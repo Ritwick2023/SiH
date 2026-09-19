@@ -21,7 +21,9 @@ export default async function InstructionsPage({ params }: PageProps) {
     <InstructionsClient
       assessmentId={assessment.id}
       title={assessment.title}
+      titleHi={assessment.title_hi}
       description={assessment.description}
+      descriptionHi={assessment.description_hi}
       totalQuestions={assessment.totalQuestions}
       durationSeconds={assessment.durationSeconds}
       type={assessment.type}

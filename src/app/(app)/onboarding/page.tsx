@@ -24,7 +24,7 @@ export default async function OnboardingPage() {
              {t('title')}
            </h1>
            <p className="mt-2 text-sm text-muted-foreground">
-             Let&apos;s build your official FRAC competency profile
+             {t('subtitle')}
            </p>
         </div>
 

@@ -5,6 +5,7 @@ import { Sparkles, Copy, Check, FileCheck, AlertCircle } from 'lucide-react';
 
 export function AdminAiNarrativeBox() {
   const [copied, setCopied] = useState(false);
+  const [staged, setStaged] = useState(false);
 
   const copyBriefing = () => {
     navigator.clipboard?.writeText(
@@ -12,6 +13,11 @@ export function AdminAiNarrativeBox() {
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleStageDirective = () => {
+    setStaged(true);
+    setTimeout(() => setStaged(false), 3500);
   };
 
   return (
@@ -97,11 +103,24 @@ export function AdminAiNarrativeBox() {
 
         <button
           type="button"
-          onClick={() => alert('Ministerial Directive staged for ADG authorization.')}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F8C858] text-[#2d1f17] text-xs font-bold hover:bg-[#e6b94e] transition-colors shrink-0"
+          onClick={handleStageDirective}
+          className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-colors shrink-0 cursor-pointer ${
+            staged
+              ? 'bg-[#555934] text-white'
+              : 'bg-[#F8C858] text-[#2d1f17] hover:bg-[#e6b94e]'
+          }`}
         >
-          <FileCheck className="h-3.5 w-3.5" />
-          <span>Stage Directive</span>
+          {staged ? (
+            <>
+              <Check className="h-3.5 w-3.5 text-[#F8C858]" />
+              <span>Directive Staged for ADG</span>
+            </>
+          ) : (
+            <>
+              <FileCheck className="h-3.5 w-3.5" />
+              <span>Stage Directive</span>
+            </>
+          )}
         </button>
       </div>
     </div>

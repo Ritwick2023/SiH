@@ -29,6 +29,7 @@ import {
   Sparkles,
   RefreshCw,
 } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface PathwaysClientProps {
   user?: AppUser | null;
@@ -37,6 +38,7 @@ interface PathwaysClientProps {
 function LearningHubContent({ user }: PathwaysClientProps) {
   const t = useTranslations();
   const searchParams = useSearchParams();
+  const globalLocale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
 
   const initialCompetency = searchParams.get('competency') || 'all';
   const initialTab = (searchParams.get('tab') as 'recommended' | 'courses' | 'manuals' | 'all') || 'recommended';
@@ -44,6 +46,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
   // Active user FRAC profile
   const profile = getPersonaFRAC(user);
   const isHindi =
+    globalLocale === 'hi' ||
     user?.user_metadata?.preferred_language === 'hi' ||
     profile.preferredLanguage === 'hi' ||
     user?.id?.includes('sunita');

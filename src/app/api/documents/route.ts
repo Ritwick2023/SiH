@@ -8,9 +8,28 @@ export async function GET() {
     const userId = user?.id || 'demo-user-1';
 
     const docs = await DocumentService.getDocuments(userId);
+
+    // Purge any lingering test survey manuals from Firestore
+    const testDocs = docs.filter((d) => {
+      const t = (d.title || '').toLowerCase();
+      const f = (d.filename || '').toLowerCase();
+      return t.includes('test_survey') || f.includes('test_survey');
+    });
+    for (const td of testDocs) {
+      if (td.id) {
+        DocumentService.deleteDocument(td.id).catch(() => {});
+      }
+    }
+
+    const cleanDocs = docs.filter((d) => {
+      const t = (d.title || '').toLowerCase();
+      const f = (d.filename || '').toLowerCase();
+      return !t.includes('test_survey') && !f.includes('test_survey');
+    });
+
     return NextResponse.json({
       success: true,
-      documents: docs,
+      documents: cleanDocs,
     });
   } catch (error) {
     console.error('Failed to fetch documents:', error);

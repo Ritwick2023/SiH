@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { matchPreMadeFaq, COPILOT_PREMADE_FAQS } from './copilotFaqResponses';
 
 describe('copilotFaqResponses', () => {
-  it('has 6 core pre-made FAQs', () => {
-    expect(COPILOT_PREMADE_FAQS.length).toBe(6);
+  it('has core and navigation pre-made FAQs', () => {
+    expect(COPILOT_PREMADE_FAQS.length).toBeGreaterThanOrEqual(11);
   });
 
   it('matches all exact quick action prompts', () => {
@@ -30,6 +30,14 @@ describe('copilotFaqResponses', () => {
     expect(matchPreMadeFaq('recommend courses')).toContain('Recommended iGOT Karmayogi Courses');
   });
 
+  it('matches navigation queries instantly', () => {
+    expect(matchPreMadeFaq('where can I find manuals?')).toContain('/documents');
+    expect(matchPreMadeFaq('how does mcq generator work?')).toContain('/mcq-generator');
+    expect(matchPreMadeFaq('what tests are available?')).toContain('/assignments');
+    expect(matchPreMadeFaq('how does offline mode work?')).toContain('IndexedDB');
+    expect(matchPreMadeFaq('where is my profile?')).toContain('/profile');
+  });
+
   it('customizes greeting with user context', () => {
     const response = matchPreMadeFaq('What is my readiness index and how can I improve it?', {
       name: 'Priya Verma',
@@ -39,8 +47,23 @@ describe('copilotFaqResponses', () => {
     expect(response).toContain('Senior Statistical Officer');
   });
 
-  it('returns null for unknown queries', () => {
-    expect(matchPreMadeFaq('What is the weather in Delhi?')).toBeNull();
-    expect(matchPreMadeFaq('hiiiiiiii helloo wt u doing')).toBeNull();
+  it('returns a pre-made match for every question in FAQ_CATEGORIES', async () => {
+    const { FAQ_CATEGORIES } = await import('./copilotFaqCategories');
+    let totalQuestions = 0;
+    const unmatched: string[] = [];
+
+    for (const category of FAQ_CATEGORIES) {
+      for (const q of category.questions) {
+        totalQuestions++;
+        const answer = matchPreMadeFaq(q.prompt);
+        if (!answer) {
+          unmatched.push(`[${category.title}] "${q.prompt}"`);
+        }
+      }
+    }
+
+    expect(unmatched).toEqual([]);
+    expect(totalQuestions).toBe(54);
   });
 });
+

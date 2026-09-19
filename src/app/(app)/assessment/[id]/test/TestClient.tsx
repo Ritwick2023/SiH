@@ -28,6 +28,7 @@ import offlineQueueManager from '@/services/offlineService';
 import { generateUUID } from '@/services/assessmentService';
 import { saveCompetencyPromotion } from '@/data/fracCadres';
 import { useAssessmentMode } from '@/contexts/AssessmentModeContext';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 import TestHeader from './TestHeader';
 import QuestionNavigator from './QuestionNavigator';
 import QuestionPanel from './QuestionPanel';
@@ -43,6 +44,8 @@ interface TestClientProps {
 
 export default function TestClient({ assessment, userId }: TestClientProps) {
   const { setAssessmentActive } = useAssessmentMode();
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
 
   const [state, dispatch] = useReducer(
     engineReducer,
@@ -155,6 +158,9 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
   const answeredCount = getAnsweredCount(state);
   const selectedAnswer = state.answers[question?.id] ?? null;
   const isLastQuestion = state.currentIndex === assessment.questions.length - 1;
+  const assessmentTitle = (isHindi && assessment.title_hi) ? assessment.title_hi : assessment.title;
+  const questionText = (isHindi && question?.question_hi) ? question.question_hi : (question?.question ?? '');
+  const questionOptions = (isHindi && question?.options_hi) ? question.options_hi : (question?.options ?? []);
 
   // ── RESULTS phase ──────────────────────────────────────────────────────
   if (showResults && scoreData) {
@@ -175,8 +181,14 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
       <div className="flex h-full items-center justify-center min-h-screen">
         <div className="text-center space-y-4 p-8">
           <div className="text-5xl">✅</div>
-          <h2 className="text-2xl font-bold text-foreground">Assessment Submitted</h2>
-          <p className="text-muted-foreground">Calculating your score and updating FRAC competency profile…</p>
+          <h2 className="text-2xl font-bold text-foreground">
+            {isHindi ? 'मूल्यांकन जमा किया गया' : 'Assessment Submitted'}
+          </h2>
+          <p className="text-muted-foreground">
+            {isHindi
+              ? 'आपके स्कोर की गणना की जा रही है और FRAC योग्यता प्रोफ़ाइल अपडेट की जा रही है…'
+              : 'Calculating your score and updating FRAC competency profile…'}
+          </p>
         </div>
       </div>
     );
@@ -187,7 +199,7 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
     return (
       <div className="flex flex-col h-full min-h-screen">
         <TestHeader
-          title={assessment.title}
+          title={assessmentTitle}
           currentIndex={state.currentIndex}
           totalQuestions={assessment.questions.length}
           remainingSeconds={state.remainingSeconds}
@@ -208,7 +220,7 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
     <div className="flex flex-col h-full min-h-screen bg-background">
       {/* Sticky header */}
       <TestHeader
-        title={assessment.title}
+        title={assessmentTitle}
         currentIndex={state.currentIndex}
         totalQuestions={assessment.questions.length}
         remainingSeconds={state.remainingSeconds}
@@ -227,8 +239,8 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
       <QuestionPanel
         questionNumber={state.currentIndex + 1}
         totalQuestions={assessment.questions.length}
-        questionText={question.question}
-        options={question.options}
+        questionText={questionText}
+        options={questionOptions}
         selectedAnswer={selectedAnswer !== undefined ? selectedAnswer : null}
         onSelectAnswer={(idx) =>
           dispatch({ type: 'SELECT_ANSWER', questionId: question.id, optionIndex: idx })
@@ -241,32 +253,32 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
           id="prev-question"
           onClick={() => dispatch({ type: 'NAVIGATE_TO', index: state.currentIndex - 1 })}
           disabled={state.currentIndex === 0}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-stone-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-stone-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4" />
-          Previous
+          {isHindi ? 'पिछला' : 'Previous'}
         </button>
 
         <span className="text-xs text-muted-foreground hidden sm:block">
-          {answeredCount} / {assessment.questions.length} answered
+          {answeredCount} / {assessment.questions.length} {isHindi ? 'उत्तर दिए गए' : 'answered'}
         </span>
 
         {isLastQuestion ? (
           <button
             id="review-assessment"
             onClick={() => dispatch({ type: 'OPEN_CONFIRM_MODAL' })}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#555934] hover:bg-[#3e4225] text-white text-sm font-bold transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#555934] hover:bg-[#3e4225] text-white text-sm font-bold transition-colors cursor-pointer"
           >
             <ClipboardList className="w-4 h-4" />
-            Review Assessment
+            {isHindi ? 'मूल्यांकन समीक्षा' : 'Review Assessment'}
           </button>
         ) : (
           <button
             id="next-question"
             onClick={() => dispatch({ type: 'NAVIGATE_TO', index: state.currentIndex + 1 })}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-stone-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-stone-50 transition-colors cursor-pointer"
           >
-            Next
+            {isHindi ? 'अगला' : 'Next'}
             <ChevronRight className="w-4 h-4" />
           </button>
         )}

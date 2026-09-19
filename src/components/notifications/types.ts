@@ -8,8 +8,11 @@ export type NotificationType =
 export interface Notification {
   id: string;
   title: string;
+  title_hi?: string;
   message: string;
+  message_hi?: string;
   timestamp: string;
+  timestamp_hi?: string;
   read: boolean;
   type: NotificationType;
   href?: string;

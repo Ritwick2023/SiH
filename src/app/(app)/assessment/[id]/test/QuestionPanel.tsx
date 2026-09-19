@@ -5,6 +5,8 @@
  * Uses radio-style interaction matching the existing AssessmentQuestion aesthetic.
  */
 
+import { useSafeLocale } from '@/lib/useSafeLocale';
+
 interface QuestionPanelProps {
   questionNumber: number;
   totalQuestions: number;
@@ -24,12 +26,17 @@ export default function QuestionPanel({
   selectedAnswer,
   onSelectAnswer,
 }: QuestionPanelProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
+
   return (
     <div className="flex-1 px-4 sm:px-8 py-6 max-w-3xl mx-auto w-full">
       {/* Question heading */}
       <div className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-          Question {questionNumber} of {totalQuestions}
+          {isHindi
+            ? `प्रश्न ${questionNumber} / ${totalQuestions}`
+            : `Question ${questionNumber} of ${totalQuestions}`}
         </p>
         <h2 className="text-lg sm:text-xl font-semibold text-foreground leading-relaxed">
           {questionText}
@@ -38,7 +45,11 @@ export default function QuestionPanel({
 
       {/* Answer options */}
       <fieldset>
-        <legend className="sr-only">Select your answer for question {questionNumber}</legend>
+        <legend className="sr-only">
+          {isHindi
+            ? `प्रश्न ${questionNumber} के लिए अपना उत्तर चुनें`
+            : `Select your answer for question ${questionNumber}`}
+        </legend>
         <div className="space-y-3">
           {options.map((option, idx) => {
             const isSelected = selectedAnswer === idx;

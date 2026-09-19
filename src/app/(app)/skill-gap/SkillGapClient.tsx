@@ -25,17 +25,18 @@ import { CompetencyService } from '@/services/competencyService';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import type { CompetencyGap } from '@/lib/types';
 import type { AppUser } from '@/lib/auth';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface GapCardProps {
   gap: CompetencyGap;
+  isHindi?: boolean;
 }
 
-function GapCard({ gap }: GapCardProps) {
+function GapCard({ gap, isHindi }: GapCardProps) {
   const matchingCourses = useMemo(
     () => LearningCatalogService.getByCompetency(gap.competencyId),
     [gap.competencyId]
   );
-
   const severityPillColors = {
     HIGH: 'text-[#8C5B3E] bg-[#8C5B3E]/12',
     MODERATE: 'text-chart-5 bg-[#BF9B7A]/20',
@@ -53,55 +54,59 @@ function GapCard({ gap }: GapCardProps) {
             <ProvenanceBadge provenance={gap.competency.provenance} showLabel={false} size="sm" />
           </div>
           <p className="text-sm text-muted-foreground mb-2">
-            Activity: {gap.activity.name}
+            {isHindi ? 'गतिविधि:' : 'Activity:'} {gap.activity.name}
           </p>
         </div>
         <div className="text-right">
           <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${severityPillColors[gap.severity]}`}>
-            {gap.severity === 'HIGH' && '🔴 Critical'}
-            {gap.severity === 'MODERATE' && '🟡 Moderate'}
-            {gap.severity === 'PROFICIENT' && '🟢 Proficient'}
+            {gap.severity === 'HIGH' && (isHindi ? '🔴 उच्च गंभीरता' : '🔴 Critical')}
+            {gap.severity === 'MODERATE' && (isHindi ? '🟡 मध्यम' : '🟡 Moderate')}
+            {gap.severity === 'PROFICIENT' && (isHindi ? '🟢 प्रवीण' : '🟢 Proficient')}
           </span>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3 bg-[#F2E6D8]/30 px-4 py-2.5 rounded-xl text-xs">
         <div className="flex items-center gap-3 font-mono">
-          <span className="text-muted-foreground">Current: <strong className="text-[#2d1f17] font-bold text-sm">L{gap.currentLevel}</strong></span>
+          <span className="text-muted-foreground">{isHindi ? 'वर्तमान:' : 'Current:'} <strong className="text-[#2d1f17] font-bold text-sm">L{gap.currentLevel}</strong></span>
           <span className="text-[#BF9B7A]">→</span>
-          <span className="text-muted-foreground">Target: <strong className="text-[#555934] font-bold text-sm">L{gap.targetLevel}</strong></span>
+          <span className="text-muted-foreground">{isHindi ? 'लक्षित:' : 'Target:'} <strong className="text-[#555934] font-bold text-sm">L{gap.targetLevel}</strong></span>
         </div>
         <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-          <span className="capitalize">Priority: <strong className="text-[#2d1f17] font-semibold">{gap.priority}</strong></span>
+          <span className="capitalize">{isHindi ? 'प्राथमिकता:' : 'Priority:'} <strong className="text-[#2d1f17] font-semibold">{gap.priority}</strong></span>
           <span>•</span>
-          <span>Severity Score: <strong className="text-[#8C5B3E] font-bold">{CompetencyService.computeGapSeverity(gap.currentLevel, gap.targetLevel, gap.priority)}</strong></span>
+          <span>{isHindi ? 'अंतर स्कोर:' : 'Severity Score:'} <strong className="text-[#8C5B3E] font-bold">{CompetencyService.computeGapSeverity(gap.currentLevel, gap.targetLevel, gap.priority)}</strong></span>
         </div>
       </div>
 
       <details className="group mb-2">
         <summary className="text-xs font-semibold text-[#555934] hover:text-primary-dark cursor-pointer inline-flex items-center gap-1 select-none">
-          <span>Why this matters</span>
+          <span>{isHindi ? 'यह क्यों महत्वपूर्ण है' : 'Why this matters'}</span>
           <span className="text-[10px] group-open:rotate-180 transition-transform">▾</span>
         </summary>
         <p className="text-xs text-muted-foreground leading-relaxed mt-1.5 pl-2 border-l-2 border-[#555934]/30">
           {gap.evidenceType === 'assessment-verified'
-            ? `Your verified proficiency is Level ${gap.currentLevel}. Cadre duties for ${gap.activity.name} require Level ${gap.targetLevel} for field data consistency.`
-            : `Self-assessed baseline is Level ${gap.currentLevel}. Take the diagnostic assessment to certify Level ${gap.targetLevel} for ${gap.activity.name}.`
+            ? isHindi
+              ? `आपके ${gap.activity.name} प्रदर्शन मूल्यांकन ने स्तर ${gap.currentLevel} दर्शाया, जबकि प्रभावी निष्पादन हेतु स्तर ${gap.targetLevel} आवश्यक है।`
+              : `Your verified proficiency is Level ${gap.currentLevel}. Cadre duties for ${gap.activity.name} require Level ${gap.targetLevel} for field data consistency.`
+            : isHindi
+              ? `स्व-मूल्यांकन के आधार पर, स्तर ${gap.targetLevel} की आवश्यकताओं को पूरा करने के लिए ${gap.competency.name} विकसित करना आवश्यक है।`
+              : `Self-assessed baseline is Level ${gap.currentLevel}. Take the diagnostic assessment to certify Level ${gap.targetLevel} for ${gap.activity.name}.`
           }
         </p>
       </details>
         <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-2 border-t border-[#BF9B7A]/15">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="px-2.5 py-1 rounded-full bg-[#F2E6D8] text-[#2d1f17]">
-              Category: {gap.competency.category}
+              {isHindi ? 'श्रेणी:' : 'Category:'} {gap.competency.category}
             </span>
             {gap.evidenceType === 'assessment-verified' ? (
               <span className="px-2.5 py-1 rounded-full bg-[#555934]/12 text-[#555934] font-medium">
-                Verified
+                {isHindi ? 'सत्यापित' : 'Verified'}
               </span>
             ) : (
               <span className="px-2.5 py-1 rounded-full bg-[#BF9B7A]/20 text-chart-5 font-medium">
-                Self-Assessed
+                {isHindi ? 'स्व-मूल्यांकित' : 'Self-Assessed'}
               </span>
             )}
           </div>
@@ -111,7 +116,7 @@ function GapCard({ gap }: GapCardProps) {
               className="inline-flex items-center gap-1 text-xs text-[#555934] hover:text-primary-dark font-semibold"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              <span>Learning Resources</span>
+              <span>{isHindi ? 'शिक्षण संसाधन' : 'Learning Resources'}</span>
             </Link>
             <Link
               href={`/assessment/${gap.competencyId}`}
@@ -119,7 +124,7 @@ function GapCard({ gap }: GapCardProps) {
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs text-white bg-[#555934] hover:bg-primary-dark font-semibold rounded-xl transition-all shadow-2xs active:scale-[0.98]"
             >
               <PlayCircle className="h-3.5 w-3.5" />
-              Take Assessment
+              {isHindi ? 'मूल्यांकन प्रारंभ करें' : 'Take Assessment'}
             </Link>
           </div>
         </div>
@@ -174,9 +179,9 @@ function GapCard({ gap }: GapCardProps) {
   );
 }
 
-function buildPersonaGapsAndRadar(user?: AppUser | null): { gaps: CompetencyGap[]; radarData: RadarDataPoint[] } {
+function buildPersonaGapsAndRadar(user?: AppUser | null, isHindiLang?: boolean): { gaps: CompetencyGap[]; radarData: RadarDataPoint[] } {
   const profile = getPersonaFRAC(user);
-  const isHindi = user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi';
+  const isHindi = isHindiLang ?? (user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi');
 
   const gaps: CompetencyGap[] = profile.competencies.map((comp) => {
     const gap = Math.max(0, comp.targetLevel - comp.currentLevel);
@@ -214,11 +219,9 @@ function buildPersonaGapsAndRadar(user?: AppUser | null): { gaps: CompetencyGap[
     };
   });
 
-  // Sort gaps by severity score descending (PRD §4.1 formula)
-  const sortedGaps = [...gaps].sort((a, b) => {
-    const scoreA = CompetencyService.computeGapSeverity(a.currentLevel, a.targetLevel, a.priority);
-    const scoreB = CompetencyService.computeGapSeverity(b.currentLevel, b.targetLevel, b.priority);
-    return scoreB - scoreA;
+  const sortedGaps = gaps.sort((a, b) => {
+    const order = { HIGH: 0, MODERATE: 1, PROFICIENT: 2 };
+    return order[a.severity] - order[b.severity];
   });
 
   const radar: RadarDataPoint[] = profile.competencies.map((c) => ({
@@ -232,7 +235,9 @@ function buildPersonaGapsAndRadar(user?: AppUser | null): { gaps: CompetencyGap[
 
 export default function SkillGapClient({ user }: { user?: AppUser | null }) {
   const t = useTranslations();
-  const [{ gaps, radarData }] = useState(() => buildPersonaGapsAndRadar(user));
+  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
+  const isHindi = locale === 'hi';
+  const { gaps, radarData } = useMemo(() => buildPersonaGapsAndRadar(user, isHindi), [user, isHindi]);
   const [filter, setFilter] = useState<'all' | 'HIGH' | 'MODERATE' | 'PROFICIENT'>('all');
 
   const topRecommendations = useMemo(
@@ -265,7 +270,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
       {/* Radar Chart */}
       <div className="rounded-2xl bg-white p-8 shadow-card">
         <h2 className="text-lg font-semibold text-[#2d1f17] mb-6">
-          Competency Radar — Current vs Required Levels
+          {isHindi ? 'दक्षता रडार — वर्तमान बनाम अपेक्षित स्तर' : 'Competency Radar — Current vs Required Levels'}
         </h2>
         <div className="flex justify-center">
           <RadarChart data={radarData} size={450} showLegend />
@@ -276,7 +281,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
       <div className="rounded-2xl bg-white p-4 shadow-card">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm font-medium text-muted-foreground">
-            Filter by severity:
+            {isHindi ? 'गंभीरता अनुसार फ़िल्टर करें:' : 'Filter by severity:'}
           </span>
           <button
             onClick={() => setFilter('all')}
@@ -286,7 +291,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
                 : 'bg-[#F2E6D8]/50 text-[#2d1f17] hover:bg-[#F2E6D8]'
             }`}
           >
-            All ({gaps.length})
+            {isHindi ? 'सभी' : 'All'} ({gaps.length})
           </button>
           <button
             onClick={() => setFilter('HIGH')}
@@ -296,7 +301,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
                 : 'bg-[#8C5B3E]/10 text-[#8C5B3E] hover:bg-[#8C5B3E]/20'
             }`}
           >
-            🔴 High ({severityCounts.HIGH})
+            {isHindi ? '🔴 उच्च गंभीरता' : '🔴 High'} ({severityCounts.HIGH})
           </button>
           <button
             onClick={() => setFilter('MODERATE')}
@@ -306,7 +311,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
                 : 'bg-[#BF9B7A]/15 text-chart-5 hover:bg-[#BF9B7A]/25'
             }`}
           >
-            🟡 Moderate ({severityCounts.MODERATE})
+            {isHindi ? '🟡 मध्यम' : '🟡 Moderate'} ({severityCounts.MODERATE})
           </button>
           <button
             onClick={() => setFilter('PROFICIENT')}
@@ -316,7 +321,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
                 : 'bg-[#555934]/10 text-[#555934] hover:bg-[#555934]/20'
             }`}
           >
-            🟢 Proficient ({severityCounts.PROFICIENT})
+            {isHindi ? '🟢 प्रवीण' : '🟢 Proficient'} ({severityCounts.PROFICIENT})
           </button>
         </div>
       </div>
@@ -324,7 +329,7 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
       {/* Gap Cards */}
       <div className="space-y-4">
         {filteredGaps.map((gap) => (
-          <GapCard key={gap.competencyId} gap={gap} />
+          <GapCard key={gap.competencyId} gap={gap} isHindi={isHindi} />
         ))}
       </div>
 
@@ -333,10 +338,12 @@ export default function SkillGapClient({ user }: { user?: AppUser | null }) {
         <div className="text-center py-12 rounded-2xl bg-white shadow-card">
           <div className="text-4xl mb-4">🎉</div>
           <h3 className="text-lg font-medium text-[#2d1f17] mb-2">
-            No gaps in this category
+            {isHindi ? 'इस श्रेणी में कोई कमी नहीं है' : 'No gaps in this category'}
           </h3>
           <p className="text-muted-foreground">
-            All competencies are at or above target level for this filter.
+            {isHindi
+              ? 'इस फ़िल्टर के लिए सभी दक्षताएं लक्षित स्तर पर या उससे अधिक हैं।'
+              : 'All competencies are at or above target level for this filter.'}
           </p>
         </div>
       )}

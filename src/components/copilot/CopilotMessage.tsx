@@ -11,67 +11,105 @@ interface CopilotMessageProps {
   timestamp?: Date;
 }
 
+function renderRouteLink(route: string, key: string) {
+  return (
+    <Link
+      key={key}
+      href={route}
+      className="inline-flex items-center gap-0.5 rounded-md bg-[--color-primary]/15 border border-[--color-primary]/30 px-1.5 py-0.5 text-[11px] font-mono font-semibold text-[#555934] hover:bg-[#555934] hover:text-white transition-all shadow-2xs mx-0.5"
+    >
+      {route}
+      <ArrowUpRight className="h-3 w-3 opacity-70" />
+    </Link>
+  );
+}
+
+function renderPlainTextWithItalics(text: string, keyPrefix: string) {
+  const italicSegments = text.split(/(\*[^*]+?\*)/g);
+  if (italicSegments.length > 1) {
+    return (
+      <span key={keyPrefix}>
+        {italicSegments.map((seg, i) => {
+          if (seg.startsWith('*') && seg.endsWith('*') && seg.length > 2) {
+            return (
+              <em key={`${keyPrefix}-it-${i}`} className="italic">
+                {seg.slice(1, -1)}
+              </em>
+            );
+          }
+          return <span key={`${keyPrefix}-tx-${i}`}>{seg}</span>;
+        })}
+      </span>
+    );
+  }
+  return <span key={keyPrefix}>{text}</span>;
+}
+
 /**
  * Render inline text elements: bold, italic, code, route links, and priority badges.
+ * Prevents raw or orphan '**' from ever leaking into the UI.
  */
 function renderInlineContent(text: string) {
-  // Clean up orphan trailing asterisks like "gap)*" -> "gap)"
-  const cleaned = text.replace(/(\w|\))[\*]+(?=$|\s)/g, '$1');
+  // Normalize bold route paths like **/dashboard** into route pills
+  const normalized = text.replace(/\*\*(\/[a-zA-Z0-9\-_/]+)\*\*/g, '`$1`');
 
-  // Split on bold, code/route pills, or priority badges
-  const segments = cleaned.split(
-    /(\*\*[^*]+\*\*|`[^`]+`|\((?:Critical|Important|Desirable)(?:\s+gap)?\))/gi
-  );
+  // Tokenize by bold, backtick code, or priority badges
+  const tokenRegex = /(\*\*[^*]+?\*\*|`[^`]+?`|\((?:Critical|Important|Desirable)(?:\s+gap)?\))/gi;
 
-  return segments.map((seg, idx) => {
-    if (!seg) return null;
+  const elements: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokenRegex.exec(normalized)) !== null) {
+    if (match.index > lastIndex) {
+      // Plain text segment before token: strip any orphan/stray **
+      const plain = normalized.slice(lastIndex, match.index).replace(/\*\*/g, '');
+      if (plain) {
+        elements.push(renderPlainTextWithItalics(plain, `plain-${lastIndex}`));
+      }
+    }
+
+    const token = match[0];
+    const key = `token-${match.index}`;
 
     // Bold
-    if (seg.startsWith('**') && seg.endsWith('**')) {
-      return (
-        <strong key={idx} className="font-semibold text-[#2d1f17]">
-          {seg.slice(2, -2)}
-        </strong>
-      );
-    }
-
-    // Code / Route pills
-    if (seg.startsWith('`') && seg.endsWith('`')) {
-      const codeVal = seg.slice(1, -1);
-
-      // Interactive platform route link
-      if (codeVal.startsWith('/')) {
-        return (
-          <Link
-            key={idx}
-            href={codeVal}
-            className="inline-flex items-center gap-0.5 rounded-md bg-[--color-primary]/15 border border-[--color-primary]/30 px-1.5 py-0.5 text-[11px] font-mono font-semibold text-[#555934] hover:bg-[#555934] hover:text-white transition-all shadow-2xs mx-0.5"
-          >
-            {codeVal}
-            <ArrowUpRight className="h-3 w-3 opacity-70" />
-          </Link>
+    if (token.startsWith('**') && token.endsWith('**')) {
+      const boldContent = token.slice(2, -2).trim();
+      if (boldContent.startsWith('/') && !boldContent.includes(' ')) {
+        elements.push(renderRouteLink(boldContent, key));
+      } else {
+        elements.push(
+          <strong key={key} className="font-semibold text-[#2d1f17]">
+            {boldContent}
+          </strong>
         );
       }
-
-      return (
-        <code
-          key={idx}
-          className="rounded bg-[#E8DACB]/60 px-1.5 py-0.5 text-xs font-mono text-[#2d1f17]"
-        >
-          {codeVal}
-        </code>
-      );
     }
-
-    // Priority badges (Critical gap / Important gap)
-    if (/^\((?:Critical|Important|Desirable)(?:\s+gap)?\)$/i.test(seg)) {
-      const isCritical = /critical/i.test(seg);
-      const isImportant = /important/i.test(seg);
+    // Code / Route pills
+    else if (token.startsWith('`') && token.endsWith('`')) {
+      const codeVal = token.slice(1, -1);
+      if (codeVal.startsWith('/')) {
+        elements.push(renderRouteLink(codeVal, key));
+      } else {
+        elements.push(
+          <code
+            key={key}
+            className="rounded bg-[#E8DACB]/60 px-1.5 py-0.5 text-xs font-mono text-[#2d1f17]"
+          >
+            {codeVal}
+          </code>
+        );
+      }
+    }
+    // Priority badges (Critical gap / Important gap / Desirable gap)
+    else {
+      const isCritical = /critical/i.test(token);
+      const isImportant = /important/i.test(token);
       const label = isCritical ? 'Critical' : isImportant ? 'Important' : 'Desirable';
 
-      return (
+      elements.push(
         <span
-          key={idx}
+          key={key}
           className={`ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
             isCritical
               ? 'bg-[#8C5B3E]/15 text-[#8C5B3E]'
@@ -85,19 +123,18 @@ function renderInlineContent(text: string) {
       );
     }
 
-    // Plain text segment (also render simple italic if present)
-    const italicSegments = seg.split(/(\*[^*]+\*)/g);
-    if (italicSegments.length > 1) {
-      return italicSegments.map((iSeg, iIdx) => {
-        if (iSeg.startsWith('*') && iSeg.endsWith('*') && iSeg.length > 2) {
-          return <em key={`${idx}-${iIdx}`} className="italic">{iSeg.slice(1, -1)}</em>;
-        }
-        return <span key={`${idx}-${iIdx}`}>{iSeg}</span>;
-      });
-    }
+    lastIndex = tokenRegex.lastIndex;
+  }
 
-    return <span key={idx}>{seg}</span>;
-  });
+  // Trailing segment: strip any trailing/unclosed ** (e.g. streaming or malformed)
+  if (lastIndex < normalized.length) {
+    const trailing = normalized.slice(lastIndex).replace(/\*\*/g, '');
+    if (trailing) {
+      elements.push(renderPlainTextWithItalics(trailing, `trailing-${lastIndex}`));
+    }
+  }
+
+  return elements;
 }
 
 /**
@@ -137,14 +174,14 @@ function renderStructuredMessage(content: string) {
     // Headings (### Header, ## Header, # Header)
     if (/^#{1,4}\s+/.test(trimmed)) {
       flushList();
-      const headerText = trimmed.replace(/^#{1,4}\s+/, '');
+      const headerText = trimmed.replace(/^#{1,4}\s+/, '').replace(/^\*\*|\*\*$/g, '').trim();
       elements.push(
         <h4
           key={`h-${lineIdx}`}
           className="mt-3 mb-1 text-[11px] font-bold uppercase tracking-wider text-[#555934] flex items-center gap-1.5"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-[#555934]" />
-          {headerText}
+          {renderInlineContent(headerText)}
         </h4>
       );
       return;

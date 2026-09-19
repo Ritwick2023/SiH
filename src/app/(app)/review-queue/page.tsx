@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { ProvenanceBadge } from '@/components/ProvenanceBadge';
 import {
@@ -135,11 +136,14 @@ function getInitialReviewItems(): ReviewItem[] {
 }
 
 export default function ReviewQueuePage() {
+  const systemLocale = useSafeLocale();
   const [items, setItems] = useState<ReviewItem[]>(getInitialReviewItems);
   const [selectedId, setSelectedId] = useState<string>(() => items[0]?.id || 'rq-101');
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'PUBLISHED' | 'REJECTED'>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeLang, setActiveLang] = useState<'en' | 'hi'>('en');
+  const [activeLangOverride, setActiveLangOverride] = useState<'en' | 'hi' | null>(null);
+  const activeLang = activeLangOverride ?? (systemLocale === 'hi' ? 'hi' : 'en');
+  const isHindi = activeLang === 'hi';
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editDraft, setEditDraft] = useState<ReviewItem | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'warn' } | null>(null);
@@ -270,15 +274,19 @@ export default function ReviewQueuePage() {
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#555934]/15 text-[#555934] flex items-center gap-1">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Faculty Quality Assurance
+              {isHindi ? 'संकाय गुणवत्ता आश्वासन' : 'Faculty Quality Assurance'}
             </span>
-            <span className="text-xs text-stone-500">• Question Certification Station</span>
+            <span className="text-xs text-stone-500">
+              {isHindi ? '• प्रश्न प्रमाणन स्टेशन' : '• Question Certification Station'}
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
-            Item Review & Calibration Queue
+            {isHindi ? 'प्रश्न समीक्षा एवं अंशांकन कतार' : 'Item Review & Calibration Queue'}
           </h1>
           <p className="text-sm text-stone-600 mt-0.5">
-            Audit, refine, and certify generated question items grounded in official manuals before publishing to live evaluations.
+            {isHindi
+              ? 'सजीव मूल्यांकनों में प्रकाशित करने से पहले आधिकारिक मैनुअल पर आधारित प्रश्नों का ऑडिट, सुधार और प्रमाणन करें।'
+              : 'Audit, refine, and certify generated question items grounded in official manuals before publishing to live evaluations.'}
           </p>
         </div>
         <ProvenanceBadge provenance="VERIFIED_OFFICIAL" />
@@ -288,28 +296,36 @@ export default function ReviewQueuePage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="p-4 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">Pending Audit</span>
+            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">
+              {isHindi ? 'लंबित ऑडिट' : 'Pending Audit'}
+            </span>
             <span className="text-2xl font-bold text-amber-700 font-mono mt-0.5 block">{pendingCount}</span>
           </div>
           <Clock className="h-6 w-6 text-amber-500/70" />
         </div>
         <div className="p-4 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">Certified Approved</span>
+            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">
+              {isHindi ? 'प्रमाणित स्वीकृत' : 'Certified Approved'}
+            </span>
             <span className="text-2xl font-bold text-[#555934] font-mono mt-0.5 block">{approvedCount}</span>
           </div>
           <CheckCircle2 className="h-6 w-6 text-[#555934]/70" />
         </div>
         <div className="p-4 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">Live in Question Pool</span>
+            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">
+              {isHindi ? 'सक्रिय प्रश्न पूल में' : 'Live in Question Pool'}
+            </span>
             <span className="text-2xl font-bold text-emerald-800 font-mono mt-0.5 block">{publishedCount}</span>
           </div>
           <UploadCloud className="h-6 w-6 text-emerald-600/70" />
         </div>
         <div className="p-4 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">Total Items</span>
+            <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">
+              {isHindi ? 'कुल प्रश्न' : 'Total Items'}
+            </span>
             <span className="text-2xl font-bold text-stone-900 font-mono mt-0.5 block">{items.length}</span>
           </div>
           <Layers className="h-6 w-6 text-stone-400" />
@@ -338,11 +354,11 @@ export default function ReviewQueuePage() {
         <div className="flex flex-wrap items-center gap-1.5">
           {(
             [
-              { key: 'ALL', label: 'All', count: items.length },
-              { key: 'PENDING', label: 'Pending', count: pendingCount },
-              { key: 'APPROVED', label: 'Approved', count: approvedCount },
-              { key: 'PUBLISHED', label: 'Live Pool', count: publishedCount },
-              { key: 'REJECTED', label: 'Rejected', count: rejectedCount },
+              { key: 'ALL', label: isHindi ? 'सभी' : 'All', count: items.length },
+              { key: 'PENDING', label: isHindi ? 'लंबित' : 'Pending', count: pendingCount },
+              { key: 'APPROVED', label: isHindi ? 'स्वीकृत' : 'Approved', count: approvedCount },
+              { key: 'PUBLISHED', label: isHindi ? 'सक्रिय पूल' : 'Live Pool', count: publishedCount },
+              { key: 'REJECTED', label: isHindi ? 'अस्वीकृत' : 'Rejected', count: rejectedCount },
             ] as const
           ).map((tab) => (
             <button
@@ -374,7 +390,7 @@ export default function ReviewQueuePage() {
           <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-stone-400" />
           <input
             type="text"
-            placeholder="Search by topic, manual, or text..."
+            placeholder={isHindi ? 'विषय, मैनुअल या प्रश्न द्वारा खोजें...' : 'Search by topic, manual, or text...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-200 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#555934]"
@@ -387,20 +403,25 @@ export default function ReviewQueuePage() {
         {/* Left Column: Triage List (4 columns) */}
         <div className="lg:col-span-4 space-y-2.5">
           <div className="flex items-center justify-between text-xs font-medium text-stone-500 px-1">
-            <span>Question Queue ({filteredItems.length})</span>
-            <span>Select item to review</span>
+            <span>{isHindi ? 'प्रश्न कतार' : 'Question Queue'} ({filteredItems.length})</span>
+            <span>{isHindi ? 'समीक्षा के लिए चुनें' : 'Select item to review'}</span>
           </div>
 
           <div className="space-y-2 max-h-[720px] overflow-y-auto pr-1">
             {filteredItems.length === 0 ? (
               <div className="p-8 text-center bg-white rounded-xl border border-stone-200 text-stone-500">
                 <Layers className="h-6 w-6 mx-auto mb-2 text-stone-400" />
-                <p className="text-xs font-semibold text-stone-800">No items match current filter</p>
-                <p className="text-[11px] text-stone-500 mt-0.5">Try resetting search or switching status tabs.</p>
+                <p className="text-xs font-semibold text-stone-800">
+                  {isHindi ? 'वर्तमान फ़िल्टर से कोई प्रश्न मेल नहीं खाता' : 'No items match current filter'}
+                </p>
+                <p className="text-[11px] text-stone-500 mt-0.5">
+                  {isHindi ? 'खोज रीसेट करें या स्थिति टैब बदलें।' : 'Try resetting search or switching status tabs.'}
+                </p>
               </div>
             ) : (
               filteredItems.map((item) => {
                 const isSelected = item.id === activeItem?.id;
+                const displayStem = isHindi ? (item.stemHi || item.stem) : item.stem;
                 return (
                   <div
                     key={item.id}
@@ -420,36 +441,36 @@ export default function ReviewQueuePage() {
                       </span>
                       {item.status === 'PENDING' && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-                          Pending
+                          {isHindi ? 'लंबित' : 'Pending'}
                         </span>
                       )}
                       {item.status === 'APPROVED' && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
-                          <Check className="h-2.5 w-2.5" /> Approved
+                          <Check className="h-2.5 w-2.5" /> {isHindi ? 'स्वीकृत' : 'Approved'}
                         </span>
                       )}
                       {item.status === 'PUBLISHED' && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#555934] text-white flex items-center gap-1">
-                          <FileCheck className="h-2.5 w-2.5" /> Live
+                          <FileCheck className="h-2.5 w-2.5" /> {isHindi ? 'सक्रिय' : 'Live'}
                         </span>
                       )}
                       {item.status === 'REJECTED' && (
                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-800">
-                          Rejected
+                          {isHindi ? 'अस्वीकृत' : 'Rejected'}
                         </span>
                       )}
                     </div>
 
                     <p className="text-xs font-medium text-stone-900 line-clamp-2 leading-relaxed">
-                      {item.stem}
+                      {displayStem}
                     </p>
 
                     <div className="flex items-center justify-between text-[11px] text-stone-400 mt-2.5 pt-2 border-t border-stone-100">
                       <span className="truncate max-w-[180px] text-stone-500 font-sans">
-                        {item.sourceDoc || 'Official MoSPI Manual'}
+                        {item.sourceDoc || (isHindi ? 'आधिकारिक MoSPI मैनुअल' : 'Official MoSPI Manual')}
                       </span>
                       <span className="font-mono text-stone-400 font-medium">
-                        {(item.consensusScore * 100).toFixed(0)}% score
+                        {(item.consensusScore * 100).toFixed(0)}% {isHindi ? 'स्कोर' : 'score'}
                       </span>
                     </div>
                   </div>
@@ -475,11 +496,11 @@ export default function ReviewQueuePage() {
                         {activeItem.id}
                       </span>
                       <span className="text-xs text-stone-500">
-                        • Multi-Model Consensus: <strong>{(activeItem.consensusScore * 100).toFixed(0)}%</strong>
+                        • {isHindi ? 'बहु-मॉडल सहमति:' : 'Multi-Model Consensus:'} <strong>{(activeItem.consensusScore * 100).toFixed(0)}%</strong>
                       </span>
                     </div>
                     <div className="text-xs text-stone-600 font-medium truncate max-w-lg">
-                      Source: {activeItem.sourceDoc || 'Official Guidelines'}
+                      {isHindi ? 'स्रोत:' : 'Source:'} {activeItem.sourceDoc || (isHindi ? 'आधिकारिक दिशानिर्देश' : 'Official Guidelines')}
                     </div>
                   </div>
 
@@ -496,7 +517,7 @@ export default function ReviewQueuePage() {
                         <ChevronLeft className="h-4 w-4" />
                       </button>
                       <span className="text-[11px] font-mono px-2 text-stone-600">
-                        {activeIndexInFiltered + 1} of {filteredItems.length || 1}
+                        {activeIndexInFiltered + 1} {isHindi ? 'कुल' : 'of'} {filteredItems.length || 1}
                       </span>
                       <button
                         onClick={handleNavigateNext}
@@ -511,7 +532,7 @@ export default function ReviewQueuePage() {
                     {/* Language Switch */}
                     <div className="flex items-center bg-stone-100 rounded-lg p-0.5 border border-stone-200">
                       <button
-                        onClick={() => setActiveLang('en')}
+                        onClick={() => setActiveLangOverride('en')}
                         className={`text-[11px] font-semibold px-2 py-1 rounded transition ${
                           activeLang === 'en' ? 'bg-white text-stone-900 shadow-2xs' : 'text-stone-600'
                         }`}
@@ -519,7 +540,7 @@ export default function ReviewQueuePage() {
                         EN
                       </button>
                       <button
-                        onClick={() => setActiveLang('hi')}
+                        onClick={() => setActiveLangOverride('hi')}
                         className={`text-[11px] font-semibold px-2 py-1 rounded transition ${
                           activeLang === 'hi' ? 'bg-white text-stone-900 shadow-2xs' : 'text-stone-600'
                         }`}
@@ -539,11 +560,11 @@ export default function ReviewQueuePage() {
                     >
                       {isEditing ? (
                         <>
-                          <Save className="h-3.5 w-3.5" /> Save Changes
+                          <Save className="h-3.5 w-3.5" /> {isHindi ? 'परिवर्तन सहेजें' : 'Save Changes'}
                         </>
                       ) : (
                         <>
-                          <Edit3 className="h-3.5 w-3.5" /> Refine Text
+                          <Edit3 className="h-3.5 w-3.5" /> {isHindi ? 'पाठ संशोधित करें' : 'Refine Text'}
                         </>
                       )}
                     </button>
@@ -556,7 +577,7 @@ export default function ReviewQueuePage() {
                 {/* Stem Section */}
                 <div>
                   <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1.5">
-                    Question Stem ({activeLang === 'en' ? 'English' : 'हिन्दी'})
+                    {isHindi ? 'प्रश्न कथन (हिन्दी)' : 'Question Stem (English)'}
                   </label>
                   {isEditing && editDraft ? (
                     <textarea
@@ -586,7 +607,7 @@ export default function ReviewQueuePage() {
                 {/* Multiple Choice Options */}
                 <div className="space-y-2.5">
                   <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block">
-                    Response Options & Verified Answer Key
+                    {isHindi ? 'उत्तर विकल्प एवं सत्यापित कुंजी' : 'Response Options & Verified Answer Key'}
                   </label>
 
                   {(activeLang === 'en'
@@ -652,11 +673,13 @@ export default function ReviewQueuePage() {
                                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                             }`}
                           >
-                            {isCorrect ? 'Key Selected' : 'Set as Key'}
+                            {isCorrect
+                              ? (isHindi ? 'कुंजी चयनित' : 'Key Selected')
+                              : (isHindi ? 'कुंजी बनाएं' : 'Set as Key')}
                           </button>
                         ) : isCorrect ? (
                           <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">
-                            Verified Key
+                            {isHindi ? 'सत्यापित कुंजी' : 'Verified Key'}
                           </span>
                         ) : null}
                       </div>
@@ -668,7 +691,9 @@ export default function ReviewQueuePage() {
                 <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/90 text-xs text-amber-950 flex items-start gap-2.5">
                   <BookOpen className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
                   <div className="flex-1">
-                    <span className="font-bold text-amber-900">MoSPI Citation Grounding:</span>{' '}
+                    <span className="font-bold text-amber-900">
+                      {isHindi ? 'MoSPI उद्धरण आधार:' : 'MoSPI Citation Grounding:'}
+                    </span>{' '}
                     {isEditing && editDraft ? (
                       <input
                         type="text"
@@ -687,25 +712,25 @@ export default function ReviewQueuePage() {
                 {/* Decisive Action Bar */}
                 <div className="pt-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-xs text-stone-500">
-                    <span>Audit Status:</span>
+                    <span>{isHindi ? 'ऑडिट स्थिति:' : 'Audit Status:'}</span>
                     {activeItem.status === 'PENDING' && (
                       <span className="font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
-                        Requires Review
+                        {isHindi ? 'समीक्षा आवश्यक' : 'Requires Review'}
                       </span>
                     )}
                     {activeItem.status === 'APPROVED' && (
                       <span className="font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
-                        Certified Approved
+                        {isHindi ? 'प्रमाणित स्वीकृत' : 'Certified Approved'}
                       </span>
                     )}
                     {activeItem.status === 'PUBLISHED' && (
                       <span className="font-semibold text-[#555934] bg-[#555934]/15 px-2 py-0.5 rounded">
-                        Active in Assessment Pool
+                        {isHindi ? 'मूल्यांकन पूल में सक्रिय' : 'Active in Assessment Pool'}
                       </span>
                     )}
                     {activeItem.status === 'REJECTED' && (
                       <span className="font-semibold text-red-800 bg-red-100 px-2 py-0.5 rounded">
-                        Rejected
+                        {isHindi ? 'अस्वीकृत' : 'Rejected'}
                       </span>
                     )}
                   </div>
@@ -717,13 +742,13 @@ export default function ReviewQueuePage() {
                           onClick={() => handleStatusChange(activeItem.id, 'REJECTED')}
                           className="px-4 py-2 rounded-xl bg-red-50 text-red-800 hover:bg-red-100 text-xs font-semibold transition flex items-center gap-1.5"
                         >
-                          <XCircle className="h-4 w-4" /> Reject Item
+                          <XCircle className="h-4 w-4" /> {isHindi ? 'अस्वीकार करें' : 'Reject Item'}
                         </button>
                         <button
                           onClick={() => handleStatusChange(activeItem.id, 'APPROVED')}
                           className="px-5 py-2 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs"
                         >
-                          <CheckCircle2 className="h-4 w-4" /> Certify & Approve
+                          <CheckCircle2 className="h-4 w-4" /> {isHindi ? 'प्रमाणित एवं स्वीकृत करें' : 'Certify & Approve'}
                         </button>
                       </>
                     )}
@@ -734,13 +759,13 @@ export default function ReviewQueuePage() {
                           onClick={() => handleStatusChange(activeItem.id, 'PENDING')}
                           className="px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition"
                         >
-                          Reopen Audit
+                          {isHindi ? 'ऑडिट पुनः खोलें' : 'Reopen Audit'}
                         </button>
                         <button
                           onClick={() => handlePublish(activeItem.id)}
                           className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs"
                         >
-                          <UploadCloud className="h-4 w-4" /> Publish to Live Bank
+                          <UploadCloud className="h-4 w-4" /> {isHindi ? 'सक्रिय बैंक में प्रकाशित करें' : 'Publish to Live Bank'}
                         </button>
                       </>
                     )}
@@ -748,13 +773,13 @@ export default function ReviewQueuePage() {
                     {activeItem.status === 'PUBLISHED' && (
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-semibold text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-                          <Check className="h-3.5 w-3.5" /> Published in Exam Bank
+                          <Check className="h-3.5 w-3.5" /> {isHindi ? 'परीक्षा बैंक में प्रकाशित' : 'Published in Exam Bank'}
                         </span>
                         <button
                           onClick={() => handleStatusChange(activeItem.id, 'APPROVED')}
                           className="px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-medium transition"
                         >
-                          Retract
+                          {isHindi ? 'वापस लें' : 'Retract'}
                         </button>
                       </div>
                     )}
@@ -764,7 +789,7 @@ export default function ReviewQueuePage() {
                         onClick={() => handleStatusChange(activeItem.id, 'PENDING')}
                         className="px-4 py-2 rounded-xl bg-stone-100 text-stone-800 text-xs font-semibold hover:bg-stone-200 transition flex items-center gap-1.5"
                       >
-                        <RotateCcw className="h-3.5 w-3.5" /> Restore to Pending
+                        <RotateCcw className="h-3.5 w-3.5" /> {isHindi ? 'लंबित में पुनर्स्थापित करें' : 'Restore to Pending'}
                       </button>
                     )}
                   </div>
@@ -774,8 +799,14 @@ export default function ReviewQueuePage() {
           ) : (
             <div className="p-12 text-center bg-white rounded-2xl border border-stone-200 text-stone-500">
               <Layers className="h-8 w-8 mx-auto mb-2 text-stone-400" />
-              <p className="text-sm font-semibold text-stone-800">No question selected</p>
-              <p className="text-xs text-stone-500 mt-1">Pick an item from the queue list on the left to inspect.</p>
+              <p className="text-sm font-semibold text-stone-800">
+                {isHindi ? 'कोई प्रश्न चयनित नहीं' : 'No question selected'}
+              </p>
+              <p className="text-xs text-stone-500 mt-1">
+                {isHindi
+                  ? 'निरीक्षण करने के लिए बाईं ओर कतार सूची से एक प्रश्न चुनें।'
+                  : 'Pick an item from the queue list on the left to inspect.'}
+              </p>
             </div>
           )}
         </div>

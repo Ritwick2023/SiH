@@ -12,6 +12,7 @@
 import type { QuestionStatus } from '@/services/assessmentEngine';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 const PAGE_SIZE = 10;
 
@@ -34,14 +35,14 @@ function statusClass(status: QuestionStatus, isCurrent: boolean): string {
   }
 }
 
-function statusLabel(status: QuestionStatus): string {
+function statusLabel(status: QuestionStatus, isHindi = false): string {
   switch (status) {
     case 'answered':
-      return 'Answered';
+      return isHindi ? 'उत्तर दिया गया' : 'Answered';
     case 'visited':
-      return 'Visited, not answered';
+      return isHindi ? 'देखा गया, उत्तर नहीं' : 'Visited, not answered';
     default:
-      return 'Not yet visited';
+      return isHindi ? 'अभी तक नहीं देखा' : 'Not yet visited';
   }
 }
 
@@ -51,6 +52,8 @@ export default function QuestionNavigator({
   statuses,
   onNavigate,
 }: QuestionNavigatorProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const totalPages = Math.ceil(totalQuestions / PAGE_SIZE);
   const [page, setPage] = useState(() => Math.floor(currentIndex / PAGE_SIZE));
 
@@ -68,7 +71,7 @@ export default function QuestionNavigator({
     <div className="border-b border-border bg-stone-50 px-4 sm:px-6 py-4">
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Questions
+          {isHindi ? 'प्रश्न' : 'Questions'}
         </p>
         {totalPages > 1 && (
           <div className="flex items-center gap-1">
@@ -105,7 +108,7 @@ export default function QuestionNavigator({
               key={qIdx}
               id={`q-nav-${qIdx + 1}`}
               onClick={() => onNavigate(qIdx)}
-              aria-label={`Question ${qIdx + 1}: ${statusLabel(status)}${isCurrent ? ' (current)' : ''}`}
+              aria-label={`${isHindi ? 'प्रश्न' : 'Question'} ${qIdx + 1}: ${statusLabel(status, isHindi)}${isCurrent ? (isHindi ? ' (वर्तमान)' : ' (current)') : ''}`}
               aria-current={isCurrent ? 'true' : undefined}
               className={`h-9 w-9 rounded-md border-2 text-sm font-semibold transition-all ${statusClass(status, isCurrent)}`}
             >
@@ -118,9 +121,9 @@ export default function QuestionNavigator({
       {/* Legend */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
         {[
-          { label: 'Unseen', cls: 'bg-white border-stone-300 border-2' },
-          { label: 'Visited', cls: 'bg-rose-100 border-rose-400 border-2' },
-          { label: 'Answered', cls: 'bg-emerald-100 border-emerald-400 border-2' },
+          { label: isHindi ? 'अनदेखा' : 'Unseen', cls: 'bg-white border-stone-300 border-2' },
+          { label: isHindi ? 'देखा गया' : 'Visited', cls: 'bg-rose-100 border-rose-400 border-2' },
+          { label: isHindi ? 'उत्तरित' : 'Answered', cls: 'bg-emerald-100 border-emerald-400 border-2' },
         ].map(({ label, cls }) => (
           <span key={label} className="flex items-center gap-1.5">
             <span className={`inline-block h-3.5 w-3.5 rounded-sm ${cls}`} aria-hidden="true" />

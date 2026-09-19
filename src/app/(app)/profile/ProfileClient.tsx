@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import type { RadarDataPoint } from '@/components/RadarChart';
@@ -22,6 +22,7 @@ import { Award, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import { CompetencyService } from '@/services/competencyService';
 import type { AppUser } from '@/lib/auth';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface CompetencyRecord {
   competencyId: string;
@@ -57,9 +58,9 @@ interface ProfileData {
   competencyHistory: Record<string, CompetencyHistoryEntry[]>;
 }
 
-function buildPersonaProfileData(user?: AppUser | null): ProfileData {
+function buildPersonaProfileData(user?: AppUser | null, isHindiLang?: boolean): ProfileData {
   const profile = getPersonaFRAC(user);
-  const isHindi = user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi';
+  const isHindi = isHindiLang ?? (user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi');
 
   const competencyRecords: CompetencyRecord[] = profile.competencies.map((comp) => ({
     competencyId: comp.id,
@@ -97,10 +98,10 @@ function buildPersonaProfileData(user?: AppUser | null): ProfileData {
     designation: isHindi ? profile.designation_hi : profile.designation,
     cadre: profile.cadre,
     department: isHindi ? profile.department_hi : profile.department,
-    organization: 'Ministry of Statistics and Programme Implementation (MoSPI)',
+    organization: isHindi ? 'सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय (MoSPI)' : 'Ministry of Statistics and Programme Implementation (MoSPI)',
     role: isHindi ? profile.designation_hi : profile.designation,
     karmaPoints: profile.personaId.includes('sunita') ? 1450 : 1820,
-    aparMilestone: '2025-2026: Benchmark Target Exceeded',
+    aparMilestone: isHindi ? '2025-2026: बेंचमार्क लक्ष्य पार किया' : '2025-2026: Benchmark Target Exceeded',
     readinessIndex,
     joinedDate: '2023-06-15',
     assessmentsCompleted: 6,
@@ -112,7 +113,9 @@ function buildPersonaProfileData(user?: AppUser | null): ProfileData {
 
 export default function ProfileClient({ user }: { user?: AppUser | null }) {
   const t = useTranslations();
-  const [data] = useState<ProfileData>(() => buildPersonaProfileData(user));
+  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
+  const isHindi = locale === 'hi';
+  const data = useMemo(() => buildPersonaProfileData(user, isHindi), [user, isHindi]);
   const [activeTab, setActiveTab] = useState<'overview' | 'competencies' | 'history'>('overview');
 
   if (!data) {
@@ -188,21 +191,27 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
               <div className="text-2xl sm:text-3xl font-bold text-[#555934] font-mono">
                 {data.karmaPoints.toLocaleString()}
               </div>
-              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">Karma Points</p>
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">
+                {isHindi ? 'कर्म अंक' : 'Karma Points'}
+              </p>
             </div>
             <div className="h-8 w-px bg-muted" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-chart-5 font-mono">
                 {data.assessmentsCompleted}
               </div>
-              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">Assessments</p>
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">
+                {isHindi ? 'मूल्यांकन' : 'Assessments'}
+              </p>
             </div>
             <div className="h-8 w-px bg-muted" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#BF9B7A] font-mono">
                 {data.coursesCompleted}
               </div>
-              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">Courses</p>
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">
+                {isHindi ? 'पाठ्यक्रम' : 'Courses'}
+              </p>
             </div>
           </div>
         </div>
@@ -219,7 +228,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
             </div>
           </div>
           <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#555934] text-white shadow-2xs">
-            Official Rating
+            {isHindi ? 'आधिकारिक रेटिंग' : 'Official Rating'}
           </span>
         </div>
       </div>
@@ -238,7 +247,11 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                   : 'border-transparent text-muted-foreground hover:text-[#2d1f17]'
               }`}
             >
-              {tab === 'overview' ? 'Overview' : tab === 'competencies' ? 'FRAC Competencies' : 'Growth History'}
+              {tab === 'overview'
+                ? isHindi ? 'अवलोकन' : 'Overview'
+                : tab === 'competencies'
+                ? isHindi ? 'FRAC क्षमताएं' : 'FRAC Competencies'
+                : isHindi ? 'प्रगति इतिहास' : 'Growth History'}
             </button>
           );
         })}
@@ -254,7 +267,9 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                 <h3 className="text-base font-semibold text-[#2d1f17]">
                   {t('dashboard.readinessIndex')}
                 </h3>
-                <p className="text-xs text-muted-foreground">Composite official evaluation</p>
+                <p className="text-xs text-muted-foreground">
+                  {isHindi ? 'समग्र आधिकारिक मूल्यांकन' : 'Composite official evaluation'}
+                </p>
               </div>
               <span className="text-xs font-mono font-bold text-[#555934] bg-[#555934]/12 px-3 py-1 rounded-full">
                 {data.readinessIndex}%
@@ -264,8 +279,8 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
               <ProgressRing
                 value={data.readinessIndex}
                 size={180}
-                label="Readiness"
-                sublabel={`${data.competencyRecords.filter((c) => c.currentLevel >= c.targetLevel).length}/${data.competencyRecords.length} at target`}
+                label={isHindi ? 'तत्परता' : 'Readiness'}
+                sublabel={`${data.competencyRecords.filter((c) => c.currentLevel >= c.targetLevel).length}/${data.competencyRecords.length} ${isHindi ? 'लक्ष्य पर' : 'at target'}`}
               />
             </div>
           </div>
@@ -277,7 +292,9 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                 <h3 className="text-base font-semibold text-[#2d1f17]">
                   {t('profile.competencyRadar')}
                 </h3>
-                <p className="text-xs text-muted-foreground">Current versus role benchmark</p>
+                <p className="text-xs text-muted-foreground">
+                  {isHindi ? 'वर्तमान बनाम पद मानक' : 'Current versus role benchmark'}
+                </p>
               </div>
             </div>
             <div className="flex justify-center py-2">
@@ -300,10 +317,10 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-[#2d1f17] flex items-center gap-2">
                     <span className={`w-2.5 h-2.5 rounded-full ${style.dot}`} />
-                    {category} Competencies
+                    {category} {isHindi ? 'दक्षताएं' : 'Competencies'}
                   </h3>
                   <span className="text-xs font-semibold text-muted-foreground">
-                    {records.length} Tracked
+                    {records.length} {isHindi ? 'ट्रैक की गईं' : 'Tracked'}
                   </span>
                 </div>
 
@@ -326,11 +343,11 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                               <ProvenanceBadge provenance="PROPOSED_FRAMEWORK" showLabel={false} size="sm" />
                               {record.evidenceType === 'assessment-verified' ? (
                                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#555934]/12 text-[#555934]">
-                                  <CheckCircle2 className="h-3 w-3" /> Verified
+                                  <CheckCircle2 className="h-3 w-3" /> {isHindi ? 'सत्यापित' : 'Verified'}
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#BF9B7A]/20 text-chart-5">
-                                  Self-Assessed
+                                  {isHindi ? 'स्व-मूल्यांकित' : 'Self-Assessed'}
                                 </span>
                               )}
                             </div>
@@ -343,7 +360,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                         {/* Level Progress */}
                         <div className="space-y-1.5 mt-3 pt-2">
                           <div className="flex justify-between text-xs">
-                            <span className="text-muted-foreground">Current Level</span>
+                            <span className="text-muted-foreground">{isHindi ? 'वर्तमान स्तर' : 'Current Level'}</span>
                             <span className="font-bold font-mono text-[#2d1f17]">
                               L{record.currentLevel} / L{record.targetLevel}
                             </span>
@@ -363,12 +380,14 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                           </div>
 
                           <div className="flex justify-between text-[11px] text-muted-foreground pt-0.5">
-                            <span>Benchmark: L{record.targetLevel}</span>
+                            <span>{isHindi ? 'मानक:' : 'Benchmark:'} L{record.targetLevel}</span>
                             {isTargetMet ? (
-                              <span className="text-[#555934] font-semibold">✓ Target Achieved</span>
+                              <span className="text-[#555934] font-semibold">
+                                {isHindi ? '✓ लक्ष्य हासिल' : '✓ Target Achieved'}
+                              </span>
                             ) : (
                               <span className="text-[#8C5B3E] font-semibold">
-                                {record.targetLevel - record.currentLevel} Level Needed
+                                {record.targetLevel - record.currentLevel} {isHindi ? 'स्तर आवश्यक' : 'Level Needed'}
                               </span>
                             )}
                           </div>
@@ -391,7 +410,9 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
               <h3 className="text-base font-bold text-[#2d1f17]">
                 {t('profile.growthHistory')}
               </h3>
-              <p className="text-xs text-muted-foreground">Audit trail of validated assessments and self-ratings</p>
+              <p className="text-xs text-muted-foreground">
+                {isHindi ? 'प्रमाणित मूल्यांकनों और स्व-मूल्यांकन का ऑडिट ट्रेल' : 'Audit trail of validated assessments and self-ratings'}
+              </p>
             </div>
           </div>
 

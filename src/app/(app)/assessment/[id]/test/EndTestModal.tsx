@@ -6,6 +6,8 @@
  * "Continue Test" dismisses; "End Test" confirms.
  */
 
+import { useSafeLocale } from '@/lib/useSafeLocale';
+
 interface EndTestModalProps {
   answeredCount: number;
   totalQuestions: number;
@@ -19,6 +21,8 @@ export default function EndTestModal({
   onContinue,
   onConfirmEnd,
 }: EndTestModalProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const unanswered = totalQuestions - answeredCount;
 
   return (
@@ -40,7 +44,7 @@ export default function EndTestModal({
             id="end-modal-title"
             className="text-xl font-bold text-foreground"
           >
-            End Assessment?
+            {isHindi ? 'मूल्यांकन समाप्त करें?' : 'End Assessment?'}
           </h2>
         </div>
 
@@ -50,16 +54,16 @@ export default function EndTestModal({
           className="rounded-2xl bg-[#F2E6D8]/50 p-4 space-y-2 text-sm"
         >
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Total questions</span>
+            <span className="text-muted-foreground">{isHindi ? 'कुल प्रश्न' : 'Total questions'}</span>
             <span className="font-semibold text-foreground">{totalQuestions}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-emerald-700">Answered</span>
+            <span className="text-emerald-700">{isHindi ? 'उत्तर दिए गए' : 'Answered'}</span>
             <span className="font-bold text-emerald-700">{answeredCount}</span>
           </div>
           {unanswered > 0 && (
             <div className="flex items-center justify-between">
-              <span className="text-rose-700">Unanswered</span>
+              <span className="text-rose-700">{isHindi ? 'अनुत्तरित' : 'Unanswered'}</span>
               <span className="font-bold text-rose-700">{unanswered}</span>
             </div>
           )}
@@ -67,8 +71,16 @@ export default function EndTestModal({
 
         {unanswered > 0 && (
           <p className="text-sm text-muted-foreground text-center">
-            You have <strong>{unanswered} unanswered</strong>{' '}
-            {unanswered === 1 ? 'question' : 'questions'}. You can still go back and answer them.
+            {isHindi ? (
+              <>
+                आपके <strong>{unanswered} प्रश्न अनुत्तरित</strong> हैं। आप अभी भी वापस जाकर उनका उत्तर दे सकते हैं।
+              </>
+            ) : (
+              <>
+                You have <strong>{unanswered} unanswered</strong>{' '}
+                {unanswered === 1 ? 'question' : 'questions'}. You can still go back and answer them.
+              </>
+            )}
           </p>
         )}
 
@@ -77,16 +89,16 @@ export default function EndTestModal({
           <button
             id="confirm-end-test"
             onClick={onConfirmEnd}
-            className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 transition-colors"
+            className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 transition-colors cursor-pointer"
           >
-            End Test
+            {isHindi ? 'परीक्षा समाप्त करें' : 'End Test'}
           </button>
           <button
             id="continue-test"
             onClick={onContinue}
-            className="w-full rounded-xl border border-border hover:bg-stone-50 text-foreground font-semibold py-3 transition-colors"
+            className="w-full rounded-xl border border-border hover:bg-stone-50 text-foreground font-semibold py-3 transition-colors cursor-pointer"
           >
-            Continue Test
+            {isHindi ? 'परीक्षा जारी रखें' : 'Continue Test'}
           </button>
         </div>
       </div>

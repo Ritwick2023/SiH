@@ -28,11 +28,14 @@ import {
   UserCheck,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 export default function TrainerDashboard({ user }: { user: DashboardUserProps }) {
-  const facultyName = user.user_metadata?.name || 'Dr. Priya Verma';
-  const facultyDesignation = user.user_metadata?.designation || 'Course Director';
-  const facultyCadre = user.user_metadata?.cadre || 'NSSTA Faculty';
+  const locale = useSafeLocale(user.user_metadata?.preferred_language || 'en');
+  const isHindi = locale === 'hi';
+  const facultyName = user.user_metadata?.name || (isHindi ? 'डॉ. प्रिया वर्मा' : 'Dr. Priya Verma');
+  const facultyDesignation = user.user_metadata?.designation || (isHindi ? 'पाठ्यक्रम निदेशक' : 'Course Director');
+  const facultyCadre = user.user_metadata?.cadre || (isHindi ? 'एनएसएसटीए संकाय' : 'NSSTA Faculty');
 
   const [activeTab, setActiveTab] = useState<'command' | 'cohorts' | 'curriculum' | 'diagnostics'>('command');
 
@@ -101,7 +104,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#8C5B3E] hover:bg-[#FAF6F0]/80 transition-colors cursor-pointer"
             >
               <UserCheck className="h-3.5 w-3.5" />
-              <span>Faculty Dossier</span>
+              <span>{isHindi ? 'संकाय डोजियर' : 'Faculty Dossier'}</span>
             </button>
 
             <Link
@@ -109,7 +112,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#FAF6F0]/80 transition-colors"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              <span>MoSPI Manuals Repository</span>
+              <span>{isHindi ? 'MoSPI नियमावली संग्रह' : 'MoSPI Manuals Repository'}</span>
             </Link>
 
             <Link
@@ -117,7 +120,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
               className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Publish Assessment</span>
+              <span>{isHindi ? 'मूल्यांकन प्रकाशित करें' : 'Publish Assessment'}</span>
             </Link>
           </div>
         </div>
@@ -130,27 +133,27 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
         {[
           {
             id: 'command',
-            label: 'Faculty Command Desk',
+            label: isHindi ? 'संकाय कमान डेस्क' : 'Faculty Command Desk',
             icon: LayoutDashboard,
-            badge: '14 QA',
+            badge: isHindi ? '14 क्यूए' : '14 QA',
           },
           {
             id: 'cohorts',
-            label: 'Academy Cohorts & Progression',
+            label: isHindi ? 'अकादमी समूह एवं प्रगति' : 'Academy Cohorts & Progression',
             icon: Users,
-            badge: '4 Batches',
+            badge: isHindi ? '4 बैच' : '4 Batches',
           },
           {
             id: 'curriculum',
-            label: 'Curriculum & Question Studio',
+            label: isHindi ? 'पाठ्यचर्या एवं प्रश्न स्टूडियो' : 'Curriculum & Question Studio',
             icon: Brain,
-            badge: '342 Items',
+            badge: isHindi ? '342 प्रश्न' : '342 Items',
           },
           {
             id: 'diagnostics',
-            label: 'Item Diagnostics & Zonal Disparities',
+            label: isHindi ? 'आइटम निदान एवं क्षेत्रीय अंतर' : 'Item Diagnostics & Zonal Disparities',
             icon: BarChart3,
-            badge: '5 ZTCs',
+            badge: isHindi ? '5 जेडटीसी' : '5 ZTCs',
           },
         ].map((tab) => {
           const Icon = tab.icon;

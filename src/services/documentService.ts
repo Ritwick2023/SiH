@@ -163,6 +163,21 @@ export class DocumentService {
             };
           })
           .filter((doc) => {
+            const lowerTitle = (doc.title || '').toLowerCase();
+            const lowerFilename = (doc.filename || '').toLowerCase();
+            const isTestSurvey =
+              lowerTitle.includes('test_survey') ||
+              lowerFilename.includes('test_survey') ||
+              doc.title === 'Test_Survey_Manual' ||
+              doc.filename === 'Test_Survey_Manual.txt';
+
+            if (isTestSurvey) {
+              if (doc.id) {
+                DocumentService.deleteDocument(doc.id).catch(() => {});
+              }
+              return false;
+            }
+
             // Include public/system documents plus user's own uploads
             if (!filterUserId) return true;
             return doc.userId === filterUserId || doc.userId === 'public' || doc.userId === 'system';

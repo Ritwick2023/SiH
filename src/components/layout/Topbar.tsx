@@ -222,6 +222,7 @@ export function Topbar({ initialRole }: TopbarProps) {
   const handleLanguageToggle = useCallback(() => {
     const nextLang = locale === 'en' ? 'hi' : 'en';
     document.cookie = `locale=${nextLang};path=/;max-age=31536000;SameSite=Lax`;
+    // Also update demo_user cookie if active so both client and server stay in sync
     try {
       const match = document.cookie.match(/(?:^|;\s*)demo_user=([^;]+)/);
       if (match) {
@@ -232,10 +233,10 @@ export function Topbar({ initialRole }: TopbarProps) {
         }
         document.cookie = `demo_user=${encodeURIComponent(
           JSON.stringify(demoUser)
-        )};path=/;max-age=${60 * 60 * 24 * 7};SameSite=Lax`;
+        )};path=/;max-age=604800;SameSite=Lax`;
       }
     } catch {
-      // Ignore JSON parse errors
+      // Ignore cookie JSON parse error
     }
     window.location.reload();
   }, [locale]);

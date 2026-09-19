@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wifi, WifiOff, RefreshCw, CheckCircle2, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Wifi, WifiOff, RefreshCw, CheckCircle2, ShieldCheck, AlertTriangle, X, Info } from 'lucide-react';
 
 export interface CachedScheduleItem {
   id: string;
@@ -67,6 +67,7 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
   const [syncProgress, setSyncProgress] = useState(0);
   const [synced, setSynced] = useState(false);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [stationNotice, setStationNotice] = useState<string | null>(null);
 
   const filtered = SAMPLE_SCHEDULES.filter((s) => {
     if (filter === 'plfs') return s.scheduleType.includes('Schedule');
@@ -77,7 +78,7 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
 
   const handleTransmitAll = () => {
     if (isOfflineMode) {
-      alert(
+      setStationNotice(
         isHindi
           ? 'ऑफ़लाइन सिम्युलेटर सक्रिय है! कृपया सर्वर से सिंक करने से पहले नेटवर्क पुनः कनेक्ट करें।'
           : 'Offline field simulation is active! Please reconnect signal to synchronize with MoSPI central server.'
@@ -191,6 +192,23 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
         </div>
       )}
 
+      {/* In-website station notice banner */}
+      {stationNotice && (
+        <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#555934]/10 border border-[#555934]/30 text-xs text-[#2d1f17] animate-in fade-in duration-150">
+          <div className="flex items-center gap-2.5">
+            <Info className="h-4 w-4 text-[#555934] shrink-0" />
+            <span className="font-semibold">{stationNotice}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setStationNotice(null)}
+            className="text-muted-foreground hover:text-[#2d1f17] p-1 rounded-lg cursor-pointer transition"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
         <button
@@ -290,13 +308,15 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
                   <button
                     type="button"
                     onClick={() =>
-                      alert(
-                        `Inspecting schedule return ${item.id} (${item.scheduleType}). All 14 data blocks encrypted.`
+                      setStationNotice(
+                        isHindi
+                          ? `अनुसूची रिटर्न ${item.id} (${item.scheduleType}) का निरीक्षण। सभी 14 डेटा ब्लॉक एन्क्रिप्टेड हैं।`
+                          : `Inspecting schedule return ${item.id} (${item.scheduleType}). All 14 data blocks encrypted.`
                       )
                     }
                     className="px-3 py-1 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
                   >
-                    Inspect
+                    {isHindi ? 'निरीक्षण' : 'Inspect'}
                   </button>
                 </td>
               </tr>

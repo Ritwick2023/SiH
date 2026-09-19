@@ -8,6 +8,7 @@ import { type GeneratedQuestion } from '@/services/mcqService';
 import { Sparkles, RefreshCw, BookOpen, Bot, FileText, SlidersHorizontal, Hash, CheckCircle2 } from 'lucide-react';
 import { DocumentPracticeCard, type AnswerRecord } from '@/components/mcq/DocumentPracticeCard';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface IngestedDoc {
   id: string;
@@ -26,6 +27,15 @@ const COMPETENCY_NAME_MAP: Record<string, string> = {
   'comp-data': 'Data Entry & Scrutiny Rules',
   'comp-demarcation': 'Block Demarcation & Urban Frame Survey',
   'comp-scrutiny': 'Field Scrutiny & Validation Rules',
+};
+
+const HINDI_COMPETENCY_MAP: Record<string, string> = {
+  'comp-capi': 'CAPI टैबलेट संचालन',
+  'comp-nsso': 'NSSO प्रोटोकॉल प्रवीणता',
+  'comp-survey': 'सर्वेक्षण नमूनाकरण एवं डिजाइन',
+  'comp-data': 'डेटा प्रविष्टि एवं संवीक्षा नियम',
+  'comp-demarcation': 'ब्लॉक सीमांकन एवं शहरी फ्रेम सर्वेक्षण',
+  'comp-scrutiny': 'फील्ड संवीक्षा एवं सत्यापन नियम',
 };
 
 const INGESTED_DOCS: IngestedDoc[] = [
@@ -64,6 +74,8 @@ const INGESTED_DOCS: IngestedDoc[] = [
 ];
 
 function MCQGeneratorInner() {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const searchParams = useSearchParams();
   const initialComp = searchParams.get('competency');
   const matchedDoc = initialComp ? INGESTED_DOCS.find((d) => d.competencyId === initialComp)?.id : null;
@@ -90,7 +102,7 @@ function MCQGeneratorInner() {
 
   const [selectedDocId, setSelectedDocId] = useState(initialDocId);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
-  const [questionFocus, setQuestionFocus] = useState<'protocols' | 'thresholds' | 'scrutiny'>('protocols');
+  const questionFocus: 'protocols' | 'thresholds' | 'scrutiny' = 'protocols';
   const [questionCount, setQuestionCount] = useState<number>(5);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedQuestion, setGeneratedQuestion] = useState<GeneratedQuestion | null>(null);
@@ -279,37 +291,43 @@ function MCQGeneratorInner() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-              MoSPI Practice & Calibration
+              {isHindi ? 'MoSPI अभ्यास और अंशांकन' : 'MoSPI Practice & Calibration'}
             </span>
-            <span className="text-xs text-stone-500">• Clause 4.3 FRAC Calibrated Generator</span>
+            <span className="text-xs text-stone-500">
+              {isHindi ? '• खंड 4.3 FRAC अंशांकित जनरेटर' : '• Clause 4.3 FRAC Calibrated Generator'}
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
-            Document Practice & MCQ Station
+            {isHindi ? 'दस्तावेज़ अभ्यास और MCQ स्टेशन' : 'Document Practice & MCQ Station'}
           </h1>
           <p className="text-sm text-stone-600">
-            Generate authentic self-paced questions grounded in your uploaded manuals and official MoSPI guidelines.
+            {isHindi
+              ? 'अपने अपलोड किए गए मैनुअल और आधिकारिक MoSPI दिशानिर्देशों पर आधारित प्रामाणिक स्व-गति प्रश्न बनाएं।'
+              : 'Generate authentic self-paced questions grounded in your uploaded manuals and official MoSPI guidelines.'}
           </p>
         </div>
         <ProvenanceBadge provenance="PROPOSED_METHODOLOGY" />
       </div>
 
-      {/* Generator & Composition Controls */}
+      {/* Generator & Grounding Controls */}
       <Card className="border-stone-200 bg-white shadow-xs">
         <CardHeader className="bg-stone-50/50 border-b border-stone-100 pb-4">
           <CardTitle className="text-base font-semibold text-stone-900 flex items-center gap-2">
             <FileText className="h-4 w-4 text-[#8b9a6e]" />
-            Document Grounding & Question Composition
+            {isHindi ? 'दस्तावेज़ आधार' : 'Document Grounding'}
           </CardTitle>
           <CardDescription className="text-xs text-stone-500">
-            Select an ingested manual and tailor difficulty and operational focus for question generation.
+            {isHindi
+              ? 'एक अंतर्ग्रहीत मैनुअल चुनें और प्रश्न निर्माण के लिए लक्षित कठिनाई निर्धारित करें।'
+              : 'Select an ingested manual and target difficulty for question generation.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-5 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Document Grounding Selector */}
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                Ingested MoSPI Document Grounding
+                {isHindi ? 'अंतर्ग्रहीत MoSPI दस्तावेज़ आधार' : 'Ingested MoSPI Document Grounding'}
               </label>
               <select
                 value={selectedDocId}
@@ -318,7 +336,9 @@ function MCQGeneratorInner() {
               >
                 {docList.map((doc) => (
                   <option key={doc.id} value={doc.id}>
-                    {doc.cadre === 'My Upload' ? `📁 [My Upload] ${doc.title}` : `[${doc.cadre}] ${doc.title}`}
+                    {doc.cadre === 'My Upload'
+                       ? (isHindi ? `📁 [मेरा अपलोड] ${doc.title}` : `📁 [My Upload] ${doc.title}`)
+                      : `[${doc.cadre}] ${doc.title}`}
                   </option>
                 ))}
               </select>
@@ -328,42 +348,31 @@ function MCQGeneratorInner() {
               </p>
             </div>
 
-            {/* Difficulty Calibration */}
+            {/* Target Difficulty */}
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                Target Difficulty Calibration
+                {isHindi ? 'लक्षित कठिनाई' : 'Target Difficulty'}
               </label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
                 className="w-full text-xs sm:text-sm border border-stone-300 rounded-lg p-2.5 bg-white text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#8b9a6e]"
               >
-                <option value="medium">Medium (L3 Operational Field Work)</option>
-                <option value="easy">Easy (L1-L2 Foundational Recall)</option>
-                <option value="hard">Hard (L4-L5 Advanced Scrutiny & Edge Cases)</option>
+                <option value="easy">
+                  {isHindi ? 'सरल' : 'Easy'}
+                </option>
+                <option value="medium">
+                  {isHindi ? 'मध्यम' : 'Medium'}
+                </option>
+                <option value="hard">
+                  {isHindi ? 'कठिन' : 'Hard'}
+                </option>
               </select>
               <p className="text-[11px] text-stone-500 mt-1">
-                Competency: <span className="font-semibold text-[#7a885f]">{activeDoc.competencyName}</span>
-              </p>
-            </div>
-
-            {/* Question Composition Focus */}
-            <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                Question Composition Focus
-              </label>
-              <select
-                value={questionFocus}
-                onChange={(e) => setQuestionFocus(e.target.value as 'protocols' | 'thresholds' | 'scrutiny')}
-                className="w-full text-xs sm:text-sm border border-stone-300 rounded-lg p-2.5 bg-white text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#8b9a6e]"
-              >
-                <option value="protocols">Operational Field Protocols & SOPs</option>
-                <option value="thresholds">Numerical Cutoffs, Limits & Rules</option>
-                <option value="scrutiny">Data Scrutiny & Discrepancy Checks</option>
-              </select>
-              <p className="text-[11px] text-stone-500 mt-1 flex items-center gap-1">
-                <SlidersHorizontal className="h-3 w-3 text-[#555934]" />
-                Targeted cognitive framing
+                {isHindi ? 'क्षमता:' : 'Competency:'}{' '}
+                <span className="font-semibold text-[#7a885f]">
+                  {isHindi ? (HINDI_COMPETENCY_MAP[competencyId] || activeDoc.competencyName) : activeDoc.competencyName}
+                </span>
               </p>
             </div>
 
@@ -372,10 +381,10 @@ function MCQGeneratorInner() {
               <div className="flex items-center justify-between mb-1.5">
                 <label className="text-xs font-semibold text-stone-700 flex items-center gap-1">
                   <Hash className="h-3.5 w-3.5 text-[#555934]" />
-                  Question Volume
+                  {isHindi ? 'प्रश्न संख्या' : 'Question Volume'}
                 </label>
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#555934]/10 text-[#555934] border border-[#555934]/20">
-                  {questionCount} {questionCount === 1 ? 'Item' : 'Items'}
+                  {questionCount} {isHindi ? 'प्रश्न' : questionCount === 1 ? 'Item' : 'Items'}
                 </span>
               </div>
 
@@ -403,7 +412,7 @@ function MCQGeneratorInner() {
                         : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
                     }`}
                   >
-                    {preset} Q{preset > 1 ? 's' : ''}
+                    {preset} {isHindi ? 'प्र' : 'Q'}{preset > 1 && !isHindi ? 's' : ''}
                   </button>
                 ))}
               </div>
@@ -413,7 +422,11 @@ function MCQGeneratorInner() {
           <div className="pt-3 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-xs text-muted-foreground flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-              Engine: <strong>MoSPI Cognitive Engine</strong> • Verified contextual inference
+              {isHindi ? (
+                <>इंजन: <strong>MoSPI संज्ञानात्मक इंजन</strong> • सत्यापित प्रासंगिक निष्कर्ष</>
+              ) : (
+                <>Engine: <strong>MoSPI Cognitive Engine</strong> • Verified contextual inference</>
+              )}
             </span>
             <button
               onClick={handleGenerate}
@@ -423,12 +436,12 @@ function MCQGeneratorInner() {
               {isGenerating ? (
                 <>
                   <RefreshCw className="h-4 w-4 animate-spin" />
-                  Generating {questionCount} Items...
+                  {isHindi ? `${questionCount} प्रश्नों का निर्माण हो रहा है...` : `Generating ${questionCount} Items...`}
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generate {questionCount} {questionCount === 1 ? 'Question' : 'Questions'}
+                  {isHindi ? `${questionCount} प्रश्न बनाएं` : `Generate ${questionCount} ${questionCount === 1 ? 'Question' : 'Questions'}`}
                 </>
               )}
             </button>
@@ -442,7 +455,11 @@ function MCQGeneratorInner() {
           {/* Mode Switcher */}
           <div className="flex items-center justify-between px-1">
             <div className="text-xs font-semibold text-stone-500">
-              Active Session: <strong>{questionList.length || 1} Questions Generated</strong>
+              {isHindi ? (
+                <>सक्रिय सत्र: <strong>{questionList.length || 1} प्रश्न तैयार किए गए</strong></>
+              ) : (
+                <>Active Session: <strong>{questionList.length || 1} Questions Generated</strong></>
+              )}
             </div>
             <div className="flex rounded-lg bg-stone-100 p-1 border border-stone-200">
               <button
@@ -453,7 +470,7 @@ function MCQGeneratorInner() {
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                Self-Paced Practice
+                {isHindi ? 'स्व-गति अभ्यास' : 'Self-Paced Practice'}
               </button>
               <button
                 onClick={() => setViewMode('inspector')}
@@ -463,7 +480,7 @@ function MCQGeneratorInner() {
                     : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
-                Faculty Inspector
+                {isHindi ? 'संकाय निरीक्षक' : 'Faculty Inspector'}
               </button>
             </div>
           </div>
@@ -499,28 +516,36 @@ function MCQGeneratorInner() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg font-bold text-stone-900">
-                      Faculty Quality & Distractor Breakdown
+                      {isHindi ? 'संकाय गुणवत्ता और भ्रामक विकल्प विश्लेषण' : 'Faculty Quality & Distractor Breakdown'}
                     </CardTitle>
                     <CardDescription className="text-xs text-stone-500 flex items-center gap-2 mt-1">
                       <Bot className="h-3.5 w-3.5 text-blue-600" />
-                      Evaluated by {activeQuestion.modelsEvaluated.join(', ')}
+                      {isHindi
+                        ? `${activeQuestion.modelsEvaluated.join(', ')} द्वारा मूल्यांकित`
+                        : `Evaluated by ${activeQuestion.modelsEvaluated.join(', ')}`}
                     </CardDescription>
                   </div>
                   <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 font-bold border border-blue-200">
-                    Consensus Score: {(activeQuestion.consensusScore * 100).toFixed(0)}%
+                    {isHindi ? 'सहमति स्कोर:' : 'Consensus Score:'} {(activeQuestion.consensusScore * 100).toFixed(0)}%
                   </span>
                 </div>
               </CardHeader>
               <CardContent className="pt-5 space-y-4">
                 <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-                  <span className="text-xs font-bold text-stone-500 block mb-1">ENGLISH STEM</span>
+                  <span className="text-xs font-bold text-stone-500 block mb-1">
+                    {isHindi ? 'अंग्रेजी प्रश्न कथन (ENGLISH STEM)' : 'ENGLISH STEM'}
+                  </span>
                   <p className="text-sm font-medium text-stone-900">{activeQuestion.stemEn}</p>
-                  <span className="text-xs font-bold text-stone-500 block mt-3 mb-1">HINDI STEM</span>
+                  <span className="text-xs font-bold text-stone-500 block mt-3 mb-1">
+                    {isHindi ? 'हिंदी प्रश्न कथन (HINDI STEM)' : 'HINDI STEM'}
+                  </span>
                   <p className="text-sm font-medium text-stone-900">{activeQuestion.stemHi}</p>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-xs font-bold text-stone-500 block">OPTIONS & VERIFIED KEY</span>
+                  <span className="text-xs font-bold text-stone-500 block">
+                    {isHindi ? 'विकल्प और सत्यापित उत्तर कुंजी' : 'OPTIONS & VERIFIED KEY'}
+                  </span>
                   {activeQuestion.optionsEn.map((opt, idx) => {
                     const isCorrect = idx === activeQuestion.correctIndex;
                     return (
@@ -539,7 +564,7 @@ function MCQGeneratorInner() {
                         </div>
                         {isCorrect && (
                           <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
-                            Key
+                            {isHindi ? 'उत्तर कुंजी' : 'Key'}
                           </span>
                         )}
                       </div>
@@ -548,8 +573,8 @@ function MCQGeneratorInner() {
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950">
-                  <strong>MoSPI Justification:</strong> {activeQuestion.rationaleEn}
-                  <div className="mt-1 text-amber-800 font-medium">Source: {activeQuestion.citation}</div>
+                  <strong>{isHindi ? 'MoSPI औचित्य:' : 'MoSPI Justification:'}</strong> {activeQuestion.rationaleEn}
+                  <div className="mt-1 text-amber-800 font-medium">{isHindi ? 'स्रोत:' : 'Source:'} {activeQuestion.citation}</div>
                 </div>
 
                 <div className="pt-2 flex flex-wrap items-center justify-end gap-2">
@@ -558,7 +583,9 @@ function MCQGeneratorInner() {
                     disabled={stagedToQueue || approvedToBank}
                     className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 disabled:bg-stone-100 disabled:text-stone-400 text-xs font-bold rounded-lg transition border border-stone-300"
                   >
-                    {stagedToQueue && !approvedToBank ? 'Staged in Faculty Queue' : 'Stage into Review Queue'}
+                    {stagedToQueue && !approvedToBank
+                      ? (isHindi ? 'संकाय कतार में रखा गया' : 'Staged in Faculty Queue')
+                      : (isHindi ? 'समीक्षा कतार में भेजें' : 'Stage into Review Queue')}
                   </button>
                   <button
                     onClick={() => handlePushToReview('APPROVED')}
@@ -566,7 +593,9 @@ function MCQGeneratorInner() {
                     className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-200 disabled:text-emerald-800 text-white text-xs font-bold rounded-lg transition shadow-xs flex items-center gap-1.5"
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    {approvedToBank ? 'Certified & Approved into Exam Bank' : 'Certify & Approve into Exam Bank'}
+                    {approvedToBank
+                      ? (isHindi ? 'परीक्षा बैंक में स्वीकृत' : 'Certified & Approved into Exam Bank')
+                      : (isHindi ? 'प्रमाणित करें और परीक्षा बैंक में जोड़ें' : 'Certify & Approve into Exam Bank')}
                   </button>
                 </div>
               </CardContent>

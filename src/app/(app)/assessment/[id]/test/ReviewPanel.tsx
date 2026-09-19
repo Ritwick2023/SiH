@@ -8,6 +8,7 @@
 
 import type { EngineState, QuestionStatus } from '@/services/assessmentEngine';
 import { getQuestionStatus, getAnsweredCount } from '@/services/assessmentEngine';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface ReviewPanelProps {
   state: EngineState;
@@ -16,14 +17,14 @@ interface ReviewPanelProps {
   onSubmit: () => void;
 }
 
-function statusDot(status: QuestionStatus): { label: string; cls: string } {
+function statusDot(status: QuestionStatus, isHindi = false): { label: string; cls: string } {
   switch (status) {
     case 'answered':
-      return { label: 'Answered', cls: 'bg-emerald-100 border-emerald-400 text-emerald-800' };
+      return { label: isHindi ? 'उत्तरित' : 'Answered', cls: 'bg-emerald-100 border-emerald-400 text-emerald-800' };
     case 'visited':
-      return { label: 'Visited', cls: 'bg-rose-100 border-rose-400 text-rose-700' };
+      return { label: isHindi ? 'देखा गया' : 'Visited', cls: 'bg-rose-100 border-rose-400 text-rose-700' };
     default:
-      return { label: 'Unseen', cls: 'bg-white border-stone-300 text-stone-500' };
+      return { label: isHindi ? 'अनदेखा' : 'Unseen', cls: 'bg-white border-stone-300 text-stone-500' };
   }
 }
 
@@ -33,6 +34,9 @@ export default function ReviewPanel({
   onContinueTest,
   onSubmit,
 }: ReviewPanelProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
+
   const questions = state.assessment.questions;
   const total = questions.length;
   const answered = getAnsweredCount(state);
@@ -43,24 +47,33 @@ export default function ReviewPanel({
       {/* Auto-submit notice */}
       {timedOut && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 font-medium text-center">
-          ⏱️ Time expired — the assessment has ended automatically.
+          {isHindi
+            ? '⏱️ समय समाप्त — मूल्यांकन स्वतः समाप्त हो गया है।'
+            : '⏱️ Time expired — the assessment has ended automatically.'}
         </div>
       )}
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Assessment Review</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-1">
+          {isHindi ? 'मूल्यांकन समीक्षा' : 'Assessment Review'}
+        </h1>
         <p className="text-muted-foreground text-sm">
-          Review your progress below. {unanswered > 0 && !timedOut && 'You can still go back and answer unanswered questions.'}
+          {isHindi ? 'नीचे अपनी प्रगति की समीक्षा करें।' : 'Review your progress below.'}{' '}
+          {unanswered > 0 && !timedOut && (
+            isHindi
+              ? 'आप अभी भी वापस जाकर अनुत्तरित प्रश्नों के उत्तर दे सकते हैं।'
+              : 'You can still go back and answer unanswered questions.'
+          )}
         </p>
       </div>
 
       {/* Stats strip */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total', value: total, cls: 'text-foreground' },
-          { label: 'Answered', value: answered, cls: 'text-[#555934]' },
-          { label: 'Unanswered', value: unanswered, cls: unanswered > 0 ? 'text-[#8C5B3E]' : 'text-[#555934]' },
+          { label: isHindi ? 'कुल' : 'Total', value: total, cls: 'text-foreground' },
+          { label: isHindi ? 'उत्तर दिए गए' : 'Answered', value: answered, cls: 'text-[#555934]' },
+          { label: isHindi ? 'अनुत्तरित' : 'Unanswered', value: unanswered, cls: unanswered > 0 ? 'text-[#8C5B3E]' : 'text-[#555934]' },
         ].map(({ label, value, cls }) => (
           <div
             key={label}
@@ -74,17 +87,19 @@ export default function ReviewPanel({
 
       {/* Question grid */}
       <div className="rounded-2xl bg-white p-6 shadow-card space-y-4">
-        <h2 className="text-base font-semibold text-foreground">Question Status</h2>
-        <div className="flex flex-wrap gap-2" role="list" aria-label="Question statuses">
+        <h2 className="text-base font-semibold text-foreground">
+          {isHindi ? 'प्रश्न स्थिति' : 'Question Status'}
+        </h2>
+        <div className="flex flex-wrap gap-2" role="list" aria-label={isHindi ? 'प्रश्न स्थितियां' : 'Question statuses'}>
           {questions.map((q, idx) => {
             const status = getQuestionStatus(state, q);
-            const { label, cls } = statusDot(status);
+            const { label, cls } = statusDot(status, isHindi);
             return (
               <div
                 key={q.id}
                 role="listitem"
-                title={`Q${idx + 1}: ${label}`}
-                aria-label={`Question ${idx + 1}: ${label}`}
+                title={`${isHindi ? 'प्रश्न' : 'Q'}${idx + 1}: ${label}`}
+                aria-label={`${isHindi ? 'प्रश्न' : 'Question'} ${idx + 1}: ${label}`}
                 className={`h-9 w-9 rounded-xl flex items-center justify-center text-sm font-semibold shadow-2xs ${cls}`}
               >
                 {idx + 1}
@@ -96,9 +111,9 @@ export default function ReviewPanel({
         {/* Legend */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground pt-1">
           {[
-            { label: 'Unseen', cls: 'bg-white shadow-2xs' },
-            { label: 'Visited', cls: 'bg-[#BF9B7A]/20 text-[#593E2E]' },
-            { label: 'Answered', cls: 'bg-[#555934]/15 text-[#555934]' },
+            { label: isHindi ? 'अनदेखा' : 'Unseen', cls: 'bg-white shadow-2xs' },
+            { label: isHindi ? 'देखा गया' : 'Visited', cls: 'bg-[#BF9B7A]/20 text-[#593E2E]' },
+            { label: isHindi ? 'उत्तरित' : 'Answered', cls: 'bg-[#555934]/15 text-[#555934]' },
           ].map(({ label, cls }) => (
             <span key={label} className="flex items-center gap-1.5">
               <span className={`inline-block h-3.5 w-3.5 rounded-full ${cls}`} aria-hidden="true" />
@@ -113,17 +128,17 @@ export default function ReviewPanel({
         <button
           id="submit-assessment"
           onClick={onSubmit}
-          className="flex-1 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white font-bold py-3.5 transition-all shadow-xs active:scale-98 text-sm sm:text-base"
+          className="flex-1 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white font-bold py-3.5 transition-all shadow-xs active:scale-98 text-sm sm:text-base cursor-pointer"
         >
-          Submit Assessment
+          {isHindi ? 'मूल्यांकन जमा करें' : 'Submit Assessment'}
         </button>
         {!timedOut && (
           <button
             id="review-continue-test"
             onClick={onContinueTest}
-            className="flex-1 rounded-xl bg-white shadow-card hover:bg-[#E8DACB]/30 text-foreground font-semibold py-3.5 transition-all active:scale-98 text-sm sm:text-base"
+            className="flex-1 rounded-xl bg-white shadow-card hover:bg-[#E8DACB]/30 text-foreground font-semibold py-3.5 transition-all active:scale-98 text-sm sm:text-base cursor-pointer"
           >
-            Continue Test
+            {isHindi ? 'परीक्षा जारी रखें' : 'Continue Test'}
           </button>
         )}
       </div>

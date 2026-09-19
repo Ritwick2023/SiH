@@ -8,9 +8,10 @@
     "skillGap": "Skill Gap",
     "pathways": "Courses & Learning",
     "profile": "Profile",
-    "documents": "Documents",
+    "documents": "Documents & Manuals",
     "assessment": "Assessment",
-    "mcqGenerator": "MCQ Generator",
+    "quiz": "Practice MCQs",
+    "mcqGenerator": "Practice MCQs",
     "reviewQueue": "Review Queue",
     "adminAnalytics": "Admin Analytics",
     "logout": "Logout",
@@ -24,7 +25,14 @@
     "persona": "Persona",
     "learner": "Learner",
     "trainer": "Trainer",
-    "admin": "Admin"
+    "admin": "Admin",
+    "facultyCommandDesk": "Faculty Command Desk",
+    "traineeErrorAnalytics": "Trainee Error Analytics",
+    "workforceCommand": "Workforce Command",
+    "scrutinyCorrelation": "Scrutiny Correlation",
+    "regionalOfficeHealth": "Regional Office Health",
+    "nationalCompetencyMatrix": "National Competency Matrix",
+    "statutoryAssessmentAudit": "Statutory Assessment Audit"
   },
   "notifications": {
     "title": "Notifications",
@@ -170,6 +178,7 @@
   },
   "onboarding": {
     "title": "Get Started with StatVidya",
+    "subtitle": "Let's build your official FRAC competency profile",
     "step1": {
       "title": "Select Your Cadre",
       "subtitle": "Choose your official cadre designation"

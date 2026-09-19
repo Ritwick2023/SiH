@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSystemPromptWithContext, getOfflineFallbackResponse } from '@/lib/copilotPrompt';
 import type { CopilotUserContext } from '@/lib/copilotPrompt';
+import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -30,10 +31,23 @@ export async function POST(request: NextRequest) {
     const systemPrompt = getSystemPromptWithContext(userContext);
     const apiKey = process.env.GEMINI_API_KEY || '';
 
+    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
+    const isHindi = userContext?.preferredLanguage === 'hi';
+
+    // Server-side instant fast-path for navigation and curated FAQs (<1ms response)
+    if (lastUserMessage?.content) {
+      const fastFaq = matchPreMadeFaq(lastUserMessage.content, userContext);
+      if (fastFaq) {
+        return NextResponse.json({
+          message: { role: 'assistant', content: fastFaq },
+          source: 'fast-faq',
+        });
+      }
+    }
+
     if (!apiKey) {
       // No API key — use offline fallback
-      const lastUserMessage = messages.filter(m => m.role === 'user').pop();
-      const fallbackResponse = getOfflineFallbackResponse(lastUserMessage?.content || '');
+      const fallbackResponse = getOfflineFallbackResponse(lastUserMessage?.content || '', isHindi);
       return NextResponse.json({
         message: { role: 'assistant', content: fallbackResponse },
         source: 'offline-fallback',
@@ -58,9 +72,10 @@ export async function POST(request: NextRequest) {
       },
       contents: geminiContents,
       generationConfig: {
-        temperature: 0.5,
-        maxOutputTokens: 1024,
-        topP: 0.9,
+        temperature: 0.3,
+        maxOutputTokens: 400,
+        topP: 0.85,
+        topK: 20,
       },
     };
 

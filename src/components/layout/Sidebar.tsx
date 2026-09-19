@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
 import { ChevronLeft, ChevronRight, ShieldCheck, CheckCircle2, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -52,6 +52,8 @@ interface SidebarProps {
 
 export function Sidebar({ initialRole }: SidebarProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const isHindi = locale === 'hi';
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [dossierOpen, setDossierOpen] = useState(false);
@@ -81,8 +83,8 @@ export function Sidebar({ initialRole }: SidebarProps) {
 
   const role: UserRole = initialRole || activePersona.role || 'learner';
   const navItems: RoleNavItem[] = getNavigationForRole(role);
-  const identity = getRoleIdentity(role);
-  const footerData = getRoleFooterData(role);
+  const identity = getRoleIdentity(role, isHindi);
+  const footerData = getRoleFooterData(role, isHindi);
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -197,7 +199,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
           <div className="px-3 pb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             <span>{identity.subtitle}</span>
             <span className="text-[9px] font-mono text-[#8C5B3E] font-semibold">
-              {navItems.length} Tools
+              {navItems.length} {isHindi ? 'उपकरण' : 'Tools'}
             </span>
           </div>
         )}

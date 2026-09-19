@@ -9,6 +9,7 @@ import {
   Megaphone,
   ChevronRight,
 } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 import { Notification, NotificationType } from './types';
 
 interface NotificationItemProps {
@@ -55,6 +56,12 @@ export function NotificationItem({
   notification,
   onSelect,
 }: NotificationItemProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
+  const title = (isHindi && notification.title_hi) ? notification.title_hi : notification.title;
+  const message = (isHindi && notification.message_hi) ? notification.message_hi : notification.message;
+  const timestamp = (isHindi && notification.timestamp_hi) ? notification.timestamp_hi : notification.timestamp;
+
   const config = typeIconMap[notification.type] || typeIconMap.system;
   const Icon = config.icon;
 
@@ -62,7 +69,7 @@ export function NotificationItem({
     <button
       type="button"
       onClick={() => onSelect(notification)}
-      aria-label={`${notification.read ? '' : 'Unread: '}${notification.title}`}
+      aria-label={`${notification.read ? '' : (isHindi ? 'अपठित: ' : 'Unread: ')}${title}`}
       className={`group relative flex w-full items-start gap-3 p-3.5 text-left transition-colors cursor-pointer border-b border-accent last:border-b-0 focus:outline-none focus-visible:bg-[#f7f2eb] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${
         notification.read
           ? 'bg-white hover:bg-[#f7f2eb]'
@@ -87,21 +94,21 @@ export function NotificationItem({
                 : 'font-semibold text-stone-900'
             }`}
           >
-            {notification.title}
+            {title}
           </p>
           {!notification.read && (
             <span
               className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-              title="Unread notification"
+              title={isHindi ? 'अपठित अधिसूचना' : 'Unread notification'}
               aria-hidden="true"
             />
           )}
         </div>
         <p className="text-[11px] leading-relaxed text-stone-600 line-clamp-2">
-          {notification.message}
+          {message}
         </p>
         <span className="mt-1 block text-[10px] text-stone-400 font-medium">
-          {notification.timestamp}
+          {timestamp}
         </span>
       </div>
 

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Send, Sparkles, Zap, RotateCcw, WifiOff } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { X, Send, Sparkles, Zap, RotateCcw, WifiOff, HelpCircle } from 'lucide-react';
 import { CopilotMessage } from './CopilotMessage';
+import { CopilotFaqBrowser } from './CopilotFaqBrowser';
 import type { CopilotUserContext } from '@/lib/copilotPrompt';
 import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
 
@@ -28,13 +29,26 @@ interface CopilotPanelProps {
 // QUICK ACTION CHIPS
 // ============================================================================
 
-const QUICK_ACTIONS = [
+const QUICK_ACTIONS_EN = [
   { label: '📊 My Readiness', prompt: 'What is my readiness index and how can I improve it?' },
   { label: '🎯 Skill Gaps', prompt: 'Show me my top competency gaps and what to do about them' },
-  { label: '📝 Take Assessment', prompt: 'How do I start an assessment?' },
+  { label: '📝 Take Assessment', prompt: 'What tests and assignments are available?' },
+  { label: '🧠 Practice MCQs', prompt: 'How does the MCQ Generator work?' },
+  { label: '📄 MoSPI Manuals', prompt: 'Where can I find MoSPI manuals and documents?' },
   { label: '🛤️ Recommend Courses', prompt: 'Recommend iGOT courses for my skill gaps' },
   { label: '🏛️ FRAC Levels', prompt: 'Explain the FRAC competency levels L1 to L5' },
   { label: '🧭 Platform Guide', prompt: 'Give me a quick overview of all platform features' },
+];
+
+const QUICK_ACTIONS_HI = [
+  { label: '📊 मेरी तैयारी', prompt: 'What is my readiness index and how can I improve it?' },
+  { label: '🎯 कौशल अंतर', prompt: 'Show me my top competency gaps and what to do about them' },
+  { label: '📝 टेस्ट दें', prompt: 'What tests and assignments are available?' },
+  { label: '🧠 अभ्यास MCQ', prompt: 'How does the MCQ Generator work?' },
+  { label: '📄 सर्वेक्षण नियमावली', prompt: 'Where can I find MoSPI manuals and documents?' },
+  { label: '🛤️ अनुशंसित कोर्स', prompt: 'Recommend iGOT courses for my skill gaps' },
+  { label: '🏛️ FRAC स्तर', prompt: 'Explain the FRAC competency levels L1 to L5' },
+  { label: '🧭 मंच का परिचय', prompt: 'Give me a quick overview of all platform features' },
 ];
 
 // ============================================================================
@@ -42,9 +56,18 @@ const QUICK_ACTIONS = [
 // ============================================================================
 
 function getWelcomeMessage(userContext?: CopilotUserContext): Message {
-  const greeting = userContext?.name
-    ? `🙏 Namaste, **${userContext.name}**! I'm your StatVidya Copilot.\n\nAs a **${userContext.designation || userContext.role || 'learner'}** in ${userContext.cadre || 'the Official Statistical System'}, I can help you navigate the platform, understand your competency gaps, and find relevant iGOT courses.\n\nWhat would you like to explore?`
-    : `🙏 **Namaste!** I'm your StatVidya Copilot.\n\nI can help you with FRAC competency tracking, iGOT learning pathways, and platform navigation.\n\nWhat would you like to explore?`;
+  const isHi = userContext?.preferredLanguage === 'hi';
+  let greeting: string;
+
+  if (isHi) {
+    greeting = userContext?.name
+      ? `🙏 नमस्ते, **${userContext.name}**! मैं आपका स्टैटविद्या कोपायलट हूँ।\n\n${userContext.cadre || 'आधिकारिक सांख्यिकी प्रणाली'} में एक **${userContext.designation || userContext.role || 'शिक्षार्थी'}** के रूप में, मैं आपको प्लेटफ़ॉर्म नेविगेट करने, अपने योग्यता अंतराल को समझने और उपयुक्त iGOT पाठ्यक्रम खोजने में मदद कर सकता हूँ।\n\nआप क्या खोजना चाहेंगे?`
+      : `🙏 **नमस्ते!** मैं आपका स्टैटविद्या कोपायलट हूँ।\n\nमैं आपकी FRAC योग्यता ट्रैकिंग, iGOT अध्ययन पथ और मंच नेविगेशन में मदद कर सकता हूँ।\n\nआप क्या खोजना चाहेंगे?`;
+  } else {
+    greeting = userContext?.name
+      ? `🙏 Namaste, **${userContext.name}**! I'm your StatVidya Copilot.\n\nAs a **${userContext.designation || userContext.role || 'learner'}** in ${userContext.cadre || 'the Official Statistical System'}, I can help you navigate the platform, understand your competency gaps, and find relevant iGOT courses.\n\nWhat would you like to explore?`
+      : `🙏 **Namaste!** I'm your StatVidya Copilot.\n\nI can help you with FRAC competency tracking, iGOT learning pathways, and platform navigation.\n\nWhat would you like to explore?`;
+  }
 
   return {
     id: 'welcome',
@@ -55,14 +78,27 @@ function getWelcomeMessage(userContext?: CopilotUserContext): Message {
 }
 
 export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps) {
+  const isHindi = userContext?.preferredLanguage === 'hi';
+  const quickActions = isHindi ? QUICK_ACTIONS_HI : QUICK_ACTIONS_EN;
   const [messages, setMessages] = useState<Message[]>(() => [getWelcomeMessage(userContext)]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isOffline, setIsOffline] = useState(false);
+  const [showFaq, setShowFaq] = useState(false);
+  const [isOffline, setIsOffline] = useState(() =>
+    typeof navigator !== 'undefined' ? !navigator.onLine : false
+  );
   const msgCounterRef = useRef(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // Dynamic welcome message based on active language if conversation is not started yet
+  const effectiveMessages = useMemo(() => {
+    if (messages.length === 1 && messages[0].id === 'welcome') {
+      return [getWelcomeMessage(userContext)];
+    }
+    return messages;
+  }, [messages, userContext]);
 
   // Auto-scroll to bottom
   const scrollToBottom = useCallback(() => {
@@ -71,7 +107,7 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, scrollToBottom]);
+  }, [effectiveMessages, scrollToBottom]);
 
   // Focus input when panel opens
   useEffect(() => {
@@ -131,27 +167,11 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
     setIsLoading(true);
 
     try {
-      // ─── Fast-path Curated FAQs & Suggestions ───
+      // ─── Ultra-Fast Curated FAQs & Suggestions (instant delivery) ───
       const preMadeResponse = matchPreMadeFaq(text, userContext);
       if (preMadeResponse) {
-        // Simulate a realistic slight AI thinking delay (~450ms)
-        await new Promise((resolve) => setTimeout(resolve, 450));
-
-        // Fast, organic token typewriter effect (~16ms per chunk)
-        const words = preMadeResponse.split(/(\s+)/);
-        const chunkSize = 4;
-
-        for (let i = chunkSize; i < words.length; i += chunkSize) {
-          const currentText = words.slice(0, i).join('');
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId
-                ? { ...m, content: currentText, isStreaming: true }
-                : m
-            )
-          );
-          await new Promise((resolve) => setTimeout(resolve, 16));
-        }
+        // Minimal delay for natural feel, then render entire response at once
+        await new Promise((resolve) => setTimeout(resolve, 80));
 
         setMessages((prev) =>
           prev.map((m) =>
@@ -164,10 +184,10 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
         return;
       }
 
-      // Build conversation history (last 6 messages for ultra-fast prompt processing)
-      const history = [...messages, userMsg]
+      // Build conversation history (last 4 messages for fastest prompt processing)
+      const history = [...effectiveMessages, userMsg]
         .filter((m) => m.id !== 'welcome')
-        .slice(-6)
+        .slice(-4)
         .map((m) => ({ role: m.role, content: m.content }));
 
       const response = await fetch('/api/copilot', {
@@ -285,9 +305,14 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
     setMessages([getWelcomeMessage(userContext)]);
   };
 
+  const handleFaqSelect = (prompt: string) => {
+    setShowFaq(false);
+    sendMessage(prompt);
+  };
+
   if (!isOpen) return null;
 
-  const showQuickActions = messages.length <= 1;
+  const showQuickActions = effectiveMessages.length <= 1 && !showFaq;
 
   return (
     <>
@@ -326,7 +351,18 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
             </div>
           </div>
           <div className="flex items-center gap-1">
-            {messages.length > 1 && (
+            <button
+              onClick={() => setShowFaq((p) => !p)}
+              className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${
+                showFaq
+                  ? 'bg-white/25 text-white'
+                  : 'text-white/70 hover:bg-white/15 hover:text-white'
+              }`}
+              title={showFaq ? (isHindi ? 'चैट पर लौटें' : 'Back to Chat') : (isHindi ? 'FAQ ज्ञान आधार' : 'FAQ Knowledge Base')}
+            >
+              <HelpCircle className="h-3.5 w-3.5" />
+            </button>
+            {effectiveMessages.length > 1 && (
               <button
                 onClick={clearChat}
                 className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors"
@@ -353,40 +389,47 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
           </div>
         )}
 
-        {/* ─── Messages ─── */}
-        <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3" id="copilot-messages">
-          {messages.map((msg) => (
-            <CopilotMessage
-              key={msg.id}
-              role={msg.role}
-              content={msg.content}
-              isStreaming={msg.isStreaming}
-              timestamp={msg.timestamp}
-            />
-          ))}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* ─── Quick Actions ─── */}
-        {showQuickActions && (
-          <div className="px-3 py-2 bg-[#F2E6D8]/30">
-            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-              <Zap className="h-3 w-3 text-[#555934]" /> Quick Actions
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {QUICK_ACTIONS.map((action) => (
-                <button
-                  key={action.label}
-                  onClick={() => handleQuickAction(action.prompt)}
-                  disabled={isLoading}
-                  className="rounded-full bg-[#F2E6D8] px-2.5 py-1 text-[11px] font-medium text-[#2d1f17] transition-all hover:bg-[#BF9B7A]/30 hover:shadow-xs active:scale-95 disabled:opacity-50"
-                >
-                  {action.label}
-                </button>
+        {/* ─── FAQ Browser OR Messages ─── */}
+        {showFaq ? (
+          <CopilotFaqBrowser isHindi={isHindi} onSelectQuestion={handleFaqSelect} />
+        ) : (
+          <>
+            {/* ─── Messages ─── */}
+            <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3" id="copilot-messages">
+              {effectiveMessages.map((msg) => (
+                <CopilotMessage
+                  key={msg.id}
+                  role={msg.role}
+                  content={msg.content}
+                  isStreaming={msg.isStreaming}
+                  timestamp={msg.timestamp}
+                />
               ))}
+
+              <div ref={messagesEndRef} />
             </div>
-          </div>
+
+            {/* ─── Quick Actions ─── */}
+            {showQuickActions && (
+              <div className="px-3 py-2 bg-[#F2E6D8]/30">
+                <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <Zap className="h-3 w-3 text-[#555934]" /> {isHindi ? 'त्वरित विकल्प' : 'Quick Actions'}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {quickActions.map((action) => (
+                    <button
+                      key={action.label}
+                      onClick={() => handleQuickAction(action.prompt)}
+                      disabled={isLoading}
+                      className="rounded-full bg-[#F2E6D8] px-2.5 py-1 text-[11px] font-medium text-[#2d1f17] transition-all hover:bg-[#BF9B7A]/30 hover:shadow-xs active:scale-95 disabled:opacity-50"
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* ─── Input ─── */}
@@ -399,7 +442,11 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about FRAC, pathways, navigation..."
+            placeholder={
+              isHindi
+                ? 'FRAC, अध्ययन पथ, या नेविगेशन के बारे में पूछें...'
+                : 'Ask about FRAC, pathways, navigation...'
+            }
             disabled={isLoading}
             className="flex-1 rounded-xl bg-white px-3 py-2 text-[13px] text-[#2d1f17] placeholder:text-stone-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#555934]/20 disabled:opacity-50"
             style={{ minHeight: '36px' }}

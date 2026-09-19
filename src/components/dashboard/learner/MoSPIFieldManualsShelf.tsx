@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { Download, ExternalLink, ShieldCheck, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import Link from 'next/link';
+import { Download, ExternalLink, ShieldCheck, ChevronLeft, ChevronRight, BookOpen, X, CheckCircle2 } from 'lucide-react';
 
 interface MoSPIFieldManualsShelfProps {
   isHindi?: boolean;
@@ -77,6 +78,8 @@ export function MoSPIFieldManualsShelf({
     },
   ];
 
+  const [shelfToast, setShelfToast] = useState<string | null>(null);
+
   const scroll = (direction: 'left' | 'right') => {
     if (containerRef.current) {
       const scrollAmount = direction === 'left' ? -320 : 320;
@@ -88,14 +91,18 @@ export function MoSPIFieldManualsShelf({
     if (onOpenManual) {
       onOpenManual(id);
     } else {
-      alert(`Accessing official MoSPI document: ${id}`);
+      setShelfToast(
+        isHindi
+          ? `आधिकारिक MoSPI दस्तावेज़ खोला जा रहा है: ${id}`
+          : `Accessing official MoSPI document: ${id}`
+      );
     }
   };
 
   const handleDownload = (title: string, pages: string) => {
-    alert(
+    setShelfToast(
       isHindi
-        ? `आधिकारिक MoSPI पीडीएफ डाउनलोड हो रहा है: ${title} (${pages})`
+        ? `आधिकारिक MoSPI पीडीएफ डाउनलोड प्रारंभ: ${title} (${pages})`
         : `Downloading official MoSPI statutory manual: ${title} (${pages})...`
     );
   };
@@ -122,24 +129,34 @@ export function MoSPIFieldManualsShelf({
           </p>
         </div>
 
-        {/* Carousel slide controls */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            type="button"
-            onClick={() => scroll('left')}
-            aria-label="Scroll manuals left"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+        {/* Carousel slide controls & Link */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/documents"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll('right')}
-            aria-label="Scroll manuals right"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
+            <BookOpen className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <span>{isHindi ? 'सभी दस्तावेज़ देखें' : 'All Documents'}</span>
+          </Link>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scroll('left')}
+              aria-label="Scroll manuals left"
+              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll('right')}
+              aria-label="Scroll manuals right"
+              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -227,11 +244,32 @@ export function MoSPIFieldManualsShelf({
         ))}
       </div>
 
+      {/* In-website status feedback */}
+      {shelfToast && (
+        <div className="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-[#555934]/10 border border-[#555934]/25 text-xs text-[#555934] animate-in fade-in duration-150">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-[#555934]" />
+            <span className="font-semibold">{shelfToast}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShelfToast(null)}
+            className="text-[#555934]/70 hover:text-[#555934] p-0.5 rounded cursor-pointer"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Footer link */}
-      <div className="pt-2 border-t border-[#BF9B7A]/20 flex items-center justify-between text-xs">
-        <span className="text-[11px] text-muted-foreground">
-          {isHindi ? 'राष्ट्रीय सांख्यिकी पोर्टल संदर्भ' : 'MoSPI Digital Repository'}
-        </span>
+      <div className="pt-2 border-t border-[#BF9B7A]/20 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <Link
+          href="/documents"
+          className="font-bold text-[#555934] inline-flex items-center gap-1 hover:underline cursor-pointer"
+        >
+          <BookOpen className="h-3.5 w-3.5 text-[#8C5B3E]" />
+          <span>{isHindi ? 'दस्तावेज़ प्रसंस्करण हब खोलें' : 'Open Documents Processing Hub'} →</span>
+        </Link>
         <a
           href="https://www.mospi.gov.in"
           target="_blank"

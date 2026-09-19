@@ -138,13 +138,15 @@ export async function middleware(request: NextRequest) {
 
   const requestLocale = request.cookies.get('locale')?.value;
   const validLocale = (requestLocale === 'en' || requestLocale === 'hi') ? requestLocale : null;
-  const locale = validLocale || user?.user_metadata?.preferred_language || 'en';
+  // Prioritize explicit cookie so toggling language sticks immediately across all pages and personas
+  const locale = validLocale || (user?.user_metadata?.preferred_language === 'hi' ? 'hi' : 'en');
 
   if (requestLocale !== locale) {
     request.cookies.set('locale', locale);
     response.cookies.set('locale', locale, {
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
     });
   }
 

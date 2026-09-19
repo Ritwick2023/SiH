@@ -6,6 +6,7 @@
  */
 
 import { Clock, AlertTriangle, StopCircle } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface TestHeaderProps {
   title: string;
@@ -28,6 +29,8 @@ export default function TestHeader({
   remainingSeconds,
   onEndTest,
 }: TestHeaderProps) {
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const isWarning = remainingSeconds <= 60 && remainingSeconds > 0;
   const isCritical = remainingSeconds <= 30 && remainingSeconds > 0;
 
@@ -39,7 +42,9 @@ export default function TestHeader({
           {title}
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground">
-          Question {currentIndex + 1} of {totalQuestions}
+          {isHindi
+            ? `प्रश्न ${currentIndex + 1} / ${totalQuestions}`
+            : `Question ${currentIndex + 1} of ${totalQuestions}`}
         </p>
       </div>
 
@@ -53,7 +58,7 @@ export default function TestHeader({
             : 'border-border bg-secondary text-foreground'
         }`}
         role="timer"
-        aria-label={`Time remaining: ${formatTime(remainingSeconds)}`}
+        aria-label={isHindi ? `शेष समय: ${formatTime(remainingSeconds)}` : `Time remaining: ${formatTime(remainingSeconds)}`}
         aria-live="off"
       >
         {isCritical || isWarning ? (
@@ -68,11 +73,11 @@ export default function TestHeader({
       <button
         id="end-test-button"
         onClick={onEndTest}
-        className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors flex-shrink-0"
+        className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors flex-shrink-0 cursor-pointer"
       >
         <StopCircle className="w-4 h-4 flex-shrink-0" />
-        <span className="hidden sm:inline">End Test</span>
-        <span className="sm:hidden">End</span>
+        <span className="hidden sm:inline">{isHindi ? 'परीक्षा समाप्त करें' : 'End Test'}</span>
+        <span className="sm:hidden">{isHindi ? 'समाप्त' : 'End'}</span>
       </button>
     </header>
   );

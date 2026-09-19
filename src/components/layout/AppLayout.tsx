@@ -17,6 +17,8 @@ import {
 import type { UserRole } from '@/lib/types';
 import { resolveUserRole } from '@/components/dashboard/RoleDashboardRouter';
 
+import { useLocale } from 'next-intl';
+
 interface AppLayoutProps {
   children: React.ReactNode;
 }
@@ -24,6 +26,7 @@ interface AppLayoutProps {
 /** Inner component — reads context after provider has been mounted. */
 function AppLayoutInner({ children }: AppLayoutProps) {
   const { isAssessmentActive } = useAssessmentMode();
+  const locale = useLocale();
   const [role, setRole] = useState<UserRole>('learner');
 
   useEffect(() => {
@@ -56,6 +59,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
           ? 'Additional Director General'
           : 'Junior Statistical Officer',
     readinessIndex: role === 'admin' ? 72 : 42,
+    preferredLanguage: locale,
     topGaps: [
       { competency: 'CAPI Tablet Operations', levelDelta: 2, priority: 'critical' },
       { competency: 'Census Boundary Demarcation', levelDelta: 2, priority: 'critical' },

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface CompetencyRating {
   id: string;
@@ -22,6 +23,8 @@ const DEFAULT_ONBOARDING_COMPETENCIES: CompetencyRating[] = [
 export default function OnboardingWizard({ userId, orgId }: { userId?: string; orgId?: string }) {
   const t = useTranslations();
   const router = useRouter();
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [ratings, setRatings] = useState<CompetencyRating[]>(DEFAULT_ONBOARDING_COMPETENCIES);
@@ -183,7 +186,7 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  placeholder="e.g. NSSO (Field Operations Division)"
+                  placeholder={isHindi ? "उदा. एनएसएसओ (क्षेत्र संक्रिया प्रभाग)" : "e.g. NSSO (Field Operations Division)"}
                 />
               </div>
 
@@ -196,14 +199,14 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
                   value={formData.designation}
                   onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  placeholder="e.g. Field Investigator (Grade II)"
+                  placeholder={isHindi ? "उदा. क्षेत्र अन्वेषक (ग्रेड II)" : "e.g. Field Investigator (Grade II)"}
                 />
               </div>
             </div>
 
             <button
               onClick={handleNext}
-              className="w-full rounded-lg bg-blue-700 hover:bg-blue-800 px-4 py-2.5 text-sm font-semibold text-white transition-colors shadow-sm mt-4"
+              className="w-full rounded-lg bg-blue-700 hover:bg-blue-800 px-4 py-2.5 text-sm font-semibold text-white transition-colors shadow-sm mt-4 cursor-pointer"
             >
               {t('common.next')}
             </button>
@@ -227,11 +230,15 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
                 <div key={comp.id} className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">{comp.name}</h4>
-                      <p className="text-xs text-slate-500">{comp.name_hi}</p>
+                      <h4 className="font-semibold text-slate-900 text-sm">
+                        {isHindi ? comp.name_hi : comp.name}
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        {isHindi ? comp.name : comp.name_hi}
+                      </p>
                     </div>
                     <span className="text-xs font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-                      Level {comp.level}
+                      {isHindi ? `स्तर ${comp.level}` : `Level ${comp.level}`}
                     </span>
                   </div>
 
@@ -241,7 +248,7 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
                         key={lvl}
                         type="button"
                         onClick={() => handleRatingChange(comp.id, lvl)}
-                        className={`py-1.5 text-xs font-semibold rounded transition-all ${
+                        className={`py-1.5 text-xs font-semibold rounded transition-all cursor-pointer ${
                           comp.level === lvl
                             ? 'bg-blue-700 text-white shadow-xs'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -258,7 +265,7 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full rounded-lg bg-blue-700 hover:bg-blue-800 px-4 py-3 text-sm font-semibold text-white transition-colors shadow-sm flex items-center justify-center gap-2"
+              className="w-full rounded-lg bg-blue-700 hover:bg-blue-800 px-4 py-3 text-sm font-semibold text-white transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -278,7 +285,7 @@ export default function OnboardingWizard({ userId, orgId }: { userId?: string; o
         {step > 1 && (
           <button
             onClick={handleBack}
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-colors"
+            className="text-sm font-medium text-slate-600 hover:text-slate-900 flex items-center gap-2 transition-colors cursor-pointer"
           >
             ← {t('onboarding.back')}
           </button>

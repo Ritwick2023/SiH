@@ -13,6 +13,8 @@ import { Notification } from '@/components/notifications/types';
 import { getInitialNotifications } from '@/components/notifications/notification-data';
 import { NotificationItem } from '@/components/notifications/NotificationItem';
 
+import { useSafeLocale } from '@/lib/useSafeLocale';
+
 function getInitialClientNotifications(): Notification[] {
   if (typeof document === 'undefined') return getInitialNotifications('learner');
   let role = 'learner';
@@ -33,6 +35,8 @@ function getInitialClientNotifications(): Notification[] {
 export function NotificationsClient() {
   const router = useRouter();
   const t = useTranslations('notifications');
+  const locale = useSafeLocale();
+  const isHindi = locale === 'hi';
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [notifications, setNotifications] = useState<Notification[]>(getInitialClientNotifications);
 
@@ -117,7 +121,11 @@ export function NotificationsClient() {
 
         <div className="hidden sm:flex items-center gap-1.5 text-xs text-stone-400">
           <Filter className="h-3.5 w-3.5" />
-          <span>Showing {filteredNotifications.length} items</span>
+          <span>
+            {isHindi
+              ? `${filteredNotifications.length} सूचनाएं दिखाई जा रही हैं`
+              : `Showing ${filteredNotifications.length} items`}
+          </span>
         </div>
       </div>
 

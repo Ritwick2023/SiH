@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { Award, CheckCircle2, Lock, ArrowUpRight, ChevronLeft, ChevronRight, Compass } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Award, CheckCircle2, Lock, ArrowUpRight, ChevronLeft, ChevronRight, Compass, X, AlertCircle } from 'lucide-react';
 
 export interface PathwayMilestone {
   id: string;
@@ -83,6 +83,7 @@ interface KarmayogiPathwaysTrackProps {
 
 export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTrackProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [lockedNotice, setLockedNotice] = useState<string | null>(null);
 
   const scroll = (direction: 'left' | 'right') => {
     if (containerRef.current) {
@@ -93,7 +94,7 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
 
   const handleLaunchModule = (milestone: PathwayMilestone) => {
     if (milestone.status === 'locked') {
-      alert(
+      setLockedNotice(
         isHindi
           ? `यह चरण लॉक है! कृपया पहले चरण ${milestone.stageNumber - 1} की योग्यताएं पूर्ण करें।`
           : `This stage is locked! Complete all prerequisite competencies in Stage ${milestone.stageNumber - 1} to unlock.`
@@ -144,6 +145,23 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
           </button>
         </div>
       </div>
+
+      {/* In-website locked stage notice banner */}
+      {lockedNotice && (
+        <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 animate-in fade-in duration-150">
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
+            <span className="font-semibold">{lockedNotice}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLockedNotice(null)}
+            className="text-amber-800/70 hover:text-amber-900 p-1 rounded-lg cursor-pointer transition"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Horizontal Milestone Cards */}
       <div

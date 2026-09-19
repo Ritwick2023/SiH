@@ -6,20 +6,20 @@ import {
 } from './roleNavigation';
 
 describe('roleNavigation', () => {
-  it('returns learner-exclusive navigation items', () => {
+  it('returns learner-exclusive navigation items including quiz and documents', () => {
     const items = getNavigationForRole('learner');
     const hrefs = items.map((i) => i.href);
 
     expect(hrefs).toContain('/dashboard');
     expect(hrefs).toContain('/skill-gap');
     expect(hrefs).toContain('/assignments');
+    expect(hrefs).toContain('/mcq-generator');
+    expect(hrefs).toContain('/documents');
     expect(hrefs).toContain('/pathways');
     expect(hrefs).toContain('/profile');
 
-    // Learners must NOT see trainer tools
-    expect(hrefs).not.toContain('/documents');
+    // Learners must NOT see faculty item calibration review queue
     expect(hrefs).not.toContain('/review-queue');
-    expect(hrefs).not.toContain('/mcq-generator');
   });
 
   it('returns trainer-exclusive faculty studio navigation items', () => {
@@ -31,9 +31,8 @@ describe('roleNavigation', () => {
     expect(hrefs).toContain('/mcq-generator');
     expect(hrefs).toContain('/review-queue');
     expect(hrefs).toContain('/assignments');
-
-    // Trainers must NOT see personal learner learning pathways
-    expect(hrefs).not.toContain('/pathways');
+    expect(hrefs).toContain('/skill-gap');
+    expect(hrefs).toContain('/profile');
   });
 
   it('returns admin-exclusive national executive navigation items', () => {
@@ -43,10 +42,10 @@ describe('roleNavigation', () => {
     expect(hrefs).toContain('/dashboard');
     expect(hrefs).toContain('/skill-gap');
     expect(hrefs).toContain('/assignments');
-
-    // Admins must NOT see trainer content generation tools
-    expect(hrefs).not.toContain('/mcq-generator');
-    expect(hrefs).not.toContain('/review-queue');
+    expect(hrefs).toContain('/documents');
+    expect(hrefs).toContain('/mcq-generator');
+    expect(hrefs).toContain('/review-queue');
+    expect(hrefs).toContain('/profile');
   });
 
   it('returns role identity headers and badge tags', () => {

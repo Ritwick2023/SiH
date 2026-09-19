@@ -17,8 +17,8 @@ import { ManualReaderModal } from './modals/ManualReaderModal';
 import { OfficerDossierModal } from './modals/OfficerDossierModal';
 import { CAPIConnectivityModal } from './modals/CAPIConnectivityModal';
 import { LearnerKarmaLedgerModal } from './modals/LearnerKarmaLedgerModal';
-import { useLocale } from 'next-intl';
-import { LayoutDashboard, BookOpen, Target, GraduationCap, Wifi, Award } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
+import { Globe2, LayoutDashboard, BookOpen, Target, GraduationCap, Wifi, Award, X } from 'lucide-react';
 import type { DemoPersona } from '@/lib/types';
 
 export default function LearnerDashboard({ user }: { user: DashboardUserProps }) {
@@ -26,21 +26,13 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
   // Retrieve official FRAC profile
   const profile = getPersonaFRAC(user);
 
-  // Global next-intl locale integration
-  let currentLocale: string | null = null;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    currentLocale = useLocale();
-  } catch {
-    currentLocale = null;
-  }
-
-  // Active language is driven by the global Topbar language toggle (next-intl locale),
-  // with fallback to user profile preference in test environments.
-  const isHindi = currentLocale
-    ? currentLocale === 'hi'
-    : user.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi' || user.id?.includes('sunita');
-
+  // Read global app locale from next-intl (with fallback to user preferred language)
+  const globalLocale = useSafeLocale(user.user_metadata?.preferred_language || (user.id?.includes('sunita') ? 'hi' : 'en'));
+  const isHindi =
+    globalLocale === 'hi' ||
+    user.user_metadata?.preferred_language === 'hi' ||
+    profile.preferredLanguage === 'hi' ||
+    user.id?.includes('sunita');
   const [activeTab, setActiveTab] = useState<'overview' | 'manuals' | 'competencies' | 'pathways' | 'capi'>('overview');
 
   // Interactive Modal States
@@ -50,6 +42,7 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
   const [capiModalOpen, setCapiModalOpen] = useState(false);
   const [karmaModalOpen, setKarmaModalOpen] = useState(false);
   const [isOfflineSimulated, setIsOfflineSimulated] = useState(false);
+  const [drillToast, setDrillToast] = useState<{ points: number; message: string } | null>(null);
 
   // Compute readiness index & verified counts
   const totalSkills = profile.competencies.length;
@@ -83,11 +76,12 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
   };
 
   const handleDrillComplete = (points: number) => {
-    alert(
-      isHindi
+    setDrillToast({
+      points,
+      message: isHindi
         ? `बधाई! आपके आधिकारिक कैडर प्रोफाइल में +${points} कर्म अंक जोड़ दिए गए हैं।`
-        : `Congratulations! +${points} Karma Points have been credited to your official civil service dossier.`
-    );
+        : `Congratulations! +${points} Karma Points have been credited to your official civil service dossier.`,
+    });
   };
 
   const tabs = [
@@ -146,6 +140,34 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
           >
             <Award className="h-3.5 w-3.5 text-[#8C5B3E]" />
             <span className="font-mono">+550 KP</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const nextLang = isHindi ? 'en' : 'hi';
+              document.cookie = `locale=${nextLang};path=/;max-age=31536000;SameSite=Lax`;
+              try {
+                const match = document.cookie.match(/(?:^|;\s*)demo_user=([^;]+)/);
+                if (match) {
+                  const demoUser = JSON.parse(decodeURIComponent(match[1]));
+                  demoUser.preferred_language = nextLang;
+                  if (demoUser.user_metadata) {
+                    demoUser.user_metadata.preferred_language = nextLang;
+                  }
+                  document.cookie = `demo_user=${encodeURIComponent(
+                    JSON.stringify(demoUser)
+                  )};path=/;max-age=604800;SameSite=Lax`;
+                }
+              } catch {
+                // Ignore cookie JSON parse error
+              }
+              window.location.reload();
+            }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#FAF6F0] transition-colors shadow-2xs cursor-pointer"
+            aria-label="Toggle Hindi language"
+          >
+            <Globe2 className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <span>{isHindi ? 'English में देखें' : 'हिन्दी में बदलें'}</span>
           </button>
         </div>
       </div>
@@ -358,6 +380,33 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
         onClose={() => setKarmaModalOpen(false)}
         isHindi={isHindi}
       />
+
+      {/* In-Website Toast for Drill Karma Credit */}
+      {drillToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-200">
+          <div className="bg-[#2d1f17] text-white px-5 py-4 rounded-2xl shadow-2xl border border-[#BF9B7A]/40 flex items-center gap-3.5 max-w-md">
+            <div className="h-10 w-10 rounded-xl bg-[#F8C858]/20 text-[#F8C858] flex items-center justify-center shrink-0">
+              <Award className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-[#F8C858]">
+                {isHindi ? 'कर्म अंक अर्जित!' : 'Karma Points Earned!'}
+              </p>
+              <p className="text-xs text-white/90 leading-snug mt-0.5">
+                {drillToast.message}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDrillToast(null)}
+              aria-label="Close notification"
+              className="text-white/60 hover:text-white p-1 rounded-lg cursor-pointer transition"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

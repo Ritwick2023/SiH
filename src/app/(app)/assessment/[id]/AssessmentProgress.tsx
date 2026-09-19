@@ -6,9 +6,10 @@
 
 interface AssessmentProgressProps {
   progress: number; // 0–1
+  isHindi?: boolean;
 }
 
-export default function AssessmentProgress({ progress }: AssessmentProgressProps) {
+export default function AssessmentProgress({ progress, isHindi }: AssessmentProgressProps) {
   const percentage = Math.round(progress * 100);
 
   return (
@@ -34,7 +35,7 @@ export default function AssessmentProgress({ progress }: AssessmentProgressProps
           <span className="text-sm font-semibold text-foreground">{percentage}%</span>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground text-center">Progress</p>
+      <p className="text-xs text-muted-foreground text-center">{isHindi ? 'प्रगति' : 'Progress'}</p>
     </div>
   );
 }

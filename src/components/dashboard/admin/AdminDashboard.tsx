@@ -31,6 +31,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
+import { useSafeLocale } from '@/lib/useSafeLocale';
+
 export type AdminWorkspaceTab =
   | 'overview'
   | 'zonal_ro'
@@ -39,9 +41,11 @@ export type AdminWorkspaceTab =
   | 'governance_orders';
 
 export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
-  const adminName = user.user_metadata?.name || 'Rajesh Kumar';
-  const adminDesignation = user.user_metadata?.designation || 'Additional Director General';
-  const adminCadre = user.user_metadata?.cadre || 'MoSPI Headquarters';
+  const locale = useSafeLocale(user.user_metadata?.preferred_language || 'en');
+  const isHindi = locale === 'hi';
+  const adminName = user.user_metadata?.name || (isHindi ? 'राजेश कुमार' : 'Rajesh Kumar');
+  const adminDesignation = user.user_metadata?.designation || (isHindi ? 'अपर महानिदेशक' : 'Additional Director General');
+  const adminCadre = user.user_metadata?.cadre || (isHindi ? 'MoSPI मुख्यालय' : 'MoSPI Headquarters');
 
   // Workspace tab state
   const [activeTab, setActiveTab] = useState<AdminWorkspaceTab>('overview');
@@ -197,7 +201,7 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
           }`}
         >
           <LayoutGrid className="h-3.5 w-3.5" />
-          <span>Executive Command</span>
+          <span>{isHindi ? 'कार्यकारी कमान' : 'Executive Command'}</span>
         </button>
 
         <button
@@ -212,7 +216,7 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
           }`}
         >
           <Map className="h-3.5 w-3.5" />
-          <span>Regional Cadre Health</span>
+          <span>{isHindi ? 'क्षेत्रीय संवर्ग स्वास्थ्य' : 'Regional Cadre Health'}</span>
         </button>
 
         <button
@@ -227,7 +231,7 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
           }`}
         >
           <TrendingDown className="h-3.5 w-3.5" />
-          <span>Outcome Regression</span>
+          <span>{isHindi ? 'परिणाम सहसंबंध विश्लेषण' : 'Outcome Regression'}</span>
         </button>
 
         <button
@@ -242,7 +246,7 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
           }`}
         >
           <FileText className="h-3.5 w-3.5" />
-          <span>Policy Directives</span>
+          <span>{isHindi ? 'नीति निर्देश' : 'Policy Directives'}</span>
         </button>
 
         <button
@@ -257,7 +261,7 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
           }`}
         >
           <Send className="h-3.5 w-3.5" />
-          <span>Cabinet Drawer</span>
+          <span>{isHindi ? 'मंत्रिमंडल दराज' : 'Cabinet Drawer'}</span>
         </button>
       </div>
 

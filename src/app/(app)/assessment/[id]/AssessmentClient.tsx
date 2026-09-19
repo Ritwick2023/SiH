@@ -27,6 +27,7 @@ import AssessmentTimer from './AssessmentTimer';
 import AssessmentProgress from './AssessmentProgress';
 import AssessmentReview from './AssessmentReview';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface Question {
   id: string;
@@ -57,7 +58,8 @@ export default function AssessmentClient({
   userId,
 }: AssessmentClientProps) {
   const router = useRouter();
-  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+  const globalLocale = useSafeLocale();
+  const [language, setLanguage] = useState<'en' | 'hi'>(() => (globalLocale === 'hi' ? 'hi' : 'en'));
   const [uiState, setUiState] = useState<UIState>('ANSWERING');
   const [assessmentState, setAssessmentState] = useState<AssessmentState>(
     initializeAssessment(competencyId, userId, firstQuestion.id)
@@ -214,9 +216,13 @@ export default function AssessmentClient({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Card className="p-8 text-center max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Assessment Submitted ✓</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            {language === 'hi' ? 'मूल्यांकन जमा हो गया ✓' : 'Assessment Submitted ✓'}
+          </h2>
           <p className="text-muted-foreground mb-6">
-            Your response has been saved. Redirecting to dashboard...
+            {language === 'hi'
+              ? 'आपकी प्रतिक्रिया सहेज ली गई है। डैशबोर्ड पर वापस भेजा जा रहा है...'
+              : 'Your response has been saved. Redirecting to dashboard...'}
           </p>
         </Card>
       </div>
@@ -228,25 +234,37 @@ export default function AssessmentClient({
       <div className="flex items-center justify-center min-h-screen">
         <Card className="p-8 max-w-md border-destructive">
           <AlertCircle className="w-12 h-12 text-destructive mb-4" />
-          <h2 className="text-xl font-bold mb-2">Error</h2>
+          <h2 className="text-xl font-bold mb-2">{language === 'hi' ? 'त्रुटि' : 'Error'}</h2>
           <p className="text-muted-foreground mb-6">{error}</p>
-          <Button onClick={() => router.push('/dashboard')}>Return to Dashboard</Button>
+          <Button onClick={() => router.push('/dashboard')}>
+            {language === 'hi' ? 'डैशबोर्ड पर लौटें' : 'Return to Dashboard'}
+          </Button>
         </Card>
       </div>
     );
   }
+
+  const isHindi = language === 'hi';
 
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">{language === 'en' ? competencyName : competencyNameHi || competencyName}</h1>
-          <p className="text-muted-foreground">Assessment Stage {assessmentState.stage === 'STAGE_1' ? 1 : assessmentState.stage === 'STAGE_2A' || assessmentState.stage === 'STAGE_2B' ? 2 : 3} of 3</p>
+          <h1 className="text-3xl font-bold">{isHindi ? competencyNameHi || competencyName : competencyName}</h1>
+          <p className="text-muted-foreground">
+            {isHindi
+              ? `मूल्यांकन चरण ${assessmentState.stage === 'STAGE_1' ? 1 : assessmentState.stage === 'STAGE_2A' || assessmentState.stage === 'STAGE_2B' ? 2 : 3} (कुल 3)`
+              : `Assessment Stage ${assessmentState.stage === 'STAGE_1' ? 1 : assessmentState.stage === 'STAGE_2A' || assessmentState.stage === 'STAGE_2B' ? 2 : 3} of 3`}
+          </p>
         </div>
         <button
-          onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-          className="px-3 py-1 text-sm border border-border rounded-md hover:bg-secondary transition-colors"
+          onClick={() => {
+            const nextLang = language === 'en' ? 'hi' : 'en';
+            setLanguage(nextLang);
+            document.cookie = `locale=${nextLang};path=/;max-age=31536000;SameSite=Lax`;
+          }}
+          className="px-3 py-1 text-sm border border-border rounded-md hover:bg-secondary transition-colors cursor-pointer"
         >
           {language === 'en' ? 'हिन्दी' : 'English'}
         </button>
@@ -254,7 +272,7 @@ export default function AssessmentClient({
 
       {/* Progress & Timer */}
       <div className="flex gap-4 mb-6">
-        <AssessmentProgress progress={progress} />
+        <AssessmentProgress progress={progress} isHindi={isHindi} />
         <AssessmentTimer timeRemaining={timeRemaining} />
       </div>
 
@@ -285,7 +303,7 @@ export default function AssessmentClient({
           className="flex items-center gap-2"
         >
           <ChevronLeft className="w-4 h-4" />
-          Previous
+          {isHindi ? 'पिछला' : 'Previous'}
         </Button>
 
         {assessmentState.stage === 'COMPLETE' ? (
@@ -294,7 +312,7 @@ export default function AssessmentClient({
             disabled={isAnimating}
             className="flex items-center gap-2"
           >
-            Submit Assessment
+            {isHindi ? 'मूल्यांकन जमा करें' : 'Submit Assessment'}
             <ChevronRight className="w-4 h-4" />
           </Button>
         ) : (
@@ -303,7 +321,7 @@ export default function AssessmentClient({
             disabled={selectedAnswer === null || isAnimating}
             className="flex items-center gap-2"
           >
-            Next
+            {isHindi ? 'अगला प्रश्न' : 'Next'}
             <ChevronRight className="w-4 h-4" />
           </Button>
         )}
@@ -311,8 +329,18 @@ export default function AssessmentClient({
 
       {/* Accessibility & Offline Notice */}
       <div className="mt-8 text-xs text-muted-foreground text-center">
-        <p>✓ No animation during assessment (accessibility: reduced motion supported)</p>
-        {isOffline && <p>🔴 Offline mode: Responses will sync when you reconnect</p>}
+        <p>
+          {isHindi
+            ? '✓ मूल्यांकन के दौरान कोई विचलन नहीं (सुलभता: कम गति समर्थित)'
+            : '✓ No animation during assessment (accessibility: reduced motion supported)'}
+        </p>
+        {isOffline && (
+          <p>
+            {isHindi
+              ? '🔴 ऑफ़लाइन मोड: पुन: कनेक्ट होने पर उत्तर स्वचालित रूप से सिंक होंगे'
+              : '🔴 Offline mode: Responses will sync when you reconnect'}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Award, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, Play, Award, Clock, Brain } from 'lucide-react';
 
 export interface DrillCardItem {
   id: string;
@@ -124,24 +125,34 @@ export function HorizontalDrillsCarousel({
           </p>
         </div>
 
-        {/* Carousel Slide Arrows */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            type="button"
-            onClick={() => scroll('left')}
-            aria-label="Scroll drills carousel left"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+        {/* Carousel Slide Arrows & Quiz Link */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/mcq-generator"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll('right')}
-            aria-label="Scroll drills carousel right"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
+            <Brain className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <span>{isHindi ? 'अभ्यास स्टेशन' : 'Practice Station'}</span>
+          </Link>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => scroll('left')}
+              aria-label="Scroll drills carousel left"
+              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll('right')}
+              aria-label="Scroll drills carousel right"
+              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 

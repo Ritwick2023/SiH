@@ -8,9 +8,10 @@
     "skillGap": "कौशल अंतर",
     "pathways": "पाठ्यक्रम एवं शिक्षण",
     "profile": "प्रोफ़ाइल",
-    "documents": "दस्तावेज़",
+    "documents": "दस्तावेज़ एवं नियमावली",
     "assessment": "मूल्यांकन",
-    "mcqGenerator": "MCQ जनरेटर",
+    "quiz": "अभ्यास MCQ",
+    "mcqGenerator": "अभ्यास MCQ",
     "reviewQueue": "समीक्षा कतार",
     "adminAnalytics": "प्रशासनिक विश्लेषण",
     "logout": "लॉगआउट",
@@ -24,7 +25,14 @@
     "persona": "व्यक्तित्व",
     "learner": "शिक्षार्थी",
     "trainer": "प्रशिक्षक",
-    "admin": "प्रशासक"
+    "admin": "प्रशासक",
+    "facultyCommandDesk": "संकाय कमान डेस्क",
+    "traineeErrorAnalytics": "प्रशिक्षु त्रुटि विश्लेषण",
+    "workforceCommand": "श्रमबल कमान",
+    "scrutinyCorrelation": "जांच सहसंबंध",
+    "regionalOfficeHealth": "क्षेत्रीय कार्यालय स्वास्थ्य",
+    "nationalCompetencyMatrix": "राष्ट्रीय योग्यता मैट्रिक्स",
+    "statutoryAssessmentAudit": "वैधानिक मूल्यांकन ऑडिट"
   },
   "notifications": {
     "title": "सूचनाएं",
@@ -169,10 +177,11 @@
     "error": "प्रमाणीकरण विफल। कृपया पुनः प्रयास करें।"
   },
   "onboarding": {
-    "title": "स्टैटविडया के साथ शुरू करें",
+    "title": "स्टैटविद्या के साथ शुरुआत करें",
+    "subtitle": "आइए अपनी आधिकारिक FRAC योग्यता प्रोफ़ाइल बनाएं",
     "step1": {
-      "title": "अपना कर्द चुनें",
-      "subtitle": "अपना आधिकारिक कर्द नाम चुनें"
+      "title": "अपना संवर्ग चुनें",
+      "subtitle": "अपना आधिकारिक संवर्ग पदनाम चुनें"
     },
     "step2": {
       "title": "आधिकारिक विवरण",
@@ -180,21 +189,21 @@
     },
     "step3": {
       "title": "भूमिका चयन",
-      "subtitle": "अनुक्रम से अपनी सरकारी भूमिका चुनें"
+      "subtitle": "कैटलॉग से अपनी सरकारी भूमिका चुनें"
     },
     "step4": {
       "title": "प्रारंभिक स्व-मूल्यांकन",
-      "subtitle": "प्रत्येक कौशल के लिए अपनी वर्तमान दक्षता का मूल्यांकन करें"
+      "subtitle": "प्रत्येक योग्यता के लिए अपनी वर्तमान दक्षता का मूल्यांकन करें"
     },
     "complete": "ऑनबोर्डिंग पूर्ण",
-    "completeSubtitle": "आपकी कौशल प्रोफ़ाइल बना दी गई है",
+    "completeSubtitle": "आपकी योग्यता प्रोफ़ाइल तैयार कर दी गई है",
     "startAssessment": "स्व-मूल्यांकन शुरू करें",
     "continue": "जारी रखें",
     "back": "वापस",
     "name": "पूरा नाम",
     "department": "विभाग",
     "designation": "पद",
-    "cadre": "कर्द",
+    "cadre": "संवर्ग",
     "role": "सरकारी भूमिका",
     "languageNote": "नोट: क्षेत्र अन्वेषक व्यक्तित्व के लिए हिंदी इंटरफ़ेस स्वचालित रूप से सक्रिय होगा"
   },
@@ -227,17 +236,17 @@
   },
   "skillGap": {
     "title": "कौशल अंतर विश्लेषण",
-    "subtitle": "वर्तमान बनाम आवश्यक कौशल स्तर",
-    "highSeverity": "उच्च 심각성",
+    "subtitle": "वर्तमान बनाम आवश्यक क्षमता स्तर",
+    "highSeverity": "उच्च गंभीरता",
     "moderateSeverity": "मध्यम",
-    "lowSeverity": "दक्ष",
+    "lowSeverity": "प्रवीण",
     "activity": "गतिविधि",
     "currentLevel": "वर्तमान स्तर",
-    "targetLevel": "लक्ष्य स्तर",
-    "gap": "अंतर",
-    "explanation": "यह महत्वपूर्ण क्यों है",
+    "targetLevel": "लक्षित स्तर",
+    "gap": "कौशल अंतर",
+    "explanation": "यह क्यों महत्वपूर्ण है",
     "assessmentVerified": "मूल्यांकन सत्यापित",
-    "selfAssessed": "स्व-मूल्यांकन"
+    "selfAssessed": "स्व-मूल्यांकित"
   },
   "pathways": {
     "title": "अध्ययन पथ",
