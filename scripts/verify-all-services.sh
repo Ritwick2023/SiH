@@ -13,7 +13,7 @@ else
 fi
 
 # 2. FastAPI Analytics Microservice
-if curl -s http://localhost:8000/health 2>/dev/null | grep -q "healthy"; then
+if curl -s http://localhost:8000/health 2>/dev/null | grep -qE "healthy|ok"; then
   echo "✅ FastAPI Analytics Engine: HEALTHY (http://localhost:8000)"
 else
   echo "⚠️  FastAPI Analytics Engine: OFFLINE (Run 'cd services/analytics-engine && uvicorn main:app --port 8000')"
