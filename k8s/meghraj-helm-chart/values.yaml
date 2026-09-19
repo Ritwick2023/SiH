@@ -1,0 +1,122 @@
+# NIC MeghRaj Sovereign Cloud Deployment Values for StatVidya
+global:
+  environment: production
+  domain: statvidya.gov.in
+  registry: registry.meghraj.gov.in/mospi
+
+web:
+  replicaCount: 3
+  image:
+    repository: registry.meghraj.gov.in/mospi/statvidya-web
+    tag: "2.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  env:
+    NODE_ENV: production
+    NEXT_PUBLIC_APP_URL: https://statvidya.gov.in
+
+analytics:
+  replicaCount: 2
+  image:
+    repository: registry.meghraj.gov.in/mospi/statvidya-analytics
+    tag: "2.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+    requests:
+      cpu: 500m
+      memory: 1024Mi
+
+celery:
+  replicaCount: 2
+  minReplicas: 2
+  maxReplicas: 20
+  image:
+    repository: registry.meghraj.gov.in/mospi/statvidya-analytics
+    tag: "2.0.0"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4096Mi
+    requests:
+      cpu: 500m
+      memory: 1024Mi
+
+postgres:
+  storage: 50Gi
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4096Mi
+    requests:
+      cpu: 500m
+      memory: 2048Mi
+
+redis:
+  storage: 10Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 200m
+      memory: 512Mi
+
+minio:
+  storage: 100Gi
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+elasticsearch:
+  storage: 50Gi
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4096Mi
+    requests:
+      cpu: 500m
+      memory: 2048Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-nic-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: statvidya.gov.in
+      paths:
+        - path: /
+          pathType: Prefix
+          service: web
+        - path: /api/v1
+          pathType: Prefix
+          service: analytics
+  tls:
+    - secretName: statvidya-tls-cert
+      hosts:
+        - statvidya.gov.in
+
+networkPolicy:
+  enabled: true

@@ -15,6 +15,7 @@ import {
   X
 } from 'lucide-react';
 import { KarmayogiHorizontalLogo, KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
+import { ParichayLoginButton } from '@/components/auth/ParichayLoginButton';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -432,7 +433,12 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* Pill Provider Buttons (Matching Apple/Google Pill Buttons in Reference) */}
+        {/* Jan-Parichay / MeriPehchaan Official SSO Button (Task C3) */}
+        <div className="mb-3">
+          <ParichayLoginButton />
+        </div>
+
+        {/* Pill Provider Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             type="button"

@@ -1,8 +1,21 @@
 'use client';
 
 import React from 'react';
-import { FileText, CheckCircle2, Upload, Eye, BookOpen } from 'lucide-react';
+import { FileText, CheckCircle2, Upload, Eye, BookOpen, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+
+export type DocumentPipelineStage =
+  | 'UPLOADED'
+  | 'EXTRACTING_TABLES'
+  | 'OCR_HIN_ENG'
+  | 'NER_TAGGING'
+  | 'CHUNKING'
+  | 'EMBEDDING_PGVECTOR'
+  | 'INDEXING_ES'
+  | 'READY'
+  | 'INDEXED'
+  | 'SYNCED'
+  | 'EXTRACTING';
 
 interface IngestedDoc {
   id: string;
@@ -12,7 +25,7 @@ interface IngestedDoc {
   pages: number;
   chunksCount: number;
   questionsGenerated: number;
-  status: 'INDEXED' | 'SYNCED' | 'EXTRACTING';
+  status: DocumentPipelineStage;
   updatedAt: string;
 }
 
@@ -152,10 +165,17 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
 
                 {/* Status */}
                 <td className="py-4 pr-4 hidden sm:table-cell">
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
-                    <CheckCircle2 className="h-3 w-3" />
-                    {doc.status}
-                  </span>
+                  {['INDEXED', 'SYNCED', 'READY'].includes(doc.status) ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
+                      <CheckCircle2 className="h-3 w-3" />
+                      {doc.status}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-800 border border-amber-500/30 animate-pulse">
+                      <Loader2 className="h-3 w-3 animate-spin text-amber-600" />
+                      {doc.status}
+                    </span>
+                  )}
                 </td>
 
                 {/* Actions */}

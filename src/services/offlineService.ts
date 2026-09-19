@@ -32,7 +32,8 @@ export interface PendingAssessment {
 }
 
 /**
- * IndexedDB Schema Definition
+/**
+ * IndexedDB Schema Definition (DB_VERSION = 2 for Task D1)
  */
 interface StatvidyaDB extends DBSchema {
   pending_assessments: {
@@ -44,11 +45,24 @@ interface StatvidyaDB extends DBSchema {
       'by-user-id': string;
     };
   };
+  offline_media_cache: {
+    key: string; // question_id
+    value: {
+      question_id: string;
+      audio_blob?: string;
+      image_blob?: string;
+      cached_at: string;
+    };
+    indexes: {
+      'by-cached-at': string;
+    };
+  };
 }
 
 const DB_NAME = 'statvidya';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'pending_assessments';
+const MEDIA_STORE_NAME = 'offline_media_cache';
 
 // =========================================================================
 // SINGLETON DATABASE INSTANCE
@@ -59,7 +73,7 @@ let dbInstance: IDBPDatabase<StatvidyaDB> | null = null;
 /**
  * openDatabase — Initialize IndexedDB connection
  *
- * Creates the database and object store if they don't exist.
+ * Creates the database and object stores if they don't exist.
  * Safe to call multiple times (returns existing connection).
  *
  * @returns Promise<IDBPDatabase>
@@ -70,12 +84,16 @@ async function openDatabase(): Promise<IDBPDatabase<StatvidyaDB>> {
   }
 
   dbInstance = await openDB<StatvidyaDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1 || !db.objectStoreNames.contains(STORE_NAME)) {
         const store = db.createObjectStore(STORE_NAME, { keyPath: 'local_id' });
         store.createIndex('by-sync-status', 'sync_status');
         store.createIndex('by-created-at', 'created_at');
         store.createIndex('by-user-id', 'user_id');
+      }
+      if (oldVersion < 2 || !db.objectStoreNames.contains(MEDIA_STORE_NAME)) {
+        const mediaStore = db.createObjectStore(MEDIA_STORE_NAME, { keyPath: 'question_id' });
+        mediaStore.createIndex('by-cached-at', 'cached_at');
       }
     },
   });
@@ -86,6 +104,37 @@ async function openDatabase(): Promise<IDBPDatabase<StatvidyaDB>> {
 export async function _resetDatabaseForTesting(): Promise<void> {
   const db = await openDatabase();
   await db.clear(STORE_NAME);
+  if (db.objectStoreNames.contains(MEDIA_STORE_NAME)) {
+    await db.clear(MEDIA_STORE_NAME);
+  }
+}
+
+/**
+ * Task D1: Offline Media Cache Manager
+ */
+export async function saveOfflineMedia(
+  questionId: string,
+  media: { audio_blob?: string; image_blob?: string }
+): Promise<void> {
+  const db = await openDatabase();
+  await db.put(MEDIA_STORE_NAME, {
+    question_id: questionId,
+    audio_blob: media.audio_blob,
+    image_blob: media.image_blob,
+    cached_at: new Date().toISOString(),
+  });
+}
+
+export async function getOfflineMedia(
+  questionId: string
+): Promise<{ question_id: string; audio_blob?: string; image_blob?: string; cached_at: string } | undefined> {
+  const db = await openDatabase();
+  return db.get(MEDIA_STORE_NAME, questionId);
+}
+
+export async function clearOfflineMedia(): Promise<void> {
+  const db = await openDatabase();
+  await db.clear(MEDIA_STORE_NAME);
 }
 
 // =========================================================================

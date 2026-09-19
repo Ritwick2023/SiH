@@ -48,6 +48,12 @@ export const STATVIDYA_MANIFESTO = [
 ].join('\n');
 
 
+import { semanticSearch } from '@/lib/db/pgvectorClient';
+import { FRAC_KNOWLEDGE_BASE, type DocumentChunk } from '@/data/fracKnowledgeBase';
+
+export { FRAC_KNOWLEDGE_BASE };
+export type { DocumentChunk };
+
 export interface CopilotUserContext {
   role?: string;
   cadre?: string;
@@ -56,6 +62,41 @@ export interface CopilotUserContext {
   readinessIndex?: number;
   topGaps?: Array<{ competency: string; levelDelta: number; priority: string }>;
   preferredLanguage?: 'en' | 'hi' | string;
+}
+
+/**
+ * Dynamically retrieves top-3 grounded knowledge chunks via pgvector / local fallback
+ * and injects them into the system prompt for hallucination-free guidance.
+ */
+export async function getSystemPromptWithRag(
+  userContext?: CopilotUserContext,
+  query?: string
+): Promise<string> {
+  const basePrompt = getSystemPromptWithContext(userContext);
+
+  try {
+    const searchQuery = query || userContext?.topGaps?.[0]?.competency || 'MoSPI survey standards';
+    const chunks = await semanticSearch(searchQuery, 3);
+
+    if (chunks && chunks.length > 0) {
+      const ragContext = [
+        '',
+        '[GROUNDED INSTITUTIONAL KNOWLEDGE (RAG CONTEXT)]:',
+        ...chunks.map(
+          (c, idx) =>
+            `${idx + 1}. [${c.document_id} | Page ${c.page_number} - ${c.section_title || 'Section'}]:\n"${c.chunk_text}"`
+        ),
+        '',
+        'CRITICAL DIRECTIVE: Ground all technical advice, survey code references, and methodology answers strictly in the institutional knowledge chunks above. If not verified in the official manuals, explicitly inform the officer.',
+      ].join('\n');
+
+      return `${basePrompt}\n${ragContext}`;
+    }
+  } catch (err) {
+    console.warn('[StatVidya Copilot RAG] Chunk retrieval fallback activated:', err);
+  }
+
+  return basePrompt;
 }
 
 export function getSystemPromptWithContext(userContext?: CopilotUserContext): string {

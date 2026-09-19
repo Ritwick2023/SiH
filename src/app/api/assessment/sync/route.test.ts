@@ -30,6 +30,9 @@ describe('POST /api/assessment/sync', () => {
     expect(data.competency_id).toBe('comp-capi');
     expect(data.final_level).toBe('L4');
     expect(data.answers_recorded).toBe(2);
+    expect(data.verifiable_credential).toBeDefined();
+    expect(data.verifiable_credential.issued).toBe(true);
+    expect(data.verifiable_credential.credential_hash).toBeDefined();
   });
 
   it('returns 400 Bad Request if local_id is missing', async () => {

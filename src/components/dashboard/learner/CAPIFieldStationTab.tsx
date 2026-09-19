@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Wifi, WifiOff, RefreshCw, CheckCircle2, ShieldCheck, AlertTriangle, X, Info } from 'lucide-react';
+import { BhuvanUFSBlockMap } from '@/components/maps/BhuvanUFSBlockMap';
 
 export interface CachedScheduleItem {
   id: string;
@@ -255,6 +256,11 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
         >
           {isHindi ? 'विसंगति पर्चियां (1)' : 'Query Slips (1)'}
         </button>
+      </div>
+
+      {/* ISRO Bhuvan UFS Block Demarcation Satellite Map (Task C5) */}
+      <div className="mb-6">
+        <BhuvanUFSBlockMap />
       </div>
 
       {/* Schedule Table */}

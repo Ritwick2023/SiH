@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { X, Send, Sparkles, Zap, RotateCcw, WifiOff, HelpCircle } from 'lucide-react';
 import { CopilotMessage } from './CopilotMessage';
 import { CopilotFaqBrowser } from './CopilotFaqBrowser';
+import { VoiceInputButton } from '@/components/common/VoiceInputButton';
 import type { CopilotUserContext } from '@/lib/copilotPrompt';
 import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
 
@@ -451,10 +452,17 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
             className="flex-1 rounded-xl bg-white px-3 py-2 text-[13px] text-[#2d1f17] placeholder:text-stone-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#555934]/20 disabled:opacity-50"
             style={{ minHeight: '36px' }}
           />
+          <VoiceInputButton
+            size="sm"
+            lang={isHindi ? 'hi' : 'en'}
+            onTranscript={(transcript) => {
+              setInput((prev) => (prev ? `${prev} ${transcript}` : transcript));
+            }}
+          />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#555934] text-white shadow-sm transition-all hover:bg-primary-dark hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:bg-[#555934] disabled:hover:shadow-sm"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1C4CA1] text-white shadow-sm transition-all hover:bg-[#153A7A] hover:shadow-md active:scale-95 disabled:opacity-40 disabled:hover:bg-[#1C4CA1] disabled:hover:shadow-sm"
           >
             <Send className="h-4 w-4" />
           </button>

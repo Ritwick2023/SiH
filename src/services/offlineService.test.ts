@@ -14,6 +14,9 @@ import {
   markSynced,
   markFailed,
   clearQueue,
+  saveOfflineMedia,
+  getOfflineMedia,
+  clearOfflineMedia,
   _resetDatabaseForTesting,
 } from './offlineService';
 
@@ -491,6 +494,34 @@ describe('offlineService — IndexedDB Queue Manager', () => {
       await markSynced(local_id, 'server-id-789', new Date().toISOString());
       assessment = await getPendingAssessmentByLocalId(local_id);
       expect(assessment?.sync_status).toBe('SYNCED');
+    });
+  });
+
+  // ========================================================================
+  // TEST SUITE: Offline Media Cache (Task D1)
+  // ========================================================================
+
+  describe('offlineMediaCache (Task D1)', () => {
+    it('saves and retrieves offline media for assessment question', async () => {
+      await saveOfflineMedia('q-boundary-101', {
+        audio_blob: 'data:audio/wav;base64,UklGRi...',
+        image_blob: 'data:image/png;base64,iVBORw...',
+      });
+
+      const media = await getOfflineMedia('q-boundary-101');
+      expect(media).toBeDefined();
+      expect(media?.question_id).toBe('q-boundary-101');
+      expect(media?.audio_blob).toContain('data:audio/wav');
+      expect(media?.image_blob).toContain('data:image/png');
+      expect(media?.cached_at).toBeDefined();
+    });
+
+    it('clears offline media cache', async () => {
+      await saveOfflineMedia('q-102', { audio_blob: 'audio-sample' });
+      await clearOfflineMedia();
+
+      const media = await getOfflineMedia('q-102');
+      expect(media).toBeUndefined();
     });
   });
 });

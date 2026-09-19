@@ -1,0 +1,15 @@
+apiVersion: v2
+name: statvidya
+description: StatVidya - AI-Powered Adaptive Capacity Building Platform for MoSPI & Mission Karmayogi on NIC MeghRaj Cloud
+type: application
+version: 2.0.0
+appVersion: "2.0.0"
+keywords:
+  - mospi
+  - mission-karmayogi
+  - frac
+  - education
+  - sovereign-cloud
+maintainers:
+  - name: NSSTA MoSPI Engineering
+    email: technical@nssta.gov.in

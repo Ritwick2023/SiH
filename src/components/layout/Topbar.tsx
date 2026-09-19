@@ -34,6 +34,7 @@ import { MinisterialBriefingModal } from '@/components/dashboard/admin/modals/Mi
 import { NationalReadinessModal } from '@/components/dashboard/admin/modals/NationalReadinessModal';
 import { FlaggedRegionsModal } from '@/components/dashboard/admin/modals/FlaggedRegionsModal';
 import { GlobalSearchModal } from './GlobalSearchModal';
+import { getPendingCount } from '@/services/offlineService';
 
 function getInitialPersona(): DemoPersona {
   if (typeof document === 'undefined') return DEMO_PERSONAS[0];
@@ -99,6 +100,30 @@ export function Topbar({ initialRole }: TopbarProps) {
   const [adminReadinessOpen, setAdminReadinessOpen] = useState(false);
   const [adminFlaggedOpen, setAdminFlaggedOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [pendingVaultCount, setPendingVaultCount] = useState(0);
+
+  // Task D1: Monitor IndexedDB pending sync queue count
+  useEffect(() => {
+    let isMounted = true;
+    const checkPending = async () => {
+      try {
+        if (typeof window !== 'undefined' && 'indexedDB' in window) {
+          const count = await getPendingCount();
+          if (isMounted) setPendingVaultCount(count);
+        }
+      } catch {
+        // graceful fallback
+      }
+    };
+    checkPending();
+    const interval = setInterval(checkPending, 8000);
+    window.addEventListener('online', checkPending);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      window.removeEventListener('online', checkPending);
+    };
+  }, []);
 
   const [activePersona, setActivePersona] = useState<DemoPersona>(() => {
     const fromCookie = getInitialPersona();
@@ -314,25 +339,35 @@ export function Topbar({ initialRole }: TopbarProps) {
                 <span className="text-[10px] text-muted-foreground">Karma Points</span>
               </button>
 
-              {/* Interactive CAPI Offline Engine */}
+              {/* Interactive CAPI & Offline Vault Engine (Task D1) */}
               <button
                 type="button"
                 onClick={() => setCapiModalOpen(true)}
-                title="Inspect CAPI Storage & Field Connectivity"
+                title="Inspect CAPI Storage & Field Offline Vault"
                 className={`hidden sm:flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95 ${
                   isOfflineSimulated
                     ? 'bg-amber-500/15 border-amber-500/30 text-amber-800 hover:bg-amber-500/25'
+                    : pendingVaultCount > 0
+                    ? 'bg-amber-500/10 border-amber-500/25 text-amber-900 hover:bg-amber-500/20'
                     : 'bg-emerald-500/12 border-emerald-500/25 text-emerald-800 hover:bg-emerald-500/20'
                 }`}
               >
+                {pendingVaultCount > 0 ? (
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                  </span>
+                ) : (
+                  <Check className="h-3 w-3 text-emerald-600" />
+                )}
                 <Wifi
                   className={`h-3.5 w-3.5 ${
-                    isOfflineSimulated ? 'text-amber-600' : 'text-emerald-600 animate-pulse'
+                    isOfflineSimulated ? 'text-amber-600' : 'text-emerald-600'
                   }`}
                 />
-                <span>{isOfflineSimulated ? 'CAPI Offline' : 'CAPI Active'}</span>
+                <span>{isOfflineSimulated ? 'CAPI Offline' : 'Vault Active'}</span>
                 <span className="text-[10px] font-mono text-emerald-700 hidden md:inline">
-                  (38 Cached)
+                  {pendingVaultCount > 0 ? `(${pendingVaultCount} queued)` : '(38 Cached)'}
                 </span>
               </button>
             </>

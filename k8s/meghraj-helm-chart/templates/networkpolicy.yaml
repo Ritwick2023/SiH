@@ -1,0 +1,30 @@
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-isolate-db-tier
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values: ["statvidya-postgres", "statvidya-redis"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: statvidya-analytics
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: statvidya-celery
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: statvidya-web
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+  policyTypes:
+    - Ingress
+{{- end }}

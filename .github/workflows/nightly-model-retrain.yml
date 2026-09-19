@@ -1,0 +1,26 @@
+name: Nightly Recommendation & IRT Model Retraining
+
+on:
+  schedule:
+    - cron: "30 20 * * *" # 02:00 IST (UTC 20:30) nightly
+  workflow_dispatch:
+
+jobs:
+  retrain-models:
+    name: Retrain Collaborative Filter & Calibration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r services/analytics-engine/requirements.txt
+      - name: Run Model Retraining Script
+        run: |
+          echo "Starting scheduled 2PL IRT calibration and collaborative filter matrix update..."
+          cd services/analytics-engine
+          python -c "from ml.collaborative_filter import MatrixFactorizationFilter; m = MatrixFactorizationFilter(); m.fit(); print('Collaborative filter updated successfully.')"

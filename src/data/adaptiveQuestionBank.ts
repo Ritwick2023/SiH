@@ -30,6 +30,26 @@ export interface AdaptiveQuestion {
   citation: string;
   rationale: string;
   rationale_hi: string;
+  irt_a?: number; // discrimination parameter [0.5, 2.5]
+  irt_b?: number; // difficulty parameter [-3.0, +3.0]
+}
+
+/**
+ * Returns calibrated IRT parameters for an item, falling back to difficulty defaults.
+ */
+export function getQuestionIrtParams(q: AdaptiveQuestion): { irt_a: number; irt_b: number } {
+  if (q.irt_a !== undefined && q.irt_b !== undefined) {
+    return { irt_a: q.irt_a, irt_b: q.irt_b };
+  }
+  switch (q.difficulty) {
+    case 'easy':
+      return { irt_a: 1.1, irt_b: -1.2 };
+    case 'hard':
+      return { irt_a: 1.6, irt_b: 1.4 };
+    case 'medium':
+    default:
+      return { irt_a: 1.3, irt_b: 0.0 };
+  }
 }
 
 export const ADAPTIVE_QUESTIONS: Record<string, Record<string, AdaptiveQuestion>> = {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { ProvenanceType } from '@/lib/types';
-import { ShieldCheck, FileEdit, FlaskConical, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, FileEdit, FlaskConical, AlertTriangle, Database, TrendingDown } from 'lucide-react';
 
 // ============================================================================
 // PROVENANCE BADGE COMPONENT
@@ -57,6 +57,22 @@ const PROVENANCE_CONFIG: Record<
     borderColor: '',
     textColor: 'text-[#8C5B3E]',
     description: 'Fabricated for demonstration; no claim to real-world accuracy',
+  },
+  EMPIRICAL_NSS78_BOOTSTRAP: {
+    label: 'Empirical NSS 78th',
+    IconComponent: Database,
+    bgColor: 'bg-amber-100',
+    borderColor: 'border-amber-300',
+    textColor: 'text-amber-800',
+    description: 'Empirical benchmark calibrated on authentic NSS 78th Round Scrutiny guidelines and logs',
+  },
+  LIVE_OLS_REGRESSION: {
+    label: 'Live OLS Regression',
+    IconComponent: TrendingDown,
+    bgColor: 'bg-emerald-100',
+    borderColor: 'border-emerald-300',
+    textColor: 'text-emerald-800',
+    description: 'Computed live using ordinary least squares regression over MoSPI field competency records',
   },
 };
 

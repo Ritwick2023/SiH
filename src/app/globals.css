@@ -2,103 +2,117 @@
 
 @theme inline {
   /* ════════════════════════════════════════════════════════════════
-     LOCKED COLOR PALETTE (New Theme)
-     Source: #555934 (Olive), #F2E6D8 (Cream Canvas), #BF9B7A (Camel Tan),
-             #8C5B3E (Warm Terracotta), #593E2E (Deep Espresso Brown)
+     SOVEREIGN CIVIC MODERN PALETTE (advanced_design.md Section 10.1)
+     Source: #1C4CA1 (Ministry Navy), #1164BE (Secondary Blue),
+             #FFA72F (Primary Orange), #F4962F (Accent Orange),
+             #1F273A (Dark Slate / Navy), #FDE5CD (Peach Cream),
+             #F9EAC1 (Soft Gold), #EDF0F7 (Lavender Grey), #FFFFFF
      ════════════════════════════════════════════════════════════════ */
 
-  /* Primary Brand Color — Deep Olive */
-  --color-primary: #555934;
-  --color-primary-foreground: #ffffff;
-  --color-primary-dark: #3e4225;      /* hover / active state */
-  --color-primary-light: #d8dbcb;     /* active selection, subtle highlights */
+  /* Sovereign Brand Tokens */
+  --color-primary-navy: #1C4CA1;
+  --color-secondary-blue: #1164BE;
+  --color-primary-orange: #FFA72F;
+  --color-accent-orange: #F4962F;
+  --color-dark-navy: #1F273A;
+  --color-peach-cream: #FDE5CD;
+  --color-soft-gold: #F9EAC1;
+  --color-lavender-grey: #EDF0F7;
 
-  /* Secondary / Muted — Camel Tan */
-  --color-secondary: #BF9B7A;
+  /* Primary Brand Color — Ministry Navy */
+  --color-primary: #1C4CA1;
+  --color-primary-foreground: #ffffff;
+  --color-primary-dark: #153c82;      /* hover / active state */
+  --color-primary-light: #EDF0F7;     /* active selection, subtle highlights */
+
+  /* Secondary / Complementary — Vibrant Blue */
+  --color-secondary: #1164BE;
   --color-secondary-foreground: #ffffff;
-  --color-secondary-hover: #a88564;   /* tan dark for hover fills */
+  --color-secondary-hover: #0d519d;
 
   /* Page & Surface Backgrounds */
-  --color-background: #F2E6D8;        /* page canvas — warm cream */
-  --color-foreground: #2d1f17;        /* primary text — deep espresso */
+  --color-background: #EDF0F7;        /* sovereign canvas — lavender grey */
+  --color-foreground: #1F273A;        /* primary text — dark slate */
   --color-card: #ffffff;              /* elevated surfaces */
-  --color-card-foreground: #2d1f17;
+  --color-card-foreground: #1F273A;
 
   /* Popover & Dropdowns */
   --color-popover: #ffffff;
-  --color-popover-foreground: #2d1f17;
+  --color-popover-foreground: #1F273A;
 
   /* Muted / Secondary Text */
-  --color-muted: #E8DACB;             /* soft cream-taupe */
-  --color-muted-foreground: #705849;  /* warm espresso taupe — captions, secondary text */
+  --color-muted: #E2E8F0;             /* slate-200 */
+  --color-muted-foreground: #64748B;  /* slate-500 — captions, secondary text */
 
-  /* Accent — Cream Accent (internal dividers, stripes, skeleton loaders) */
-  --color-accent: #EFE4D6;
-  --color-accent-foreground: #2d1f17;
+  /* Accent — Primary Orange Accent for callouts, focus, and primary CTAs */
+  --color-accent: #FFA72F;
+  --color-accent-foreground: #1F273A;
 
-  /* Destructive / Error / Critical — Warm Terracotta / Russet */
-  --color-destructive: #8C5B3E;
+  /* Destructive / Error / Critical — Deep Crimson */
+  --color-destructive: #B91C1C;
   --color-destructive-foreground: #ffffff;
 
-  /* Border Strategy — Borderless Aesthetic */
-  --color-border: transparent;        /* borderless modern aesthetic */
-  --color-input: #ded1c1;             /* subtle input border if needed */
-  --color-ring: #555934;              /* focus ring = primary olive */
+  /* Border Strategy — Sovereign Hairline 1px borders */
+  --color-border: #CBD5E1;            /* slate-300 subtle border */
+  --color-input: #E2E8F0;             /* slate-200 input border */
+  --color-ring: #FFA72F;              /* focus ring = sovereign orange */
 
   /* ════════════════════════════════════════════════════════════════
      SEVERITY & CHART COLORS
      ════════════════════════════════════════════════════════════════ */
 
-  --color-severity-high: #8C5B3E;     /* warm terracotta */
-  --color-severity-moderate: #BF9B7A; /* camel tan */
-  --color-severity-moderate-hover: #a88564; /* camel tan hover */
-  --color-severity-proficient: #555934; /* deep olive */
+  --color-severity-high: #B91C1C;     /* crimson — critical gap / error */
+  --color-severity-moderate: #FFA72F; /* sovereign orange — moderate gap */
+  --color-severity-moderate-hover: #F4962F;
+  --color-severity-proficient: #15803D; /* emerald — proficient */
 
-  --color-chart-1: #555934;           /* deep olive — primary / proficient */
-  --color-chart-2: #BF9B7A;           /* camel tan — moderate */
-  --color-chart-3: #8C5B3E;           /* terracotta — high */
-  --color-chart-4: #F2E6D8;           /* cream — neutral canvas */
-  --color-chart-5: #593E2E;           /* espresso brown — axis / labels */
-
-  /* ════════════════════════════════════════════════════════════════
-     TYPOGRAPHY
-     ════════════════════════════════════════════════════════════════ */
-
-  --font-sans: 'Inter', 'Noto Sans Devanagari', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --color-chart-1: #1C4CA1;           /* ministry navy */
+  --color-chart-2: #FFA72F;           /* primary orange */
+  --color-chart-3: #1164BE;           /* secondary blue */
+  --color-chart-4: #B91C1C;           /* crimson */
+  --color-chart-5: #15803D;           /* emerald */
 
   /* ════════════════════════════════════════════════════════════════
-     COMPONENT RADII — Unified Scale
+     TYPOGRAPHY (Sovereign Civic Modern)
      ════════════════════════════════════════════════════════════════ */
 
-  --radius-card: 16px;                /* softer, modern card curves */
-  --radius-btn: 8px;                  /* buttons */
-  --radius-badge: 9999px;             /* organic rounded pills */
-  --radius-input: 8px;                /* inputs, selects */
+  --font-sans: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-hindi: 'Mukta', 'Noto Sans Devanagari', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+
+  /* ════════════════════════════════════════════════════════════════
+     COMPONENT RADII & SHADOWS
+     ════════════════════════════════════════════════════════════════ */
+
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-badge: 9999px;
+  --radius-input: 8px;
 }
 
 @layer base {
   :root {
     /* CSS Custom Properties for shadcn/ui compatibility */
-    --background: #F2E6D8;
-    --foreground: #2d1f17;
+    --background: #EDF0F7;
+    --foreground: #1F273A;
     --card: #ffffff;
-    --card-foreground: #2d1f17;
+    --card-foreground: #1F273A;
     --popover: #ffffff;
-    --popover-foreground: #2d1f17;
-    --primary: #555934;
+    --popover-foreground: #1F273A;
+    --primary: #1C4CA1;
     --primary-foreground: #ffffff;
-    --secondary: #BF9B7A;
+    --secondary: #1164BE;
     --secondary-foreground: #ffffff;
-    --muted: #E8DACB;
-    --muted-foreground: #705849;
-    --accent: #EFE4D6;
-    --accent-foreground: #2d1f17;
-    --destructive: #8C5B3E;
+    --muted: #E2E8F0;
+    --muted-foreground: #64748B;
+    --accent: #FFA72F;
+    --accent-foreground: #1F273A;
+    --destructive: #B91C1C;
     --destructive-foreground: #ffffff;
-    --border: transparent;
-    --input: #ded1c1;
-    --ring: #555934;
+    --border: #CBD5E1;
+    --input: #E2E8F0;
+    --ring: #FFA72F;
     --radius: 8px;
   }
 
@@ -473,3 +487,68 @@
 .animate-fadeIn {
   animation: fadeIn 150ms ease-out forwards;
 }
+
+/* ════════════════════════════════════════════════════════════════
+   SOVEREIGN CIVIC MODERN UTILITY CLASSES (advanced_design.md 10.1)
+   ════════════════════════════════════════════════════════════════ */
+
+.btn-primary-sovereign {
+  background-color: var(--color-primary-orange);
+  color: var(--color-dark-navy);
+  font-weight: 700;
+  border-radius: var(--radius-btn);
+  padding: 0.625rem 1.25rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.btn-primary-sovereign:hover {
+  background-color: var(--color-accent-orange);
+  transform: translateY(-1px);
+}
+
+.btn-primary-sovereign:active {
+  transform: translateY(0);
+}
+
+.card-sovereign {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card-sovereign-navy {
+  background-color: var(--color-primary-navy);
+  color: #ffffff;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge-sovereign-critical {
+  background-color: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+}
+
+.badge-sovereign-moderate {
+  background-color: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #FCD34D;
+}
+
+.badge-sovereign-proficient {
+  background-color: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+
+.hairline-border-sovereign {
+  border: 1px solid var(--color-border);
+}
+

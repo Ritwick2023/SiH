@@ -1,0 +1,45 @@
+{
+  "index_patterns": ["statvidya_*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "analysis": {
+        "analyzer": {
+          "hindi_analyzer": {
+            "type": "standard"
+          },
+          "english_analyzer": {
+            "type": "standard"
+          }
+        }
+      }
+    },
+    "mappings": {
+      "properties": {
+        "id": { "type": "keyword" },
+        "competency_id": { "type": "keyword" },
+        "question_stem": {
+          "type": "text",
+          "fields": {
+            "keyword": { "type": "keyword", "ignore_above": 256 }
+          }
+        },
+        "question_stem_hi": {
+          "type": "text"
+        },
+        "options": {
+          "type": "nested",
+          "properties": {
+            "id": { "type": "keyword" },
+            "text": { "type": "text" }
+          }
+        },
+        "explanation": { "type": "text" },
+        "irt_a": { "type": "float" },
+        "irt_b": { "type": "float" },
+        "created_at": { "type": "date" }
+      }
+    }
+  }
+}

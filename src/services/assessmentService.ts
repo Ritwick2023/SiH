@@ -8,6 +8,8 @@
  * Design: PHASE_4_BRAINSTORM.md § 2
  */
 
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+
 export type ProficiencyLevel = 'L1' | 'L2' | 'L3' | 'L4' | 'L5';
 export type AssessmentStage = 'INITIAL' | 'STAGE_1' | 'STAGE_2A' | 'STAGE_2B' | 'STAGE_3' | 'COMPLETE';
 export type BranchPath = 'L1' | 'L2_L3' | 'L3_L4' | 'L5';
@@ -267,12 +269,172 @@ export function generateUUID(): string {
     return crypto.randomUUID();
   }
 
-  // Fallback for non-crypto environments (testing)
+// Fallback for non-crypto environments (testing)
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
+}
+
+/**
+ * =========================================================================
+ * IRT 2PL PSYCHOMETRIC ADAPTIVE ENGINE (FastAPI with Local Fallback)
+ * =========================================================================
+ */
+
+export interface IrtAdministeredItem {
+  item_id: string;
+  is_correct: boolean;
+  irt_a: number;
+  irt_b: number;
+}
+
+export interface IrtCandidateItem {
+  id: string;
+  competency_id: string;
+  irt_a: number;
+  irt_b: number;
+}
+
+export interface IrtNextQuestionResult {
+  next_item_id: string | null;
+  current_theta: number;
+  standard_error: number;
+  is_converged: boolean;
+  estimated_level: ProficiencyLevel;
+  items_administered_count: number;
+  provenance: 'FASTAPI_IRT_2PL' | 'LOCAL_HEURISTIC_FALLBACK';
+}
+
+export interface IrtFinalizeResult {
+  theta: number;
+  standard_error: number;
+  level: ProficiencyLevel;
+  confidence_interval_95: [number, number];
+  accuracy_percent: number;
+  provenance: 'FASTAPI_IRT_2PL' | 'LOCAL_HEURISTIC_FALLBACK';
+}
+
+/**
+ * Maps continuous theta to Mission Karmayogi L1-L5 levels.
+ */
+export function thetaToKarmayogiLevel(theta: number): ProficiencyLevel {
+  if (theta < -1.8) return 'L1';
+  if (theta < -0.4) return 'L2';
+  if (theta < 0.9) return 'L3';
+  if (theta < 2.2) return 'L4';
+  return 'L5';
+}
+
+/**
+ * Fetches the next optimal question according to Maximum Fisher Information.
+ * Uses FastAPI microservice when online; otherwise executes local fallback.
+ */
+export async function fetchIrtNextQuestion(
+  candidateItems: IrtCandidateItem[],
+  administeredItems: IrtAdministeredItem[],
+  currentTheta: number = 0.0
+): Promise<IrtNextQuestionResult> {
+  const serviceUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+
+  return executeWithFallback(
+    async () => {
+      const res = await fetch(`${serviceUrl}/api/v1/assessment/next-question`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          candidate_items: candidateItems,
+          administered_items: administeredItems,
+          current_theta: currentTheta,
+        }),
+      });
+      if (!res.ok) throw new Error(`FastAPI returned status ${res.status}`);
+      const data = await res.json();
+      return {
+        ...data,
+        estimated_level: data.estimated_level as ProficiencyLevel,
+        provenance: 'FASTAPI_IRT_2PL' as const,
+      };
+    },
+    () => {
+      // Local Heuristic Fallback
+      const administeredIds = new Set(administeredItems.map((i) => i.item_id));
+      const unadministered = candidateItems.filter((i) => !administeredIds.has(i.id));
+
+      const correctCount = administeredItems.filter((i) => i.is_correct).length;
+      const totalAdministered = administeredItems.length;
+      const pCorrect = totalAdministered > 0 ? correctCount / totalAdministered : 0.5;
+
+      // Approximate theta from proportion correct
+      const approxTheta = Number(((pCorrect - 0.5) * 4.0).toFixed(2));
+      const se = Math.max(0.28, Number((1.0 / Math.sqrt(Math.max(1, totalAdministered))).toFixed(2)));
+      const isConverged = se < 0.30 || totalAdministered >= 15 || unadministered.length === 0;
+
+      // Select item closest to current ability
+      unadministered.sort((a, b) => Math.abs(a.irt_b - approxTheta) - Math.abs(b.irt_b - approxTheta));
+      const nextItem = unadministered[0] ?? null;
+
+      return {
+        next_item_id: isConverged ? null : nextItem ? nextItem.id : null,
+        current_theta: approxTheta,
+        standard_error: se,
+        is_converged: isConverged,
+        estimated_level: thetaToKarmayogiLevel(approxTheta),
+        items_administered_count: totalAdministered,
+        provenance: 'LOCAL_HEURISTIC_FALLBACK' as const,
+      };
+    },
+    'IRT_NextQuestion',
+    1500
+  );
+}
+
+/**
+ * Finalizes an assessment with IRT ability estimate, standard error, and confidence interval.
+ */
+export async function finalizeIrtAssessment(
+  administeredItems: IrtAdministeredItem[]
+): Promise<IrtFinalizeResult> {
+  const serviceUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+
+  return executeWithFallback(
+    async () => {
+      const res = await fetch(`${serviceUrl}/api/v1/assessment/finalize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ administered_items: administeredItems }),
+      });
+      if (!res.ok) throw new Error(`FastAPI returned status ${res.status}`);
+      const data = await res.json();
+      return {
+        ...data,
+        level: data.level as ProficiencyLevel,
+        provenance: 'FASTAPI_IRT_2PL' as const,
+      };
+    },
+    () => {
+      // Local Heuristic Fallback
+      const correctCount = administeredItems.filter((i) => i.is_correct).length;
+      const totalAdministered = Math.max(administeredItems.length, 1);
+      const accuracy = Math.round((correctCount / totalAdministered) * 100);
+      const pCorrect = correctCount / totalAdministered;
+
+      const approxTheta = Number(((pCorrect - 0.5) * 4.0).toFixed(2));
+      const se = Math.max(0.25, Number((1.0 / Math.sqrt(totalAdministered)).toFixed(2)));
+
+      return {
+        theta: approxTheta,
+        standard_error: se,
+        level: thetaToKarmayogiLevel(approxTheta),
+        confidence_interval_95: [Number((approxTheta - 1.96 * se).toFixed(2)), Number((approxTheta + 1.96 * se).toFixed(2))],
+        accuracy_percent: accuracy,
+        provenance: 'LOCAL_HEURISTIC_FALLBACK' as const,
+      };
+    },
+    'IRT_Finalize',
+    1500
+  );
 }
 
 /**
@@ -287,6 +449,10 @@ const assessmentService = {
   recordAnswer,
   getCompletionPercentage,
   generateUUID,
+  fetchIrtNextQuestion,
+  finalizeIrtAssessment,
+  thetaToKarmayogiLevel,
 };
 
 export default assessmentService;
+

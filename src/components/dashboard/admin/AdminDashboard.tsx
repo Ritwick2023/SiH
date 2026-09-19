@@ -5,6 +5,7 @@ import type { DashboardUserProps } from '@/components/dashboard/RoleDashboardRou
 import { AdminKpiStrip } from './AdminKpiStrip';
 import { AdminAiNarrativeBox } from './AdminAiNarrativeBox';
 import { OutcomeCorrelationChart } from './OutcomeCorrelationChart';
+import { FracSunburstHierarchy } from '@/components/charts/FracSunburstHierarchy';
 import { DepartmentBreakdownTable } from './DepartmentBreakdownTable';
 import type { DepartmentRow } from './DepartmentBreakdownTable';
 import { AdminCabinetDrawer } from './AdminCabinetDrawer';
@@ -282,6 +283,9 @@ export default function AdminDashboard({ user }: { user: DashboardUserProps }) {
 
           {/* Horizontal Policy Directives & Cabinet Circulars Deck */}
           <HorizontalPolicyDirectivesCarousel onReadCircular={handleReadCircular} />
+
+          {/* FRAC Competency Sunburst Hierarchy (Task C1) */}
+          <FracSunburstHierarchy />
 
           {/* Outcome Correlation Scatter Chart (PRD Lever 2 & §9.4.5) */}
           <OutcomeCorrelationChart />

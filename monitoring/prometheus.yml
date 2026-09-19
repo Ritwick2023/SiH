@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "alert_rules.yml"
+
+scrape_configs:
+  - job_name: "statvidya-analytics-engine"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["analytics-engine:8000"]
+
+  - job_name: "statvidya-web-app"
+    metrics_path: "/api/health"
+    static_configs:
+      - targets: ["web:3000"]
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

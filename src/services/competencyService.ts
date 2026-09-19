@@ -13,6 +13,7 @@ import type {
   Activity,
   Competency,
 } from '@/lib/types';
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
 
 // ============================================================================
 // CONSTANTS
@@ -47,6 +48,77 @@ export function computeGapSeverity(
   const gap = Math.max(0, targetLevel - currentLevel);
   const weight = GAP_PRIORITY_WEIGHTS[priority] ?? 1;
   return gap * weight;
+}
+
+/**
+ * Computes evidence weight with half-life time decay for Bayesian gap weighting.
+ * IRT-Verified < 30 days: 1.0, 30-90 days: 0.85, > 90 days: 0.65
+ * Self-Reported: 0.50, Default: 0.30
+ * Decay factor: exp(-0.35 * days / 180)
+ */
+export function computeEvidenceWeight(
+  evidenceType?: string,
+  daysSinceAssessment: number = 0
+): number {
+  let baseWeight = 0.30;
+  const ev = (evidenceType || '').toLowerCase();
+  if (ev.includes('irt') || ev.includes('assessment-verified') || ev.includes('verified')) {
+    if (daysSinceAssessment < 30) baseWeight = 1.00;
+    else if (daysSinceAssessment <= 90) baseWeight = 0.85;
+    else baseWeight = 0.65;
+  } else if (ev.includes('self')) {
+    baseWeight = 0.50;
+  }
+
+  const lambda = 0.35;
+  const decay = Math.exp(-lambda * (daysSinceAssessment / 180));
+  return Number((baseWeight * decay).toFixed(3));
+}
+
+/**
+ * Computes Bayesian Evidence-Weighted Gap Score:
+ * WeightedGapScore = max(0, targetLevel - currentLevel) * W_priority * W_evidence * Delta_decay
+ */
+export function computeBayesianWeightedGap(
+  currentLevel: number,
+  targetLevel: number,
+  priority: ActivityPriority,
+  options?: { evidenceType?: string; daysSinceAssessment?: number }
+): number {
+  const gap = Math.max(0, targetLevel - currentLevel);
+  const priorityWeight = GAP_PRIORITY_WEIGHTS[priority] ?? 1;
+  const evidenceWeight = options ? computeEvidenceWeight(options.evidenceType, options.daysSinceAssessment ?? 0) : 1.0;
+  return Number((gap * priorityWeight * evidenceWeight).toFixed(2));
+}
+
+/**
+ * Computes priority and evidence-weighted readiness index:
+ * WeightedReadiness = Sum(min(level_i, target_i) * W_p * W_ev) / Sum(target_i * W_p)
+ */
+export function computeWeightedReadinessIndex(
+  requiredCompetencies: Array<{ competencyId: string; targetLevel: number; priority?: ActivityPriority }>,
+  userRecords: Map<string, number>,
+  evidenceMap?: Map<string, { evidenceType?: string; daysSinceAssessment?: number }>
+): number {
+  if (requiredCompetencies.length === 0) return 0;
+
+  let totalMaxWeight = 0;
+  let achievedWeight = 0;
+
+  for (const req of requiredCompetencies) {
+    const pWeight = GAP_PRIORITY_WEIGHTS[req.priority ?? 'important'] ?? 2;
+    const ev = evidenceMap?.get(req.competencyId);
+    const evWeight = ev ? computeEvidenceWeight(ev.evidenceType, ev.daysSinceAssessment ?? 0) : 0.85;
+
+    const userLevel = userRecords.get(req.competencyId) ?? 0;
+    const cappedLevel = Math.min(userLevel, req.targetLevel);
+
+    totalMaxWeight += req.targetLevel * pWeight;
+    achievedWeight += cappedLevel * pWeight * evWeight;
+  }
+
+  if (totalMaxWeight === 0) return 0;
+  return Math.round((achievedWeight / totalMaxWeight) * 100);
 }
 
 /**

@@ -23,6 +23,7 @@ import { getPersonaFRAC } from '@/data/fracCadres';
 import { CompetencyService } from '@/services/competencyService';
 import type { AppUser } from '@/lib/auth';
 import { useSafeLocale } from '@/lib/useSafeLocale';
+import { DigiLockerBadge } from '@/components/profile/DigiLockerBadge';
 
 interface CompetencyRecord {
   competencyId: string;
@@ -300,6 +301,11 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
             <div className="flex justify-center py-2">
               <RadarChart data={radarData} size={290} showLegend />
             </div>
+          </div>
+
+          {/* Sovereign DigiLocker W3C Verifiable Credential Card (Task C4) */}
+          <div className="col-span-1 lg:col-span-2">
+            <DigiLockerBadge />
           </div>
         </div>
       )}
