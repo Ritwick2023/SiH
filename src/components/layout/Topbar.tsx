@@ -246,7 +246,8 @@ export function Topbar({ initialRole }: TopbarProps) {
     setSwitcherOpen(false);
     setNotifications(getInitialNotifications(persona.role));
     setPersonaCookie(persona);
-    window.location.href = '/dashboard';
+    router.push('/dashboard');
+    router.refresh();
   };
 
   const roleColors: Record<

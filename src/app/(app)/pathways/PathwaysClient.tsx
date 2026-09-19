@@ -3,7 +3,6 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import type { AppUser } from '@/lib/auth';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import { CompetencyService } from '@/services/competencyService';
@@ -23,9 +22,7 @@ import {
   PlayCircle,
   ArrowRight,
   Filter,
-  CheckCircle2,
   GraduationCap,
-  FileText,
   Sparkles,
   RefreshCw,
 } from 'lucide-react';
@@ -36,7 +33,6 @@ interface PathwaysClientProps {
 }
 
 function LearningHubContent({ user }: PathwaysClientProps) {
-  const t = useTranslations();
   const searchParams = useSearchParams();
   const globalLocale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
 
