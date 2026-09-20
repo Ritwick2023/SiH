@@ -28,6 +28,7 @@ export function AuthShowcaseVisual() {
           fill
           priority
           className="object-cover object-center transform scale-105 transition-transform duration-1000 hover:scale-100"
+          suppressHydrationWarning
         />
         {/* Warm photographic grading & vignette overlay matching StatVidya palette */}
         <div className="absolute inset-0 bg-linear-to-t from-[#2d1f17]/85 via-[#2d1f17]/35 to-[#2d1f17]/25" />

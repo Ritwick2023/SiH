@@ -113,7 +113,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
       <div className="flex h-16 items-center justify-between px-4 border-b border-[#BF9B7A]/20">
         {!collapsed ? (
           <Link href="/dashboard" prefetch={true} className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 shadow-2xs transition-transform group-hover:scale-105 p-1 shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 shadow-2xs transition-transform group-hover:scale-105 p-1 shrink-0" suppressHydrationWarning>
               <KarmayogiEmblemIcon className="h-7 w-7" />
             </div>
             <div className="flex flex-col">
@@ -130,6 +130,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
             href="/dashboard"
             prefetch={true}
             className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 shadow-2xs p-1"
+            suppressHydrationWarning
           >
             <KarmayogiEmblemIcon className="h-7 w-7" />
           </Link>

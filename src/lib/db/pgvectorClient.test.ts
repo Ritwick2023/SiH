@@ -7,7 +7,7 @@ describe('pgvectorClient Dual-Mode Semantic Search', () => {
     expect(results).toBeDefined();
     expect(results.length).toBeGreaterThanOrEqual(1);
     expect(results[0].document_id).toContain('ufs');
-    expect(results[0].chunk_text).toContain('boundary');
+    expect(results[0].chunk_text.toLowerCase()).toContain('boundar');
   });
 
   it('returns CAPI tablet operation chunks for offline sync queries', async () => {

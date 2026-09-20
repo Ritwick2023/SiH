@@ -57,19 +57,49 @@ export function computeStringSimilarity(strA: string, strB: string): number {
   return union === 0 ? 0 : intersection / union;
 }
 
+function localCheckDuplicate(questionStem: string): {
+  isDuplicate: boolean;
+  similarQuestions: string[];
+  maxSimilarity: number;
+} {
+  const matches: Array<{ stem: string; sim: number }> = [];
+
+  for (const item of LOCAL_QUESTION_REGISTRY) {
+    const sim = computeStringSimilarity(questionStem, item.stem);
+    if (sim >= 0.70) {
+      matches.push({ stem: item.stem, sim });
+    }
+  }
+
+  matches.sort((a, b) => b.sim - a.sim);
+  const topMatches = matches.slice(0, 3);
+  const highestSim = topMatches[0]?.sim || 0;
+
+  return {
+    isDuplicate: highestSim >= 0.82,
+    similarQuestions: topMatches.map((m) => m.stem),
+    maxSimilarity: Number(highestSim.toFixed(3)),
+  };
+}
+
 /**
- * Checks whether a question stem is a duplicate (>82% similarity) of existing bank items.
+ * Checks whether a proposed question stem is duplicate or highly similar to an existing question.
+ * Employs Elasticsearch bilingual fuzzy search with local Jaccard fallback.
  */
 export async function checkDuplicate(
   questionStem: string,
   lang: 'en' | 'hi' = 'en'
-): Promise<DuplicateCheckResult> {
+): Promise<{
+  isDuplicate: boolean;
+  similarQuestions: string[];
+  maxSimilarity: number;
+}> {
+  const index = lang === 'hi' ? 'statvidya_questions_hi' : 'statvidya_questions_en';
   const esUrl = getServiceUrl('ELASTICSEARCH_URL', 'http://localhost:9200');
 
   return executeWithFallback(
     async () => {
-      const indexName = lang === 'hi' ? 'statvidya_questions_hi' : 'statvidya_questions_en';
-      const res = await fetch(`${esUrl}/${indexName}/_search`, {
+      const res = await fetch(`${esUrl}/${index}/_search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,36 +120,19 @@ export async function checkDuplicate(
       const hits = data.hits?.hits || [];
 
       const maxScore = hits.length > 0 ? (hits[0]._score || 0) : 0;
-      const isDuplicate = maxScore > 12.0; // calibrated ES Lucene score threshold
-      const similarQuestions = hits.map((h: { _source?: { stem?: string } }) => h._source?.stem || '').filter(Boolean);
-
-      return {
-        isDuplicate,
-        similarQuestions,
-        maxSimilarity: isDuplicate ? 0.95 : 0.4,
-      };
-    },
-    () => {
-      // Local Jaccard fallback
-      const matches: Array<{ stem: string; sim: number }> = [];
-
-      for (const item of LOCAL_QUESTION_REGISTRY) {
-        const sim = computeStringSimilarity(questionStem, item.stem);
-        if (sim >= 0.70) {
-          matches.push({ stem: item.stem, sim });
-        }
+      if (maxScore > 12.0) {
+        const similarQuestions = hits.map((h: { _source?: { stem?: string } }) => h._source?.stem || '').filter(Boolean);
+        return {
+          isDuplicate: true,
+          similarQuestions,
+          maxSimilarity: 0.95,
+        };
       }
 
-      matches.sort((a, b) => b.sim - a.sim);
-      const topMatches = matches.slice(0, 3);
-      const highestSim = topMatches[0]?.sim || 0;
-
-      return {
-        isDuplicate: highestSim >= 0.82,
-        similarQuestions: topMatches.map((m) => m.stem),
-        maxSimilarity: Number(highestSim.toFixed(3)),
-      };
+      // Check local seed questions registry
+      return localCheckDuplicate(questionStem);
     },
+    () => localCheckDuplicate(questionStem),
     'searchService.checkDuplicate',
     1500
   );
@@ -137,7 +150,7 @@ export async function indexQuestion(
 
   return executeWithFallback(
     async () => {
-      const res = await fetch(`${esUrl}/statvidya_questions_en/_doc/${questionId}`, {
+      const res = await fetch(`${esUrl}/statvidya_questions_en/_doc/${questionId}?refresh=true`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -148,6 +161,7 @@ export async function indexQuestion(
       });
 
       if (!res.ok) throw new Error(`ES index returned status ${res.status}`);
+      LOCAL_QUESTION_REGISTRY.push({ id: questionId, stem, competencyId });
     },
     () => {
       // Local fallback registry
