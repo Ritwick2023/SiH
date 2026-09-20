@@ -133,7 +133,7 @@ export default function InstructionsClient({
         <ul className="space-y-3">
           {instructions.map((instruction, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-foreground">
-              <span className="flex-shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] font-semibold text-xs mt-0.5">
+              <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] font-semibold text-xs mt-0.5">
                 {i + 1}
               </span>
               {instruction}
@@ -151,7 +151,7 @@ export default function InstructionsClient({
           {statusLegend.map(({ label, description: desc, colorClass }) => (
             <div key={label} className="flex items-center gap-4">
               <div
-                className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md text-sm font-bold ${colorClass}`}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-bold ${colorClass}`}
                 aria-label={label}
               >
                 7
@@ -167,7 +167,7 @@ export default function InstructionsClient({
 
       {/* Important timer note */}
       <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
-        <XCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <XCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
         <p className="text-amber-800">
           <strong>{isHindi ? 'महत्वपूर्ण:' : 'Important:'}</strong>{' '}
           {isHindi

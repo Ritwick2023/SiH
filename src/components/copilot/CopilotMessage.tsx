@@ -266,7 +266,7 @@ function CopilotMessageInner({ role, content, timestamp }: CopilotMessageProps) 
             )}
           </div>
         ) : (
-          <div className="whitespace-pre-wrap break-words">{content}</div>
+          <div className="whitespace-pre-wrap wrap-break-word">{content}</div>
         )}
 
         {/* Hover Timestamp */}

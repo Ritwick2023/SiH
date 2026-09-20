@@ -122,7 +122,7 @@ export function BhuvanUFSBlockMap() {
       </div>
 
       {/* Interactive Map Canvas Container */}
-      <div className="mt-4 relative rounded-2xl overflow-hidden border border-[#CBD5E1] bg-[#142319] shadow-inner select-none">
+      <div className="mt-4 relative rounded-2xl overflow-hidden border border-border bg-[#142319] shadow-inner select-none">
         {/* Background Satellite Grid Simulation */}
         <svg
           viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}

@@ -1006,6 +1006,29 @@ npm test
 
 ---
 
+#### Task C6: Sovereign Skill Gap Intelligence Center Redesign
+
+- **Depends on**: A4 (Bayesian gap computation), C1 (D3 Sunburst).
+- **Files to Create**:
+  - `src/components/skill-gap/ReadinessHeroBento.tsx` ← animated readiness gauge, severity counters, evidence ratio, APAR export
+  - `src/components/skill-gap/EnhancedGapCard.tsx` ← Bayesian evidence pill, time decay bar, rubric trigger, pathway links
+  - `src/components/skill-gap/CompetencyRubricModal.tsx` ← L1–L5 Mission Karmayogi behavioral descriptors drawer
+  - `src/components/skill-gap/SkillGapSimulator.tsx` ← real-time What-If sandbox with instant TypeScript recalculation
+  - `src/components/skill-gap/RemediationRoadmap.tsx` ← 30/60/90-day 3-column timeline with persistent checkboxes
+  - `src/components/skill-gap/CadreBenchmarkSelector.tsx` ← cross-cadre mobility benchmarking (FOD, SSS, ISS)
+- **Files to Modify**:
+  - `src/app/(app)/skill-gap/SkillGapClient.tsx` ← full restructure into modular intelligence center
+  - `src/services/competencyService.ts` ← export Bayesian functions, add `simulateReadinessScore()` & `getConfidenceTier()`
+  - `src/lib/types.ts` ← extend `CompetencyGap` with Bayesian score and confidence fields
+  - `src/messages/en.json` & `src/messages/hi.json` ← bilingual strings for all new components
+- **Design & Aesthetics**:
+  - Sovereign Karmayogi palette: Deep Indian Navy (`#1F273A`), Ashoka Blue (`#1C4CA1`), Saffron (`#FFA72F`), India Green (`#10B981`).
+  - Glassmorphism cards with `backdrop-filter: blur(12px)` and smooth micro-animations.
+  - Interactive tactile sliders for sub-5ms real-time promotion readiness simulation.
+  - Print-optimized CSS (`@media print`) for official APAR Dossier PDF generation.
+
+---
+
 ### PHASE D: Mobile Companion, Resilient Sync, Observability & Cloud Deployment
 
 **Phase Goal**: Production hardening — resilient offline sync, monitoring, and NIC MeghRaj deployment.
@@ -1169,6 +1192,7 @@ Understanding dependencies prevents blocked work. Tasks connected by arrows must
         ▼        ▼
      [A8: pgvector] ────► [A5: Recommendation] ────► [C2: D3.js Correlation]
         │                                              [C4: DigiLocker] (needs A6)
+        │                                              [C6: Skill Gap Center] (needs A4, C1)
         ▼
      [A9: WASM Search]
         │

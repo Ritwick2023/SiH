@@ -118,7 +118,7 @@ export function LearnerHeroBento({
               <button
                 type="button"
                 onClick={onOpenCapiModal}
-                className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#153c82] transition-colors shrink-0 cursor-pointer shadow-2xs"
+                className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-primary-dark transition-colors shrink-0 cursor-pointer shadow-2xs"
               >
                 {isHindi ? 'सिंक स्थिति' : 'Sync Status'}
               </button>
@@ -150,7 +150,7 @@ export function LearnerHeroBento({
                 <button
                   type="button"
                   onClick={onViewGaps}
-                  className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#153c82] transition-colors shrink-0 cursor-pointer shadow-2xs"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-primary-dark transition-colors shrink-0 cursor-pointer shadow-2xs"
                 >
                   {isHindi ? 'कौशल अंतर देखें' : 'View Gap Analysis'}
                 </button>

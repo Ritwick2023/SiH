@@ -158,7 +158,7 @@ export function HlsVideoPlayer({
       </div>
 
       {/* Video Controls Bar */}
-      <div className="p-3 bg-gradient-to-t from-slate-950 to-slate-900 border-t border-white/10">
+      <div className="p-3 bg-linear-to-t from-slate-950 to-slate-900 border-t border-white/10">
         {/* Progress Bar Scrubber */}
         <div
           onClick={handleSeek}

@@ -269,7 +269,7 @@ export function FracSunburstHierarchy() {
         </div>
       </div>
 
-      <div className="relative flex justify-center items-center w-full max-w-[500px] aspect-square">
+      <div className="relative flex justify-center items-center w-full max-w-125 aspect-square">
         <svg
           ref={svgRef}
           viewBox="0 0 500 500"

@@ -108,6 +108,20 @@ const SAMPLE_CREDENTIALS: W3CVerifiableCredential[] = [
   },
 ];
 
+export function formatCredentialDate(isoDate: string): string {
+  try {
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return isoDate.slice(0, 10);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    const month = months[d.getUTCMonth()];
+    const year = d.getUTCFullYear();
+    return `${day} ${month} ${year}`;
+  } catch {
+    return isoDate.slice(0, 10);
+  }
+}
+
 export default function CredentialsClient({ user }: CredentialsClientProps) {
   const [selectedCred, setSelectedCred] = useState<W3CVerifiableCredential>(SAMPLE_CREDENTIALS[0]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'L4' | 'L5'>('all');
@@ -151,7 +165,7 @@ export default function CredentialsClient({ user }: CredentialsClientProps) {
         {/* Top Header Banner */}
         <div className="bg-white rounded-3xl p-6 border border-[#D8DFEE] shadow-xs relative overflow-hidden">
           <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#1C4CA1]/5 rounded-full blur-2xl pointer-events-none" />
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-1">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
@@ -303,8 +317,11 @@ export default function CredentialsClient({ user }: CredentialsClientProps) {
                             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono font-black bg-[#FFA72F]/20 text-[#1F273A] border border-[#FFA72F]/40">
                               {cred.credentialSubject.level_achieved} Certified
                             </span>
-                            <span className="text-[11px] text-muted-foreground">
-                              {new Date(cred.issuanceDate).toLocaleDateString()}
+                            <span
+                              className="text-[11px] text-muted-foreground"
+                              suppressHydrationWarning
+                            >
+                              {formatCredentialDate(cred.issuanceDate)}
                             </span>
                           </div>
                         </div>

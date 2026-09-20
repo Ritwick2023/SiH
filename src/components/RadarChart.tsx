@@ -35,7 +35,7 @@ export function RadarChart({
   }
 
   const center = size / 2;
-  const radius = (size - 90) / 2; // Leave padding for labels
+  const radius = (size - 130) / 2; // Leave generous padding for labels
   const totalPoints = data.length;
   const angleStep = (Math.PI * 2) / totalPoints;
 
@@ -82,8 +82,8 @@ export function RadarChart({
             <polygon
               key={`grid-${lvl}`}
               points={points}
-              fill={lvl === maxLevel ? '#EDF0F7' : 'none'}
-              stroke="#D8DFEE"
+              fill={lvl === maxLevel ? '#F8FAFC' : 'none'}
+              stroke="#CBD5E1"
               strokeWidth={1}
             />
           );
@@ -99,7 +99,7 @@ export function RadarChart({
               y1={center}
               x2={x}
               y2={y}
-              stroke="#D8DFEE"
+              stroke="#CBD5E1"
               strokeWidth={1}
               strokeDasharray="2,2"
             />
@@ -160,7 +160,7 @@ export function RadarChart({
         {/* Vertex Labels */}
         {data.map((item, idx) => {
           const angle = idx * angleStep - Math.PI / 2;
-          const labelDist = radius + 24;
+          const labelDist = radius + 22;
           const x = center + labelDist * Math.cos(angle);
           const y = center + labelDist * Math.sin(angle);
 
@@ -177,10 +177,10 @@ export function RadarChart({
               x={x}
               y={y + 4}
               textAnchor={textAnchor}
-              className={`text-xs font-medium cursor-pointer transition-colors ${
+              className={`text-xs font-bold cursor-pointer transition-colors ${
                 isHovered
-                  ? 'fill-[#1C4CA1] font-bold'
-                  : 'fill-slate-600'
+                  ? 'fill-[#1C4CA1]'
+                  : 'fill-[#1F273A]'
               }`}
               onMouseEnter={() => setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}

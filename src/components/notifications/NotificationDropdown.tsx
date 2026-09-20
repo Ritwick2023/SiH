@@ -56,7 +56,7 @@ export function NotificationDropdown({
       </div>
 
       {/* Body: Scrollable Notification List or Empty State */}
-      <div className="max-h-[380px] overflow-y-auto divide-y divide-accent">
+      <div className="max-h-95 overflow-y-auto divide-y divide-accent">
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] mb-3">
@@ -65,7 +65,7 @@ export function NotificationDropdown({
             <p className="text-sm font-semibold text-stone-900">
               {t('allCaughtUp')}
             </p>
-            <p className="text-xs text-stone-500 mt-1 max-w-[240px]">
+            <p className="text-xs text-stone-500 mt-1 max-w-60">
               {t('noNotifications')}
             </p>
           </div>
