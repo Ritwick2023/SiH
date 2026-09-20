@@ -29,7 +29,7 @@ export function MoSPIFieldManualsShelf({
         ? 'गतिविधि स्थिति निर्धारण, एनआईसी/एनसीओ कोडिंग और घरेलू अनुसूची सर्वेक्षण नियम।'
         : 'Statutory guidelines on activity status determination, NIC/NCO coding, and household schedule canvassing.',
       tag: 'STATUTORY SOP',
-      color: '#555934',
+      color: '#1C4CA1',
     },
     {
       id: 'manual-schedule-0',
@@ -44,7 +44,7 @@ export function MoSPIFieldManualsShelf({
         ? 'जनगणना प्रगणना ब्लॉक सीमा पहचान और हेमलेट-समूह गठन के दिशा-निर्देश।'
         : 'Precise CEB landmark verification and hamlet-group formation rules to eliminate coverage errors.',
       tag: 'FIELD GUIDE',
-      color: '#8C5B3E',
+      color: '#1164BE',
     },
     {
       id: 'manual-capi-handbook',
@@ -59,7 +59,7 @@ export function MoSPIFieldManualsShelf({
         ? 'ऑफ़लाइन डेटा संग्रह, जीपीएस सत्यापन और दैनिक सर्वर तुल्यकालन प्रक्रियाएं।'
         : 'Operational protocols for Android CAPI tablets, GPS validation bypass, and daily server sync.',
       tag: 'CAPI PROTOCOL',
-      color: '#2d1f17',
+      color: '#1F273A',
     },
     {
       id: 'manual-nic-compendium',
@@ -74,7 +74,7 @@ export function MoSPIFieldManualsShelf({
         ? 'असंगठित और संगठित विनिर्माण, व्यापार एवं सेवा गतिविधियों की 5-अंकीय संरचना।'
         : 'Comprehensive 5-digit hierarchy for industrial and informal manufacturing classifications.',
       tag: 'CLASSIFICATION',
-      color: '#593E2E',
+      color: '#0F3470',
     },
   ];
 
@@ -108,21 +108,21 @@ export function MoSPIFieldManualsShelf({
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 sm:p-6 shadow-xs space-y-4">
+    <div className="rounded-3xl bg-white border border-[#D8DFEE] p-5 sm:p-6 shadow-xs space-y-4">
       {/* Header & Controls */}
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#BF9B7A]/20">
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-            <h2 className="text-base sm:text-lg font-bold text-[#2d1f17]">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h2 className="text-base sm:text-lg font-bold text-[#1F273A]">
               {isHindi ? 'आधिकारिक सांख्यिकी मैनुअल' : 'Official MoSPI Field Manuals'}
             </h2>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#555934]/10 text-[#555934]">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1C4CA1]/10 text-[#1C4CA1]">
               <ShieldCheck className="h-3 w-3" />
               {isHindi ? 'वैधानिक दस्तावेज' : 'Statutory'}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-[#475569] mt-0.5">
             {isHindi
               ? 'फील्ड सत्यापन और सांख्यिकीय संवीक्षा के लिए अधिकृत संदर्भ पुस्तकें'
               : 'Authoritative operational handbooks for field surveys, sampling frames, and CAPI operations.'}
@@ -133,9 +133,9 @@ export function MoSPIFieldManualsShelf({
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/documents"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors cursor-pointer"
           >
-            <BookOpen className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <BookOpen className="h-3.5 w-3.5 text-[#1C4CA1]" />
             <span>{isHindi ? 'सभी दस्तावेज़ देखें' : 'All Documents'}</span>
           </Link>
 
@@ -144,7 +144,7 @@ export function MoSPIFieldManualsShelf({
               type="button"
               onClick={() => scroll('left')}
               aria-label="Scroll manuals left"
-              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+              className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -152,7 +152,7 @@ export function MoSPIFieldManualsShelf({
               type="button"
               onClick={() => scroll('right')}
               aria-label="Scroll manuals right"
-              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+              className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -169,15 +169,15 @@ export function MoSPIFieldManualsShelf({
         {manuals.map((manual) => (
           <div
             key={manual.id}
-            className="min-w-70 sm:min-w-77.5 max-w-77.5 rounded-2xl border border-[#BF9B7A]/30 bg-[#FAF6F0]/60 p-4 sm:p-5 flex flex-col justify-between hover:border-[#BF9B7A] hover:bg-[#FAF6F0] transition-all snap-start shadow-2xs group"
+            className="min-w-70 sm:min-w-77.5 max-w-77.5 rounded-2xl border border-[#D8DFEE] bg-[#EDF0F7]/40 p-4 sm:p-5 flex flex-col justify-between hover:border-[#1C4CA1]/40 hover:bg-white transition-all snap-start shadow-2xs group"
           >
             <div>
               {/* Hardcover Spine Accent */}
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#BF9B7A]/25 text-chart-5">
+                <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#1C4CA1]/10 text-[#1C4CA1]">
                   {manual.tag}
                 </span>
-                <span className="text-[10px] font-mono text-muted-foreground">
+                <span className="text-[10px] font-mono text-[#475569]">
                   {manual.version}
                 </span>
               </div>
@@ -188,32 +188,32 @@ export function MoSPIFieldManualsShelf({
                   className="h-11 w-11 rounded-xl text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform"
                   style={{ backgroundColor: manual.color }}
                 >
-                  <BookOpen className="h-5 w-5 text-[#F8C858]" />
+                  <BookOpen className="h-5 w-5 text-[#FFA72F]" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-xs sm:text-sm font-black text-[#2d1f17] group-hover:text-[#555934] transition-colors line-clamp-2 leading-snug">
+                  <h3 className="text-xs sm:text-sm font-black text-[#1F273A] group-hover:text-[#1C4CA1] transition-colors line-clamp-2 leading-snug">
                     {manual.title}
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                  <p className="text-[11px] text-[#475569] mt-0.5 truncate">
                     {manual.division}
                   </p>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-xs text-muted-foreground mt-3 line-clamp-2 leading-relaxed">
+              <p className="text-xs text-[#475569] mt-3 line-clamp-2 leading-relaxed">
                 {manual.description}
               </p>
 
               {/* Reading Progress */}
-              <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20 space-y-1">
+              <div className="mt-4 pt-3 border-t border-[#D8DFEE] space-y-1">
                 <div className="flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-muted-foreground">{manual.pages}</span>
-                  <span className="font-bold text-[#555934]">{manual.progress}% read</span>
+                  <span className="text-[#475569]">{manual.pages}</span>
+                  <span className="font-bold text-[#1C4CA1]">{manual.progress}% read</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#555934] transition-all"
+                    className="h-full rounded-full bg-[#1C4CA1] transition-all"
                     style={{ width: `${manual.progress}%` }}
                   />
                 </div>
@@ -221,13 +221,13 @@ export function MoSPIFieldManualsShelf({
             </div>
 
             {/* Actions */}
-            <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20 flex items-center gap-2">
+            <div className="mt-4 pt-3 border-t border-[#D8DFEE] flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => handleOpen(manual.id)}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs cursor-pointer active:scale-[0.98]"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs cursor-pointer active:scale-[0.98]"
               >
-                <BookOpen className="h-3.5 w-3.5 text-[#F8C858]" />
+                <BookOpen className="h-3.5 w-3.5 text-[#FFA72F]" />
                 <span>{isHindi ? 'पढ़ें (SOP)' : 'Read Online'}</span>
               </button>
 
@@ -235,7 +235,7 @@ export function MoSPIFieldManualsShelf({
                 type="button"
                 onClick={() => handleDownload(manual.title, manual.pages)}
                 title="Download Official PDF"
-                className="p-2 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:text-[#2d1f17] hover:bg-[#FAF6F0] transition-colors cursor-pointer shrink-0 active:scale-95"
+                className="p-2 rounded-xl bg-white border border-[#D8DFEE] text-[#475569] hover:text-[#1F273A] hover:bg-[#EDF0F7] transition-colors cursor-pointer shrink-0 active:scale-95"
               >
                 <Download className="h-4 w-4" />
               </button>
@@ -246,15 +246,15 @@ export function MoSPIFieldManualsShelf({
 
       {/* In-website status feedback */}
       {shelfToast && (
-        <div className="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-[#555934]/10 border border-[#555934]/25 text-xs text-[#555934] animate-in fade-in duration-150">
+        <div className="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-[#1C4CA1]/10 border border-[#1C4CA1]/20 text-xs text-[#1C4CA1] animate-in fade-in duration-150">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-[#555934]" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-[#1C4CA1]" />
             <span className="font-semibold">{shelfToast}</span>
           </div>
           <button
             type="button"
             onClick={() => setShelfToast(null)}
-            className="text-[#555934]/70 hover:text-[#555934] p-0.5 rounded cursor-pointer"
+            className="text-[#1C4CA1]/70 hover:text-[#1C4CA1] p-0.5 rounded cursor-pointer"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -262,19 +262,19 @@ export function MoSPIFieldManualsShelf({
       )}
 
       {/* Footer link */}
-      <div className="pt-2 border-t border-[#BF9B7A]/20 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div className="pt-2 border-t border-[#D8DFEE] flex flex-wrap items-center justify-between gap-2 text-xs">
         <Link
           href="/documents"
-          className="font-bold text-[#555934] inline-flex items-center gap-1 hover:underline cursor-pointer"
+          className="font-bold text-[#1C4CA1] inline-flex items-center gap-1 hover:underline cursor-pointer"
         >
-          <BookOpen className="h-3.5 w-3.5 text-[#8C5B3E]" />
+          <BookOpen className="h-3.5 w-3.5 text-[#1C4CA1]" />
           <span>{isHindi ? 'दस्तावेज़ प्रसंस्करण हब खोलें' : 'Open Documents Processing Hub'} →</span>
         </Link>
         <a
           href="https://www.mospi.gov.in"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-bold text-[#555934] inline-flex items-center gap-1 hover:underline cursor-pointer"
+          className="font-bold text-[#1C4CA1] inline-flex items-center gap-1 hover:underline cursor-pointer"
         >
           <span>{isHindi ? 'MoSPI पोर्टल' : 'MoSPI.gov.in'}</span>
           <ExternalLink className="h-3 w-3" />

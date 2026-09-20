@@ -15,7 +15,7 @@ export const DEMO_PERSONAS: DemoPersona[] = [
   {
     id: 'demo-sunita',
     name: 'Sunita Devi',
-    email: 'sunita.devi@nssO.gov.in',
+    email: 'sunita.devi@nsso.gov.in',
     role: 'learner',
     organization_id: 'org-nsso',
     cadre: 'NSSO Field Operations Division',

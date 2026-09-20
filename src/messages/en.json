@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "skillGap": "Skill Gap",
-    "pathways": "Learning Pathways",
+    "pathways": "Courses & Learning",
     "profile": "Profile",
     "documents": "Documents & Manuals",
     "assessment": "Assessment",
@@ -32,7 +32,8 @@
     "scrutinyCorrelation": "Scrutiny Correlation",
     "regionalOfficeHealth": "Regional Office Health",
     "nationalCompetencyMatrix": "National Competency Matrix",
-    "statutoryAssessmentAudit": "Statutory Assessment Audit"
+    "statutoryAssessmentAudit": "Statutory Assessment Audit",
+    "credentials": "Karmayogi Passport"
   },
   "notifications": {
     "title": "Notifications",
@@ -390,7 +391,7 @@
     "profile": "Profile",
     "onboarding": "Onboarding",
     "assessment": "Assessment",
-    "assignments": "Assignments",
+    "assignments": "Assessments",
     "instructions": "Instructions",
     "test": "Test",
     "documents": "Documents",

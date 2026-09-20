@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Wifi, WifiOff, RefreshCw, CheckCircle2, ShieldCheck, AlertTriangle, X, Info } from 'lucide-react';
+import { BhuvanUFSBlockMap } from '@/components/maps/BhuvanUFSBlockMap';
 
 export interface CachedScheduleItem {
   id: string;
@@ -102,19 +103,19 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
   return (
     <div className="space-y-5">
       {/* Top Banner & Offline Switch */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-3xl bg-white border border-[#D8DFEE] p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="h-12 w-12 rounded-2xl bg-emerald-500/15 text-emerald-700 flex items-center justify-center shrink-0">
             <Wifi className="h-6 w-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-[#2d1f17]">
+              <h2 className="text-lg font-black text-[#1F273A]">
                 {isHindi ? 'CAPI फील्ड स्टेशन एवं डेटा कैश' : 'CAPI Field Station & Encrypted Form Ledger'}
               </h2>
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-[#475569] mt-0.5">
               {isHindi
                 ? 'स्थानीय एंड्रॉइड टैबलेट संग्रहण • 38 अनुसूचियां हार्डवेयर एन्क्रिप्टेड'
                 : 'Local hardware-backed storage • 38 schedules secured with AES-256 GCM'}
@@ -130,7 +131,7 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
               isOfflineMode
                 ? 'bg-amber-500/15 border-amber-500/30 text-amber-800'
-                : 'bg-[#FAF6F0] border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#F2E6D8]'
+                : 'bg-[#EDF0F7] border-[#D8DFEE] text-[#475569] hover:bg-[#D8DFEE]'
             }`}
           >
             {isOfflineMode ? <WifiOff className="h-3.5 w-3.5" /> : <Wifi className="h-3.5 w-3.5" />}
@@ -141,7 +142,7 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
             type="button"
             disabled={syncing}
             onClick={handleTransmitAll}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
             <span>
@@ -159,8 +160,8 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
 
       {/* Sync Progress Bar */}
       {syncing && (
-        <div className="p-4 rounded-2xl bg-white border border-[#BF9B7A]/30 space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-mono font-bold text-[#555934]">
+        <div className="p-4 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5">
+          <div className="flex items-center justify-between text-xs font-mono font-bold text-[#1C4CA1]">
             <span>
               {syncProgress < 50
                 ? isHindi
@@ -172,9 +173,9 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
             </span>
             <span>{syncProgress}%</span>
           </div>
-          <div className="h-2 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+          <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#555934] transition-all duration-300"
+              className="h-full rounded-full bg-[#1C4CA1] transition-all duration-300"
               style={{ width: `${syncProgress}%` }}
             />
           </div>
@@ -194,15 +195,15 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
 
       {/* In-website station notice banner */}
       {stationNotice && (
-        <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#555934]/10 border border-[#555934]/30 text-xs text-[#2d1f17] animate-in fade-in duration-150">
+        <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#1C4CA1]/10 border border-[#1C4CA1]/20 text-xs text-[#1F273A] animate-in fade-in duration-150">
           <div className="flex items-center gap-2.5">
-            <Info className="h-4 w-4 text-[#555934] shrink-0" />
+            <Info className="h-4 w-4 text-[#1C4CA1] shrink-0" />
             <span className="font-semibold">{stationNotice}</span>
           </div>
           <button
             type="button"
             onClick={() => setStationNotice(null)}
-            className="text-muted-foreground hover:text-[#2d1f17] p-1 rounded-lg cursor-pointer transition"
+            className="text-[#475569] hover:text-[#1F273A] p-1 rounded-lg cursor-pointer transition"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -210,14 +211,14 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
       )}
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs font-semibold text-[#475569]">
         <button
           type="button"
           onClick={() => setFilter('all')}
           className={`px-3 py-1.5 rounded-xl transition-colors cursor-pointer ${
             filter === 'all'
-              ? 'bg-[#555934] text-white font-bold'
-              : 'bg-white border border-[#BF9B7A]/30 hover:bg-[#FAF6F0]'
+              ? 'bg-[#1C4CA1] text-white font-bold'
+              : 'bg-white border border-[#D8DFEE] hover:bg-[#EDF0F7]'
           }`}
         >
           {isHindi ? 'सभी प्रपत्र (38)' : 'All Forms (38)'}
@@ -227,8 +228,8 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
           onClick={() => setFilter('plfs')}
           className={`px-3 py-1.5 rounded-xl transition-colors cursor-pointer ${
             filter === 'plfs'
-              ? 'bg-[#555934] text-white font-bold'
-              : 'bg-white border border-[#BF9B7A]/30 hover:bg-[#FAF6F0]'
+              ? 'bg-[#1C4CA1] text-white font-bold'
+              : 'bg-white border border-[#D8DFEE] hover:bg-[#EDF0F7]'
           }`}
         >
           {isHindi ? 'पीएलएफएस परिवार (24)' : 'PLFS Household (24)'}
@@ -238,8 +239,8 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
           onClick={() => setFilter('ashe')}
           className={`px-3 py-1.5 rounded-xl transition-colors cursor-pointer ${
             filter === 'ashe'
-              ? 'bg-[#555934] text-white font-bold'
-              : 'bg-white border border-[#BF9B7A]/30 hover:bg-[#FAF6F0]'
+              ? 'bg-[#1C4CA1] text-white font-bold'
+              : 'bg-white border border-[#D8DFEE] hover:bg-[#EDF0F7]'
           }`}
         >
           {isHindi ? 'एएसएचई उद्यम (14)' : 'ASHE Enterprise (14)'}
@@ -250,18 +251,23 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
           className={`px-3 py-1.5 rounded-xl transition-colors cursor-pointer ${
             filter === 'query'
               ? 'bg-amber-600 text-white font-bold'
-              : 'bg-white border border-[#BF9B7A]/30 hover:bg-[#FAF6F0]'
+              : 'bg-white border border-[#D8DFEE] hover:bg-[#EDF0F7]'
           }`}
         >
           {isHindi ? 'विसंगति पर्चियां (1)' : 'Query Slips (1)'}
         </button>
       </div>
 
+      {/* ISRO Bhuvan UFS Block Demarcation Satellite Map (Task C5) */}
+      <div className="mb-6">
+        <BhuvanUFSBlockMap />
+      </div>
+
       {/* Schedule Table */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 shadow-xs overflow-x-auto">
+      <div className="rounded-3xl bg-white border border-[#D8DFEE] p-5 shadow-xs overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="border-b border-[#BF9B7A]/20 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+            <tr className="border-b border-[#D8DFEE] text-[11px] font-bold text-[#475569] uppercase tracking-wider">
               <th className="pb-3 pl-2">Schedule ID</th>
               <th className="pb-3">Type & Unit</th>
               <th className="pb-3 hidden md:table-cell">CEB / Location</th>
@@ -270,18 +276,18 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
               <th className="pb-3 pr-2 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#BF9B7A]/15">
+          <tbody className="divide-y divide-[#D8DFEE]">
             {filtered.map((item) => (
-              <tr key={item.id} className="hover:bg-[#FAF6F0]/50 transition-colors">
-                <td className="py-3.5 pl-2 font-mono font-bold text-[#555934]">{item.id}</td>
+              <tr key={item.id} className="hover:bg-[#EDF0F7]/50 transition-colors">
+                <td className="py-3.5 pl-2 font-mono font-bold text-[#1C4CA1]">{item.id}</td>
                 <td className="py-3.5 pr-3">
-                  <p className="font-bold text-[#2d1f17]">{item.scheduleType}</p>
-                  <p className="text-[11px] text-muted-foreground">{item.sampleUnit}</p>
+                  <p className="font-bold text-[#1F273A]">{item.scheduleType}</p>
+                  <p className="text-[11px] text-[#475569]">{item.sampleUnit}</p>
                 </td>
-                <td className="py-3.5 pr-3 hidden md:table-cell text-muted-foreground">
+                <td className="py-3.5 pr-3 hidden md:table-cell text-[#475569]">
                   {item.villageBlock}
                 </td>
-                <td className="py-3.5 pr-3 hidden sm:table-cell font-mono text-[11px] text-muted-foreground">
+                <td className="py-3.5 pr-3 hidden sm:table-cell font-mono text-[11px] text-[#475569]">
                   {item.gpsLock}
                 </td>
                 <td className="py-3.5 pr-3">
@@ -314,7 +320,7 @@ export function CAPIFieldStationTab({ isHindi = false }: CAPIFieldStationTabProp
                           : `Inspecting schedule return ${item.id} (${item.scheduleType}). All 14 data blocks encrypted.`
                       )
                     }
-                    className="px-3 py-1 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+                    className="px-3 py-1 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors cursor-pointer"
                   >
                     {isHindi ? 'निरीक्षण' : 'Inspect'}
                   </button>

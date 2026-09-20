@@ -12,6 +12,7 @@
 
 import type { CompetencyGap } from '@/lib/types';
 import { SEVERITY_WEIGHTS } from './competencyService';
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
 
 export interface Course {
   id: string;
@@ -204,3 +205,82 @@ export function rankCoursesForGaps(
   // Sort descending by score
   return recommendations.sort((a, b) => b.score - a.score);
 }
+
+/**
+ * Multi-Signal Course Ranking Bridge
+ * Attempts to query FastAPI multi-signal ranker (LightGBM + Collab + Gap);
+ * gracefully falls back to local heuristic ranking in <= 1500ms.
+ */
+export async function rankCoursesMultiSignal(
+  userCadre: string,
+  gaps: CompetencyGap[],
+  catalog: Course[] = OFFICIAL_COURSE_CATALOG
+): Promise<RankedRecommendation[]> {
+  const serviceUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+
+  return executeWithFallback(
+    async () => {
+      const payload = {
+        user_cadre: userCadre,
+        user_gaps: gaps.map((g) => ({
+          competency_id: g.competencyId,
+          competency_title: g.competency.name,
+          gap: g.gap,
+          priority: g.priority,
+          evidence_type: g.evidenceType,
+        })),
+        catalog: catalog.map((c) => ({
+          competency_id: c.targetCompetencies[0] || '',
+          tier: c.stage,
+          semantic_relevance: 0.9,
+          ...c,
+        })),
+      };
+
+      const res = await fetch(`${serviceUrl}/api/v1/recommendations/rank`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error(`FastAPI returned status ${res.status}`);
+      const data = await res.json();
+
+      // Transform backend response back into RankedRecommendation objects
+      interface BackendCourseItem extends Course {
+        competency_id?: string;
+        recommendation_score?: number;
+        explainability?: string;
+      }
+      return data.ranked_courses.map((item: BackendCourseItem) => {
+        const matchingGaps = gaps
+          .filter((g) => (item.targetCompetencies || [item.competency_id]).includes(g.competencyId))
+          .map((g) => ({
+            competencyId: g.competencyId,
+            competencyName: g.competency.name,
+            competencyNameHi: g.competency.name_hi,
+            currentLevel: g.currentLevel,
+            targetLevel: g.targetLevel,
+            gap: g.gap,
+          }));
+
+        const score = Math.round((item.recommendation_score || 0.5) * 200);
+        return {
+          course: item as Course,
+          score,
+          priority: score >= 150 ? 'HIGH' : score >= 70 ? 'MEDIUM' : 'LOW',
+          whyRecommended: item.explainability || `Recommended for ${userCadre} cadre development.`,
+          whyRecommended_hi: item.explainability || `कैडर विकास के लिए अनुशंसित।`,
+          matchingGaps,
+        } as RankedRecommendation;
+      });
+    },
+    () => {
+      // Local Heuristic Fallback
+      return rankCoursesForGaps(gaps, catalog);
+    },
+    'RecommendationEngine_MultiSignal',
+    1500
+  );
+}
+

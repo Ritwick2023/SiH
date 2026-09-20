@@ -1,337 +1,548 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import { ProvenanceBadge } from '@/components/ProvenanceBadge';
-import { rankCoursesForGaps } from '@/services/recommendationService';
+import React, { useState, useMemo, Suspense } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import type { AppUser } from '@/lib/auth';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import { CompetencyService } from '@/services/competencyService';
+import {
+  LearningCatalogService,
+  type RankedLearningRecommendation,
+} from '@/services/learningCatalogService';
+import type { OfficialLearningItem } from '@/data/officialLearningCatalog';
 import type { CompetencyGap } from '@/lib/types';
-import type { AppUser } from '@/lib/auth';
+import {
+  Search,
+  BookOpen,
+  Building2,
+  ExternalLink,
+  ShieldCheck,
+  AlertCircle,
+  PlayCircle,
+  ArrowRight,
+  Filter,
+  GraduationCap,
+  Sparkles,
+  RefreshCw,
+} from 'lucide-react';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 
-interface RecommendedCourse {
-  id: string;
-  title: string;
-  title_hi?: string;
-  provider: string;
-  duration: string;
-  description: string;
-  description_hi?: string;
-  priority: 'HIGH' | 'MEDIUM' | 'LOW';
-  targetCompetencies: string[];
-  whyRecommended: string;
-  whyRecommended_hi?: string;
-  competencyGaps: {
-    competency: string;
-    currentLevel: number;
-    targetLevel: number;
-    gap: number;
-  }[];
-  courseId?: string;
-  iGotLink?: string;
+interface PathwaysClientProps {
+  user?: AppUser | null;
 }
 
-interface PathwaysData {
-  pathways: RecommendedCourse[];
-  readinessIndex: number;
-  totalGaps: number;
-}
+function LearningHubContent({ user }: PathwaysClientProps) {
+  const searchParams = useSearchParams();
+  const globalLocale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
 
-function CourseCard({ course, isHindi }: { course: RecommendedCourse; isHindi?: boolean }) {
-  const priorityColors = {
-    HIGH: 'bg-[#8C5B3E]/12 text-[#8C5B3E]',
-    MEDIUM: 'bg-[#BF9B7A]/20 text-[#593E2E]',
-    LOW: 'bg-[#555934]/12 text-[#555934]',
-  };
+  const initialCompetency = searchParams.get('competency') || 'all';
+  const initialTab = (searchParams.get('tab') as 'recommended' | 'courses' | 'manuals' | 'all') || 'recommended';
 
-  const priorityLabels = {
-    HIGH: isHindi ? '🔥 उच्च प्राथमिकता' : '🔥 High Priority',
-    MEDIUM: isHindi ? '⚡ मध्यम प्राथमिकता' : '⚡ Medium Priority',
-    LOW: isHindi ? '✅ सामान्य प्राथमिकता' : '✅ Low Priority',
+  // Active user FRAC profile
+  const profile = getPersonaFRAC(user);
+  const isHindi =
+    globalLocale === 'hi' ||
+    user?.user_metadata?.preferred_language === 'hi' ||
+    profile.preferredLanguage === 'hi' ||
+    user?.id?.includes('sunita');
+
+  // Compute active gaps
+  const gaps: CompetencyGap[] = useMemo(() => {
+    return profile.competencies.map((comp) => {
+      const gap = Math.max(0, comp.targetLevel - comp.currentLevel);
+      const severityScore = CompetencyService.computeGapSeverity(comp.currentLevel, comp.targetLevel, comp.priority);
+      const severity = CompetencyService.classifySeverity(severityScore);
+
+      return {
+        competencyId: comp.id,
+        competency: {
+          id: comp.id,
+          name: isHindi ? comp.name_hi : comp.name,
+          name_hi: comp.name_hi,
+          category: comp.category,
+          description: isHindi ? comp.description_hi : comp.description,
+          description_hi: comp.description_hi,
+          levels: comp.levels,
+          provenance: comp.provenance,
+          created_at: new Date().toISOString(),
+        },
+        activity: {
+          id: `act-${comp.id}`,
+          name: isHindi ? comp.activityName_hi : comp.activityName,
+          name_hi: comp.activityName_hi,
+          description: comp.description,
+          role_id: profile.personaId,
+          provenance: comp.provenance,
+          created_at: new Date().toISOString(),
+        },
+        currentLevel: comp.currentLevel,
+        targetLevel: comp.targetLevel,
+        gap,
+        priority: comp.priority,
+        severity,
+        evidenceType: comp.evidenceType,
+      };
+    });
+  }, [profile, isHindi]);
+
+  // Overall metrics
+  const userRecords = useMemo(() => new Map(profile.competencies.map((c) => [c.id, c.currentLevel])), [profile]);
+  const required = useMemo(() => profile.competencies.map((c) => ({ competencyId: c.id, targetLevel: c.targetLevel })), [profile]);
+  const readinessIndex = useMemo(() => CompetencyService.computeReadinessIndex(required, userRecords), [required, userRecords]);
+  const activeGapsCount = useMemo(() => gaps.filter((g) => g.gap > 0).length, [gaps]);
+
+  // Ranked recommendations
+  const rankedRecommendations = useMemo(() => {
+    return LearningCatalogService.rankForGaps(gaps, user);
+  }, [gaps, user]);
+
+  // Filter and view state
+  const [activeTab, setActiveTab] = useState<'recommended' | 'courses' | 'manuals' | 'all'>(initialTab);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState<string>('all');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
+  const [selectedCompetency, setSelectedCompetency] = useState<string>(initialCompetency);
+
+  // Filtered items logic
+  const displayedItems = useMemo(() => {
+    if (activeTab === 'recommended') {
+      // In recommended tab, filter ranked recommendations
+      return rankedRecommendations.filter((rec) => {
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = rec.item.title.toLowerCase().includes(q) || rec.item.title_hi.toLowerCase().includes(q);
+          const matchDesc = rec.item.description.toLowerCase().includes(q) || rec.item.description_hi.toLowerCase().includes(q);
+          const matchTopic = rec.item.topics.some((t) => t.toLowerCase().includes(q));
+          if (!matchTitle && !matchDesc && !matchTopic) return false;
+        }
+
+        if (selectedProvider !== 'all' && !rec.item.provider.toLowerCase().includes(selectedProvider.toLowerCase())) {
+          return false;
+        }
+
+        if (selectedLanguage !== 'all') {
+          if (selectedLanguage === 'Hindi' && rec.item.language === 'English') return false;
+          if (selectedLanguage === 'English' && rec.item.language === 'Hindi') return false;
+        }
+
+        if (selectedCompetency !== 'all' && !rec.item.targetCompetencies.includes(selectedCompetency)) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    // In other tabs, filter full catalog
+    let typeFilter = 'all';
+    if (activeTab === 'courses') typeFilter = 'courses';
+    if (activeTab === 'manuals') typeFilter = 'manuals';
+
+    return LearningCatalogService.filter({
+      query: searchQuery,
+      type: typeFilter,
+      provider: selectedProvider,
+      language: selectedLanguage,
+      competencyId: selectedCompetency,
+    });
+  }, [activeTab, rankedRecommendations, searchQuery, selectedProvider, selectedLanguage, selectedCompetency]);
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedProvider('all');
+    setSelectedLanguage('all');
+    setSelectedCompetency('all');
   };
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all group">
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-lg font-semibold text-foreground group-hover:text-[#555934] transition-colors">
-              {isHindi && course.title_hi ? course.title_hi : course.title}
-            </h3>
-            <ProvenanceBadge provenance="SYNTHETIC_DEMO_DATA" showLabel={false} size="sm" />
+    <div className="space-y-8 pb-12">
+      {/* Hub Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#D8DFEE]">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h1 className="text-2xl sm:text-3xl font-black text-[#1F273A] tracking-tight">
+              {isHindi ? 'आधिकारिक सांख्यिकी शिक्षण एवं पाठ्यक्रम केंद्र' : 'Official Learning & Courses Hub'}
+            </h1>
           </div>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground mb-2">
-            <span className="font-medium">{course.provider}</span>
-            <span className="text-slate-400">•</span>
-            <span>{course.duration}</span>
-          </div>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            {isHindi
+              ? 'एनएसएसटीए एवं सांख्यिकी मंत्रालय (MoSPI) द्वारा प्रमाणित प्रशिक्षण कार्यक्रम और फील्ड नियमावलियां'
+              : 'Grounded in Official Training Programmes & Publications from NSSTA & MoSPI'}
+          </p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${priorityColors[course.priority]}`}>
-          {priorityLabels[course.priority]}
-        </span>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="px-3 py-1.5 rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1] text-xs font-bold inline-flex items-center gap-1.5">
+            <ShieldCheck className="h-4 w-4" />
+            <span>Mission Karmayogi FRAC</span>
+          </span>
+        </div>
       </div>
 
-      <div className="mb-4">
-        <h4 className="text-sm font-medium text-foreground mb-2">
-          {isHindi ? 'यह पाठ्यक्रम क्यों' : 'Why This Course'}
-        </h4>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {isHindi && course.whyRecommended_hi ? course.whyRecommended_hi : course.whyRecommended}
-        </p>
-      </div>
-
-      <div className="mb-4">
-        <h4 className="text-sm font-medium text-foreground mb-2">
-          {isHindi
-            ? `${course.targetCompetencies.length} दक्षताओं के अंतर को पूरा करता है:`
-            : `Targets ${course.targetCompetencies.length} Competency ${course.targetCompetencies.length === 1 ? 'Gap' : 'Gaps'}:`}
-        </h4>
-        <div className="flex flex-wrap gap-2">
-          {course.targetCompetencies.map((comp, idx) => (
-            <span
-              key={idx}
-              className="px-2.5 py-1 rounded-full bg-[#BF9B7A]/15 text-xs font-medium text-[#593E2E]"
-            >
-              {comp}
+      {/* 3 Executive Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Readiness Index */}
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
+          <div>
+            <span className="text-xs text-muted-foreground font-semibold block">
+              {isHindi ? 'समग्र कैडर तत्परता' : 'Cadre Readiness Index'}
             </span>
-          ))}
+            <span className="text-2xl sm:text-3xl font-black text-[#1C4CA1] font-mono mt-0.5 block">
+              {readinessIndex}%
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              {readinessIndex >= 70 ? (isHindi ? 'अधिकांश क्षमताएं पूरी हैं' : 'Field ready') : (isHindi ? 'प्राथमिकता अंतर मौजूद' : 'Gaps to address')}
+            </span>
+          </div>
+          <div className="h-11 w-11 rounded-2xl bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center shrink-0">
+            <GraduationCap className="h-5 w-5" />
+          </div>
+        </div>
+
+        {/* Priority Gaps */}
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
+          <div>
+            <span className="text-xs text-muted-foreground font-semibold block">
+              {isHindi ? 'सक्रिय क्षमता अंतर' : 'Active Competency Gaps'}
+            </span>
+            <span className="text-2xl sm:text-3xl font-black text-[#FFA72F] font-mono mt-0.5 block">
+              {activeGapsCount}
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              {isHindi ? 'लक्षित शिक्षण से सुधारें' : 'Targeted by official courses'}
+            </span>
+          </div>
+          <div className="h-11 w-11 rounded-2xl bg-[#FFA72F]/15 text-[#FFA72F] flex items-center justify-center shrink-0">
+            <Sparkles className="h-5 w-5" />
+          </div>
+        </div>
+
+        {/* Official Resources */}
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
+          <div>
+            <span className="text-xs text-muted-foreground font-semibold block">
+              {isHindi ? 'सत्यापित सरकारी संसाधन' : 'Verified Official Catalog'}
+            </span>
+            <span className="text-2xl sm:text-3xl font-black text-[#1F273A] font-mono mt-0.5 block">
+              10
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              NSSTA (G. Noida) & MoSPI
+            </span>
+          </div>
+          <div className="h-11 w-11 rounded-2xl bg-[#EDF0F7] text-[#1F273A] flex items-center justify-center shrink-0">
+            <Building2 className="h-5 w-5" />
+          </div>
         </div>
       </div>
 
-      {course.competencyGaps && course.competencyGaps.length > 0 && (
-        <div className="mb-4">
-          <h4 className="text-sm font-medium text-foreground mb-2">
-            {isHindi ? 'संबोधित विशिष्ट अंतर:' : 'Specific Gaps Addressed:'}
-          </h4>
-          <div className="space-y-2">
-            {course.competencyGaps.map((gap, idx) => (
-              <div key={idx} className="flex items-center justify-between text-sm bg-[#F2E6D8]/50 rounded-xl p-3">
-                <span className="font-medium text-foreground">{gap.competency}</span>
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-muted-foreground">{isHindi ? 'वर्तमान:' : 'Current:'} L{gap.currentLevel}</span>
-                  <span className="text-slate-400">→</span>
-                  <span className="font-bold text-[#555934]">L{gap.targetLevel}</span>
-                  <span className="text-muted-foreground ml-1">
-                    ({gap.gap} {isHindi ? 'स्तर' : gap.gap === 1 ? 'level' : 'levels'})
-                  </span>
-                </div>
-              </div>
-            ))}
+      {/* Main View Switcher Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-[#D8DFEE] text-xs font-bold scrollbar-none">
+        <button
+          type="button"
+          onClick={() => setActiveTab('recommended')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+            activeTab === 'recommended'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
+          }`}
+        >
+          <Sparkles className="h-3.5 w-3.5 text-[#FFA72F]" />
+          <span>{isHindi ? 'आपके अंतर के लिए अनुशंसित' : 'Recommended for Your Gaps'}</span>
+          <span className="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]">
+            {rankedRecommendations.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('courses')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+            activeTab === 'courses'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
+          }`}
+        >
+          <GraduationCap className="h-3.5 w-3.5 text-[#1164BE]" />
+          <span>{isHindi ? 'एनएसएसटीए प्रशिक्षण एवं कार्यशालाएं' : 'NSSTA Courses & Workshops'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('manuals')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+            activeTab === 'manuals'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
+          }`}
+        >
+          <BookOpen className="h-3.5 w-3.5 text-[#1C4CA1]" />
+          <span>{isHindi ? 'आधिकारिक फील्ड नियमावलियां (MoSPI)' : 'Official Field Manuals (MoSPI)'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('all')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+            activeTab === 'all'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
+          }`}
+        >
+          <span>{isHindi ? 'समस्त संसाधन (कैटलॉग)' : 'All Resources'}</span>
+        </button>
+      </div>
+
+      {/* Search & Multi-Criteria Filter Bar */}
+      <div className="bg-white p-4 rounded-2xl border border-[#D8DFEE] shadow-xs space-y-3">
+        <div className="flex flex-col md:flex-row items-center gap-3">
+          {/* Live Search Bar */}
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={
+                isHindi
+                  ? 'पाठ्यक्रम, मैनुअल, विषय या कीवर्ड खोजें (उदा. CAPI, PLFS, Scrutiny)...'
+                  : 'Search by title, topic, manual, or competency (e.g., CAPI, PLFS, Scrutiny)...'
+              }
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/30 focus:border-[#1C4CA1] text-[#1F273A] placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* Quick Dropdown Filters */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {/* Provider Filter */}
+            <select
+              value={selectedProvider}
+              onChange={(e) => setSelectedProvider(e.target.value)}
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
+            >
+              <option value="all">{isHindi ? 'सभी प्रदाता' : 'All Providers'}</option>
+              <option value="NSSTA">NSSTA (Academy)</option>
+              <option value="MoSPI">MoSPI (Ministry)</option>
+              <option value="NSSO">NSSO FOD</option>
+            </select>
+
+            {/* Language Filter */}
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
+            >
+              <option value="all">{isHindi ? 'सभी भाषाएँ' : 'All Languages'}</option>
+              <option value="Hindi">{isHindi ? 'हिंदी / द्विभाषी' : 'Hindi / Bilingual'}</option>
+              <option value="English">English</option>
+            </select>
+
+            {/* Competency Filter */}
+            <select
+              value={selectedCompetency}
+              onChange={(e) => setSelectedCompetency(e.target.value)}
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
+            >
+              <option value="all">{isHindi ? 'सभी FRAC क्षमताएं' : 'All Competencies'}</option>
+              <option value="comp-capi">{isHindi ? 'कैपी टैबलेट संचालन' : 'CAPI Operations'}</option>
+              <option value="comp-nsso">{isHindi ? 'एनएसएसओ सर्वेक्षण' : 'PLFS & Schedule 0.0'}</option>
+              <option value="comp-data">{isHindi ? 'डेटा संवीक्षा' : 'Statistical Scrutiny'}</option>
+              <option value="comp-survey">{isHindi ? 'नमूनाकरण डिजाइन' : 'Sampling Theory'}</option>
+              <option value="comp-informant">{isHindi ? 'सूचनादाता नैतिकता' : 'Informant Ethics'}</option>
+              <option value="comp-teamwork">{isHindi ? 'फील्ड समन्वय' : 'Teamwork'}</option>
+            </select>
+
+            {(searchQuery || selectedProvider !== 'all' || selectedLanguage !== 'all' || selectedCompetency !== 'all') && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="px-2.5 py-2 text-xs text-muted-foreground hover:text-[#FFA72F] font-semibold inline-flex items-center gap-1 cursor-pointer"
+                title="Reset Filters"
+              >
+                <RefreshCw className="h-3 w-3" />
+                <span>Reset</span>
+              </button>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="flex items-center justify-between pt-4">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="w-2 h-2 rounded-full bg-[#555934]"></span>
-          <span>{isHindi ? 'iGOT कर्मयोगी के साथ सीधा एकीकरण' : 'Live integration with iGOT Karmayogi'}</span>
-        </div>
-        <a
-          href={course.iGotLink || "#"}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#555934] hover:bg-[#3e4225] text-white text-sm font-semibold rounded-xl transition-all shadow-xs active:scale-95"
-        >
-          {isHindi ? 'पाठ्यक्रम देखें' : 'View Course'}
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
+      {/* Grid of Course / Learning Cards */}
+      <div className="space-y-4">
+        {displayedItems.length === 0 ? (
+          /* Empty State */
+          <div className="rounded-3xl bg-white border border-[#D8DFEE] p-12 text-center space-y-4">
+            <div className="h-12 w-12 rounded-full bg-[#EDF0F7] text-muted-foreground flex items-center justify-center mx-auto">
+              <Filter className="h-6 w-6" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-base font-bold text-[#1F273A]">
+                {isHindi ? 'कोई मेल खाता शिक्षण संसाधन नहीं मिला' : 'No matching learning resources found'}
+              </h3>
+              <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                {isHindi
+                  ? 'कृपया अन्य कीवर्ड, भाषा, या क्षमता फ़िल्टर चुनकर पुन: प्रयास करें।'
+                  : 'Try adjusting your search query, provider, or competency filter to browse available materials.'}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer"
+            >
+              {isHindi ? 'फ़िल्टर रीसेट करें' : 'Clear All Filters'}
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            {displayedItems.map((entry) => {
+              // Discriminate between RankedRecommendation and raw OfficialLearningItem
+              const item = 'item' in entry ? (entry as RankedLearningRecommendation).item : (entry as OfficialLearningItem);
+              const recommendation = 'item' in entry ? (entry as RankedLearningRecommendation) : undefined;
+
+              const title = isHindi && item.title_hi ? item.title_hi : item.title;
+              const description = isHindi && item.description_hi ? item.description_hi : item.description;
+              const provider = isHindi && item.provider_hi ? item.provider_hi : item.provider;
+              const whyRecommended = recommendation
+                ? (isHindi && recommendation.whyRecommended_hi ? recommendation.whyRecommended_hi : recommendation.whyRecommended)
+                : null;
+
+              const isOfficial = item.provenance === 'VERIFIED_OFFICIAL';
+              const primaryCompId = item.targetCompetencies[0] || 'comp-capi';
+
+              return (
+                <div
+                  key={item.id}
+                  className="rounded-3xl bg-white border border-[#D8DFEE] p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-4">
+                    {/* Header Strip: Type + Provenance */}
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1]">
+                          {item.source_type.replace('_', ' ')}
+                        </span>
+
+                        {isOfficial ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1]">
+                            <ShieldCheck className="h-3 w-3" />
+                            <span>{item.source_domain}</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-800">
+                            <AlertCircle className="h-3 w-3" />
+                            <span>Demo Module</span>
+                          </span>
+                        )}
+
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#EDF0F7] text-[#1F273A]">
+                          {item.language}
+                        </span>
+                      </div>
+
+                      {item.duration && (
+                        <span className="text-[11px] font-mono text-muted-foreground font-semibold">
+                          {item.duration}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Title & Provider */}
+                    <div className="space-y-1">
+                      <Link
+                        href={`/pathways/${item.id}`}
+                        className="group-hover:text-[#1C4CA1] transition-colors"
+                      >
+                        <h3 className="text-base font-bold text-[#1F273A] hover:text-[#1C4CA1] transition-colors line-clamp-2">
+                          {title}
+                        </h3>
+                      </Link>
+                      <div className="flex items-center gap-1.5 text-xs text-[#FFA72F] font-semibold">
+                        <Building2 className="h-3.5 w-3.5 shrink-0 text-[#1C4CA1]" />
+                        <span className="truncate">{provider}</span>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {description}
+                    </p>
+
+                    {/* Explainability / Why Recommended Callout */}
+                    {whyRecommended && (
+                      <div className="rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] p-3 space-y-1">
+                        <span className="text-[10px] font-bold text-[#FFA72F] uppercase tracking-wider block">
+                          {isHindi ? 'आपके अंतर के लिए अनुशंसित' : 'Recommended for Your Gap'}
+                        </span>
+                        <p className="text-xs text-[#1F273A] leading-relaxed">
+                          {whyRecommended}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Competency Badges */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      <span className="text-[11px] text-muted-foreground font-medium mr-1">
+                        {isHindi ? 'लक्षित क्षमता:' : 'Targets:'}
+                      </span>
+                      {item.targetCompetencies.map((cId) => (
+                        <span
+                          key={cId}
+                          className="px-2.5 py-0.5 rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-[11px] font-semibold text-[#1F273A]"
+                        >
+                          {cId}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Actions Footer */}
+                  <div className="mt-6 pt-4 border-t border-[#D8DFEE] flex items-center justify-between gap-3">
+                    <Link
+                      href={`/pathways/${item.id}`}
+                      className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1"
+                    >
+                      <span>{isHindi ? 'विवरण देखें' : 'View Details'}</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={item.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-xl bg-white border border-[#D8DFEE] text-[#1F273A] hover:bg-[#EDF0F7] text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                        title="Open source website"
+                      >
+                        <span>{isHindi ? 'आधिकारिक स्रोत' : 'Source'}</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+
+                      <Link
+                        href={`/assessment/${primaryCompId}`}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white hover:bg-[#1164BE] text-xs font-bold transition-all inline-flex items-center gap-1 shadow-2xs active:scale-95"
+                      >
+                        <PlayCircle className="h-3.5 w-3.5" />
+                        <span>{isHindi ? 'मूल्यांकन' : 'Assess'}</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function buildPersonaPathwaysData(user?: AppUser | null, isHindiLang?: boolean): PathwaysData {
-  const profile = getPersonaFRAC(user);
-  const isHindi = isHindiLang ?? (user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi');
-
-  const gaps: CompetencyGap[] = profile.competencies.map((comp) => {
-    const gap = Math.max(0, comp.targetLevel - comp.currentLevel);
-    const severityScore = CompetencyService.computeGapSeverity(comp.currentLevel, comp.targetLevel, comp.priority);
-    const severity = CompetencyService.classifySeverity(severityScore);
-
-    return {
-      competencyId: comp.id,
-      competency: {
-        id: comp.id,
-        name: isHindi ? comp.name_hi : comp.name,
-        name_hi: comp.name_hi,
-        category: comp.category,
-        description: isHindi ? comp.description_hi : comp.description,
-        description_hi: comp.description_hi,
-        levels: comp.levels,
-        provenance: comp.provenance,
-        created_at: new Date().toISOString(),
-      },
-      activity: {
-        id: `act-${comp.id}`,
-        name: isHindi ? comp.activityName_hi : comp.activityName,
-        name_hi: comp.activityName_hi,
-        description: comp.description,
-        role_id: profile.personaId,
-        provenance: comp.provenance,
-        created_at: new Date().toISOString(),
-      },
-      currentLevel: comp.currentLevel,
-      targetLevel: comp.targetLevel,
-      gap,
-      priority: comp.priority,
-      severity,
-      evidenceType: comp.evidenceType,
-    };
-  });
-
-  const ranked = rankCoursesForGaps(gaps);
-
-  const pathways: RecommendedCourse[] = ranked.map((r) => ({
-    id: r.course.id,
-    title: isHindi && r.course.title_hi ? r.course.title_hi : r.course.title,
-    title_hi: r.course.title_hi,
-    provider: r.course.provider,
-    duration: r.course.duration,
-    description: isHindi && r.course.description_hi ? r.course.description_hi : r.course.description,
-    description_hi: r.course.description_hi,
-    priority: r.priority,
-    targetCompetencies: r.course.targetCompetencies.map(
-      (cId) => gaps.find((g) => g.competencyId === cId)?.competency.name || cId
-    ),
-    whyRecommended: isHindi && r.whyRecommended_hi ? r.whyRecommended_hi : r.whyRecommended,
-    whyRecommended_hi: r.whyRecommended_hi,
-    competencyGaps: r.matchingGaps.map((mg) => ({
-      competency: mg.competencyName,
-      currentLevel: mg.currentLevel,
-      targetLevel: mg.targetLevel,
-      gap: mg.gap,
-    })),
-    courseId: r.course.courseId,
-    iGotLink: r.course.iGotLink,
-  }));
-
-  const userRecords = new Map(profile.competencies.map((c) => [c.id, c.currentLevel]));
-  const required = profile.competencies.map((c) => ({ competencyId: c.id, targetLevel: c.targetLevel }));
-  const readinessIndex = CompetencyService.computeReadinessIndex(required, userRecords);
-
-  return {
-    pathways,
-    readinessIndex,
-    totalGaps: gaps.filter((g) => g.gap > 0).length,
-  };
-}
-
-export default function PathwaysClient({ user }: { user?: AppUser | null }) {
-  const t = useTranslations();
-  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
-  const isHindi = locale === 'hi';
-  const data = useMemo(() => buildPersonaPathwaysData(user, isHindi), [user, isHindi]);
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-
-  if (!data) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          {isHindi ? 'कोई शिक्षण पथ उपलब्ध नहीं है' : 'No pathways available'}
-        </p>
-      </div>
-    );
-  }
-
+export default function PathwaysClient({ user }: PathwaysClientProps) {
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-foreground">
-          {t('pathways.title')}
-        </h1>
-        <p className="text-muted-foreground">
-          {t('pathways.subtitle')}
-        </p>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Readiness Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
-            {isHindi ? 'समग्र तत्परता' : 'Overall Readiness'}
-          </h3>
-          <div className="text-3xl font-bold text-[#555934] mb-1 font-mono">
-            {data.readinessIndex}%
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {data.readinessIndex >= 80
-              ? isHindi ? 'उत्कृष्ट! अधिकांश दक्षताएं पूर्ण' : 'Excellent! Most competencies met'
-              : data.readinessIndex >= 50
-              ? isHindi ? 'अच्छी प्रगति, कुछ कमियां शेष' : 'Good progress, some gaps remain'
-              : isHindi ? 'दक्षताओं पर ध्यान देने की आवश्यकता' : 'Significant gaps need attention'
-            }
-          </p>
-        </div>
-
-        {/* Gaps Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
-            {isHindi ? 'कुल दक्षता अंतर' : 'Total Competency Gaps'}
-          </h3>
-          <div className="text-3xl font-bold text-[#8C5B3E] mb-1 font-mono">
-            {data.totalGaps}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {data.totalGaps === 1
-              ? isHindi ? 'एक स्तर में सुधार की आवश्यकता' : 'One level needs improvement'
-              : data.totalGaps <= 3
-              ? isHindi ? 'कुछ कमियां पहचानी गईं' : 'Few gaps identified'
-              : isHindi ? 'कई कमियों पर ध्यान देने की आवश्यकता' : 'Multiple gaps require attention'
-            }
-          </p>
-        </div>
-
-        {/* Priority Courses Card */}
-        <div className="rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
-            {isHindi ? 'अनुशंसित पाठ्यक्रम' : 'Recommended Courses'}
-          </h3>
-          <div className="text-3xl font-bold text-[#593E2E] mb-1 font-mono">
-            {data.pathways.filter(c => c.priority === 'HIGH').length}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {isHindi ? 'आपकी दक्षता कमियों से मेल खाने वाले उच्च-प्राथमिकता पाठ्यक्रम' : 'High-priority courses matching your gaps'}
-          </p>
-        </div>
-      </div>
-
-      {/* Course Grid */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-foreground">
-            {isHindi ? 'अनुशंसित शिक्षण पथ' : 'Recommended Learning Pathways'}
-          </h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{isHindi ? 'एकीकरण:' : 'Integration:'}</span>
-            <ProvenanceBadge provenance="SYNTHETIC_DEMO_DATA" showLabel={true} size="sm" />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {data.pathways.map((course) => (
-            <CourseCard key={course.id} course={course} isHindi={isHindi} />
-          ))}
-        </div>
-      </div>
-
-      {/* Expandable Course Details */}
-      {selectedCourse && data.pathways.find(c => c.id === selectedCourse) && (
-        <div className="rounded-2xl bg-white p-6 shadow-card">
-          <h3 className="text-lg font-semibold text-foreground mb-4">
-            {isHindi ? 'पाठ्यक्रम विवरण' : 'Course Details'}
-          </h3>
-          <button
-            onClick={() => setSelectedCourse(null)}
-            className="text-sm text-primary hover:underline"
-          >
-            {isHindi ? 'सभी पाठ्यक्रम दिखाएं' : 'Show all courses'}
-          </button>
-        </div>
-      )}
-    </div>
+    <Suspense fallback={<div className="p-8 text-center text-xs text-muted-foreground">Loading Learning Hub...</div>}>
+      <LearningHubContent user={user} />
+    </Suspense>
   );
 }

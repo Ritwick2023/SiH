@@ -20,6 +20,8 @@ describe('Topbar Component', () => {
     const html = renderToString(<Topbar initialRole="learner" />);
     expect(html).toContain('Karma Points');
     expect(html).toContain('CAPI');
+    expect(html).toContain('Search competencies, manuals...');
+    expect(html).toContain('⌘K');
   });
 
   it('renders trainer topbar with QA pending counter and faculty studio identity', () => {

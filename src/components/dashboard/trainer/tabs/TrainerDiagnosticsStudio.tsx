@@ -157,10 +157,10 @@ export function TrainerDiagnosticsStudio({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-2">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-2">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-red-600" />
-          <h2 className="text-lg font-bold text-[#2d1f17] tracking-tight">
+          <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
             Item Diagnostics & Zonal Error Disparities
           </h2>
         </div>
@@ -169,7 +169,7 @@ export function TrainerDiagnosticsStudio({
         </p>
 
         {toastMsg && (
-          <div className="mt-3 p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+          <div className="mt-3 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{toastMsg}</span>
           </div>
@@ -177,24 +177,24 @@ export function TrainerDiagnosticsStudio({
       </div>
 
       {/* Regional Error Disparities Matrix */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#BF9B7A]/20">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D8DFEE]">
           <div>
-            <h3 className="text-base font-bold text-[#2d1f17]">
+            <h3 className="text-base font-bold text-[#1F273A]">
               Regional Zonal Center Deficit Comparison
             </h3>
             <p className="text-xs text-muted-foreground">
               Cross-zonal performance on NSS 79th Round benchmark competencies
             </p>
           </div>
-          <span className="text-xs font-mono font-bold text-[#8C5B3E] bg-[#FAF6F0] px-2.5 py-1 rounded-lg border border-[#BF9B7A]/25">
+          <span className="text-xs font-mono font-bold text-[#1C4CA1] bg-[#EDF0F7] px-2.5 py-1 rounded-lg border border-[#D8DFEE]">
             5 ZTC Centers Audited
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-[#BF9B7A]/20">
+        <div className="overflow-x-auto rounded-xl border border-[#D8DFEE]">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF6F0] border-b border-[#BF9B7A]/20 text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
+            <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="py-3 px-4">Zonal Center</th>
                 <th className="py-3 px-4">Trainees</th>
@@ -204,24 +204,24 @@ export function TrainerDiagnosticsStudio({
                 <th className="py-3 px-4 text-right">Faculty Intervention</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#BF9B7A]/15">
+            <tbody className="divide-y divide-[#D8DFEE]">
               {REGIONAL_ERROR_DISPARITIES.map((reg, idx) => (
-                <tr key={idx} className="hover:bg-[#FAF6F0]/40 transition-colors">
-                  <td className="py-3 px-4 font-bold text-[#2d1f17]">
+                <tr key={idx} className="hover:bg-[#EDF0F7]/40 transition-colors">
+                  <td className="py-3 px-4 font-bold text-[#1F273A]">
                     <div className="flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-[#8C5B3E]" />
+                      <Building2 className="h-4 w-4 text-[#1C4CA1]" />
                       <span>{reg.center}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4 font-mono text-muted-foreground">
                     {reg.cadreCount} Officers
                   </td>
-                  <td className="py-3 px-4 font-medium text-[#2d1f17]">
+                  <td className="py-3 px-4 font-medium text-[#1F273A]">
                     {reg.topDeficit}
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold font-mono text-sm text-[#2d1f17]">
+                      <span className="font-bold font-mono text-sm text-[#1F273A]">
                         {reg.errorRate}%
                       </span>
                       <span
@@ -244,7 +244,7 @@ export function TrainerDiagnosticsStudio({
                     <button
                       type="button"
                       onClick={() => handleDispatchZtc(reg.center)}
-                      className="px-3 py-1 rounded-xl bg-[#8C5B3E] hover:bg-[#704830] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
+                      className="px-3 py-1 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
                     >
                       <Sparkles className="h-3 w-3" />
                       <span>Dispatch Remediation</span>
@@ -260,9 +260,9 @@ export function TrainerDiagnosticsStudio({
       {/* Top 5 Most Confused Concepts & Remediation Recommendations */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left: Most Confused Concepts */}
-        <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-[#BF9B7A]/20">
-            <h4 className="font-bold text-sm text-[#2d1f17]">
+        <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[#D8DFEE]">
+            <h4 className="font-bold text-sm text-[#1F273A]">
               Top 4 Most Confused MoSPI Concepts
             </h4>
             <span className="text-[10px] font-bold uppercase text-red-700 bg-red-500/15 px-2 py-0.5 rounded-full">
@@ -293,9 +293,9 @@ export function TrainerDiagnosticsStudio({
                 detail: 'Misclassifying unpaid family helpers as own-account self-employed workers.',
               },
             ].map((item, idx) => (
-              <div key={idx} className="p-3 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/20 space-y-2">
+              <div key={idx} className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#2d1f17]">{item.concept}</span>
+                  <span className="font-bold text-[#1F273A]">{item.concept}</span>
                   <span className="font-mono font-bold text-red-600 text-[11px]">{item.pct}</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">{item.detail}</p>
@@ -303,7 +303,7 @@ export function TrainerDiagnosticsStudio({
                   <button
                     type="button"
                     onClick={() => onInspectItem(SAMPLE_DIAGNOSTIC_ITEMS[idx] || SAMPLE_DIAGNOSTIC_ITEMS[0])}
-                    className="inline-flex items-center gap-1 text-[10px] font-bold text-[#555934] hover:text-[#2d1f17] cursor-pointer"
+                    className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1C4CA1] hover:text-[#1164BE] cursor-pointer"
                   >
                     <BarChart3 className="h-3 w-3" />
                     <span>Inspect Distractors</span>
@@ -315,29 +315,29 @@ export function TrainerDiagnosticsStudio({
         </div>
 
         {/* Right: Faculty Action Protocol */}
-        <div className="rounded-3xl bg-[#2d1f17] text-white p-6 shadow-2xs space-y-3 border border-[#BF9B7A]/20 flex flex-col justify-between">
+        <div className="rounded-2xl bg-[#1F273A] text-white p-6 shadow-2xs space-y-3 border border-[#2C3B59] flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-              <ShieldAlert className="h-4 w-4 text-[#F8C858]" />
-              <h4 className="font-bold text-sm text-[#F8C858]">
+              <ShieldAlert className="h-4 w-4 text-[#FFA72F]" />
+              <h4 className="font-bold text-sm text-[#FFA72F]">
                 NSSTA Faculty Remediation Guidance
               </h4>
             </div>
 
-            <p className="text-xs text-[#FAF6F0]/80 leading-relaxed">
+            <p className="text-xs text-slate-200 leading-relaxed">
               Based on empirical psychometric responses, automated drills with statutory citations should be dispatched at least 7 days prior to national survey rollouts.
             </p>
 
             <div className="space-y-2 text-xs">
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-                <p className="font-bold text-[#F8C858]">Prescription 1: CAPI Field Simulation</p>
-                <p className="text-[11px] text-[#FAF6F0]/70">
+                <p className="font-bold text-[#FFA72F]">Prescription 1: CAPI Field Simulation</p>
+                <p className="text-[11px] text-slate-300">
                   Mandate 3 interactive practice trials on Android emulator for all ZTC Kolkata & Lucknow trainees.
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-                <p className="font-bold text-[#F8C858]">Prescription 2: Schedule 0.0 Diagnostic</p>
-                <p className="text-[11px] text-[#FAF6F0]/70">
+                <p className="font-bold text-[#FFA72F]">Prescription 2: Schedule 0.0 Diagnostic</p>
+                <p className="text-[11px] text-slate-300">
                   Dispatch 5-question targeted drill with population threshold examples.
                 </p>
               </div>
@@ -347,7 +347,7 @@ export function TrainerDiagnosticsStudio({
           <button
             type="button"
             onClick={() => onRemediateCohort(ACTIVE_COHORTS[0])}
-            className="w-full py-2.5 rounded-xl bg-[#8C5B3E] hover:bg-[#704830] text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4"
+            className="w-full py-2.5 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4"
           >
             <Sparkles className="h-3.5 w-3.5" />
             <span>Open Global Remediation Dispatcher</span>

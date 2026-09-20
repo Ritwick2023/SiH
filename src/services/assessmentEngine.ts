@@ -47,6 +47,9 @@ export interface ScoreResult {
   correct: number;
   unanswered: number;
   percentageCorrect: number;
+  theta?: number;
+  standardError?: number;
+  proficiencyLevel?: string;
 }
 
 // ============================================================
@@ -208,12 +211,29 @@ export function getScore(state: EngineState): ScoreResult {
   const correct = questions.filter(
     (q) => state.answers[q.id] === q.correctAnswer
   ).length;
+
+  const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const pCorrect = total > 0 ? correct / total : 0;
+  const approxTheta = Number(((pCorrect - 0.5) * 4.0).toFixed(2));
+  const se = Math.max(0.25, Number((1.0 / Math.sqrt(Math.max(1, total))).toFixed(2)));
+
+  // Karmayogi level mapping
+  let level = 'L3';
+  if (approxTheta < -1.8) level = 'L1';
+  else if (approxTheta < -0.4) level = 'L2';
+  else if (approxTheta < 0.9) level = 'L3';
+  else if (approxTheta < 2.2) level = 'L4';
+  else level = 'L5';
+
   return {
     total,
     answered,
     correct,
     unanswered: total - answered,
-    percentageCorrect: total > 0 ? Math.round((correct / total) * 100) : 0,
+    percentageCorrect: percentage,
+    theta: approxTheta,
+    standardError: se,
+    proficiencyLevel: level,
   };
 }
 

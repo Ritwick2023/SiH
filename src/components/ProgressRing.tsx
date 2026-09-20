@@ -33,9 +33,9 @@ export function ProgressRing({
   // Determine stroke color based on value if not provided
   const getRingColor = (val: number) => {
     if (color) return color;
-    if (val >= 80) return 'text-[#555934]';
-    if (val >= 50) return 'text-[#BF9B7A]';
-    return 'text-[#8C5B3E]';
+    if (val >= 80) return 'text-[#1C4CA1]';
+    if (val >= 50) return 'text-[#FFA72F]';
+    return 'text-amber-700';
   };
 
   return (
@@ -57,7 +57,7 @@ export function ProgressRing({
           strokeWidth={strokeWidth}
           stroke="currentColor"
           fill="transparent"
-          className="text-[#E8DACB]"
+          className="text-[#EDF0F7]"
         />
         {/* Progress stroke */}
         <circle
@@ -77,17 +77,17 @@ export function ProgressRing({
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-2">
         {showPercentage && (
-          <span className="text-3xl font-bold tracking-tight text-[#2d1f17] font-mono leading-none">
+          <span className="text-3xl font-bold tracking-tight text-[#1F273A] font-mono leading-none">
             {Math.round(normalizedValue)}%
           </span>
         )}
         {label && (
-          <span className="text-[11px] font-semibold text-[#705849] uppercase tracking-wider mt-1">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-1">
             {label}
           </span>
         )}
         {trendDelta && (
-          <span className="mt-1 inline-flex items-center rounded-full bg-[#555934]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#555934] border border-[#555934]/25 font-mono">
+          <span className="mt-1 inline-flex items-center rounded-full bg-[#1C4CA1]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#1C4CA1] border border-[#1C4CA1]/25 font-mono">
             {trendDelta}
           </span>
         )}

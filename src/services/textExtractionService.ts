@@ -7,6 +7,8 @@
  * 3. Standard text decoder for TXT/MD/CSV files
  */
 
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+
 export interface ExtractionResult {
   text: string;
   method: 'pdf_parse' | 'ocr_tesseract' | 'plain_text';
@@ -15,6 +17,56 @@ export interface ExtractionResult {
 }
 
 export class TextExtractionService {
+  /**
+   * Dispatches extraction to the asynchronous Celery/FastAPI pipeline for background processing,
+   * falling back to local extractText() if the microservice is unavailable.
+   */
+  static async extractAsync(
+    buffer: ArrayBuffer | Uint8Array | Buffer,
+    filename: string,
+    documentId: string,
+    mimeType?: string
+  ): Promise<{ jobId: string; status: 'QUEUED' | 'PROCESSED'; result?: ExtractionResult }> {
+    const serviceUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+
+    return executeWithFallback(
+      async () => {
+        const localResult = await this.extractText(buffer, filename, mimeType);
+
+        const res = await fetch(`${serviceUrl}/api/v1/documents/chunks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            document_id: documentId,
+            page_number: 1,
+            section_title: filename,
+            chunk_text: localResult.text.slice(0, 1500),
+            provenance: 'UPLOADED_MANUAL',
+          }),
+        });
+
+        if (!res.ok) throw new Error(`Document extraction API returned ${res.status}`);
+        const data = await res.json();
+
+        return {
+          jobId: data.chunk_id || `job-${Date.now()}`,
+          status: 'PROCESSED' as const,
+          result: localResult,
+        };
+      },
+      async () => {
+        const localResult = await this.extractText(buffer, filename, mimeType);
+        return {
+          jobId: `job-local-${Date.now()}`,
+          status: 'PROCESSED' as const,
+          result: localResult,
+        };
+      },
+      'TextExtractionService.extractAsync',
+      1500
+    );
+  }
+
   /**
    * Extracts text from a file buffer based on filename and MIME type
    */

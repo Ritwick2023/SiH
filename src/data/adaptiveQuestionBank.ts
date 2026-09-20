@@ -30,6 +30,26 @@ export interface AdaptiveQuestion {
   citation: string;
   rationale: string;
   rationale_hi: string;
+  irt_a?: number; // discrimination parameter [0.5, 2.5]
+  irt_b?: number; // difficulty parameter [-3.0, +3.0]
+}
+
+/**
+ * Returns calibrated IRT parameters for an item, falling back to difficulty defaults.
+ */
+export function getQuestionIrtParams(q: AdaptiveQuestion): { irt_a: number; irt_b: number } {
+  if (q.irt_a !== undefined && q.irt_b !== undefined) {
+    return { irt_a: q.irt_a, irt_b: q.irt_b };
+  }
+  switch (q.difficulty) {
+    case 'easy':
+      return { irt_a: 1.1, irt_b: -1.2 };
+    case 'hard':
+      return { irt_a: 1.6, irt_b: 1.4 };
+    case 'medium':
+    default:
+      return { irt_a: 1.3, irt_b: 0.0 };
+  }
 }
 
 export const ADAPTIVE_QUESTIONS: Record<string, Record<string, AdaptiveQuestion>> = {
@@ -586,6 +606,374 @@ export const ADAPTIVE_QUESTIONS: Record<string, Record<string, AdaptiveQuestion>
       citation: 'Field Scrutiny Guide 2024, Chapter 1',
       rationale: 'Mandatory fields cannot be fabricated; clarification must be sought from the primary enumerator.',
       rationale_hi: 'अनिवार्य फ़ील्ड मनगढ़ंत नहीं हो सकते; प्राथमिक प्रगणक से स्पष्टीकरण मांगा जाना चाहिए।',
+    },
+  },
+
+  // ==========================================================================
+  // comp-survey: Multi-Stage Sampling Design & DEFF Variance
+  // ==========================================================================
+  'comp-survey': {
+    STAGE_1: {
+      id: 'survey-s1',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_1',
+      difficulty: 'medium',
+      question_text: 'In MoSPI multi-stage stratified survey designs for national sample surveys, what typically constitutes the First Stage Unit (FSU) and the Ultimate Stage Unit (USU) in rural sectors?',
+      question_text_hi: 'राष्ट्रीय नमूना सर्वेक्षणों के लिए सांख्यिकी मंत्रालय के बहु-चरणीय स्तरीकृत नमूना डिजाइन में, ग्रामीण क्षेत्रों में आमतौर पर प्रथम चरण इकाई (FSU) और अंतिम चरण इकाई (USU) क्या होती है?',
+      answer_choices: [
+        'FSU is the individual household, and USU is the specific individual member',
+        'FSU is the Census village (or Panchayat ward), and USU is the listed household',
+        'FSU is the District Collectorate, and USU is the Village Revenue Inspector',
+        'FSU is the NSSO Regional Office, and USU is the Block Development Office',
+      ],
+      answer_choices_hi: [
+        'FSU व्यक्तिगत परिवार है, और USU विशिष्ट व्यक्तिगत सदस्य है',
+        'FSU जनगणना गाँव (या पंचायत वार्ड) है, और USU सूचीबद्ध परिवार है',
+        'FSU जिला कलेक्ट्रेट है, और USU ग्राम राजस्व निरीक्षक है',
+        'FSU एनएसएसओ क्षेत्रीय कार्यालय है, और USU ब्लॉक विकास कार्यालय है',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'NSS Sampling Design Manual, Chapter 2: Sampling Frame and Sampling Units',
+      rationale: 'In rural surveys, census villages form the First Stage Units (FSUs), while systematically selected households constitute the Ultimate Stage Units (USUs).',
+      rationale_hi: 'ग्रामीण सर्वेक्षणों में, जनगणना गाँव प्रथम चरण इकाइयाँ (FSU) बनाते हैं, जबकि व्यवस्थित रूप से चयनित परिवार अंतिम चरण इकाइयाँ (USU) होते हैं।',
+    },
+
+    STAGE_2A: {
+      id: 'survey-s2a',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_2A',
+      difficulty: 'hard',
+      question_text: 'When evaluating sample variance inflation in a cluster design with intra-cluster correlation coefficient rho = 0.05 and average cluster size m = 21, what is the calculated Design Effect (DEFF = 1 + (m - 1)*rho)?',
+      question_text_hi: 'अंतः-क्लस्टर सहसंबंध गुणांक rho = 0.05 और औसत क्लस्टर आकार m = 21 वाले क्लस्टर डिजाइन में प्रसरण विस्तार का मूल्यांकन करते समय, परिकलित डिजाइन प्रभाव (DEFF = 1 + (m - 1)*rho) क्या है?',
+      answer_choices: [
+        'DEFF = 1.05 (Variance is unchanged relative to SRS)',
+        'DEFF = 2.00 (Variance is twice as high as an equivalent Simple Random Sample)',
+        'DEFF = 0.50 (Variance is halved due to clustering efficiencies)',
+        'DEFF = 4.20 (Cluster boundaries must be immediately redrawn)',
+      ],
+      answer_choices_hi: [
+        'DEFF = 1.05 (एसआरएस की तुलना में प्रसरण अपरिवर्तित है)',
+        'DEFF = 2.00 (प्रसरण समकक्ष सरल यादृच्छिक नमूने की तुलना में दोगुना अधिक है)',
+        'DEFF = 0.50 (क्लस्टरिंग दक्षता के कारण प्रसरण आधा हो गया है)',
+        'DEFF = 4.20 (क्लस्टर सीमाओं को तुरंत फिर से तैयार किया जाना चाहिए)',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'MoSPI Sampling Methodology Manual, Section 4.2: Design Effects in Complex Surveys',
+      rationale: 'DEFF = 1 + (21 - 1) * 0.05 = 1 + 1.00 = 2.00. This indicates cluster variance is 200% of simple random sampling variance.',
+      rationale_hi: 'DEFF = 1 + (21 - 1) * 0.05 = 1 + 1.00 = 2.00। यह इंगित करता है कि क्लस्टर प्रसरण सरल यादृच्छिक नमूनाकरण प्रसरण का 200% है।',
+    },
+
+    STAGE_2B: {
+      id: 'survey-s2b',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_2B',
+      difficulty: 'easy',
+      question_text: 'When drawing a circular systematic sample of households from an ordered listing frame with sampling interval k = 5 and random start R = 3, what are the first three sampled household order numbers?',
+      question_text_hi: 'नमूनाकरण अंतराल k = 5 और यादृच्छिक शुरुआत R = 3 के साथ एक व्यवस्थित सूचीकरण फ्रेम से परिवारों का चक्रीय व्यवस्थित नमूना लेते समय, पहले तीन नमूना परिवार क्रम संख्या क्या हैं?',
+      answer_choices: [
+        '1, 2, 3',
+        '3, 8, 13',
+        '5, 10, 15',
+        '3, 6, 9',
+      ],
+      answer_choices_hi: [
+        '1, 2, 3',
+        '3, 8, 13',
+        '5, 10, 15',
+        '3, 6, 9',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'Field Operations Guidelines, Chapter 4: Systematic Selection Procedures',
+      rationale: 'Systematic selection progresses by adding interval k = 5 to random start R = 3: giving 3, 3+5=8, 8+5=13.',
+      rationale_hi: 'व्यवस्थित चयन यादृच्छिक शुरुआत R = 3 में अंतराल k = 5 जोड़कर आगे बढ़ता है: 3, 3+5=8, 8+5=13।',
+    },
+
+    STAGE_3_L5: {
+      id: 'survey-s3-l5',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_3',
+      targetBranch: 'L5',
+      difficulty: 'hard',
+      question_text: 'In complex survey estimation under NSSO protocols, how are sub-sample combined multipliers applied to calculate unbiased aggregate population totals?',
+      question_text_hi: 'एनएसएसओ प्रोटोकॉल के तहत जटिल सर्वेक्षण आकलन में, निष्पक्ष कुल जनसंख्या अनुमानों की गणना के लिए उप-नमूना संयुक्त गुणकों को कैसे लागू किया जाता है?',
+      answer_choices: [
+        'Sum the unweighted sample raw counts and multiply by 100',
+        'Apply inverse selection probability weights calibrated across sub-sample 1 and sub-sample 2 ratio adjustments',
+        'Average the maximum and minimum responses in each district disregarding sampling weights',
+        'Replace all multi-stage multipliers with simple decennial Census growth rates',
+      ],
+      answer_choices_hi: [
+        'भाररहित नमूना कच्ची गणनाओं को जोड़ें और 100 से गुणा करें',
+        'उप-नमूना 1 और उप-नमूना 2 अनुपात समायोजन में कैलिब्रेट किए गए व्युत्क्रम चयन प्रायिकता भार लागू करें',
+        'नमूना भारों की अनदेखी करते हुए प्रत्येक जिले में अधिकतम और न्यूनतम प्रतिक्रियाओं का औसत निकालें',
+        'सभी बहु-चरणीय गुणकों को सरल दशकीय जनगणना विकास दरों से बदलें',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'NSSO Estimation Procedures Manual, Chapter 6: Multiplier Formulas and Sub-sample Pooling',
+      rationale: 'Unbiased aggregate estimates require applying calibrated inverse selection probability weights (multipliers) across pooled sub-samples.',
+      rationale_hi: 'निष्पक्ष सकल अनुमानों के लिए एकत्रित उप-नमूनों में कैलिब्रेट किए गए व्युत्क्रम चयन प्रायिकता भार (गुणक) लागू करने की आवश्यकता होती है।',
+    },
+
+    STAGE_3_L3_L4: {
+      id: 'survey-s3-l3l4',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_3',
+      targetBranch: 'L3_L4',
+      difficulty: 'medium',
+      question_text: 'When allocating total sample size n across heterogeneous strata to estimate mean household consumption with minimum variance, which allocation method is optimal?',
+      question_text_hi: 'न्यूनतम प्रसरण के साथ औसत घरेलू उपभोग का अनुमान लगाने के लिए विषम स्तरों में कुल नमूना आकार n आवंटित करते समय, कौन सी आवंटन विधि इष्टतम है?',
+      answer_choices: [
+        'Equal allocation dividing n evenly across all strata regardless of size or variability',
+        'Neyman optimal allocation proportional to the product of stratum size and stratum standard deviation (N_h * S_h)',
+        'Arbitrary allocation based on local field investigator preference',
+        'Inverse variance allocation assigning the largest sample to the most homogeneous stratum',
+      ],
+      answer_choices_hi: [
+        'आकार या परिवर्तनशीलता की परवाह किए बिना सभी स्तरों में n को समान रूप से विभाजित करने वाला समान आवंटन',
+        'नेमन इष्टतम आवंटन जो स्तर के आकार और स्तर के मानक विचलन के गुणनफल (N_h * S_h) के समानुपाती होता है',
+        'स्थानीय क्षेत्र अन्वेषक की पसंद के आधार पर मनमाना आवंटन',
+        'व्युत्क्रम प्रसरण आवंटन जो सबसे सजातीय स्तर को सबसे बड़ा नमूना प्रदान करता है',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'Cochran Sampling Techniques & MoSPI Cadre Training Notes, Stratified Allocation',
+      rationale: 'Neyman allocation minimizes the sampling variance of the stratified estimator for a fixed total sample size by factoring in both stratum size and within-stratum standard deviation.',
+      rationale_hi: 'नेमन आवंटन स्तर के आकार और स्तर के भीतर मानक विचलन दोनों को शामिल करके एक निश्चित कुल नमूना आकार के लिए स्तरीकृत अनुमानक के नमूनाकरण प्रसरण को कम करता है।',
+    },
+
+    STAGE_3_L2_L3: {
+      id: 'survey-s3-l2l3',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_3',
+      targetBranch: 'L2_L3',
+      difficulty: 'medium',
+      question_text: 'If a large Census village of 1,800 households is segmented into 3 equal hamlet-groups and 2 are selected for listing, what is the hamlet-group selection multiplier factor?',
+      question_text_hi: 'यदि 1,800 परिवारों वाले एक बड़े जनगणना गाँव को 3 समान हेमलेट-समूहों में विभाजित किया जाता है और 2 को सूचीकरण के लिए चुना जाता है, तो हेमलेट-समूह चयन गुणक कारक क्या है?',
+      answer_choices: [
+        'Multiplier factor = 1.0 (no adjustment required)',
+        'Multiplier factor = 3/2 = 1.50 (inverse of selection probability 2/3)',
+        'Multiplier factor = 2/3 = 0.67',
+        'Multiplier factor = 6.0',
+      ],
+      answer_choices_hi: [
+        'गुणक कारक = 1.0 (कोई समायोजन आवश्यक नहीं)',
+        'गुणक कारक = 3/2 = 1.50 (चयन प्रायिकता 2/3 का व्युत्क्रम)',
+        'गुणक कारक = 2/3 = 0.67',
+        'गुणक कारक = 6.0',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'Instructions to Field Staff Vol. I, Hamlet-Group Formation and Multipliers',
+      rationale: 'When 2 out of 3 hamlet-groups are selected, the probability of hamlet-group selection is 2/3; hence its inverse multiplier factor is 3/2 = 1.5.',
+      rationale_hi: 'जब 3 में से 2 हेमलेट-समूह चुने जाते हैं, तो हेमलेट-समूह चयन की प्रायिकता 2/3 होती है; इसलिए इसका व्युत्क्रम गुणक कारक 3/2 = 1.5 है।',
+    },
+
+    STAGE_3_L1: {
+      id: 'survey-s3-l1',
+      competencyId: 'comp-survey',
+      stage: 'STAGE_3',
+      targetBranch: 'L1',
+      difficulty: 'easy',
+      question_text: 'What is the key theoretical advantage of Simple Random Sampling Without Replacement (SRSWOR) over With Replacement (SRSWR)?',
+      question_text_hi: 'प्रतिस्थापन के साथ सरल यादृच्छिक नमूनाकरण (SRSWR) की तुलना में प्रतिस्थापन के बिना सरल यादृच्छिक नमूनाकरण (SRSWOR) का मुख्य सैद्धांतिक लाभ क्या है?',
+      answer_choices: [
+        'SRSWOR requires zero mathematical calculation',
+        'SRSWOR yields a lower sampling variance due to the finite population correction factor (N - n)/(N - 1)',
+        'SRSWOR allows the same household to be surveyed multiple times in the same round',
+        'SRSWOR completely eliminates non-sampling errors and respondent bias',
+      ],
+      answer_choices_hi: [
+        'SRSWOR को शून्य गणितीय गणना की आवश्यकता होती है',
+        'SRSWOR परिमित जनसंख्या सुधार कारक (N - n)/(N - 1) के कारण कम नमूनाकरण प्रसरण देता है',
+        'SRSWOR एक ही परिवार का एक ही दौर में कई बार सर्वेक्षण करने की अनुमति देता है',
+        'SRSWOR गैर-नमूनाकरण त्रुटियों और उत्तरदाता पूर्वाग्रह को पूरी तरह से समाप्त करता है',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'Fundamental Principles of Sample Survey Theory, Chapter 1',
+      rationale: 'SRSWOR always has lower or equal variance compared to SRSWR for finite populations because each sampled unit provides unique information.',
+      rationale_hi: 'परिमित आबादी के लिए SRSWOR में SRSWR की तुलना में हमेशा कम या बराबर प्रसरण होता है क्योंकि प्रत्येक नमूना इकाई अद्वितीय जानकारी प्रदान करती है।',
+    },
+  },
+
+  // ==========================================================================
+  // comp-nsso: NSSO Standard Protocols & PLFS Classification
+  // ==========================================================================
+  'comp-nsso': {
+    STAGE_1: {
+      id: 'nsso-s1',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_1',
+      difficulty: 'medium',
+      question_text: 'Under NSSO Periodic Labour Force Survey (PLFS) guidelines, what is the criterion to determine a person\'s Usual Principal Activity Status (UPAS)?',
+      question_text_hi: 'एनएसएसओ आवधिक श्रम बल सर्वेक्षण (PLFS) दिशानिर्देशों के तहत, किसी व्यक्ति की सामान्य प्रमुख गतिविधि स्थिति (UPAS) निर्धारित करने का मानदंड क्या है?',
+      answer_choices: [
+        'The economic activity pursued on the single day immediately preceding the interview',
+        'The major time spent criterion over the 365 days preceding the date of survey',
+        'The activity that generated the highest monetary income regardless of time spent',
+        'The profession listed on the respondent\'s educational certificate',
+      ],
+      answer_choices_hi: [
+        'साक्षात्कार से ठीक पहले के एक दिन की गई आर्थिक गतिविधि',
+        'सर्वेक्षण की तारीख से पहले के 365 दिनों में बिताया गया प्रमुख समय मानदंड',
+        'वह गतिविधि जिसने बिताए गए समय की परवाह किए बिना उच्चतम मौद्रिक आय उत्पन्न की',
+        'उत्तरदाता के शैक्षिक प्रमाण पत्र पर सूचीबद्ध पेशा',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'PLFS Annual Report Concepts and Definitions, Section 2.3: Usual Activity Status',
+      rationale: 'Usual Principal Activity Status is determined by the major time criterion among working, seeking/available for work, and out of labour force over 365 days.',
+      rationale_hi: 'सामान्य प्रमुख गतिविधि स्थिति का निर्धारण 365 दिनों में काम करने, काम की तलाश करने/उपलब्ध होने और श्रम बल से बाहर होने के बीच प्रमुख समय मानदंड द्वारा किया जाता है।',
+    },
+
+    STAGE_2A: {
+      id: 'nsso-s2a',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_2A',
+      difficulty: 'hard',
+      question_text: 'A person attended college for 8 months (code 91) but also worked 40 days as a casual construction worker during the 365-day reference period. How is this person classified in PLFS?',
+      question_text_hi: 'एक व्यक्ति ने 8 महीने कॉलेज में पढ़ाई की (कोड 91) लेकिन 365 दिनों की संदर्भ अवधि के दौरान 40 दिनों तक आकस्मिक निर्माण श्रमिक के रूप में भी काम किया। पीएलएफएस में इस व्यक्ति को कैसे वर्गीकृत किया जाता है?',
+      answer_choices: [
+        'Employed under Usual Principal Status (UPAS) and unemployed in subsidiary status',
+        'Out of labour force by UPAS, but Employed under Usual Status (ps+ss) as a subsidiary status worker',
+        'Unemployed under both Usual Principal Status and subsidiary status',
+        'Omitted completely from the demographic roster due to conflicting activities',
+      ],
+      answer_choices_hi: [
+        'सामान्य प्रमुख स्थिति (UPAS) के तहत नियोजित और सहायक स्थिति में बेरोजगार',
+        'UPAS द्वारा श्रम बल से बाहर, लेकिन सहायक स्थिति कार्यकर्ता के रूप में सामान्य स्थिति (ps+ss) के तहत नियोजित',
+        'सामान्य प्रमुख स्थिति और सहायक स्थिति दोनों के तहत बेरोजगार',
+        'विरोधी गतिविधियों के कारण जनसांख्यिकीय रोस्टर से पूरी तरह से बाहर रखा गया',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'PLFS Field Manual, Chapter 3: Classification of Subsidiary Economic Activities',
+      rationale: 'Since education was the principal activity (>182 days), UPAS is Out of Labour Force (code 91). Pursuing economic work for >=30 days qualifies as a subsidiary economic status (ss) worker.',
+      rationale_hi: 'चूंकि शिक्षा प्रमुख गतिविधि (>182 दिन) थी, UPAS श्रम बल से बाहर (कोड 91) है। >=30 दिनों के लिए आर्थिक कार्य करना सहायक आर्थिक स्थिति (ss) कार्यकर्ता के रूप में योग्य बनाता है।',
+    },
+
+    STAGE_2B: {
+      id: 'nsso-s2b',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_2B',
+      difficulty: 'easy',
+      question_text: 'What is the reference period for recording labour force activity under Current Weekly Status (CWS) in the PLFS schedule?',
+      question_text_hi: 'PLFS अनुसूची में वर्तमान साप्ताहिक स्थिति (CWS) के तहत श्रम बल गतिविधि दर्ज करने के लिए संदर्भ अवधि क्या है?',
+      answer_choices: [
+        'The preceding 365 calendar days',
+        'The 7 days preceding the date of survey',
+        'The last completed calendar month',
+        'The entire current financial quarter',
+      ],
+      answer_choices_hi: [
+        'पिछले 365 कैलेंडर दिन',
+        'सर्वेक्षण की तारीख से पहले के 7 दिन',
+        'अंतिम पूर्ण कैलेंडर माह',
+        'वर्तमान संपूर्ण वित्तीय तिमाही',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'PLFS Guidelines for Field Staff, Section 2: Reference Periods',
+      rationale: 'Current Weekly Status (CWS) strictly adopts the 7 days preceding the date of survey as its reference frame.',
+      rationale_hi: 'वर्तमान साप्ताहिक स्थिति (CWS) कड़ाई से सर्वेक्षण की तारीख से पहले के 7 दिनों को अपने संदर्भ फ्रेम के रूप में अपनाती है।',
+    },
+
+    STAGE_3_L5: {
+      id: 'nsso-s3-l5',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_3',
+      targetBranch: 'L5',
+      difficulty: 'hard',
+      question_text: 'In the PLFS urban rotational panel design, how many visits are made to each selected urban sample household, and how does panel rotation occur?',
+      question_text_hi: 'PLFS शहरी घूर्णी पैनल डिजाइन में, प्रत्येक चयनित शहरी नमूना परिवार का कितनी बार दौरा किया जाता है, और पैनल रोटेशन कैसे होता है?',
+      answer_choices: [
+        'Only 1 visit without any revisiting schedule',
+        '4 visits (first visit and 3 quarterly revisits), rotating out 25% of the FSUs each quarter',
+        '12 monthly visits for complete longitudinal tracing',
+        '2 visits per year indefinitely until the household relocates',
+      ],
+      answer_choices_hi: [
+        'बिना किसी पुनरीक्षण कार्यक्रम के केवल 1 यात्रा',
+        '4 दौरे (पहला दौरा और 3 त्रैमासिक पुनरीक्षण), प्रत्येक तिमाही में 25% एफएसयू को रोटेट करना',
+        'पूर्ण अनुदैर्ध्य अनुरेखण के लिए 12 मासिक दौरे',
+        'प्रति वर्ष 2 दौरे अनिश्चित काल के लिए जब तक परिवार स्थानांतरित नहीं हो जाता',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'PLFS Sampling Design and Estimation Procedure, Rotational Panel Scheme Para 1.8',
+      rationale: 'In urban areas, a rotational panel scheme is used where each household is visited 4 times (first visit + 3 quarterly revisits) with 25% sample replacement.',
+      rationale_hi: 'शहरी क्षेत्रों में, एक घूर्णी पैनल योजना का उपयोग किया जाता है जहाँ प्रत्येक परिवार का 4 बार (पहला दौरा + 3 त्रैमासिक पुनरीक्षण) दौरा किया जाता है, जिसमें 25% नमूना प्रतिस्थापन होता है।',
+    },
+
+    STAGE_3_L3_L4: {
+      id: 'nsso-s3-l3l4',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_3',
+      targetBranch: 'L3_L4',
+      difficulty: 'medium',
+      question_text: 'In Schedule 10.4 of PLFS (Daily Time Disposition), if an individual works for 3.5 hours on wage employment and spends the rest of the day seeking work, how are activity intensities assigned?',
+      question_text_hi: 'PLFS की अनुसूची 10.4 (दैनिक समय स्वभाव) में, यदि कोई व्यक्ति वेतन रोजगार पर 3.5 घंटे काम करता है और दिन का शेष समय काम की तलाश में बिताता है, तो गतिविधि तीव्रता कैसे सौंपी जाती है?',
+      answer_choices: [
+        '1.0 intensity to wage employment and 0.0 to seeking work',
+        '0.5 intensity to wage employment (worked 1 to <4 hours) and 0.5 intensity to seeking work',
+        '1.0 intensity to seeking work and 0.0 to wage employment',
+        '0.25 intensity to both activities',
+      ],
+      answer_choices_hi: [
+        'वेतन रोजगार के लिए 1.0 तीव्रता और काम की तलाश के लिए 0.0',
+        'वेतन रोजगार के लिए 0.5 तीव्रता (1 से <4 घंटे काम किया) और काम की तलाश के लिए 0.5 तीव्रता',
+        'काम की तलाश के लिए 1.0 तीव्रता और वेतन रोजगार के लिए 0.0',
+        'दोनों गतिविधियों के लिए 0.25 तीव्रता',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'Instructions to Field Staff Vol. II: Schedule 10.4 Recording Rules',
+      rationale: 'Under PLFS intensity rules, working 1 to less than 4 hours receives intensity 0.5; seeking work for 1 to less than 4 hours receives intensity 0.5.',
+      rationale_hi: 'पीएलएफएस तीव्रता नियमों के तहत, 1 से 4 घंटे से कम काम करने पर तीव्रता 0.5 मिलती है; 1 से 4 घंटे से कम काम की तलाश करने पर 0.5 तीव्रता मिलती है।',
+    },
+
+    STAGE_3_L2_L3: {
+      id: 'nsso-s3-l2l3',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_3',
+      targetBranch: 'L2_L3',
+      difficulty: 'medium',
+      question_text: 'Under NSSO classification, which status code represents an unpaid family helper in a household enterprise?',
+      question_text_hi: 'एनएसएसओ वर्गीकरण के तहत, कौन सा स्थिति कोड घरेलू उद्यम में अवैतनिक पारिवारिक सहायक का प्रतिनिधित्व करता है?',
+      answer_choices: [
+        'Status code 11 (Own account worker)',
+        'Status code 21 (Worked as helper in household enterprise - unpaid family worker)',
+        'Status code 31 (Regular wage/salaried employee)',
+        'Status code 51 (Casual wage labour in public works)',
+      ],
+      answer_choices_hi: [
+        'स्थिति कोड 11 (स्वनियोजित खाता कार्यकर्ता)',
+        'स्थिति कोड 21 (घरेलू उद्यम में सहायक के रूप में काम किया - अवैतनिक पारिवारिक कार्यकर्ता)',
+        'स्थिति कोड 31 (नियमित वेतन/वेतनभोगी कर्मचारी)',
+        'स्थिति कोड 51 (सार्वजनिक कार्यों में आकस्मिक मजदूरी श्रम)',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'NSS Employment-Unemployment Coding Manual, Status Codes 11-51',
+      rationale: 'Code 21 is exclusively designated for persons who helped in household enterprises without regular wages or share of profits.',
+      rationale_hi: 'कोड 21 विशेष रूप से उन व्यक्तियों के लिए निर्दिष्ट है जिन्होंने नियमित वेतन या मुनाफे के हिस्से के बिना घरेलू उद्यमों में मदद की।',
+    },
+
+    STAGE_3_L1: {
+      id: 'nsso-s3-l1',
+      competencyId: 'comp-nsso',
+      stage: 'STAGE_3',
+      targetBranch: 'L1',
+      difficulty: 'easy',
+      question_text: 'In official Indian statistics, which two segments together constitute the "Labour Force"?',
+      question_text_hi: 'आधिकारिक भारतीय सांख्यिकी में, कौन से दो वर्ग मिलकर "श्रम बल" बनाते हैं?',
+      answer_choices: [
+        'Only persons employed in government services and formal corporations',
+        'Persons classified as Employed plus persons classified as Unemployed (seeking or available for work)',
+        'All resident citizens between ages 18 and 60 regardless of student or retirement status',
+        'Only individuals paying income tax to the central government',
+      ],
+      answer_choices_hi: [
+        'केवल सरकारी सेवाओं और औपचारिक निगमों में कार्यरत व्यक्ति',
+        'नियोजित के रूप में वर्गीकृत व्यक्ति और बेरोजगार के रूप में वर्गीकृत व्यक्ति (काम की तलाश में या उपलब्ध)',
+        'छात्र या सेवानिवृत्ति की स्थिति की परवाह किए बिना 18 से 60 वर्ष की आयु के बीच के सभी निवासी नागरिक',
+        'केवल केंद्र सरकार को आयकर का भुगतान करने वाले व्यक्ति',
+      ],
+      correctAnswerIndex: 1,
+      citation: 'MoSPI National Statistical Commission Labour Statistics Standards',
+      rationale: 'Labour Force = Employed + Unemployed (those seeking/available for work). Students, rentiers, and homemakers are Out of Labour Force.',
+      rationale_hi: 'श्रम बल = नियोजित + बेरोजगार (जो काम की तलाश में/उपलब्ध हैं)। छात्र, पेंशनभोगी और गृहिणी श्रम बल से बाहर हैं।',
     },
   },
 };

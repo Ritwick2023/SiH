@@ -72,8 +72,8 @@ export default function ReviewPanel({
       <div className="grid grid-cols-3 gap-4">
         {[
           { label: isHindi ? 'कुल' : 'Total', value: total, cls: 'text-foreground' },
-          { label: isHindi ? 'उत्तर दिए गए' : 'Answered', value: answered, cls: 'text-[#555934]' },
-          { label: isHindi ? 'अनुत्तरित' : 'Unanswered', value: unanswered, cls: unanswered > 0 ? 'text-[#8C5B3E]' : 'text-[#555934]' },
+          { label: isHindi ? 'उत्तर दिए गए' : 'Answered', value: answered, cls: 'text-[#1C4CA1]' },
+          { label: isHindi ? 'अनुत्तरित' : 'Unanswered', value: unanswered, cls: unanswered > 0 ? 'text-[#FFA72F]' : 'text-[#1C4CA1]' },
         ].map(({ label, value, cls }) => (
           <div
             key={label}
@@ -112,8 +112,8 @@ export default function ReviewPanel({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground pt-1">
           {[
             { label: isHindi ? 'अनदेखा' : 'Unseen', cls: 'bg-white shadow-2xs' },
-            { label: isHindi ? 'देखा गया' : 'Visited', cls: 'bg-[#BF9B7A]/20 text-[#593E2E]' },
-            { label: isHindi ? 'उत्तरित' : 'Answered', cls: 'bg-[#555934]/15 text-[#555934]' },
+            { label: isHindi ? 'देखा गया' : 'Visited', cls: 'bg-rose-100 text-rose-700' },
+            { label: isHindi ? 'उत्तरित' : 'Answered', cls: 'bg-[#1C4CA1]/15 text-[#1C4CA1]' },
           ].map(({ label, cls }) => (
             <span key={label} className="flex items-center gap-1.5">
               <span className={`inline-block h-3.5 w-3.5 rounded-full ${cls}`} aria-hidden="true" />
@@ -128,7 +128,7 @@ export default function ReviewPanel({
         <button
           id="submit-assessment"
           onClick={onSubmit}
-          className="flex-1 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white font-bold py-3.5 transition-all shadow-xs active:scale-98 text-sm sm:text-base cursor-pointer"
+          className="flex-1 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white font-bold py-3.5 transition-all shadow-xs active:scale-98 text-sm sm:text-base cursor-pointer"
         >
           {isHindi ? 'मूल्यांकन जमा करें' : 'Submit Assessment'}
         </button>
@@ -136,7 +136,7 @@ export default function ReviewPanel({
           <button
             id="review-continue-test"
             onClick={onContinueTest}
-            className="flex-1 rounded-xl bg-white shadow-card hover:bg-[#E8DACB]/30 text-foreground font-semibold py-3.5 transition-all active:scale-98 text-sm sm:text-base cursor-pointer"
+            className="flex-1 rounded-xl bg-white shadow-card hover:bg-[#EDF0F7] text-foreground font-semibold py-3.5 transition-all active:scale-98 text-sm sm:text-base cursor-pointer"
           >
             {isHindi ? 'परीक्षा जारी रखें' : 'Continue Test'}
           </button>

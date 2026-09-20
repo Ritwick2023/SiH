@@ -27,8 +27,8 @@ export function AdminKpiStrip({
       value: totalHeadcount.toLocaleString(),
       subtext: 'MoSPI, FOD & SSS Cadres',
       icon: Users,
-      bgColor: 'bg-[#555934]/15',
-      textColor: 'text-[#555934]',
+      bgColor: 'bg-[#1C4CA1]/10',
+      textColor: 'text-[#1C4CA1]',
     },
     {
       id: 'readiness',
@@ -45,8 +45,8 @@ export function AdminKpiStrip({
       value: `${scrutinyErrorRate}%`,
       subtext: '-4.1% Reduction QoQ',
       icon: AlertTriangle,
-      bgColor: 'bg-[#BF9B7A]/25',
-      textColor: 'text-chart-5',
+      bgColor: 'bg-[#FFA72F]/15',
+      textColor: 'text-[#FFA72F]',
     },
     {
       id: 'flagged',
@@ -63,8 +63,8 @@ export function AdminKpiStrip({
       value: activeCohortsCount.toString(),
       subtext: 'PLFS, HCES, ASI, CAPI',
       icon: Layers,
-      bgColor: 'bg-[#F8C858]/25',
-      textColor: 'text-[#8C5B3E]',
+      bgColor: 'bg-[#1164BE]/10',
+      textColor: 'text-[#1164BE]',
     },
   ];
 
@@ -83,7 +83,7 @@ export function AdminKpiStrip({
                 onKpiClick(kpi.id);
               }
             }}
-            className={`rounded-2xl bg-white border border-[#BF9B7A]/30 p-4 shadow-2xs hover:shadow-xs transition-all flex items-center gap-3.5 ${
+            className={`rounded-2xl bg-white border border-[#D8DFEE] p-4 shadow-2xs hover:shadow-xs hover:border-[#1C4CA1]/40 transition-all flex items-center gap-3.5 ${
               onKpiClick ? 'cursor-pointer hover:scale-101 active:scale-98' : ''
             }`}
           >
@@ -91,13 +91,13 @@ export function AdminKpiStrip({
               <Icon className={`h-5 w-5 ${kpi.textColor}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold text-muted-foreground truncate leading-tight">
+              <p className="text-[11px] font-semibold text-[#475569] truncate leading-tight">
                 {kpi.label}
               </p>
-              <p className="text-xl sm:text-2xl font-extrabold text-[#2d1f17] tracking-tight mt-0.5 font-mono">
+              <p className="text-xl sm:text-2xl font-extrabold text-[#1F273A] tracking-tight mt-0.5 font-mono">
                 {kpi.value}
               </p>
-              <p className="text-[10px] font-medium text-muted-foreground/80 truncate">
+              <p className="text-[10px] font-medium text-[#475569]/80 truncate">
                 {kpi.subtext}
               </p>
             </div>

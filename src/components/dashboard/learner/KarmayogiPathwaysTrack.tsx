@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { Award, CheckCircle2, Lock, ArrowUpRight, ChevronLeft, ChevronRight, Compass, X, AlertCircle } from 'lucide-react';
+import { Award, Compass, ArrowUpRight, CheckCircle2, Lock, ChevronLeft, ChevronRight, X, AlertCircle } from 'lucide-react';
 
 export interface PathwayMilestone {
   id: string;
@@ -20,59 +20,59 @@ export interface PathwayMilestone {
 
 export const PATHWAY_MILESTONES: PathwayMilestone[] = [
   {
-    id: 'stage-1',
+    id: 'stage-1-foundational',
     stageNumber: 1,
-    title: 'Induction & Statistical Cadre Foundations',
-    title_hi: 'दीक्षा एवं सांख्यिकी कैडर बुनियादी सिद्धांत',
-    cadre: 'Foundational • Level 1-2',
+    title: 'Stage 1: Field Demarcation & Survey Listing',
+    title_hi: 'चरण 1: फील्ड सीमांकन एवं सर्वेक्षण सूचीकरण',
+    cadre: 'Field Operations Division (FOD) • JSO / SSU',
     status: 'completed',
     progress: 100,
-    competenciesCovered: 4,
-    totalCompetencies: 4,
+    competenciesCovered: 3,
+    totalCompetencies: 3,
     karmaReward: '+150 KP',
-    iGotCourseTitle: 'Official Statistics & Legal Framework of NSSO',
+    iGotCourseTitle: 'Mastering Census Enumeration Blocks & Hamlet Formation',
     iGotLink: 'https://igotkarmayogi.gov.in',
   },
   {
-    id: 'stage-2',
+    id: 'stage-2-capi-operations',
     stageNumber: 2,
-    title: 'Field Operations & Demarcation Mastery',
-    title_hi: 'फील्ड परिचालन एवं सीमांकन दक्षता',
-    cadre: 'Applied Field • Level 3',
+    title: 'Stage 2: CAPI Tablet Operations & Error Mitigation',
+    title_hi: 'चरण 2: कैपी टैबलेट संचालन एवं त्रुटि निवारण',
+    cadre: 'FOD Investigators & Field Supervisors',
     status: 'in-progress',
-    progress: 85,
-    competenciesCovered: 5,
-    totalCompetencies: 6,
+    progress: 65,
+    competenciesCovered: 2,
+    totalCompetencies: 3,
     karmaReward: '+200 KP',
-    iGotCourseTitle: 'Schedule 0.0 & CAPI Tablet Operational Mastery',
+    iGotCourseTitle: 'ASHE & PLFS Android CAPI Protocols & Offline Encryption',
     iGotLink: 'https://igotkarmayogi.gov.in',
   },
   {
-    id: 'stage-3',
+    id: 'stage-3-economic-coding',
     stageNumber: 3,
-    title: 'Advanced Data Scrutiny & Microdata Validation',
-    title_hi: 'उन्नत डेटा संवीक्षा एवं माइक्रो-डेटा सत्यापन',
-    cadre: 'Senior Cadre • Level 4',
-    status: 'locked',
-    progress: 0,
-    competenciesCovered: 0,
-    totalCompetencies: 5,
-    karmaReward: '+250 KP',
-    iGotCourseTitle: 'DQAD Statistical Scrutiny & Anomaly Detection',
-    iGotLink: 'https://igotkarmayogi.gov.in',
-  },
-  {
-    id: 'stage-4',
-    stageNumber: 4,
-    title: 'National Accounts & Macro-Aggregation Leadership',
-    title_hi: 'राष्ट्रीय लेखा एवं समष्टि-एकत्रीकरण नेतृत्व',
-    cadre: 'Executive Director • Level 5',
+    title: 'Stage 3: Advanced Economic Coding (NIC/NCO)',
+    title_hi: 'चरण 3: उन्नत आर्थिक वर्गीकरण (एनआईसी/एनसीओ)',
+    cadre: 'Survey Design & Research Division (SDRD)',
     status: 'locked',
     progress: 0,
     competenciesCovered: 0,
     totalCompetencies: 4,
-    karmaReward: '+300 KP',
-    iGotCourseTitle: 'GDP Estimation & System of National Accounts (SNA)',
+    karmaReward: '+250 KP',
+    iGotCourseTitle: 'Disambiguating Informal Sector Enterprises under NIC-2008',
+    iGotLink: 'https://igotkarmayogi.gov.in',
+  },
+  {
+    id: 'stage-4-national-accounts',
+    stageNumber: 4,
+    title: 'Stage 4: Statistical Quality Audits & Macro Aggregates',
+    title_hi: 'चरण 4: सांख्यिकीय गुणवत्ता लेखापरीक्षा एवं समष्टि योग',
+    cadre: 'Data Quality Assurance Division (DQAD) • ISS Officers',
+    status: 'locked',
+    progress: 0,
+    competenciesCovered: 0,
+    totalCompetencies: 4,
+    karmaReward: '+400 KP',
+    iGotCourseTitle: 'National Accounts Aggregates & Discrepancy Reconciliation',
     iGotLink: 'https://igotkarmayogi.gov.in',
   },
 ];
@@ -105,20 +105,20 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 sm:p-6 shadow-xs space-y-4">
+    <div className="rounded-3xl bg-white border border-[#D8DFEE] p-5 sm:p-6 shadow-xs space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#BF9B7A]/20">
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#555934]" />
-            <h2 className="text-base sm:text-lg font-bold text-[#2d1f17]">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h2 className="text-base sm:text-lg font-bold text-[#1F273A]">
               {isHindi ? 'iGOT कर्मयोगी एकीकृत प्रगति पथ' : 'Karmayogi Bharat Integrated Progression Track'}
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#555934]/15 text-[#555934] hidden sm:inline">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#1C4CA1]/10 text-[#1C4CA1] hidden sm:inline">
               4 Stages
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-[#475569] mt-0.5">
             {isHindi
               ? 'अन्वेषक से सांख्यिकी अधिकारी तक राष्ट्रीय क्षमता विकास का क्रमबद्ध मार्ग'
               : 'Sequential civil service competency ladder from Field Demarcation to National Accounts'}
@@ -131,7 +131,7 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
             type="button"
             onClick={() => scroll('left')}
             aria-label="Scroll pathways left"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -139,7 +139,7 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
             type="button"
             onClick={() => scroll('right')}
             aria-label="Scroll pathways right"
-            className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+            className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -177,10 +177,10 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
               key={m.id}
               className={`min-w-70 sm:min-w-[320px] max-w-[320px] rounded-2xl border p-4 sm:p-5 flex flex-col justify-between snap-start shadow-2xs transition-all ${
                 m.status === 'in-progress'
-                  ? 'bg-white border-[#555934] ring-2 ring-[#555934]/15'
+                  ? 'bg-white border-[#1C4CA1] ring-2 ring-[#1C4CA1]/20'
                   : m.status === 'completed'
-                    ? 'bg-[#FAF6F0]/80 border-[#BF9B7A]/30 hover:border-[#BF9B7A]'
-                    : 'bg-stone-50 border-stone-200 opacity-70'
+                    ? 'bg-[#EDF0F7]/40 border-[#D8DFEE] hover:border-[#1C4CA1]/40 hover:bg-white'
+                    : 'bg-slate-50 border-[#D8DFEE] opacity-70'
               }`}
             >
               <div>
@@ -191,33 +191,33 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
                       m.status === 'completed'
                         ? 'bg-emerald-500/15 text-emerald-800 border border-emerald-500/30'
                         : m.status === 'in-progress'
-                          ? 'bg-[#555934]/15 text-[#555934] border border-[#555934]/30'
-                          : 'bg-stone-200 text-stone-600'
+                          ? 'bg-[#1C4CA1]/15 text-[#1C4CA1] border border-[#1C4CA1]/30'
+                          : 'bg-slate-200 text-slate-600'
                     }`}
                   >
                     {isHindi ? `चरण ${m.stageNumber}` : `Stage ${m.stageNumber}`}
                   </span>
 
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#8C5B3E] bg-[#F8C858]/25 px-2 py-0.5 rounded-full border border-[#F8C858]/40">
-                    <Award className="h-3 w-3" />
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#1F273A] bg-[#FFA72F]/20 px-2 py-0.5 rounded-full border border-[#FFA72F]/40">
+                    <Award className="h-3 w-3 text-[#1C4CA1]" />
                     {m.karmaReward}
                   </span>
                 </div>
 
                 {/* Milestone Title */}
-                <h3 className="text-sm font-black text-[#2d1f17] line-clamp-2 leading-snug">
+                <h3 className="text-sm font-black text-[#1F273A] line-clamp-2 leading-snug">
                   {title}
                 </h3>
-                <p className="text-[11px] font-medium text-muted-foreground mt-1 truncate">
+                <p className="text-[11px] font-medium text-[#475569] mt-1 truncate">
                   {m.cadre}
                 </p>
 
                 {/* Course preview */}
-                <div className="mt-3 p-3 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/25 space-y-1">
-                  <span className="text-[10px] font-bold text-[#8C5B3E] uppercase tracking-wider block">
+                <div className="mt-3 p-3 rounded-xl bg-[#EDF0F7]/60 border border-[#D8DFEE] space-y-1">
+                  <span className="text-[10px] font-bold text-[#1164BE] uppercase tracking-wider block">
                     {isHindi ? 'संबद्ध कर्मयोगी मॉड्यूल' : 'Core iGOT Course'}
                   </span>
-                  <p className="text-xs font-bold text-[#2d1f17] line-clamp-1">
+                  <p className="text-xs font-bold text-[#1F273A] line-clamp-1">
                     {m.iGotCourseTitle}
                   </p>
                 </div>
@@ -225,15 +225,15 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
                 {/* Progress Bar */}
                 <div className="mt-3 space-y-1">
                   <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-muted-foreground">
+                    <span className="text-[#475569]">
                       {m.competenciesCovered}/{m.totalCompetencies} {isHindi ? 'कौशल' : 'Skills'}
                     </span>
-                    <span className="font-bold text-[#555934]">{m.progress}%</span>
+                    <span className="font-bold text-[#1C4CA1]">{m.progress}%</span>
                   </div>
-                  <div className="h-1.5 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                  <div className="h-1.5 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${
-                        m.status === 'completed' ? 'bg-emerald-600' : 'bg-[#555934]'
+                        m.status === 'completed' ? 'bg-emerald-600' : 'bg-[#1C4CA1]'
                       }`}
                       style={{ width: `${m.progress}%` }}
                     />
@@ -242,7 +242,7 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
               </div>
 
               {/* Action Button */}
-              <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20">
+              <div className="mt-4 pt-3 border-t border-[#D8DFEE]">
                 <button
                   type="button"
                   onClick={() => handleLaunchModule(m)}
@@ -250,8 +250,8 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
                     m.status === 'completed'
                       ? 'bg-emerald-500/15 text-emerald-800 border border-emerald-500/30 hover:bg-emerald-500/25'
                       : m.status === 'in-progress'
-                        ? 'bg-[#555934] text-white hover:bg-[#434728]'
-                        : 'bg-stone-200 text-stone-600 cursor-not-allowed'
+                        ? 'bg-[#1C4CA1] text-white hover:bg-[#1164BE]'
+                        : 'bg-slate-200 text-slate-600 cursor-not-allowed'
                   }`}
                 >
                   {m.status === 'completed' ? (
@@ -261,7 +261,7 @@ export function KarmayogiPathwaysTrack({ isHindi = false }: KarmayogiPathwaysTra
                     </>
                   ) : m.status === 'in-progress' ? (
                     <>
-                      <Compass className="h-3.5 w-3.5 text-[#F8C858]" />
+                      <Compass className="h-3.5 w-3.5 text-[#FFA72F]" />
                       <span>{isHindi ? 'मॉड्यूल जारी रखें' : 'Resume Module'}</span>
                       <ArrowUpRight className="h-3 w-3" />
                     </>

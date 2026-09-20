@@ -188,10 +188,15 @@ export default function DocumentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#2d1f17]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
+              🏛️ MoSPI Digital Repository
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold text-[#1F273A]">
             {isHindi ? 'MoSPI दस्तावेज़ प्रसंस्करण केंद्र' : 'MoSPI Document Processing Hub'}
           </h1>
-          <p className="text-sm text-[#705849] mt-0.5">
+          <p className="text-sm text-[#1F273A]/70 mt-0.5">
             {isHindi
               ? 'स्वचालित विखंडन और अनुक्रमण के लिए सांख्यिकीय नियमावली, सर्वेक्षण अनुसूचियां और FRAC पाठ्यचर्या अपलोड करें।'
               : 'Upload statistical manuals, survey schedules, and FRAC curriculum guides for automated chunking.'}
@@ -201,12 +206,12 @@ export default function DocumentsPage() {
       </div>
 
       {/* Upload Box */}
-      <Card className="rounded-2xl bg-white shadow-card">
+      <Card className="rounded-2xl bg-white border border-[#D8DFEE] shadow-card">
         <CardHeader>
-          <CardTitle className="text-lg text-[#2d1f17]">
+          <CardTitle className="text-lg text-[#1F273A]">
             {isHindi ? 'नई नियमावली या अनुसूची अपलोड करें' : 'Ingest New Manual or Schedule'}
           </CardTitle>
-          <CardDescription className="text-[#705849]">
+          <CardDescription className="text-[#1F273A]/70">
             {isHindi
               ? 'स्वचालित अर्थगत विखंडन और क्षमता मानचित्रण के साथ मल्टी-मॉडल निष्कर्षण पाइपलाइन।'
               : 'Multi-modal extraction pipeline with automated semantic chunking and competency mapping.'}
@@ -215,13 +220,13 @@ export default function DocumentsPage() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
             <div>
-              <label className="block text-xs font-semibold text-[#705849] uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-[#1F273A]/70 uppercase tracking-wider mb-1.5">
                 {isHindi ? 'लक्षित FRAC क्षमता' : 'Target FRAC Competency'}
               </label>
               <select
                 value={selectedCompetency}
                 onChange={(e) => setSelectedCompetency(e.target.value)}
-                className="w-full text-sm rounded-xl p-3 bg-[#F2E6D8]/40 text-[#2d1f17] focus:outline-none focus:ring-2 focus:ring-[#555934]/20 transition-all shadow-2xs cursor-pointer"
+                className="w-full text-sm rounded-xl p-3 bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/20 transition-all shadow-2xs cursor-pointer"
               >
                 <option value="comp-capi">{isHindi ? 'CAPI टैबलेट संचालन' : 'CAPI Tablet Operation'}</option>
                 <option value="comp-demarcation">{isHindi ? 'ब्लॉक सीमांकन एवं यूएफएस (अनुसूची 0.0)' : 'Block Demarcation & UFS (Schedule 0.0)'}</option>
@@ -232,12 +237,12 @@ export default function DocumentsPage() {
             </div>
           </div>
 
-          <label className="flex flex-col items-center justify-center rounded-2xl p-8 text-center bg-[#F2E6D8]/35 hover:bg-[#F2E6D8]/65 transition cursor-pointer">
-            <Upload className="h-10 w-10 text-[#555934] mb-2" />
-            <p className="font-semibold text-[#2d1f17]">
+          <label className="flex flex-col items-center justify-center rounded-2xl p-8 text-center bg-[#EDF0F7]/60 hover:bg-[#EDF0F7] border-2 border-dashed border-[#D8DFEE] hover:border-[#1C4CA1]/40 transition cursor-pointer">
+            <Upload className="h-10 w-10 text-[#1C4CA1] mb-2" />
+            <p className="font-semibold text-[#1F273A]">
               {isHindi ? 'MoSPI दस्तावेज़ चुनने के लिए क्लिक करें या यहाँ खींचें' : 'Click to browse or drop MoSPI documents'}
             </p>
-            <p className="text-xs text-[#705849] mt-1">
+            <p className="text-xs text-[#1F273A]/70 mt-1">
               {isHindi
                 ? 'पीडीएफ मैनुअल, टेक्स्ट अर्क, सर्वेक्षण निर्देश (PLFS, ASI, NSS) समर्थित हैं'
                 : 'Supports PDF manuals, text extracts, survey instructions (PLFS, ASI, NSS)'}
@@ -250,7 +255,7 @@ export default function DocumentsPage() {
               disabled={isUploading}
             />
             {isUploading && (
-              <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-[#555934]">
+              <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-[#1C4CA1]">
                 <RefreshCw className="h-4 w-4 animate-spin" />
                 {isHindi ? 'दस्तावेज़ खंडों का विश्लेषण और क्षमता टैगिंग जारी है...' : 'Parsing document chunks and assigning competency tags...'}
               </div>
@@ -258,8 +263,8 @@ export default function DocumentsPage() {
           </label>
 
           {uploadMessage && (
-            <div className="p-3.5 bg-[#555934]/12 text-[#555934] text-xs rounded-xl flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-[#555934] shrink-0" />
+            <div className="p-3.5 bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 text-xs rounded-xl flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#1C4CA1] shrink-0" />
               {uploadMessage}
             </div>
           )}
@@ -267,19 +272,19 @@ export default function DocumentsPage() {
       </Card>
 
       {/* Document Library Table with Interactive Documents Bar */}
-      <Card className="rounded-2xl bg-white shadow-card">
+      <Card className="rounded-2xl bg-white border border-[#D8DFEE] shadow-card">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-lg text-[#2d1f17]">
+              <CardTitle className="text-lg text-[#1F273A]">
                 {isHindi ? 'अनुक्रमित दस्तावेज़ संग्रह' : 'Ingested Document Repository'}
               </CardTitle>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#555934]/12 text-[#555934]">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                 <Database className="h-3 w-3" />
                 {isHindi ? 'फ़ायरस्टोर से सिंक' : 'Firestore Synced'}
               </span>
             </div>
-            <CardDescription className="text-[#705849] mt-0.5">
+            <CardDescription className="text-[#1F273A]/70 mt-0.5">
               {isHindi
                 ? `${documents.length} संदर्भ नियमावली एआई प्रश्न निर्माण के लिए अनुक्रमित हैं।`
                 : `${documents.length} reference manuals indexed for grounding Multi-AI Question Generation.`}
@@ -289,16 +294,16 @@ export default function DocumentsPage() {
           <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/mcq-generator"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#555934] text-white hover:bg-[#3e4225] transition shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#1C4CA1] text-white hover:bg-[#153a7b] transition shadow-xs cursor-pointer"
             >
-              <Sparkles className="h-3.5 w-3.5 text-[#F8C858]" />
+              <Sparkles className="h-3.5 w-3.5 text-[#FFA72F]" />
               <span>{isHindi ? 'दस्तावेज़ से क्विज़ बनाएं' : 'Practice Quiz from Manuals'}</span>
             </Link>
 
             <button
               onClick={handleRefresh}
               disabled={isLoadingDocs}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#555934] bg-[#555934]/10 hover:bg-[#555934]/20 transition disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#1C4CA1] bg-[#1C4CA1]/10 hover:bg-[#1C4CA1]/20 transition disabled:opacity-50 cursor-pointer"
               title="Refresh documents from Firestore"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${isLoadingDocs ? 'animate-spin' : ''}`} />
@@ -308,23 +313,23 @@ export default function DocumentsPage() {
         </CardHeader>
 
         {/* Dedicated Documents Bar (Search & Filter Toolbar) */}
-        <div className="px-6 pb-4 border-b border-[#F2E6D8] space-y-3">
+        <div className="px-6 pb-4 border-b border-[#D8DFEE] space-y-3">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {/* Search input */}
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#705849]/60" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={isHindi ? "दस्तावेज़ या नियमावली खोजें... (शीर्षक, फ़ाइल या क्षमता)" : "Search documents & manuals by title, filename, or competency..."}
-                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-[#2d1f17] placeholder:text-[#705849]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#555934]/20 transition shadow-2xs"
+                className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/20 transition shadow-2xs"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#705849] hover:text-[#2d1f17]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-[#1F273A]"
                 >
                   ✕
                 </button>
@@ -332,7 +337,7 @@ export default function DocumentsPage() {
             </div>
 
             {/* Document Count Badge */}
-            <span className="text-xs font-mono font-semibold text-[#705849] px-2.5 py-1.5 rounded-lg bg-[#FAF6F0] border border-[#BF9B7A]/25 shrink-0 self-center sm:self-auto">
+            <span className="text-xs font-mono font-semibold text-[#1F273A]/70 px-2.5 py-1.5 rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] shrink-0 self-center sm:self-auto">
               {filteredDocuments.length} / {documents.length} {isHindi ? 'मैनुअल' : 'manuals'}
             </span>
           </div>
@@ -353,8 +358,8 @@ export default function DocumentsPage() {
                 onClick={() => setActiveFilterComp(comp.id)}
                 className={`px-3 py-1 rounded-xl font-medium transition cursor-pointer shrink-0 ${
                   activeFilterComp === comp.id
-                    ? 'bg-[#555934] text-white shadow-2xs font-bold'
-                    : 'bg-[#FAF6F0] text-[#705849] hover:bg-[#F2E6D8] border border-[#BF9B7A]/25'
+                    ? 'bg-[#1C4CA1] text-white shadow-xs font-bold'
+                    : 'bg-[#EDF0F7] text-[#1F273A]/70 hover:bg-[#D8DFEE]/60 border border-[#D8DFEE]'
                 }`}
               >
                 {comp.label}
@@ -366,11 +371,11 @@ export default function DocumentsPage() {
         <CardContent className="pt-4">
           {filteredDocuments.length === 0 ? (
             <div className="py-12 text-center space-y-3">
-              <FileText className="h-10 w-10 text-[#BF9B7A] mx-auto opacity-50" />
-              <p className="text-sm font-semibold text-[#2d1f17]">
+              <FileText className="h-10 w-10 text-slate-300 mx-auto opacity-50" />
+              <p className="text-sm font-semibold text-[#1F273A]">
                 {isHindi ? 'कोई दस्तावेज़ नहीं मिला' : 'No documents match your filter'}
               </p>
-              <p className="text-xs text-[#705849]">
+              <p className="text-xs text-[#1F273A]/70">
                 {isHindi ? 'कृपया दूसरा खोज शब्द आज़माएँ या फ़िल्टर रीसेट करें।' : 'Try adjusting your search query or competency filter.'}
               </p>
               <button
@@ -379,27 +384,27 @@ export default function DocumentsPage() {
                   setSearchQuery('');
                   setActiveFilterComp('all');
                 }}
-                className="px-3.5 py-1.5 rounded-xl bg-[#555934] text-white text-xs font-semibold hover:bg-[#3e4225] transition"
+                className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-semibold hover:bg-[#153a7b] transition shadow-xs"
               >
                 {isHindi ? 'फ़िल्टर साफ़ करें' : 'Clear Filters'}
               </button>
             </div>
           ) : (
-            <div className="divide-y divide-[#F2E6D8]">
+            <div className="divide-y divide-[#D8DFEE]">
               {filteredDocuments.map((doc) => (
                 <div key={doc.id} className="py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="p-2.5 bg-[#555934]/10 rounded-xl text-[#555934] shrink-0 mt-0.5">
+                    <div className="p-2.5 bg-[#1C4CA1]/10 rounded-xl text-[#1C4CA1] shrink-0 mt-0.5">
                       <FileText className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-[#2d1f17]">{doc.title}</h4>
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-[#705849] mt-0.5">
+                      <h4 className="text-sm font-semibold text-[#1F273A]">{doc.title}</h4>
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-[#1F273A]/70 mt-0.5">
                         <span className="font-mono">{doc.filename}</span>
                         <span>•</span>
                         <span>{(doc.sizeBytes / 1024 / 1024).toFixed(1)} MB</span>
                         <span>•</span>
-                        <span className="inline-flex items-center gap-1 font-semibold text-[#555934]">
+                        <span className="inline-flex items-center gap-1 font-semibold text-[#1C4CA1]">
                           <Layers className="h-3 w-3" />
                           {doc.chunkCount} {isHindi ? 'खंड' : 'Chunks'}
                         </span>
@@ -408,7 +413,7 @@ export default function DocumentsPage() {
                 </div>
 
                 <div className="flex items-center gap-2 self-end md:self-auto">
-                  <span className="text-xs px-3 py-1 font-semibold rounded-full bg-[#555934]/12 text-[#555934]">
+                  <span className="text-xs px-3 py-1 font-semibold rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                     {doc.status}
                   </span>
 
@@ -417,7 +422,7 @@ export default function DocumentsPage() {
                       href={doc.storageUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-[#F2E6D8]/60 hover:bg-[#E8DACB] text-[#593E2E] text-xs font-semibold rounded-xl transition-all shadow-2xs"
+                      className="p-2 bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1F273A] text-xs font-semibold rounded-xl transition-all shadow-2xs border border-[#D8DFEE]"
                       title="Download document from cloud storage"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -426,7 +431,7 @@ export default function DocumentsPage() {
 
                   <button
                     onClick={() => setSelectedChunkDoc(doc)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F2E6D8]/60 hover:bg-[#E8DACB] text-[#593E2E] text-xs font-semibold rounded-xl transition-all shadow-2xs cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1F273A] text-xs font-semibold rounded-xl transition-all shadow-2xs cursor-pointer border border-[#D8DFEE]"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     {isHindi ? 'खंड देखें' : 'View Chunks'}
@@ -435,7 +440,7 @@ export default function DocumentsPage() {
                   <Link
                     href={`/mcq-generator?docId=${doc.id}&competency=${doc.targetCompetencies[0] || 'comp-capi'}&docTitle=${encodeURIComponent(doc.title)}`}
                     prefetch={true}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#555934] hover:bg-[#3e4225] text-white text-xs font-semibold rounded-xl transition-all shadow-xs"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1C4CA1] hover:bg-[#153a7b] text-white text-xs font-semibold rounded-xl transition-all shadow-xs"
                   >
                     <Brain className="w-3.5 h-3.5" />
                     {isHindi ? 'MCQ बनाएं' : 'Generate MCQs'}
@@ -444,7 +449,7 @@ export default function DocumentsPage() {
                   <button
                     type="button"
                     onClick={() => handleOpenDeleteConfirm(doc)}
-                    className="p-2 text-[#8C5B3E] hover:bg-[#8C5B3E]/10 rounded-xl transition cursor-pointer"
+                    className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
                     title={isHindi ? 'दस्तावेज़ हटाएं' : 'Delete document'}
                     aria-label={isHindi ? `दस्तावेज़ "${doc.title}" हटाएं` : `Delete document "${doc.title}"`}
                   >
@@ -461,10 +466,10 @@ export default function DocumentsPage() {
       {/* Semantic Chunks Modal */}
       {selectedChunkDoc && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
-            <div className="p-4 bg-gradient-to-r from-[#555934] to-[#3e4225] rounded-t-2xl flex items-center justify-between text-white">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl border border-[#D8DFEE]">
+            <div className="p-4 bg-gradient-to-r from-[#1F273A] to-[#2C3B59] rounded-t-2xl flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-white" />
+                <BookOpen className="w-5 h-5 text-[#FFA72F]" />
                 <h3 className="text-base font-bold text-white">
                   {isHindi ? 'अर्थगत खंड:' : 'Semantic Chunks:'} {selectedChunkDoc.title}
                 </h3>
@@ -512,26 +517,26 @@ export default function DocumentsPage() {
                     },
                   ]
               ).map((chunk, idx) => (
-                <div key={idx} className="p-3 bg-[#F2E6D8]/25 border border-[#F2E6D8] rounded-xl space-y-1">
+                <div key={idx} className="p-3 bg-[#EDF0F7] border border-[#D8DFEE] rounded-xl space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#2d1f17]">{chunk.section}</span>
-                    <span className="text-[11px] font-mono font-semibold text-[#555934]">{chunk.page}</span>
+                    <span className="font-bold text-[#1F273A]">{chunk.section}</span>
+                    <span className="text-[11px] font-mono font-semibold text-[#1C4CA1]">{chunk.page}</span>
                   </div>
-                  <p className="text-xs text-[#593E2E] leading-relaxed italic">
+                  <p className="text-xs text-[#1F273A]/80 leading-relaxed italic">
                     &ldquo;{chunk.text}&rdquo;
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="p-4 border-t border-[#F2E6D8] flex items-center justify-between">
-              <span className="text-xs text-[#705849]">
+            <div className="p-4 border-t border-[#D8DFEE] flex items-center justify-between">
+              <span className="text-xs text-[#1F273A]/70">
                 {isHindi ? 'संबद्ध क्षमता:' : 'Tagged Competency:'} {selectedChunkDoc.targetCompetencies.join(', ')}
               </span>
               <Link
                 href={`/mcq-generator?docId=${selectedChunkDoc.id}&competency=${selectedChunkDoc.targetCompetencies[0] || 'comp-capi'}`}
                 prefetch={true}
-                className="px-4 py-2 bg-[#555934] hover:bg-[#3e4225] text-white text-xs font-bold rounded-xl transition"
+                className="px-4 py-2 bg-[#1C4CA1] hover:bg-[#153a7b] text-white text-xs font-bold rounded-xl transition shadow-xs"
               >
                 {isHindi ? 'MCQ निर्माण पर आगे बढ़ें →' : 'Proceed to MCQ Generation →'}
               </Link>
@@ -550,7 +555,7 @@ export default function DocumentsPage() {
           onClick={() => !isDeleting && setDeleteConfirmDoc(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#BF9B7A]/30 space-y-5 animate-in zoom-in-95 duration-150 relative"
+            className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#D8DFEE] space-y-5 animate-in zoom-in-95 duration-150 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top alert badge & close button */}
@@ -560,7 +565,7 @@ export default function DocumentsPage() {
                   <AlertTriangle className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 id="delete-dialog-title" className="text-base font-bold text-[#2d1f17]">
+                  <h3 id="delete-dialog-title" className="text-base font-bold text-[#1F273A]">
                     {isHindi ? 'दस्तावेज़ हटाने की पुष्टि' : 'Remove Document?'}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -574,21 +579,21 @@ export default function DocumentsPage() {
                 onClick={() => !isDeleting && setDeleteConfirmDoc(null)}
                 disabled={isDeleting}
                 aria-label="Close dialog"
-                className="p-1.5 text-muted-foreground hover:text-[#2d1f17] hover:bg-[#FAF6F0] rounded-xl transition cursor-pointer disabled:opacity-50"
+                className="p-1.5 text-muted-foreground hover:text-[#1F273A] hover:bg-[#EDF0F7] rounded-xl transition cursor-pointer disabled:opacity-50"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Document Info Card */}
-            <div className="p-3.5 rounded-2xl bg-[#FAF6F0] border border-[#BF9B7A]/30 space-y-1.5">
+            <div className="p-3.5 rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] space-y-1.5">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#8C5B3E] shrink-0" />
-                <span className="text-xs font-bold text-[#2d1f17] line-clamp-1">
+                <FileText className="w-4 h-4 text-[#1C4CA1] shrink-0" />
+                <span className="text-xs font-bold text-[#1F273A] line-clamp-1">
                   {deleteConfirmDoc.title}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-[11px] text-[#705849] pl-6">
+              <div className="flex items-center gap-3 text-[11px] text-[#1F273A]/70 pl-6">
                 <span className="font-mono">{deleteConfirmDoc.filename}</span>
                 <span>•</span>
                 <span>{deleteConfirmDoc.chunkCount} {isHindi ? 'खंड' : 'chunks'}</span>
@@ -596,7 +601,7 @@ export default function DocumentsPage() {
             </div>
 
             {/* Description prompt */}
-            <p className="text-xs text-[#705849] leading-relaxed">
+            <p className="text-xs text-[#1F273A]/80 leading-relaxed">
               {isHindi ? (
                 <>
                   क्या आप वाकई रिपॉजिटरी से इस दस्तावेज़ को हटाना चाहते हैं? यह क्रिया संबंधित सभी <strong>{deleteConfirmDoc.chunkCount} खंडों</strong> को AI प्रश्न निर्माण बैंक से स्थायी रूप से हटा देगी।
@@ -614,7 +619,7 @@ export default function DocumentsPage() {
                 type="button"
                 onClick={() => setDeleteConfirmDoc(null)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-[#BF9B7A]/40 text-[#705849] hover:bg-[#FAF6F0] hover:text-[#2d1f17] text-xs font-bold transition cursor-pointer disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 rounded-xl border border-[#D8DFEE] text-[#1F273A]/80 hover:bg-[#EDF0F7] hover:text-[#1F273A] text-xs font-bold transition cursor-pointer disabled:opacity-50"
               >
                 {isHindi ? 'रद्द करें' : 'Cancel'}
               </button>

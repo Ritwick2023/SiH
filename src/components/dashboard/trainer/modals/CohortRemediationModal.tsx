@@ -58,31 +58,31 @@ export function CohortRemediationModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-[#BF9B7A]/40 flex flex-col overflow-hidden"
+        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-[#D8DFEE] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-[#BF9B7A]/20 bg-[#FAF6F0]">
+        <div className="flex items-start justify-between p-6 border-b border-[#D8DFEE] bg-[#EDF0F7]/60">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                 NSSTA Faculty Intervention
               </span>
               <span className="text-[10px] font-mono text-muted-foreground">
                 Rule FR-CONTENT-11
               </span>
             </div>
-            <h2 className="text-xl font-bold text-[#2d1f17] tracking-tight">
+            <h2 className="text-xl font-bold text-[#1F273A] tracking-tight">
               Curate Remedial Drill
             </h2>
             <p className="text-xs text-muted-foreground">
-              Target: <span className="font-semibold text-[#2d1f17]">{cohortName}</span>
+              Target: <span className="font-semibold text-[#1F273A]">{cohortName}</span>
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#F2E6D8] transition-colors"
+            className="p-2 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -95,7 +95,7 @@ export function CohortRemediationModal({
               <div className="h-16 w-16 mx-auto rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center animate-bounce">
                 <CheckCircle2 className="h-10 w-10" />
               </div>
-              <h3 className="text-lg font-bold text-[#2d1f17]">
+              <h3 className="text-lg font-bold text-[#1F273A]">
                 Remedial Drill Dispatched!
               </h3>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto">
@@ -106,7 +106,7 @@ export function CohortRemediationModal({
             <>
               {/* Recipient Scope */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-[#2d1f17] flex items-center justify-between">
+                <label className="text-xs font-bold text-[#1F273A] flex items-center justify-between">
                   <span>Target Recipients</span>
                   <span className="text-[10px] text-muted-foreground font-mono font-normal">
                     Select delivery scope
@@ -116,10 +116,10 @@ export function CohortRemediationModal({
                   <button
                     type="button"
                     onClick={() => setRecipientScope('AT_RISK')}
-                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       recipientScope === 'AT_RISK'
-                        ? 'bg-[#8C5B3E]/10 border-[#8C5B3E] text-[#8C5B3E]'
-                        : 'bg-white border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0]'
+                        ? 'bg-[#1C4CA1]/10 border-[#1C4CA1] text-[#1C4CA1]'
+                        : 'bg-white border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7]'
                     }`}
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs">
@@ -134,14 +134,14 @@ export function CohortRemediationModal({
                   <button
                     type="button"
                     onClick={() => setRecipientScope('ALL')}
-                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       recipientScope === 'ALL'
-                        ? 'bg-[#8C5B3E]/10 border-[#8C5B3E] text-[#8C5B3E]'
-                        : 'bg-white border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0]'
+                        ? 'bg-[#1C4CA1]/10 border-[#1C4CA1] text-[#1C4CA1]'
+                        : 'bg-white border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7]'
                     }`}
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs">
-                      <Target className="h-3.5 w-3.5 text-[#555934]" />
+                      <Target className="h-3.5 w-3.5 text-[#1C4CA1]" />
                       <span>Entire Cohort</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -153,7 +153,7 @@ export function CohortRemediationModal({
 
               {/* Competency Focus */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-[#2d1f17]">
+                <label className="text-xs font-bold text-[#1F273A]">
                   Deficient Competency Focus
                 </label>
                 <div className="space-y-1.5">
@@ -184,8 +184,8 @@ export function CohortRemediationModal({
                       onClick={() => setCompetency(c.id)}
                       className={`p-2.5 rounded-xl border text-xs transition-all cursor-pointer flex items-center justify-between ${
                         competency === c.id
-                          ? 'bg-[#555934]/10 border-[#555934] text-[#2d1f17]'
-                          : 'bg-white border-[#BF9B7A]/25 text-muted-foreground hover:bg-[#FAF6F0]'
+                          ? 'bg-[#1C4CA1]/10 border-[#1C4CA1] text-[#1F273A]'
+                          : 'bg-white border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7]'
                       }`}
                     >
                       <div>
@@ -195,8 +195,8 @@ export function CohortRemediationModal({
                       <div
                         className={`h-4 w-4 rounded-full border flex items-center justify-center shrink-0 ${
                           competency === c.id
-                            ? 'border-[#555934] bg-[#555934] text-white'
-                            : 'border-[#BF9B7A]'
+                            ? 'border-[#1C4CA1] bg-[#1C4CA1] text-white'
+                            : 'border-[#D8DFEE]'
                         }`}
                       >
                         {competency === c.id && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
@@ -209,11 +209,11 @@ export function CohortRemediationModal({
               {/* Drill Parameters (Questions, Benchmark, Deadline) */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#2d1f17]">Questions</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">Questions</label>
                   <select
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Number(e.target.value))}
-                    className="w-full p-2 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] bg-white focus:ring-1 focus:ring-[#8C5B3E]"
+                    className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
                     <option value={5}>5 Questions</option>
                     <option value={10}>10 Questions</option>
@@ -222,11 +222,11 @@ export function CohortRemediationModal({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#2d1f17]">Passing %</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">Passing %</label>
                   <select
                     value={passThreshold}
                     onChange={(e) => setPassThreshold(Number(e.target.value))}
-                    className="w-full p-2 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] bg-white focus:ring-1 focus:ring-[#8C5B3E]"
+                    className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
                     <option value={70}>70% (Standard)</option>
                     <option value={75}>75% (Target)</option>
@@ -235,11 +235,11 @@ export function CohortRemediationModal({
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#2d1f17]">Deadline</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">Deadline</label>
                   <select
                     value={deadlineHours}
                     onChange={(e) => setDeadlineHours(Number(e.target.value))}
-                    className="w-full p-2 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] bg-white focus:ring-1 focus:ring-[#8C5B3E]"
+                    className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
                     <option value={24}>24 Hours</option>
                     <option value={48}>48 Hours</option>
@@ -249,8 +249,8 @@ export function CohortRemediationModal({
               </div>
 
               {/* Institutional Notice */}
-              <div className="p-3 rounded-2xl bg-[#FAF6F0] border border-[#BF9B7A]/25 flex items-start gap-2.5 text-xs text-muted-foreground">
-                <ShieldCheck className="h-4 w-4 text-[#555934] shrink-0 mt-0.5" />
+              <div className="p-3 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] flex items-start gap-2.5 text-xs text-muted-foreground">
+                <ShieldCheck className="h-4 w-4 text-[#1C4CA1] shrink-0 mt-0.5" />
                 <p className="text-[11px] leading-relaxed">
                   Remedial test items are extracted directly from the verified MoSPI question bank with statutory citation feedback upon trainee submission.
                 </p>
@@ -261,11 +261,11 @@ export function CohortRemediationModal({
 
         {/* Footer */}
         {!dispatchedSuccess && (
-          <div className="p-4 border-t border-[#BF9B7A]/20 bg-[#FAF6F0]/80 flex items-center justify-between">
+          <div className="p-4 border-t border-[#D8DFEE] bg-[#EDF0F7]/60 flex items-center justify-between">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white border border-[#BF9B7A]/30 text-xs font-bold text-muted-foreground hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-[#EDF0F7] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -274,7 +274,7 @@ export function CohortRemediationModal({
               type="button"
               onClick={handleDispatch}
               disabled={isDispatching}
-              className="px-5 py-2.5 rounded-xl bg-[#8C5B3E] text-white text-xs font-bold hover:bg-[#704830] transition-colors shadow-2xs flex items-center gap-2 cursor-pointer disabled:opacity-70"
+              className="px-5 py-2.5 rounded-xl bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] transition-colors shadow-2xs flex items-center gap-2 cursor-pointer disabled:opacity-70"
             >
               {isDispatching ? (
                 <>

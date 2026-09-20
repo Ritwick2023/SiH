@@ -1,0 +1,11 @@
+python-interpreter-path = "venv/bin/python"
+search-path = [
+  ".",
+  "routers",
+  "ml",
+  "nlp",
+  "tasks"
+]
+site-package-path = [
+  "venv/lib/python3.13/site-packages"
+]

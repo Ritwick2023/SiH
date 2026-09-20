@@ -27,28 +27,28 @@ const typeIconMap: Record<
 > = {
   assessment: {
     icon: ClipboardCheck,
-    bgClass: 'bg-[#8b9a6e]/15',
-    textClass: 'text-[#728056]',
+    bgClass: 'bg-[#1C4CA1]/10',
+    textClass: 'text-[#1C4CA1]',
   },
   learning: {
     icon: BookOpen,
-    bgClass: 'bg-[#c9963a]/15',
-    textClass: 'text-[#a47524]',
+    bgClass: 'bg-[#1164BE]/10',
+    textClass: 'text-[#1164BE]',
   },
   achievement: {
     icon: Trophy,
-    bgClass: 'bg-[#e2a829]/15',
-    textClass: 'text-[#a17415]',
+    bgClass: 'bg-[#FFA72F]/15',
+    textClass: 'text-[#b86f0a]',
   },
   system: {
     icon: Settings,
-    bgClass: 'bg-[#eae2d6]',
-    textClass: 'text-stone-700',
+    bgClass: 'bg-[#EDF0F7]',
+    textClass: 'text-[#1F273A]',
   },
   announcement: {
     icon: Megaphone,
-    bgClass: 'bg-[#8b9a6e]/20',
-    textClass: 'text-[#8b9a6e]',
+    bgClass: 'bg-[#1C4CA1]/10',
+    textClass: 'text-[#1C4CA1]',
   },
 };
 
@@ -70,10 +70,10 @@ export function NotificationItem({
       type="button"
       onClick={() => onSelect(notification)}
       aria-label={`${notification.read ? '' : (isHindi ? 'अपठित: ' : 'Unread: ')}${title}`}
-      className={`group relative flex w-full items-start gap-3 p-3.5 text-left transition-colors cursor-pointer border-b border-accent last:border-b-0 focus:outline-none focus-visible:bg-[#f7f2eb] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${
+      className={`group relative flex w-full items-start gap-3 p-3.5 text-left transition-colors cursor-pointer border-b border-[#D8DFEE] last:border-b-0 focus:outline-none focus-visible:bg-[#EDF0F7] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1C4CA1] ${
         notification.read
-          ? 'bg-white hover:bg-[#f7f2eb]'
-          : 'bg-[#fbf9f6] hover:bg-[#f5ede2]'
+          ? 'bg-white hover:bg-[#EDF0F7]'
+          : 'bg-[#EDF0F7]/40 hover:bg-[#EDF0F7]'
       }`}
     >
       {/* Type Icon Badge */}

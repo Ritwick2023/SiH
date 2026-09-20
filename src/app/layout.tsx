@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Inter, Noto_Sans_Devanagari, JetBrains_Mono } from 'next/font/google';
-import { OfflineIndicator, LanguageSwitcher } from '@/components/layout';
+import { OfflineIndicator } from '@/components/layout';
 import './globals.css';
 
 
@@ -56,7 +56,6 @@ export default async function RootLayout({
             <div className="flex flex-col min-h-full">
               {children}
               <OfflineIndicator />
-              <LanguageSwitcher />
             </div>
           </ThemeProvider>
         </NextIntlClientProvider>

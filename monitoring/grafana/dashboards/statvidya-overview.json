@@ -1,0 +1,71 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Active Concurrent IRT Assessments",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(statvidya_active_assessments)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "title": "IRT 2PL Theta Latency (P95 ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{handler=~\"/api/v1/assessment/.*\"}[5m])) by (le)) * 1000",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "title": "Celery PDF Ingestion Throughput (docs/min)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum(rate(celery_tasks_completed_total[1m])) * 60",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "title": "Offline Sync Backlog by FOD Division",
+      "type": "bargauge",
+      "targets": [
+        {
+          "expr": "sum by (division) (statvidya_offline_pending_records)",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["statvidya", "mospi", "karmayogi"],
+  "time": { "from": "now-6h", "to": "now" },
+  "title": "StatVidya MoSPI Production Overview",
+  "version": 1
+}

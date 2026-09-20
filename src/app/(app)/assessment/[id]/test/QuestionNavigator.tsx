@@ -24,7 +24,7 @@ interface QuestionNavigatorProps {
 }
 
 function statusClass(status: QuestionStatus, isCurrent: boolean): string {
-  const ring = isCurrent ? ' ring-2 ring-offset-1 ring-[#555934]' : '';
+  const ring = isCurrent ? ' ring-2 ring-offset-1 ring-[#1C4CA1]' : '';
   switch (status) {
     case 'answered':
       return `bg-emerald-100 border-emerald-400 text-emerald-800 hover:bg-emerald-200${ring}`;

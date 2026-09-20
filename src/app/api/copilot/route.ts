@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSystemPromptWithContext, getOfflineFallbackResponse } from '@/lib/copilotPrompt';
-import type { CopilotUserContext } from '@/lib/copilotPrompt';
+import { getSystemPromptWithRag, getOfflineFallbackResponse, type CopilotUserContext } from '@/lib/copilotPrompt';
 import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
 
 export const runtime = 'nodejs';
@@ -28,10 +27,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = getSystemPromptWithContext(userContext);
-    const apiKey = process.env.GEMINI_API_KEY || '';
-
     const lastUserMessage = messages.filter(m => m.role === 'user').pop();
+    const systemPrompt = await getSystemPromptWithRag(userContext, lastUserMessage?.content);
+    const apiKey = process.env.GEMINI_API_KEY || '';
     const isHindi = userContext?.preferredLanguage === 'hi';
 
     // Server-side instant fast-path for navigation and curated FAQs (<1ms response)

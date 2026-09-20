@@ -87,3 +87,57 @@ export const SYNTHETIC_SURVEY_OUTCOMES: OutcomeCorrelationSeries[] = [
     ],
   },
 ];
+
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import type { ProvenanceType } from '@/lib/types';
+
+/**
+ * Fetches live statistical correlation from FastAPI microservice with automatic local fallback.
+ */
+export async function fetchLiveScrutinyCorrelation(
+  seriesId?: string
+): Promise<OutcomeCorrelationSeries[]> {
+  const serviceUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+
+  return executeWithFallback(
+    async () => {
+      const activeSeries =
+        SYNTHETIC_SURVEY_OUTCOMES.find((s) => !seriesId || s.id === seriesId) ??
+        SYNTHETIC_SURVEY_OUTCOMES[0];
+
+      const records = activeSeries.dataPoints.map((dp) => ({
+        competency_level: dp.competencyLevel,
+        error_rate_percent: dp.errorRatePercent,
+      }));
+
+      const res = await fetch(`${serviceUrl}/api/v1/analytics/correlate-scrutiny`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ records }),
+      });
+
+      if (!res.ok) throw new Error(`FastAPI returned status ${res.status}`);
+      const data = await res.json();
+
+      return SYNTHETIC_SURVEY_OUTCOMES.map((s) => {
+        if (s.id === activeSeries.id) {
+          return {
+            ...s,
+            regressionSlope: data.slope,
+            rSquared: data.r_squared,
+            pValue: data.p_value,
+            provenance: data.provenance as ProvenanceType,
+          };
+        }
+        return s;
+      });
+    },
+    () => {
+      // Local Fallback
+      return SYNTHETIC_SURVEY_OUTCOMES;
+    },
+    'ScrutinyCorrelation_Live',
+    1500
+  );
+}
+
