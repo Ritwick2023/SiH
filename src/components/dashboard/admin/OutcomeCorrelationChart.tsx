@@ -346,7 +346,7 @@ export function OutcomeCorrelationChart() {
               </div>
             </div>
             <div className="flex items-center gap-3 font-mono">
-              <div className="flex items-center gap-1 text-[#64748B]">
+              <div className="flex items-center gap-1 text-muted-foreground">
                 <Users className="h-3.5 w-3.5" />
                 <span>n={hoveredPoint.sampleSize}</span>
               </div>
