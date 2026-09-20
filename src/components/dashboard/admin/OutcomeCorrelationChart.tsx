@@ -271,7 +271,7 @@ export function OutcomeCorrelationChart() {
             />
 
             {/* Data Points */}
-            {selectedSeries.dataPoints.map((dp: any) => {
+            {selectedSeries.dataPoints.map((dp) => {
               const cx = scaleX(dp.competencyLevel);
               const cy = scaleY(dp.errorRatePercent);
               const isHovered = hoveredPoint?.id === dp.id;

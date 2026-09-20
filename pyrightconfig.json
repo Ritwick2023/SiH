@@ -1,0 +1,15 @@
+{
+  "include": [
+    "services/analytics-engine"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "services/analytics-engine/venv"
+  ],
+  "venvPath": "services/analytics-engine",
+  "venv": "venv",
+  "extraPaths": [
+    "services/analytics-engine",
+    "services/analytics-engine/venv/lib/python3.13/site-packages"
+  ]
+}
