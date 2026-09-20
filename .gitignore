@@ -49,3 +49,9 @@ dataconnect/.dataconnect/
 # Vitest / Coverage
 coverage/
 .nyc_output/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+services/analytics-engine/venv/

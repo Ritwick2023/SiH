@@ -2,15 +2,18 @@ import os
 import shutil
 from typing import Dict, Any, Union
 from PIL import Image, ImageEnhance, ImageFilter
-import pytesseract
+try:
+    import pytesseract
 
-# Configure Tesseract binary path
-TESSERACT_CMD = os.getenv("TESSERACT_CMD")
-if not TESSERACT_CMD:
-    TESSERACT_CMD = shutil.which("tesseract") or "/opt/homebrew/bin/tesseract"
+    # Configure Tesseract binary path
+    TESSERACT_CMD = os.getenv("TESSERACT_CMD")
+    if not TESSERACT_CMD:
+        TESSERACT_CMD = shutil.which("tesseract") or "/opt/homebrew/bin/tesseract"
 
-if os.path.exists(TESSERACT_CMD):
-    pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
+    if TESSERACT_CMD and os.path.exists(TESSERACT_CMD):
+        pytesseract.pytesseract.tesseract_cmd = TESSERACT_CMD
+except ImportError:
+    pytesseract = None
 
 def preprocess_image_for_ocr(image: Image.Image) -> Image.Image:
     """
@@ -51,6 +54,14 @@ def extract_bilingual_text_from_image(
             image = Image.open(image_input)
         else:
             image = image_input
+
+        if pytesseract is None:
+            return {
+                "text": "",
+                "method": "ocr_bilingual_tesseract",
+                "status": "fallback",
+                "error": "pytesseract library is not installed"
+            }
 
         # Preprocessing
         preprocessed = preprocess_image_for_ocr(image)
