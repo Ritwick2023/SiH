@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSystemPromptWithContext, getSystemPromptWithRag, getOfflineFallbackResponse } from '@/lib/copilotPrompt';
-import type { CopilotUserContext } from '@/lib/copilotPrompt';
+import { getSystemPromptWithRag, getOfflineFallbackResponse, type CopilotUserContext } from '@/lib/copilotPrompt';
 import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
 
 export const runtime = 'nodejs';

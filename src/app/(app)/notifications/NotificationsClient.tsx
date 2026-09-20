@@ -65,7 +65,7 @@ export function NotificationsClient() {
       {/* Top Header Card */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-accent bg-white p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#8b9a6e]/15 text-[#8b9a6e]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
             <Bell className="h-6 w-6" />
           </div>
           <div>
@@ -133,7 +133,7 @@ export function NotificationsClient() {
       <div className="rounded-xl border border-accent bg-white shadow-sm overflow-hidden divide-y divide-accent">
         {filteredNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#8b9a6e]/15 text-[#8b9a6e] mb-3">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] mb-3">
               <CheckCircle2 className="h-7 w-7" />
             </div>
             <p className="text-base font-semibold text-stone-900">

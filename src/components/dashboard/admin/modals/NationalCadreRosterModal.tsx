@@ -153,16 +153,16 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
       aria-labelledby="roster-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden">
         {/* Header Ribbon */}
-        <div className="bg-[#555934] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#1C4CA1] text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20">
-              <Users className="h-6 w-6 text-[#F8C858]" />
+              <Users className="h-6 w-6 text-[#FFA72F]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-[#FAF6F0] border border-white/30 uppercase">
+                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-white border border-white/30 uppercase">
                   National Cadre Registry • 4,850 Personnel
                 </span>
               </div>
@@ -182,7 +182,7 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
         </div>
 
         {/* Toolbar & Filter Bar */}
-        <div className="p-4 sm:p-6 pb-2 border-b border-[#BF9B7A]/20 bg-white/60 shrink-0 space-y-3">
+        <div className="p-4 sm:p-6 pb-2 border-b border-[#D8DFEE] bg-white shrink-0 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             {/* Search Input */}
             <div className="relative w-full sm:w-80">
@@ -192,7 +192,7 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                 placeholder="Search by officer, station, cadre..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-xs text-[#2d1f17] focus:outline-none focus:ring-2 focus:ring-[#555934]"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
               />
             </div>
 
@@ -200,9 +200,9 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
             <button
               type="button"
               onClick={handleExportCSV}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
             >
-              <Download className="h-3.5 w-3.5 text-[#F8C858]" />
+              <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
               <span>{downloadSuccess ? 'CSV Generated!' : 'Export National Roster (CSV)'}</span>
             </button>
           </div>
@@ -216,8 +216,8 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                 onClick={() => setSelectedCadre(c)}
                 className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   selectedCadre === c
-                    ? 'bg-[#555934] text-white shadow-2xs'
-                    : 'bg-[#FAF6F0] text-muted-foreground border border-[#BF9B7A]/30 hover:bg-[#FAF6F0]/80'
+                    ? 'bg-[#1C4CA1] text-white shadow-2xs'
+                    : 'bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE] hover:bg-[#D8DFEE]'
                 }`}
               >
                 {c === 'ALL' ? 'All Cadres (4,850)' : `${c} Cadre`}
@@ -228,10 +228,10 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
 
         {/* Scrollable Table */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <div className="overflow-x-auto rounded-2xl border border-[#BF9B7A]/30 bg-white shadow-2xs">
+          <div className="overflow-x-auto rounded-2xl border border-[#D8DFEE] bg-white shadow-2xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#FAF6F0] border-b border-[#BF9B7A]/20 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                <tr className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                   <th className="py-3 px-4">Officer Name</th>
                   <th className="py-3 px-3">Cadre &amp; Rank</th>
                   <th className="py-3 px-3">Posting Station</th>
@@ -241,10 +241,10 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                   <th className="py-3 px-4 text-right">Cadre Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#BF9B7A]/15 font-mono">
+              <tbody className="divide-y divide-[#D8DFEE] font-mono">
                 {filtered.map((officer) => (
-                  <tr key={officer.id} className="hover:bg-[#FAF6F0]/50 transition-colors">
-                    <td className="py-3.5 px-4 font-sans font-bold text-[#2d1f17]">
+                  <tr key={officer.id} className="hover:bg-[#EDF0F7]/40 transition-colors">
+                    <td className="py-3.5 px-4 font-sans font-bold text-[#1F273A]">
                       {officer.name}
                     </td>
                     <td className="py-3.5 px-3 font-sans text-muted-foreground">
@@ -253,23 +253,23 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                     <td className="py-3.5 px-3 font-sans text-muted-foreground">
                       {officer.station}
                     </td>
-                    <td className="py-3.5 px-3 font-bold text-[#555934]">
+                    <td className="py-3.5 px-3 font-bold text-[#1C4CA1]">
                       {officer.fracLevel}
                     </td>
                     <td className="py-3.5 px-3">
                       <div className="space-y-1 min-w-17.5">
-                        <span className="font-bold text-[#2d1f17]">{officer.readiness}%</span>
-                        <div className="h-1.5 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                        <span className="font-bold text-[#1F273A]">{officer.readiness}%</span>
+                        <div className="h-1.5 w-full rounded-full bg-[#D8DFEE] overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              officer.readiness >= 75 ? 'bg-emerald-600' : 'bg-[#8C5B3E]'
+                              officer.readiness >= 75 ? 'bg-emerald-600' : 'bg-[#FFA72F]'
                             }`}
                             style={{ width: `${officer.readiness}%` }}
                           />
                         </div>
                       </div>
                     </td>
-                    <td className="py-3.5 px-3 font-bold text-[#8C5B3E]">
+                    <td className="py-3.5 px-3 font-bold text-[#FFA72F]">
                       {officer.errorRate}%
                     </td>
                     <td className="py-3.5 px-4 text-right font-sans">
@@ -279,7 +279,7 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                           Optimal
                         </span>
                       ) : officer.status === 'COMPETENT' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF6F0] text-muted-foreground border border-[#BF9B7A]/40">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE]">
                           Competent
                         </span>
                       ) : (
@@ -296,12 +296,12 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
         </div>
 
         {/* Footer */}
-        <div className="bg-[#FAF6F0] border-t border-[#BF9B7A]/30 px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
+        <div className="bg-[#EDF0F7]/60 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
           <span>Showing {filtered.length} of 4,850 officers across 7 zones</span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl border border-[#BF9B7A]/40 text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
             Close Roster
           </button>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShieldCheck, Download, QrCode, CheckCircle, ExternalLink, Award } from 'lucide-react';
+import { ShieldCheck, Download, QrCode, CheckCircle, Award } from 'lucide-react';
 import { W3CVerifiableCredential } from '@/services/digilockerService';
 
 interface DigiLockerBadgeProps {
@@ -85,7 +85,7 @@ export function DigiLockerBadge({ credential, className = '' }: DigiLockerBadgeP
         <button
           type="button"
           onClick={handleDownload}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#EDF0F7] bg-[#FAF6F0] hover:bg-[#EDF0F7] text-xs font-bold text-[#1F273A] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#D8DFEE] bg-[#EDF0F7] hover:bg-[#D8DFEE] text-xs font-bold text-[#1F273A] transition-colors cursor-pointer"
           title="Download signed JSON-LD credential"
         >
           <Download className="h-3.5 w-3.5 text-[#1C4CA1]" />

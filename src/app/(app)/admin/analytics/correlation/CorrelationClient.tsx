@@ -10,7 +10,7 @@ const ScatterChart = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-80 w-full items-center justify-center bg-white rounded-2xl shadow-card border border-stone-200">
-        <div className="h-48 w-full max-w-md bg-[#E8DACB]/30 rounded-xl animate-pulse" />
+        <div className="h-48 w-full max-w-md bg-[#D8DFEE]/50 rounded-xl animate-pulse" />
       </div>
     ),
   }

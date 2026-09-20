@@ -70,7 +70,7 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   if (isAssessmentActive) {
     // Full-screen assessment mode: no sidebar, no topbar, no max-width padding
     return (
-      <div className="flex h-full flex-col bg-[#FAF6F0]">
+      <div className="flex h-full flex-col bg-[#F4F6FB]">
         {children}
         <CopilotFAB userContext={userContext} />
       </div>
@@ -78,11 +78,11 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#FAF6F0]/40">
+    <div className="flex h-screen overflow-hidden bg-[#F4F6FB]">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
         <Topbar />
-        <main className="flex-1 overflow-y-auto bg-[#FAF6F0]/30">
+        <main className="flex-1 overflow-y-auto bg-[#F4F6FB]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
             <div className="mb-4">
               <Breadcrumb />

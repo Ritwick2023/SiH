@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import Hls from 'hls.js';
-import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw, Award, Settings, Check } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Award, Settings, Check } from 'lucide-react';
 
 interface HlsVideoPlayerProps {
   src?: string;
@@ -17,7 +17,6 @@ interface HlsVideoPlayerProps {
 export function HlsVideoPlayer({
   src = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   poster,
-  title = 'MoSPI Field Enumeration & Schedule 0.0 Protocol Video',
   courseId = 'course-field-listing-01',
   competencyId = 'comp-boundary-demarcation',
   onQuizReady,

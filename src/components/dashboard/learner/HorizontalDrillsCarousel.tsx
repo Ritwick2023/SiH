@@ -105,20 +105,20 @@ export function HorizontalDrillsCarousel({
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 sm:p-6 shadow-xs space-y-4">
+    <div className="rounded-3xl bg-white border border-[#D8DFEE] p-5 sm:p-6 shadow-xs space-y-4">
       {/* Header & Controls */}
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#BF9B7A]/20">
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-            <h2 className="text-base sm:text-lg font-bold text-[#2d1f17]">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h2 className="text-base sm:text-lg font-bold text-[#1F273A]">
               {isHindi ? 'प्राथमिकता फील्ड एवं डेस्क अभ्यास' : 'Priority Field & Desk Drills'}
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F8C858]/20 text-[#8C5B3E] hidden sm:inline">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#FFA72F]/15 text-[#1F273A] border border-[#FFA72F]/30 hidden sm:inline">
               5 Available
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-[#475569] mt-0.5">
             {isHindi
               ? 'आधिकारिक परिदृश्यों पर आधारित छोटे अभ्यास • तत्काल अंक और वैधानिक नियम व्याख्या'
               : 'Micro-simulations on authentic MoSPI scenarios • Instant feedback and manual citations'}
@@ -129,9 +129,9 @@ export function HorizontalDrillsCarousel({
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/mcq-generator"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors cursor-pointer shadow-2xs"
           >
-            <Brain className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <Brain className="h-3.5 w-3.5 text-[#1C4CA1]" />
             <span>{isHindi ? 'अभ्यास स्टेशन' : 'Practice Station'}</span>
           </Link>
 
@@ -140,7 +140,7 @@ export function HorizontalDrillsCarousel({
               type="button"
               onClick={() => scroll('left')}
               aria-label="Scroll drills carousel left"
-              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+              className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -148,7 +148,7 @@ export function HorizontalDrillsCarousel({
               type="button"
               onClick={() => scroll('right')}
               aria-label="Scroll drills carousel right"
-              className="h-8 w-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 flex items-center justify-center text-muted-foreground hover:bg-[#F2E6D8] hover:text-[#2d1f17] transition-all cursor-pointer shadow-2xs active:scale-95"
+              className="h-8 w-8 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] flex items-center justify-center text-[#1F273A] hover:bg-[#D8DFEE] transition-all cursor-pointer shadow-2xs active:scale-95"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -169,41 +169,41 @@ export function HorizontalDrillsCarousel({
           return (
             <div
               key={drill.id}
-              className="min-w-70 sm:min-w-[320px] max-w-[320px] rounded-2xl border border-[#BF9B7A]/30 bg-[#FAF6F0]/60 p-4 sm:p-5 flex flex-col justify-between hover:border-[#BF9B7A] hover:bg-[#FAF6F0] transition-all snap-start shadow-2xs group"
+              className="min-w-70 sm:min-w-[320px] max-w-[320px] rounded-2xl border border-[#D8DFEE] bg-[#EDF0F7]/40 p-4 sm:p-5 flex flex-col justify-between hover:border-[#1C4CA1]/40 hover:bg-white transition-all snap-start shadow-2xs group"
             >
               <div>
                 {/* Top badges */}
                 <div className="flex items-center justify-between gap-2 mb-2.5">
-                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#BF9B7A]/25 text-chart-5">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1]">
                     {drill.tag}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#8C5B3E] bg-[#F8C858]/25 px-2 py-0.5 rounded-full border border-[#F8C858]/40">
-                    <Award className="h-3 w-3" />
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#1F273A] bg-[#FFA72F]/20 px-2 py-0.5 rounded-full border border-[#FFA72F]/40">
+                    <Award className="h-3 w-3 text-[#1C4CA1]" />
                     {drill.points}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-sm font-black text-[#2d1f17] group-hover:text-[#555934] transition-colors line-clamp-2 leading-snug">
+                <h3 className="text-sm font-black text-[#1F273A] group-hover:text-[#1C4CA1] transition-colors line-clamp-2 leading-snug">
                   {title}
                 </h3>
 
                 {/* Subtitle / Cadre */}
-                <p className="text-[11px] font-medium text-muted-foreground mt-1 truncate">
+                <p className="text-[11px] font-medium text-[#475569] mt-1 truncate">
                   {drill.cadre}
                 </p>
 
                 {/* Description */}
-                <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[#475569] mt-2 line-clamp-2 leading-relaxed">
                   {description}
                 </p>
               </div>
 
               {/* Card Footer & Action */}
-              <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20">
-                <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground mb-3">
+              <div className="mt-4 pt-3 border-t border-[#D8DFEE]">
+                <div className="flex items-center justify-between text-[11px] font-mono text-[#475569] mb-3">
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3 text-[#8C5B3E]" />
+                    <Clock className="h-3 w-3 text-[#1C4CA1]" />
                     {drill.duration}
                   </span>
                   <span
@@ -222,9 +222,9 @@ export function HorizontalDrillsCarousel({
                 <button
                   type="button"
                   onClick={() => onStartDrill(drill.id)}
-                  className="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs cursor-pointer group-hover:shadow-xs active:scale-[0.98]"
+                  className="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs cursor-pointer group-hover:shadow-xs active:scale-[0.98]"
                 >
-                  <Play className="h-3 w-3 fill-current text-[#F8C858]" />
+                  <Play className="h-3 w-3 fill-current text-[#FFA72F]" />
                   <span>{isHindi ? 'अभ्यास प्रारंभ' : 'Start Drill'}</span>
                 </button>
               </div>

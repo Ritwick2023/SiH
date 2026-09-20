@@ -47,7 +47,6 @@ export function VoiceInputButton({
         setIsRecording(false);
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recog.onerror = () => {
         setIsRecording(false);
       };

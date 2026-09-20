@@ -118,7 +118,7 @@ export default function InstructionsClient({
             key={label}
             className="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white p-4 text-center shadow-card hover:shadow-card-hover transition-all"
           >
-            <Icon className="w-5 h-5 text-[#555934]" />
+            <Icon className="w-5 h-5 text-[#1C4CA1]" />
             <p className="text-xl font-bold text-foreground font-mono">{value}</p>
             <p className="text-xs text-muted-foreground">{label}</p>
           </div>
@@ -133,7 +133,7 @@ export default function InstructionsClient({
         <ul className="space-y-3">
           {instructions.map((instruction, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-foreground">
-              <span className="flex-shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#555934]/15 text-[#555934] font-semibold text-xs mt-0.5">
+              <span className="flex-shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] font-semibold text-xs mt-0.5">
                 {i + 1}
               </span>
               {instruction}
@@ -180,7 +180,7 @@ export default function InstructionsClient({
       <button
         id={`start-test-${assessmentId}`}
         onClick={() => router.push(`/assessment/${assessmentId}/test`)}
-        className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white font-bold text-lg py-4 transition-colors shadow-sm cursor-pointer"
+        className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white font-bold text-lg py-4 transition-colors shadow-sm cursor-pointer"
       >
         <PlayCircle className="w-6 h-6" />
         {isHindi ? 'परीक्षा शुरू करें' : 'Start Test'}

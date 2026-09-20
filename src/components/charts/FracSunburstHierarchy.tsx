@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { OFFICIAL_FRAC_COMPETENCIES } from '@/data/fracCadres';
-import { ShieldCheck, ZoomIn, RotateCcw } from 'lucide-react';
+import { ShieldCheck, ZoomIn } from 'lucide-react';
 
 interface SunburstNode {
   name: string;
@@ -14,6 +14,21 @@ interface SunburstNode {
   children?: SunburstNode[];
   description?: string;
 }
+
+type SunburstCoords = {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+  depth?: number;
+  children?: unknown;
+};
+
+/** D3 partition node augmented with `current` and `target` animation coords */
+type PartitionNode = d3.HierarchyRectangularNode<SunburstNode> & {
+  current: SunburstCoords;
+  target: SunburstCoords;
+};
 
 // Generate authentic hierarchical FRAC data structure
 function buildFracHierarchyData(): SunburstNode {
@@ -108,20 +123,18 @@ export function FracSunburstHierarchy() {
 
     const partition = d3.partition<SunburstNode>().size([2 * Math.PI, hierarchy.height + 1]);
 
-    const root = partition(hierarchy);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (root as any).each((d: any) => {
-      d.current = d;
+    const root = partition(hierarchy) as unknown as PartitionNode;
+    root.each((d) => {
+      (d as PartitionNode).current = d as d3.HierarchyRectangularNode<SunburstNode>;
     });
 
     // Sovereign Color Scheme
     const colorScale = d3.scaleOrdinal<string>()
       .domain(['Field Operations Division (FOD)', 'Subordinate Statistical Service (SSS)', 'NSSTA Training Faculty'])
-      .range(['#1C4CA1', '#FFA72F', '#555934']);
+      .range(['#1C4CA1', '#FFA72F', '#1164BE']);
 
-    // Arc generator
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const arc = d3.arc<any>()
+    // Arc generator — typed with SunburstCoords
+    const arc = d3.arc<SunburstCoords>()
       .startAngle((d) => d.x0)
       .endAngle((d) => d.x1)
       .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
@@ -137,16 +150,16 @@ export function FracSunburstHierarchy() {
     const path = g
       .append('g')
       .selectAll('path')
-      .data((root.descendants().slice(1) as any[]))
+      .data((root.descendants().slice(1) as PartitionNode[]))
       .join('path')
-      .attr('fill', (d: any) => {
-        let cur: any = d;
-        while (cur.depth > 1) cur = cur.parent;
+      .attr('fill', (d) => {
+        let cur: PartitionNode = d;
+        while (cur.depth > 1) cur = cur.parent as PartitionNode;
         return colorScale(cur.data.name) || '#EDF0F7';
       })
-      .attr('fill-opacity', (d: any) => (arcVisible(d.current) ? (d.children ? 0.85 : 0.6) : 0))
-      .attr('pointer-events', (d: any) => (arcVisible(d.current) ? 'auto' : 'none'))
-      .attr('d', (d: any) => arc(d.current) || '')
+      .attr('fill-opacity', (d) => (arcVisible(d.current) ? (d.children ? 0.85 : 0.6) : 0))
+      .attr('pointer-events', (d) => (arcVisible(d.current) ? 'auto' : 'none'))
+      .attr('d', (d) => arc(d.current) || '')
       .attr('cursor', 'pointer')
       .on('mouseenter', (_, d) => {
         setSelectedNode({
@@ -163,7 +176,7 @@ export function FracSunburstHierarchy() {
       .append('circle')
       .datum(root)
       .attr('r', radius)
-      .attr('fill', '#FAF6F0')
+      .attr('fill', '#EDF0F7')
       .attr('stroke', '#1C4CA1')
       .attr('stroke-width', 1.5)
       .attr('pointer-events', 'all')
@@ -189,12 +202,12 @@ export function FracSunburstHierarchy() {
       .text('Reset View');
 
     function clicked(event: unknown, p: unknown) {
-      centerCircle.datum((p as { parent?: unknown }).parent || root);
+      const pNode = p as PartitionNode;
+      centerCircle.datum(pNode.parent || root);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const pNode = p as any;
-      root.each((d: any) => {
-        d.target = {
+      root.each((d) => {
+        (d as PartitionNode).target = {
+          ...d,
           x0: Math.max(0, Math.min(1, (d.x0 - pNode.x0) / (pNode.x1 - pNode.x0))) * 2 * Math.PI,
           x1: Math.max(0, Math.min(1, (d.x1 - pNode.x0) / (pNode.x1 - pNode.x0))) * 2 * Math.PI,
           y0: Math.max(0, d.y0 - pNode.depth),
@@ -205,24 +218,34 @@ export function FracSunburstHierarchy() {
       const t = g.transition().duration(450);
 
       path
-        .transition(t as any)
-        .tween('data', (d: any) => {
-          const i = d3.interpolate(d.current, d.target);
+        .transition(t as never)
+        .tween('data', (d) => {
+          const node = d as PartitionNode;
+          const i = d3.interpolate(node.current, node.target);
           return (time: number) => {
-            d.current = i(time);
+            node.current = i(time) as SunburstCoords;
           };
         })
-        .filter(function (d: any) {
-          return Boolean(this) && (arcVisible(d.target) || arcVisible(d.current));
+        .filter(function (d) {
+          const node = d as PartitionNode;
+          return Boolean(this) && (arcVisible(node.target) || arcVisible(node.current));
         })
-        .attr('fill-opacity', (d: any) => (arcVisible(d.target) ? (d.children ? 0.85 : 0.6) : 0))
-        .attr('pointer-events', (d: any) => (arcVisible(d.target) ? 'auto' : 'none'))
-        .attrTween('d', (d: any) => () => (arc(d.current) || '') as string);
+        .attr('fill-opacity', (d) => {
+          const node = d as PartitionNode;
+          return arcVisible(node.target) ? (node.children ? 0.85 : 0.6) : 0;
+        })
+        .attr('pointer-events', (d) => {
+          const node = d as PartitionNode;
+          return arcVisible(node.target) ? 'auto' : 'none';
+        })
+        .attrTween('d', (d) => {
+          const node = d as PartitionNode;
+          return () => (arc(node.current) || '') as string;
+        });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function arcVisible(d: any) {
-      return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+    function arcVisible(d: SunburstCoords) {
+      return (d.y1 ?? 0) <= 3 && (d.y0 ?? 0) >= 1 && d.x1 > d.x0;
     }
   }, []);
 

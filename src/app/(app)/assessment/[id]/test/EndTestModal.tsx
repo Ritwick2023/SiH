@@ -51,7 +51,7 @@ export default function EndTestModal({
         {/* Stats */}
         <div
           id="end-modal-desc"
-          className="rounded-2xl bg-[#F2E6D8]/50 p-4 space-y-2 text-sm"
+          className="rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] p-4 space-y-2 text-sm"
         >
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">{isHindi ? 'कुल प्रश्न' : 'Total questions'}</span>

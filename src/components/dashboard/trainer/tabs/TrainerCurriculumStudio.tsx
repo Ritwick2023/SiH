@@ -127,12 +127,12 @@ export function TrainerCurriculumStudio({
   return (
     <div className="space-y-6">
       {/* Top Banner & Quick Stats */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#555934]" />
-              <h2 className="text-lg font-bold text-[#2d1f17] tracking-tight">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
+              <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
                 Curriculum Studio & Vector Knowledge Base
               </h2>
             </div>
@@ -144,7 +144,7 @@ export function TrainerCurriculumStudio({
           <div className="flex items-center gap-2">
             <Link
               href="/documents"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors"
             >
               <UploadCloud className="h-3.5 w-3.5" />
               <span>Upload Manual</span>
@@ -152,7 +152,7 @@ export function TrainerCurriculumStudio({
             <button
               type="button"
               onClick={handleExportBank}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer shadow-2xs"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Export Question Bank</span>
@@ -161,27 +161,27 @@ export function TrainerCurriculumStudio({
         </div>
 
         {toastMsg && (
-          <div className="p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{toastMsg}</span>
           </div>
         )}
 
         {/* Vector Engine KPI Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#BF9B7A]/20 text-center">
-          <div className="p-3 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#D8DFEE] text-center">
+          <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Manuals Ingested</p>
-            <p className="text-xl font-extrabold text-[#2d1f17] font-mono mt-0.5">6 Books</p>
+            <p className="text-xl font-extrabold text-[#1F273A] font-mono mt-0.5">6 Books</p>
           </div>
-          <div className="p-3 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Vector Chunks</p>
-            <p className="text-xl font-extrabold text-[#555934] font-mono mt-0.5">1,276 Chunks</p>
+            <p className="text-xl font-extrabold text-[#1C4CA1] font-mono mt-0.5">1,276 Chunks</p>
           </div>
-          <div className="p-3 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Active Pool</p>
-            <p className="text-xl font-extrabold text-[#8C5B3E] font-mono mt-0.5">342 MCQs</p>
+            <p className="text-xl font-extrabold text-[#FFA72F] font-mono mt-0.5">342 MCQs</p>
           </div>
-          <div className="p-3 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-emerald-700">RAG Alignment</p>
             <p className="text-xl font-extrabold text-emerald-600 font-mono mt-0.5">99.4%</p>
           </div>
@@ -189,17 +189,17 @@ export function TrainerCurriculumStudio({
       </div>
 
       {/* Ingested Handbooks Quick Shelf */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#BF9B7A]/20">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D8DFEE]">
           <div>
-            <h3 className="text-base font-bold text-[#2d1f17]">Ingested MoSPI Handbooks</h3>
+            <h3 className="text-base font-bold text-[#1F273A]">Ingested MoSPI Handbooks</h3>
             <p className="text-xs text-muted-foreground">
               Click on any manual to inspect official chapters and vector extracts
             </p>
           </div>
           <Link
             href="/documents"
-            className="text-xs font-bold text-[#555934] hover:text-[#434728] inline-flex items-center gap-1"
+            className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1"
           >
             <span>All Documents</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -233,24 +233,24 @@ export function TrainerCurriculumStudio({
             <div
               key={m.id}
               onClick={() => onOpenManualReader(m.id)}
-              className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/30 hover:border-[#BF9B7A] hover:bg-[#FAF6F0] transition-all cursor-pointer space-y-2 flex flex-col justify-between"
+              className="p-4 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] hover:border-[#1C4CA1]/40 hover:bg-[#EDF0F7]/70 transition-all cursor-pointer space-y-2 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-white text-[#8C5B3E] border border-[#BF9B7A]/25">
+                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-white text-[#1C4CA1] border border-[#D8DFEE]">
                     {m.badge}
                   </span>
-                  <BookOpen className="h-4 w-4 text-[#555934]" />
+                  <BookOpen className="h-4 w-4 text-[#1C4CA1]" />
                 </div>
-                <h4 className="font-bold text-xs text-[#2d1f17] mt-2 line-clamp-2">
+                <h4 className="font-bold text-xs text-[#1F273A] mt-2 line-clamp-2">
                   {m.title}
                 </h4>
                 <p className="text-[11px] text-muted-foreground mt-0.5">{m.division}</p>
               </div>
 
-              <div className="pt-2 border-t border-[#BF9B7A]/20 flex items-center justify-between text-[10px] text-muted-foreground">
+              <div className="pt-2 border-t border-[#D8DFEE] flex items-center justify-between text-[10px] text-muted-foreground">
                 <span>{m.pages}</span>
-                <span className="font-bold text-[#555934]">Inspect Chapters →</span>
+                <span className="font-bold text-[#1C4CA1]">Inspect Chapters →</span>
               </div>
             </div>
           ))}
@@ -258,10 +258,10 @@ export function TrainerCurriculumStudio({
       </div>
 
       {/* Filterable Question Bank Browser */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-[#BF9B7A]/20">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
           <div>
-            <h3 className="text-base font-bold text-[#2d1f17]">
+            <h3 className="text-base font-bold text-[#1F273A]">
               Curated Question Bank Explorer
             </h3>
             <p className="text-xs text-muted-foreground">
@@ -271,7 +271,7 @@ export function TrainerCurriculumStudio({
 
           <Link
             href="/mcq-generator"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8C5B3E] text-white text-xs font-bold hover:bg-[#704830] transition-colors shadow-2xs self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] transition-colors shadow-2xs self-start sm:self-auto"
           >
             <Sparkles className="h-3.5 w-3.5" />
             <span>Generate New MCQs with AI</span>
@@ -287,7 +287,7 @@ export function TrainerCurriculumStudio({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search question stem, source manual..."
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] focus:outline-none focus:ring-1 focus:ring-[#555934]"
+              className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
             />
           </div>
 
@@ -305,8 +305,8 @@ export function TrainerCurriculumStudio({
                 onClick={() => setSelectedCompetency(c.id)}
                 className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
                   selectedCompetency === c.id
-                    ? 'bg-[#555934] text-white'
-                    : 'bg-[#FAF6F0] text-muted-foreground hover:bg-[#F2E6D8]'
+                    ? 'bg-[#1C4CA1] text-white'
+                    : 'bg-[#EDF0F7] text-muted-foreground hover:bg-[#D8DFEE]'
                 }`}
               >
                 {c.label}
@@ -320,14 +320,14 @@ export function TrainerCurriculumStudio({
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="p-4 rounded-2xl border border-[#BF9B7A]/25 bg-[#FAF6F0]/50 hover:bg-white hover:shadow-2xs transition-all space-y-2.5"
+              className="p-4 rounded-xl border border-[#D8DFEE] bg-[#EDF0F7]/40 hover:bg-white hover:shadow-2xs transition-all space-y-2.5"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-white text-[#8C5B3E] border border-[#BF9B7A]/25">
+                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-white text-[#1C4CA1] border border-[#D8DFEE]">
                     {item.id}
                   </span>
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[#555934]/15 text-[#555934]">
+                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[#1164BE]/10 text-[#1164BE]">
                     {item.competencyTag}
                   </span>
                   <span className="text-[10px] font-mono text-muted-foreground">
@@ -346,20 +346,20 @@ export function TrainerCurriculumStudio({
                 </span>
               </div>
 
-              <p className="text-xs font-semibold text-[#2d1f17] leading-relaxed">
+              <p className="text-xs font-semibold text-[#1F273A] leading-relaxed">
                 {item.stem}
               </p>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-[#BF9B7A]/15 text-[11px] text-muted-foreground">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-[#D8DFEE] text-[11px] text-muted-foreground">
                 <div className="flex items-center gap-1.5 font-serif truncate">
-                  <BookOpen className="h-3.5 w-3.5 text-[#8C5B3E] shrink-0" />
+                  <BookOpen className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                   <span className="truncate">{item.sourceDoc} ({item.section})</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => onInspectItem(item)}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white border border-[#BF9B7A]/30 text-xs font-bold text-[#555934] hover:bg-[#555934] hover:text-white transition-colors cursor-pointer shrink-0"
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-colors cursor-pointer shrink-0"
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
                   <span>Item Psychometrics</span>

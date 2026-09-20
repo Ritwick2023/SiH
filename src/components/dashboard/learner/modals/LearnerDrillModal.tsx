@@ -247,18 +247,18 @@ export function LearnerDrillModal({
       aria-labelledby="drill-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-2xl rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-2xl rounded-3xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-[#555934] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#1C4CA1] text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20">
-              <BookOpen className="h-5 w-5 text-[#F8C858]" />
+              <BookOpen className="h-5 w-5 text-[#FFA72F]" />
             </div>
             <div>
-              <h2 id="drill-modal-title" className="text-sm font-black tracking-wide text-[#F8C858]">
+              <h2 id="drill-modal-title" className="text-sm font-black tracking-wide text-[#FFA72F]">
                 {isHindi ? drill.title_hi : drill.title}
               </h2>
-              <p className="text-[11px] text-white/80">{drill.division}</p>
+              <p className="text-[11px] text-white/90">{drill.division}</p>
             </div>
           </div>
           <button
@@ -272,45 +272,45 @@ export function LearnerDrillModal({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-5">
+        <div className="p-6 overflow-y-auto flex-1 space-y-5 bg-[#EDF0F7]/40">
           {!completed ? (
             <>
               {/* Question Progress & Reward Bar */}
-              <div className="flex items-center justify-between text-xs pb-3 border-b border-[#BF9B7A]/25">
-                <span className="font-bold text-[#555934]">
+              <div className="flex items-center justify-between text-xs pb-3 border-b border-[#D8DFEE]">
+                <span className="font-bold text-[#1C4CA1]">
                   {isHindi
                     ? `प्रश्न ${currentQuestionIndex + 1} / ${questions.length}`
                     : `Question ${currentQuestionIndex + 1} of ${questions.length}`}
                 </span>
-                <span className="inline-flex items-center gap-1 font-mono font-bold text-[#8C5B3E] bg-[#F8C858]/25 px-2.5 py-0.5 rounded-full border border-[#F8C858]/40">
-                  <Award className="h-3.5 w-3.5 text-[#8C5B3E]" />
+                <span className="inline-flex items-center gap-1 font-mono font-bold text-[#1F273A] bg-[#FFA72F]/20 px-2.5 py-0.5 rounded-full border border-[#FFA72F]/40">
+                  <Award className="h-3.5 w-3.5 text-[#1C4CA1]" />
                   +{drill.pointsReward} KP
                 </span>
               </div>
 
               {/* Scenario Box */}
-              <div className="p-4 rounded-2xl bg-white border border-[#BF9B7A]/30 shadow-xs space-y-2">
-                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#8C5B3E]">
+              <div className="p-4 rounded-2xl bg-white border border-[#D8DFEE] shadow-xs space-y-2">
+                <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#1C4CA1]">
                   <HelpCircle className="h-3.5 w-3.5" />
                   <span>{isHindi ? 'फील्ड परिदृश्य' : 'Official Field Scenario'}</span>
                 </div>
-                <p className="text-sm font-medium text-[#2d1f17] leading-relaxed">
+                <p className="text-sm font-medium text-[#1F273A] leading-relaxed">
                   {isHindi ? currentQuestion.scenario_hi : currentQuestion.scenario}
                 </p>
               </div>
 
               {/* Multiple Choice Options */}
               <div className="space-y-2.5">
-                <p className="text-xs font-bold text-muted-foreground">
+                <p className="text-xs font-bold text-[#475569]">
                   {isHindi ? 'सही मानक प्रक्रिया चुनें:' : 'Select Standard Operating Procedure:'}
                 </p>
                 {currentQuestion.options.map((opt) => {
                   const isSelected = selectedOptionId === opt.id;
                   const isCorrectOption = opt.id === currentQuestion.correctOptionId;
 
-                  let optBorder = 'border-[#BF9B7A]/30 bg-white hover:bg-[#FAF6F0]';
+                  let optBorder = 'border-[#D8DFEE] bg-white hover:bg-[#EDF0F7]';
                   if (isSelected && !verified) {
-                    optBorder = 'border-[#555934] bg-[#555934]/10 ring-2 ring-[#555934]/20';
+                    optBorder = 'border-[#1C4CA1] bg-[#1C4CA1]/10 ring-2 ring-[#1C4CA1]/20';
                   } else if (verified) {
                     if (isCorrectOption) {
                       optBorder = 'border-emerald-500 bg-emerald-500/15 ring-2 ring-emerald-500/30';
@@ -326,10 +326,10 @@ export function LearnerDrillModal({
                       onClick={() => handleSelectOption(opt.id)}
                       className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer ${optBorder}`}
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#FAF6F0] border border-[#BF9B7A]/40 font-mono font-bold text-xs text-[#2d1f17]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] font-mono font-bold text-xs text-[#1F273A]">
                         {opt.id}
                       </span>
-                      <span className="text-xs font-medium text-[#2d1f17] flex-1 leading-normal pt-0.5">
+                      <span className="text-xs font-medium text-[#1F273A] flex-1 leading-normal pt-0.5">
                         {isHindi ? opt.text_hi : opt.text}
                       </span>
                     </button>
@@ -363,7 +363,7 @@ export function LearnerDrillModal({
                       </>
                     )}
                   </div>
-                  <p className="text-xs text-[#2d1f17]/90 leading-relaxed mt-1">
+                  <p className="text-xs text-[#1F273A]/90 leading-relaxed mt-1">
                     {isHindi ? currentQuestion.citation_hi : currentQuestion.citation}
                   </p>
                 </div>
@@ -372,20 +372,20 @@ export function LearnerDrillModal({
           ) : (
             /* Completion Screen */
             <div className="text-center py-8 px-4 space-y-4">
-              <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#555934]/15 text-[#555934] mb-2">
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#1C4CA1]/10 text-[#1C4CA1] mb-2">
                 <ShieldCheck className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-black text-[#2d1f17]">
+              <h3 className="text-xl font-black text-[#1F273A]">
                 {isHindi ? 'फील्ड ड्रिल सफलतापूर्वक पूर्ण!' : 'Field Drill Successfully Completed!'}
               </h3>
-              <p className="text-xs text-muted-foreground max-w-md mx-auto">
+              <p className="text-xs text-[#475569] max-w-md mx-auto">
                 {isHindi
                   ? `आपने ${questions.length} में से ${score} प्रश्नों का सही उत्तर दिया है। आपके आधिकारिक कैडर प्रोफाइल में कर्म अंक जोड़ दिए गए हैं।`
                   : `You verified ${score} out of ${questions.length} scenarios correctly. Karma points have been credited to your official civil service dossier.`}
               </p>
 
-              <div className="inline-flex items-center gap-2 p-3 rounded-2xl bg-[#F8C858]/20 border border-[#F8C858]/40 text-[#8C5B3E] font-bold text-sm">
-                <Award className="h-5 w-5" />
+              <div className="inline-flex items-center gap-2 p-3 rounded-2xl bg-[#FFA72F]/20 border border-[#FFA72F]/40 text-[#1F273A] font-bold text-sm">
+                <Award className="h-5 w-5 text-[#1C4CA1]" />
                 <span>+{drill.pointsReward} Karma Points Credited</span>
               </div>
             </div>
@@ -393,11 +393,11 @@ export function LearnerDrillModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 bg-[#F2E6D8]/50 border-t border-[#BF9B7A]/25 flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 bg-white border-t border-[#D8DFEE] flex items-center justify-between shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white border border-[#BF9B7A]/40 text-xs font-bold text-muted-foreground hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#475569] hover:bg-[#EDF0F7] transition-colors cursor-pointer"
           >
             {isHindi ? 'छोड़ें' : 'Close'}
           </button>
@@ -408,7 +408,7 @@ export function LearnerDrillModal({
                 type="button"
                 disabled={!selectedOptionId}
                 onClick={handleVerify}
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs disabled:opacity-40 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs disabled:opacity-40 cursor-pointer"
               >
                 <span>{isHindi ? 'उत्तर जांचें' : 'Verify Answer'}</span>
               </button>
@@ -416,7 +416,7 @@ export function LearnerDrillModal({
               <button
                 type="button"
                 onClick={handleNext}
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs cursor-pointer"
               >
                 <span>
                   {currentQuestionIndex + 1 < questions.length
@@ -434,7 +434,7 @@ export function LearnerDrillModal({
             <button
               type="button"
               onClick={handleFinishDrill}
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs cursor-pointer"
             >
               <span>{isHindi ? 'कैडर प्रोफाइल में सुरक्षित करें' : 'Save & Return to Workspace'}</span>
             </button>

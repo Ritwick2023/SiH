@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { LearningCatalogService } from './learningCatalogService';
 import type { CompetencyGap } from '@/lib/types';
+import type { AppUser } from '@/lib/auth';
 
 describe('LearningCatalogService', () => {
   it('loads all catalog items with verified official provenance and valid source domains', () => {
@@ -87,7 +88,7 @@ describe('LearningCatalogService', () => {
     const ranked = LearningCatalogService.rankForGaps(mockGaps, {
       id: 'demo-sunita',
       user_metadata: { preferred_language: 'hi', cadre: 'NSSO Field Operations Division' },
-    } as any);
+    } as unknown as AppUser);
 
     expect(ranked.length).toBeGreaterThan(0);
     expect(ranked[0].item.targetCompetencies).toContain('comp-capi');

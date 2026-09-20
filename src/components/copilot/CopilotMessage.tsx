@@ -16,7 +16,7 @@ function renderRouteLink(route: string, key: string) {
     <Link
       key={key}
       href={route}
-      className="inline-flex items-center gap-0.5 rounded-md bg-[--color-primary]/15 border border-[--color-primary]/30 px-1.5 py-0.5 text-[11px] font-mono font-semibold text-[#555934] hover:bg-[#555934] hover:text-white transition-all shadow-2xs mx-0.5"
+      className="inline-flex items-center gap-0.5 rounded-md bg-[#1C4CA1]/10 border border-[#1C4CA1]/20 px-1.5 py-0.5 text-[11px] font-mono font-semibold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all shadow-2xs mx-0.5"
     >
       {route}
       <ArrowUpRight className="h-3 w-3 opacity-70" />
@@ -79,7 +79,7 @@ function renderInlineContent(text: string) {
         elements.push(renderRouteLink(boldContent, key));
       } else {
         elements.push(
-          <strong key={key} className="font-semibold text-[#2d1f17]">
+          <strong key={key} className="font-semibold text-[#1F273A]">
             {boldContent}
           </strong>
         );
@@ -94,7 +94,7 @@ function renderInlineContent(text: string) {
         elements.push(
           <code
             key={key}
-            className="rounded bg-[#E8DACB]/60 px-1.5 py-0.5 text-xs font-mono text-[#2d1f17]"
+            className="rounded bg-[#EDF0F7] border border-[#D8DFEE] px-1.5 py-0.5 text-xs font-mono text-[#1F273A]"
           >
             {codeVal}
           </code>
@@ -112,10 +112,10 @@ function renderInlineContent(text: string) {
           key={key}
           className={`ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
             isCritical
-              ? 'bg-[#8C5B3E]/15 text-[#8C5B3E]'
+              ? 'bg-rose-500/15 text-rose-700'
               : isImportant
-              ? 'bg-[#BF9B7A]/25 text-[#593E2E]'
-              : 'bg-[#F2E6D8] text-[#2d1f17]'
+              ? 'bg-[#FFA72F]/20 text-amber-800'
+              : 'bg-[#EDF0F7] text-[#1F273A]'
           }`}
         >
           {label}
@@ -167,7 +167,7 @@ function renderStructuredMessage(content: string) {
     // Horizontal Rule (--- or ***)
     if (/^(---|\*\*\*|___)$/.test(trimmed)) {
       flushList();
-      elements.push(<hr key={`hr-${lineIdx}`} className="my-2 border-0 h-px bg-[#BF9B7A]/30" />);
+      elements.push(<hr key={`hr-${lineIdx}`} className="my-2 border-0 h-px bg-[#D8DFEE]" />);
       return;
     }
 
@@ -178,9 +178,9 @@ function renderStructuredMessage(content: string) {
       elements.push(
         <h4
           key={`h-${lineIdx}`}
-          className="mt-3 mb-1 text-[11px] font-bold uppercase tracking-wider text-[#555934] flex items-center gap-1.5"
+          className="mt-3 mb-1 text-[11px] font-bold uppercase tracking-wider text-[#1C4CA1] flex items-center gap-1.5"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#555934]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#1C4CA1]" />
           {renderInlineContent(headerText)}
         </h4>
       );
@@ -192,7 +192,7 @@ function renderStructuredMessage(content: string) {
       const itemText = trimmed.replace(/^[-*•]\s+/, '');
       currentList.push(
         <li key={`li-${lineIdx}`} className="flex items-start gap-2 text-[13px] leading-relaxed">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#555934] shrink-0 mt-2" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#1C4CA1] shrink-0 mt-2" />
           <div className="flex-1">{renderInlineContent(itemText)}</div>
         </li>
       );
@@ -207,7 +207,7 @@ function renderStructuredMessage(content: string) {
         const itemText = match[2];
         currentList.push(
           <li key={`nli-${lineIdx}`} className="flex items-start gap-2 text-[13px] leading-relaxed">
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#555934]/15 text-[10px] font-bold text-[#555934] shrink-0 mt-0.5">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[10px] font-bold text-[#1C4CA1] shrink-0 mt-0.5">
               {num}
             </span>
             <div className="flex-1">{renderInlineContent(itemText)}</div>
@@ -220,7 +220,7 @@ function renderStructuredMessage(content: string) {
     // Regular Paragraph
     flushList();
     elements.push(
-      <p key={`p-${lineIdx}`} className="my-1 text-[13px] leading-relaxed text-[#2d1f17]">
+      <p key={`p-${lineIdx}`} className="my-1 text-[13px] leading-relaxed text-[#1F273A]">
         {renderInlineContent(trimmed)}
       </p>
     );
@@ -240,7 +240,7 @@ function CopilotMessageInner({ role, content, timestamp }: CopilotMessageProps) 
     >
       {/* Bot Avatar */}
       {isBot && (
-        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#555934] shadow-xs">
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1C4CA1] shadow-xs">
           <Bot className="h-3.5 w-3.5 text-white" />
         </div>
       )}
@@ -249,17 +249,17 @@ function CopilotMessageInner({ role, content, timestamp }: CopilotMessageProps) 
       <div
         className={`group relative max-w-[88%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${
           isBot
-            ? 'rounded-tl-md bg-white text-[#2d1f17] shadow-xs'
-            : 'rounded-tr-md bg-[#555934] text-white'
+            ? 'rounded-tl-md bg-white text-[#1F273A] border border-[#D8DFEE] shadow-xs'
+            : 'rounded-tr-md bg-[#1C4CA1] text-white shadow-xs'
         }`}
       >
         {isBot ? (
           <div className="space-y-0.5">
             {!content.trim() ? (
               <div className="flex items-center gap-1.5 py-1 px-0.5">
-                <span className="h-2 w-2 rounded-full bg-[#555934] animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="h-2 w-2 rounded-full bg-[#555934] animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="h-2 w-2 rounded-full bg-[#555934] animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="h-2 w-2 rounded-full bg-[#1C4CA1] animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="h-2 w-2 rounded-full bg-[#1C4CA1] animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="h-2 w-2 rounded-full bg-[#1C4CA1] animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             ) : (
               renderStructuredMessage(content)
@@ -279,8 +279,8 @@ function CopilotMessageInner({ role, content, timestamp }: CopilotMessageProps) 
 
       {/* User Avatar */}
       {!isBot && (
-        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E8DACB] shadow-xs">
-          <User className="h-3.5 w-3.5 text-[#555934]" />
+        <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EDF0F7] border border-[#D8DFEE] shadow-xs">
+          <User className="h-3.5 w-3.5 text-[#1C4CA1]" />
         </div>
       )}
     </div>

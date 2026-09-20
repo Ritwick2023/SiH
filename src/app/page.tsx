@@ -45,19 +45,19 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-[#2d1f17] antialiased">
+    <div className="min-h-screen flex flex-col bg-background text-[#1F273A] antialiased">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-xs">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-xs border-b border-[#D8DFEE]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/35 shadow-xs p-1">
-              <KarmayogiEmblemIcon className="h-8 w-8" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] shadow-xs p-1">
+              <KarmayogiEmblemIcon className="h-8 w-8 text-[#FFA72F]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold tracking-tight text-lg text-[#2d1f17] leading-none">StatVidya</span>
-                <span className="rounded-full bg-[#BF9B7A]/25 px-2.5 py-0.5 text-[10px] font-bold text-chart-5 uppercase tracking-wide">
+                <span className="font-bold tracking-tight text-lg text-[#1F273A] leading-none">StatVidya</span>
+                <span className="rounded-full bg-[#1C4CA1]/10 px-2.5 py-0.5 text-[10px] font-bold text-[#1C4CA1] uppercase tracking-wide">
                   MoSPI · NSSTA
                 </span>
               </div>
@@ -69,16 +69,16 @@ export default async function LandingPage() {
 
           {/* Nav */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-muted-foreground">
-            <a href="#capabilities" className="hover:text-[#2d1f17] transition-colors">
+            <a href="#capabilities" className="hover:text-[#1C4CA1] transition-colors">
               {t('nav.capabilities')}
             </a>
-            <a href="#framework" className="hover:text-[#2d1f17] transition-colors">
+            <a href="#framework" className="hover:text-[#1C4CA1] transition-colors">
               {t('nav.framework')}
             </a>
-            <a href="#cadres" className="hover:text-[#2d1f17] transition-colors">
+            <a href="#cadres" className="hover:text-[#1C4CA1] transition-colors">
               {t('nav.cadres')}
             </a>
-            <a href="#about" className="hover:text-[#2d1f17] transition-colors">
+            <a href="#about" className="hover:text-[#1C4CA1] transition-colors">
               {t('nav.about')}
             </a>
           </nav>
@@ -88,7 +88,7 @@ export default async function LandingPage() {
             {activeUser ? (
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#555934] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-primary-dark transition-all hover:-translate-y-0.5 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1C4CA1] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-[#1164BE] transition-all hover:-translate-y-0.5 active:scale-95"
               >
                 <span>{t('nav.goToDashboard')}</span>
                 <ArrowRight className="h-4 w-4" />
@@ -96,7 +96,7 @@ export default async function LandingPage() {
             ) : (
               <Link
                 href="/auth/login"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#555934] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-primary-dark transition-all hover:-translate-y-0.5 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1C4CA1] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-[#1164BE] transition-all hover:-translate-y-0.5 active:scale-95"
               >
                 <span>{t('nav.officialLogin')}</span>
                 <ArrowRight className="h-4 w-4" />
@@ -111,26 +111,26 @@ export default async function LandingPage() {
         <section
           className="relative overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #2d1f17 0%, #3e4225 35%, #555934 70%, #20150e 100%)',
+            background: 'linear-gradient(135deg, #1F273A 0%, #152238 35%, #1C4CA1 70%, #111827 100%)',
             minHeight: '92vh',
           }}
         >
           {/* Decorative blobs */}
           <div
-            className="absolute top-0 right-0 w-150 h-150 rounded-full opacity-15 pointer-events-none"
-            style={{ background: 'radial-gradient(circle, #BF9B7A 0%, transparent 70%)', transform: 'translate(30%, -30%)' }}
+            className="absolute top-0 right-0 w-150 h-150 rounded-full opacity-20 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #FFA72F 0%, transparent 70%)', transform: 'translate(30%, -30%)' }}
           />
           <div
-            className="absolute bottom-0 left-0 w-100 h-100 rounded-full opacity-10 pointer-events-none"
-            style={{ background: 'radial-gradient(circle, #8C5B3E 0%, transparent 70%)', transform: 'translate(-40%, 40%)' }}
+            className="absolute bottom-0 left-0 w-100 h-100 rounded-full opacity-25 pointer-events-none"
+            style={{ background: 'radial-gradient(circle, #1164BE 0%, transparent 70%)', transform: 'translate(-40%, 40%)' }}
           />
 
           {/* Government emblem strip */}
-          <div className="relative bg-white/5 backdrop-blur-xs">
+          <div className="relative bg-white/5 backdrop-blur-xs border-b border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
               <div className="flex items-center gap-4 text-[11px] text-white/60 font-medium">
                 <span className="flex items-center gap-1.5">
-                  <Lock className="h-3 w-3 text-[#BF9B7A]" />
+                  <Lock className="h-3 w-3 text-[#FFA72F]" />
                   Secured · NIC Infrastructure
                 </span>
                 <span className="h-3 w-px bg-white/20" />
@@ -148,9 +148,9 @@ export default async function LandingPage() {
               {/* Left: Text */}
               <div className="space-y-8">
                 {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#BF9B7A] animate-pulse shrink-0" />
-                  <span className="text-xs font-semibold text-[#F2E6D8] tracking-wide uppercase">{t('badge')}</span>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/15">
+                  <span className="w-2 h-2 rounded-full bg-[#FFA72F] animate-pulse shrink-0" />
+                  <span className="text-xs font-semibold text-slate-200 tracking-wide uppercase">{t('badge')}</span>
                 </div>
 
                 {/* Headline */}
@@ -169,7 +169,7 @@ export default async function LandingPage() {
                     <>
                       <Link
                         href="/dashboard"
-                        className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#555934] hover:bg-primary-dark text-white font-bold text-sm shadow-xl hover:-translate-y-0.5 transition-all"
+                        className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white font-bold text-sm shadow-xl hover:-translate-y-0.5 transition-all"
                       >
                         {t('cta.continueAs', { name: activeUser.name })}
                         <ArrowRight className="h-4 w-4" />
@@ -186,7 +186,7 @@ export default async function LandingPage() {
                     <>
                       <Link
                         href="/auth/login"
-                        className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#555934] hover:bg-primary-dark text-white font-bold text-sm shadow-xl hover:-translate-y-0.5 transition-all"
+                        className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white font-bold text-sm shadow-xl hover:-translate-y-0.5 transition-all"
                       >
                         {t('cta.enterPortal')}
                         <ArrowRight className="h-4 w-4" />
@@ -211,7 +211,7 @@ export default async function LandingPage() {
                     { icon: WifiOff, text: 'Offline-First' },
                   ].map(({ icon: Icon, text }, i) => (
                     <span key={i} className="flex items-center gap-1.5 text-xs text-white/60 font-medium">
-                      <Icon className="h-3.5 w-3.5 text-[#BF9B7A]" />
+                      <Icon className="h-3.5 w-3.5 text-[#FFA72F]" />
                       {text}
                     </span>
                   ))}
@@ -221,18 +221,18 @@ export default async function LandingPage() {
               {/* Right: Radar Visualization Card */}
               <div className="relative">
                 <div
-                  className="relative rounded-2xl overflow-hidden shadow-2xl"
+                  className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20"
                   style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)' }}
                 >
                   {/* Card header */}
-                  <div className="px-6 py-4 bg-white/5 flex items-center justify-between">
+                  <div className="px-6 py-4 bg-white/5 flex items-center justify-between border-b border-white/10">
                     <div>
                       <div className="text-xs font-bold text-white/90 uppercase tracking-widest mb-0.5">Competency Radar</div>
                       <div className="text-[11px] text-white/50">NSSO Field Investigator · Demo Profile</div>
                     </div>
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#555934]/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#BF9B7A] animate-pulse" />
-                      <span className="text-[10px] font-bold text-[#F2E6D8]">LIVE</span>
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C4CA1]/40 border border-blue-400/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FFA72F] animate-pulse" />
+                      <span className="text-[10px] font-bold text-blue-200">LIVE</span>
                     </span>
                   </div>
 
@@ -243,20 +243,20 @@ export default async function LandingPage() {
 
                   {/* Competency bars */}
                   <div className="px-6 pb-6 space-y-3">
-                    <AnimatedProgressBar label="Domain Competencies" value={3} delay={0} color="#555934" />
-                    <AnimatedProgressBar label="Survey Methodology" value={2} delay={120} color="#BF9B7A" />
-                    <AnimatedProgressBar label="Digital Literacy" value={3} delay={240} color="#8C5B3E" />
-                    <AnimatedProgressBar label="Behavioural" value={4} delay={360} color="#593E2E" />
+                    <AnimatedProgressBar label="Domain Competencies" value={3} delay={0} color="#1C4CA1" />
+                    <AnimatedProgressBar label="Survey Methodology" value={2} delay={120} color="#FFA72F" />
+                    <AnimatedProgressBar label="Digital Literacy" value={3} delay={240} color="#1164BE" />
+                    <AnimatedProgressBar label="Behavioural" value={4} delay={360} color="#2C3B59" />
                   </div>
 
                   {/* Legend */}
                   <div className="px-6 pb-5 flex items-center gap-5 pt-4 bg-white/5">
                     <div className="flex items-center gap-2 text-[11px] text-white/60">
-                      <div className="w-6 h-0.5 border-t border-dashed border-[#BF9B7A]" />
+                      <div className="w-6 h-0.5 border-t border-dashed border-[#FFA72F]" />
                       Target Level
                     </div>
                     <div className="flex items-center gap-2 text-[11px] text-white/60">
-                      <div className="w-6 h-0.5 bg-[#555934]" />
+                      <div className="w-6 h-0.5 bg-[#1C4CA1]" />
                       Current Level
                     </div>
                   </div>
@@ -272,8 +272,8 @@ export default async function LandingPage() {
                 { value: 4000, suffix: '+', label: 'Personnel Covered', sub: 'Field investigators to directors', icon: BarChart3 },
                 { value: 5, suffix: ' Levels', label: 'Proficiency Scale', sub: 'L1 Awareness → L5 Expert Mastery', icon: TrendingUp },
               ].map(({ value, suffix, label, sub, icon: Icon }, i) => (
-                <div key={i} className="text-left space-y-1 p-5 rounded-2xl bg-white/6 hover:bg-white/10 transition-all group">
-                  <Icon className="h-5 w-5 text-[#BF9B7A] mb-2 group-hover:scale-110 transition-transform" />
+                <div key={i} className="text-left space-y-1 p-5 rounded-2xl bg-white/6 border border-white/10 hover:bg-white/10 transition-all group">
+                  <Icon className="h-5 w-5 text-[#FFA72F] mb-2 group-hover:scale-110 transition-transform" />
                   <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
                     <AnimatedCounter target={value} suffix={suffix} />
                   </div>
@@ -289,10 +289,10 @@ export default async function LandingPage() {
         <section id="capabilities" className="px-4 sm:px-6 py-20 bg-background">
           <div className="max-w-6xl mx-auto space-y-14">
             <ScrollReveal className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="inline-block text-[11px] font-bold text-[#555934] uppercase tracking-widest px-3 py-1 rounded-full bg-[#555934]/12">
+              <span className="inline-block text-[11px] font-bold text-[#1C4CA1] uppercase tracking-widest px-3 py-1 rounded-full bg-[#1C4CA1]/10">
                 Platform Pillars
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2d1f17]">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#1F273A]">
                 {t('pillars.title')}
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -306,35 +306,35 @@ export default async function LandingPage() {
                   icon: ShieldCheck,
                   title: t('pillars.frac.title'),
                   desc: t('pillars.frac.description'),
-                  accent: '#555934',
+                  accent: '#1C4CA1',
                   delay: 0,
                 },
                 {
                   icon: BookOpen,
                   title: t('pillars.igot.title'),
                   desc: t('pillars.igot.description'),
-                  accent: '#8C5B3E',
+                  accent: '#1164BE',
                   delay: 80,
                 },
                 {
                   icon: Cpu,
                   title: t('pillars.mcq.title'),
                   desc: t('pillars.mcq.description'),
-                  accent: '#BF9B7A',
+                  accent: '#FFA72F',
                   delay: 160,
                 },
                 {
                   icon: WifiOff,
                   title: t('pillars.offline.title'),
                   desc: t('pillars.offline.description'),
-                  accent: '#593E2E',
+                  accent: '#1F273A',
                   delay: 240,
                 },
                 {
                   icon: FileCheck,
                   title: t('pillars.provenance.title'),
                   desc: t('pillars.provenance.description'),
-                  accent: '#555934',
+                  accent: '#1C4CA1',
                   delay: 320,
                   wide: true,
                 },
@@ -344,14 +344,14 @@ export default async function LandingPage() {
                   delay={delay}
                   className={wide ? 'md:col-span-2' : ''}
                 >
-                  <div className="h-full rounded-2xl bg-white p-7 space-y-4 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all group cursor-default">
+                  <div className="h-full rounded-2xl bg-white border border-[#D8DFEE] p-7 space-y-4 shadow-2xs hover:shadow-md hover:-translate-y-1 transition-all group cursor-default">
                     <div
                       className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-xs group-hover:scale-105 transition-transform"
                       style={{ background: accent }}
                     >
                       <Icon className="h-6 w-6" />
                     </div>
-                    <h3 className="text-base font-bold text-[#2d1f17]">{title}</h3>
+                    <h3 className="text-base font-bold text-[#1F273A]">{title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
                   </div>
                 </ScrollReveal>
@@ -364,11 +364,11 @@ export default async function LandingPage() {
         <section
           id="framework"
           className="relative px-4 sm:px-6 py-20 overflow-hidden"
-          style={{ background: 'linear-gradient(160deg, #2d1f17 0%, #3e4225 50%, #20150e 100%)' }}
+          style={{ background: 'linear-gradient(160deg, #1F273A 0%, #17243B 50%, #0F172A 100%)' }}
         >
           <div className="relative max-w-6xl mx-auto space-y-14">
             <ScrollReveal className="text-center space-y-3 max-w-3xl mx-auto">
-              <span className="inline-block text-[11px] font-bold text-[#BF9B7A] uppercase tracking-widest px-3 py-1 rounded-full bg-white/10">
+              <span className="inline-block text-[11px] font-bold text-[#FFA72F] uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 border border-white/15">
                 Architecture
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
@@ -405,12 +405,12 @@ export default async function LandingPage() {
                 },
               ].map(({ cat, title, desc, icon: Icon, delay }, i) => (
                 <ScrollReveal key={i} delay={delay}>
-                  <div className="h-full rounded-2xl bg-white/8 backdrop-blur-sm p-6 space-y-4 hover:bg-white/12 transition-all group">
+                  <div className="h-full rounded-2xl bg-white/8 border border-white/10 backdrop-blur-sm p-6 space-y-4 hover:bg-white/12 transition-all group">
                     <div className="flex items-center justify-between">
-                      <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#BF9B7A]/25 text-[#F2E6D8] uppercase tracking-wider">
+                      <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FFA72F]/20 text-amber-200 border border-[#FFA72F]/30 uppercase tracking-wider">
                         {cat}
                       </span>
-                      <Icon className="h-5 w-5 text-white/40 group-hover:text-[#BF9B7A] transition-colors" />
+                      <Icon className="h-5 w-5 text-white/40 group-hover:text-[#FFA72F] transition-colors" />
                     </div>
                     <h3 className="text-lg font-bold text-white">{title}</h3>
                     <p className="text-sm text-white/65 leading-relaxed">{desc}</p>
@@ -421,9 +421,9 @@ export default async function LandingPage() {
 
             {/* Proficiency Scale */}
             <ScrollReveal delay={100}>
-              <div className="rounded-2xl bg-white/6 backdrop-blur-sm p-6 sm:p-8 space-y-6">
+              <div className="rounded-2xl bg-white/6 border border-white/10 backdrop-blur-sm p-6 sm:p-8 space-y-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#555934] text-white">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1C4CA1] text-white">
                     <Compass className="h-5 w-5" />
                   </div>
                   <div>
@@ -433,15 +433,15 @@ export default async function LandingPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   {[
-                    { key: 'l1', color: '#BF9B7A', bg: 'rgba(191,155,122,0.15)' },
-                    { key: 'l2', color: '#BF9B7A', bg: 'rgba(191,155,122,0.18)' },
-                    { key: 'l3', color: '#F2E6D8', bg: 'rgba(242,230,216,0.15)' },
-                    { key: 'l4', color: '#8C5B3E', bg: 'rgba(140,91,62,0.25)' },
-                    { key: 'l5', color: '#F2E6D8', bg: 'rgba(85,89,52,0.35)' },
+                    { key: 'l1', color: '#60A5FA', bg: 'rgba(28,76,161,0.25)' },
+                    { key: 'l2', color: '#93C5FD', bg: 'rgba(17,100,190,0.25)' },
+                    { key: 'l3', color: '#FCD34D', bg: 'rgba(255,167,47,0.20)' },
+                    { key: 'l4', color: '#FFA72F', bg: 'rgba(255,167,47,0.30)' },
+                    { key: 'l5', color: '#34D399', bg: 'rgba(16,185,129,0.25)' },
                   ].map(({ key, color, bg }, i) => (
                     <div
                       key={key}
-                      className="p-4 rounded-xl hover:scale-105 transition-transform cursor-default"
+                      className="p-4 rounded-xl border border-white/10 hover:scale-105 transition-transform cursor-default"
                       style={{ backgroundColor: bg }}
                     >
                       <span
@@ -465,10 +465,10 @@ export default async function LandingPage() {
         <section id="cadres" className="px-4 sm:px-6 py-20 bg-background">
           <div className="max-w-6xl mx-auto space-y-14">
             <ScrollReveal className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="inline-block text-[11px] font-bold text-[#555934] uppercase tracking-widest px-3 py-1 rounded-full bg-[#555934]/12">
+              <span className="inline-block text-[11px] font-bold text-[#1C4CA1] uppercase tracking-widest px-3 py-1 rounded-full bg-[#1C4CA1]/10">
                 Cadres & Roles
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#2d1f17]">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#1F273A]">
                 {t('cadres.title')}
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -483,7 +483,7 @@ export default async function LandingPage() {
                   title: t('cadres.iss.title'),
                   desc: t('cadres.iss.desc'),
                   level: 'Senior Leadership',
-                  color: '#555934',
+                  color: '#1C4CA1',
                   delay: 0,
                 },
                 {
@@ -491,7 +491,7 @@ export default async function LandingPage() {
                   title: t('cadres.sss.title'),
                   desc: t('cadres.sss.desc'),
                   level: 'Mid-level Officers',
-                  color: '#593E2E',
+                  color: '#1164BE',
                   delay: 80,
                 },
                 {
@@ -499,7 +499,7 @@ export default async function LandingPage() {
                   title: t('cadres.nsso.title'),
                   desc: t('cadres.nsso.desc'),
                   level: 'Field Operations',
-                  color: '#8C5B3E',
+                  color: '#2C3B59',
                   delay: 160,
                 },
                 {
@@ -507,24 +507,24 @@ export default async function LandingPage() {
                   title: t('cadres.nssta.title'),
                   desc: t('cadres.nssta.desc'),
                   level: 'Training Academy',
-                  color: '#BF9B7A',
+                  color: '#FFA72F',
                   delay: 240,
                 },
               ].map(({ abbr, title, desc, level, color, delay }, i) => (
                 <ScrollReveal key={i} delay={delay}>
-                  <div className="h-full group rounded-2xl bg-white shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all">
+                  <div className="h-full group rounded-2xl bg-white shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all border border-[#D8DFEE]/60">
                     {/* Top accent */}
                     <div
                       className="px-5 py-4 flex items-center justify-between"
                       style={{ background: color }}
                     >
                       <span className="text-2xl font-black text-white tracking-tight">{abbr}</span>
-                      <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold text-white/90 uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">
                         {level}
                       </span>
                     </div>
                     <div className="p-5 space-y-2 bg-white">
-                      <h3 className="text-sm font-bold text-[#2d1f17]">{title}</h3>
+                      <h3 className="text-sm font-bold text-[#1F273A]">{title}</h3>
                       <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
                     </div>
                   </div>
@@ -538,18 +538,18 @@ export default async function LandingPage() {
         <section id="about" className="px-4 sm:px-6 py-20 bg-background">
           <div className="max-w-5xl mx-auto">
             <ScrollReveal>
-              <div className="rounded-2xl bg-white overflow-hidden shadow-card">
+              <div className="rounded-2xl bg-white overflow-hidden shadow-card border border-[#D8DFEE]">
                 {/* Top bar */}
                 <div
                   className="px-8 py-5"
-                  style={{ background: 'linear-gradient(135deg, #2d1f17 0%, #3e4225 100%)' }}
+                  style={{ background: 'linear-gradient(135deg, #1F273A 0%, #2C3B59 100%)' }}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-bold text-white">{t('about.title')}</h2>
                       <p className="text-xs text-white/60 mt-1">Government of India · MoSPI</p>
                     </div>
-                    <div className="hidden sm:flex items-center gap-2 text-[11px] text-[#BF9B7A]">
+                    <div className="hidden sm:flex items-center gap-2 text-[11px] text-[#FFA72F] font-medium">
                       <CheckCircle2 className="h-4 w-4" />
                       Verified Institutional Platform
                     </div>
@@ -564,16 +564,16 @@ export default async function LandingPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
                     <div className="space-y-2">
-                      <span className="text-[11px] font-bold text-[#2d1f17] uppercase tracking-widest block">
+                      <span className="text-[11px] font-bold text-[#1F273A] uppercase tracking-widest block">
                         {t('about.contactTitle')}
                       </span>
                       <p className="text-sm text-muted-foreground leading-relaxed">{t('about.contactAddress')}</p>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-[11px] font-bold text-[#2d1f17] uppercase tracking-widest block">
+                      <span className="text-[11px] font-bold text-[#1F273A] uppercase tracking-widest block">
                         Official Communication
                       </span>
-                      <p className="font-mono text-sm text-[#555934] font-semibold">{t('about.contactEmail')}</p>
+                      <p className="font-mono text-sm text-[#1C4CA1] font-semibold">{t('about.contactEmail')}</p>
                       <p className="text-xs text-muted-foreground">Ministry of Statistics & Programme Implementation (MoSPI)</p>
                     </div>
                   </div>
@@ -590,8 +590,8 @@ export default async function LandingPage() {
                         href={href}
                         className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                           primary
-                            ? 'bg-[#555934] text-white hover:bg-primary-dark shadow-xs'
-                            : 'bg-[#F2E6D8]/60 text-[#2d1f17] hover:bg-[#F2E6D8]'
+                            ? 'bg-[#1C4CA1] text-white hover:bg-[#1164BE] shadow-xs'
+                            : 'bg-[#EDF0F7] text-[#1F273A] hover:bg-[#D8DFEE]'
                         }`}
                       >
                         {label}
@@ -609,14 +609,14 @@ export default async function LandingPage() {
       {/* FOOTER */}
       <footer
         className="py-10 px-4 sm:px-6"
-        style={{ background: 'linear-gradient(135deg, #2d1f17 0%, #20150e 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #1F273A 0%, #161D2B 100%)' }}
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-white/10">
             {/* Brand */}
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#555934] flex items-center justify-center text-white">
+                <div className="h-9 w-9 rounded-xl bg-[#1C4CA1] flex items-center justify-center text-white">
                   <Building2 className="h-5 w-5" />
                 </div>
                 <span className="font-bold text-lg text-white">StatVidya</span>
@@ -653,7 +653,7 @@ export default async function LandingPage() {
                 <div>National Statistical Systems Training Academy</div>
                 <div>Plot No. 22, Knowledge Park-II</div>
                 <div>Greater Noida, UP 201310</div>
-                <div className="pt-2 font-mono text-[#BF9B7A]">nssta-training@mospi.gov.in</div>
+                <div className="pt-2 font-mono text-[#FFA72F]">nssta-training@mospi.gov.in</div>
               </div>
             </div>
           </div>

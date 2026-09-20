@@ -94,11 +94,11 @@ export function HorizontalPolicyDirectivesCarousel({
       <div className="flex items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-            <h2 className="text-sm sm:text-base font-black text-[#2d1f17] tracking-tight">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
+            <h2 className="text-sm sm:text-base font-black text-[#1F273A] tracking-tight">
               National Policy Directives &amp; Cabinet Circulars
             </h2>
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#FFA72F]/15 text-amber-700 border border-[#FFA72F]/30">
               5 Active Directives
             </span>
           </div>
@@ -113,7 +113,7 @@ export function HorizontalPolicyDirectivesCarousel({
             type="button"
             onClick={scrollLeft}
             aria-label="Previous circulars"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1C4CA1] transition-all shadow-2xs cursor-pointer active:scale-95"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -121,7 +121,7 @@ export function HorizontalPolicyDirectivesCarousel({
             type="button"
             onClick={scrollRight}
             aria-label="Next circulars"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1C4CA1] transition-all shadow-2xs cursor-pointer active:scale-95"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -137,12 +137,12 @@ export function HorizontalPolicyDirectivesCarousel({
         {POLICY_DIRECTIVES_DATA.map((item) => (
           <div
             key={item.id}
-            className="min-w-[320px] max-w-85 shrink-0 snap-start rounded-2xl p-4.5 bg-white border border-[#BF9B7A]/30 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="min-w-[320px] max-w-85 shrink-0 snap-start rounded-2xl p-4.5 bg-white border border-[#D8DFEE] shadow-2xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div className="space-y-3">
               {/* Circular Reference & Status Pill */}
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-mono font-bold text-[#8C5B3E] truncate">
+                <span className="text-[10px] font-mono font-bold text-[#1C4CA1] truncate">
                   {item.circularNo}
                 </span>
 
@@ -152,7 +152,7 @@ export function HorizontalPolicyDirectivesCarousel({
                     Enforced
                   </span>
                 ) : item.status === 'ACTIVE_ROLLOUT' ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#555934]/15 text-[#555934] border border-[#555934]/30 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 shrink-0">
                     <Clock className="h-3 w-3" />
                     Rollout
                   </span>
@@ -161,7 +161,7 @@ export function HorizontalPolicyDirectivesCarousel({
                     In Review
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30 shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFA72F]/15 text-amber-700 border border-[#FFA72F]/30 shrink-0">
                     Gazette
                   </span>
                 )}
@@ -169,7 +169,7 @@ export function HorizontalPolicyDirectivesCarousel({
 
               {/* Title & Authority */}
               <div>
-                <h3 className="font-bold text-sm text-[#2d1f17] leading-snug line-clamp-2">
+                <h3 className="font-bold text-sm text-[#1F273A] leading-snug line-clamp-2">
                   {item.title}
                 </h3>
                 <p className="text-[10.5px] font-semibold text-muted-foreground mt-0.5 truncate">
@@ -178,7 +178,7 @@ export function HorizontalPolicyDirectivesCarousel({
               </div>
 
               {/* Mandate Summary */}
-              <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-3 bg-[#FAF6F0]/60 p-2.5 rounded-xl border border-[#BF9B7A]/20">
+              <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-3 bg-[#EDF0F7]/60 p-2.5 rounded-xl border border-[#D8DFEE]">
                 {item.mandateSummary}
               </p>
 
@@ -186,16 +186,16 @@ export function HorizontalPolicyDirectivesCarousel({
               <div className="space-y-1 pt-1">
                 <div className="flex items-center justify-between text-[10.5px]">
                   <span className="text-muted-foreground flex items-center gap-1">
-                    <Calendar className="h-3 w-3 text-[#8C5B3E]" />
+                    <Calendar className="h-3 w-3 text-[#1C4CA1]" />
                     Deadline: <strong>{item.complianceDeadline}</strong>
                   </span>
-                  <span className="font-mono font-bold text-[#555934]">
+                  <span className="font-mono font-bold text-[#1C4CA1]">
                     {item.complianceRate}% Comply
                   </span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#555934]"
+                    className="h-full rounded-full bg-[#1C4CA1]"
                     style={{ width: `${item.complianceRate}%` }}
                   />
                 </div>
@@ -203,11 +203,11 @@ export function HorizontalPolicyDirectivesCarousel({
             </div>
 
             {/* Read Action Button */}
-            <div className="pt-3.5 mt-3 border-t border-[#BF9B7A]/20">
+            <div className="pt-3.5 mt-3 border-t border-[#D8DFEE]">
               <button
                 type="button"
                 onClick={() => onReadCircular && onReadCircular(item)}
-                className="w-full py-1.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#555934] hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+                className="w-full py-1.5 px-3 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
               >
                 <FileText className="h-3.5 w-3.5" />
                 <span>Read Official Circular</span>

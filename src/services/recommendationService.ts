@@ -247,7 +247,12 @@ export async function rankCoursesMultiSignal(
       const data = await res.json();
 
       // Transform backend response back into RankedRecommendation objects
-      return data.ranked_courses.map((item: any) => {
+      interface BackendCourseItem extends Course {
+        competency_id?: string;
+        recommendation_score?: number;
+        explainability?: string;
+      }
+      return data.ranked_courses.map((item: BackendCourseItem) => {
         const matchingGaps = gaps
           .filter((g) => (item.targetCompetencies || [item.competency_id]).includes(g.competencyId))
           .map((g) => ({

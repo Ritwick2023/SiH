@@ -192,29 +192,29 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             <button
               type="button"
               onClick={handleGoBack}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#BF9B7A]/40 bg-white hover:bg-[#FAF6F0] text-xs font-semibold text-chart-5 shadow-2xs transition-all hover:scale-102 active:scale-98 group cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#D8DFEE] bg-white hover:bg-[#EDF0F7] text-xs font-semibold text-[#1F273A] shadow-2xs transition-all hover:scale-102 active:scale-98 group cursor-pointer"
               title="Go back to previous page"
             >
-              <ArrowLeft className="h-3.5 w-3.5 text-[#555934] group-hover:-translate-x-0.5 transition-transform" />
+              <ArrowLeft className="h-3.5 w-3.5 text-[#1C4CA1] group-hover:-translate-x-0.5 transition-transform" />
               <span>Go Back</span>
             </button>
             <Link
               href="/"
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-[#BF9B7A]/25 bg-white/70 hover:bg-white text-[11px] font-medium text-muted-foreground hover:text-[#2d1f17] transition-all"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-[#D8DFEE] bg-white/70 hover:bg-white text-[11px] font-medium text-muted-foreground hover:text-[#1F273A] transition-all"
               title="Go to Home"
             >
               <span>Home</span>
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#BF9B7A]/40 bg-white/80 backdrop-blur-xs text-[11px] font-semibold text-chart-5 shadow-2xs">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#D8DFEE] bg-white/80 backdrop-blur-xs text-[11px] font-semibold text-[#1C4CA1] shadow-2xs">
               <KarmayogiEmblemIcon className="h-4 w-4" />
               <span>MoSPI • NSSTA</span>
             </div>
             <button
               type="button"
               onClick={handleGoBack}
-              className="lg:hidden h-7 w-7 rounded-full bg-white border border-[#BF9B7A]/40 text-chart-5 flex items-center justify-center shadow-2xs hover:bg-[#FAF6F0] cursor-pointer"
+              className="lg:hidden h-7 w-7 rounded-full bg-white border border-[#D8DFEE] text-[#1F273A] flex items-center justify-center shadow-2xs hover:bg-[#EDF0F7] cursor-pointer"
               title="Close and go back"
             >
               <X className="h-3.5 w-3.5" />
@@ -229,7 +229,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
         {/* Heading */}
         <div className="mb-5">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2d1f17] tracking-tight font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F273A] tracking-tight font-sans">
             Create an account
           </h1>
           <p className="text-xs text-muted-foreground mt-1">
@@ -247,8 +247,8 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             }}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
               currentStep === 1
-                ? 'bg-[#555934] text-white shadow-xs'
-                : 'bg-white/80 text-muted-foreground border border-[#BF9B7A]/30'
+                ? 'bg-[#1C4CA1] text-white shadow-xs'
+                : 'bg-white text-muted-foreground border border-[#D8DFEE]'
             }`}
           >
             1. Cadre & Organization
@@ -263,8 +263,8 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             }}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
               currentStep === 2
-                ? 'bg-[#555934] text-white shadow-xs'
-                : 'bg-white/80 text-muted-foreground border border-[#BF9B7A]/30'
+                ? 'bg-[#1C4CA1] text-white shadow-xs'
+                : 'bg-white text-muted-foreground border border-[#D8DFEE]'
             }`}
           >
             2. Profile & Competencies
@@ -273,7 +273,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
         {/* Error Banner */}
         {error && (
-          <div className="mb-4 flex items-start gap-2 text-xs text-[#8C5B3E] bg-[#8C5B3E]/10 border border-[#8C5B3E]/20 rounded-xl p-3">
+          <div className="mb-4 flex items-start gap-2 text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -284,15 +284,15 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
           <form onSubmit={handleProceedToStep2} className="space-y-3.5">
             {/* Center / State */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Jurisdiction <span className="text-red-500">*</span>
               </label>
-              <div className="inline-flex p-1 rounded-full bg-[#F2E6D8]/60 border border-[#BF9B7A]/30">
+              <div className="inline-flex p-1 rounded-full bg-[#EDF0F7] border border-[#D8DFEE]">
                 <button
                   type="button"
                   onClick={() => setCenterState('Center')}
                   className={`px-4 py-1 rounded-full text-xs font-semibold transition-all ${
-                    centerState === 'Center' ? 'bg-white text-[#2d1f17] shadow-xs' : 'text-muted-foreground'
+                    centerState === 'Center' ? 'bg-white text-[#1F273A] shadow-xs' : 'text-muted-foreground'
                   }`}
                 >
                   Central Ministry
@@ -301,7 +301,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                   type="button"
                   onClick={() => setCenterState('State')}
                   className={`px-4 py-1 rounded-full text-xs font-semibold transition-all ${
-                    centerState === 'State' ? 'bg-white text-[#2d1f17] shadow-xs' : 'text-muted-foreground'
+                    centerState === 'State' ? 'bg-white text-[#1F273A] shadow-xs' : 'text-muted-foreground'
                   }`}
                 >
                   State DES
@@ -311,13 +311,13 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
             {/* Ministry */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Ministry/Department <span className="text-red-500">*</span>
               </label>
               <select
                 value={ministry}
                 onChange={(e) => setMinistry(e.target.value)}
-                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934] focus:outline-none"
+                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none"
                 required
               >
                 <option value="Ministry of Statistics and Programme Implementation (MoSPI)">
@@ -333,7 +333,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
             {/* Organisation */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Organisation <span className="text-red-500">*</span>
               </label>
               <select
@@ -345,7 +345,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                     if (opts.length > 0) setDesignation(opts[0]);
                   }, 10);
                 }}
-                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934] focus:outline-none"
+                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none"
                 required
               >
                 {organisations.map((org) => (
@@ -358,13 +358,13 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
             {/* Designation */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Cadre / Designation <span className="text-red-500">*</span>
               </label>
               <select
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
-                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934] focus:outline-none"
+                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none"
                 required
               >
                 {getDesignations().map((desig) => (
@@ -376,8 +376,8 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             </div>
 
             {/* Email Box with Send OTP */}
-            <div className="rounded-2xl border border-[#BF9B7A]/35 p-3.5 bg-white space-y-2.5 shadow-xs">
-              <label className="block text-xs font-semibold text-chart-5">
+            <div className="rounded-2xl border border-[#D8DFEE] p-3.5 bg-white space-y-2.5 shadow-xs">
+              <label className="block text-xs font-semibold text-[#1F273A]">
                 Official Government Email <span className="text-red-500">*</span>
               </label>
               <div className="flex gap-2">
@@ -386,14 +386,14 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@mospi.gov.in"
-                  className="flex-1 h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/30 rounded-xl bg-[#FAF6F0]/50 text-[#2d1f17] focus:ring-2 focus:ring-[#555934] focus:outline-none"
+                  className="flex-1 h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-xl bg-[#F4F6FB] text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none"
                   required
                 />
                 <button
                   type="button"
                   onClick={handleSendOtp}
                   disabled={loading || !email.includes('@')}
-                  className="px-4 h-11 rounded-xl bg-[#555934] hover:bg-primary-dark text-white text-xs font-semibold shrink-0 transition-colors disabled:opacity-50 cursor-pointer"
+                  className="px-4 h-11 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-xs font-semibold shrink-0 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? 'Sending...' : otpSent ? 'OTP Sent ✓' : 'Send OTP'}
                 </button>
@@ -411,7 +411,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
             <button
               type="submit"
-              className="w-full h-12 rounded-full bg-[#F8C858] hover:bg-[#ebb83b] text-[#2d1f17] text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-3"
+              className="w-full h-12 rounded-full bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-3"
             >
               <span>Continue to Step 2</span>
               <ArrowRight className="h-4 w-4" />
@@ -428,7 +428,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                 setCurrentStep(1);
                 if (onStepChange) onStepChange(1);
               }}
-              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-[#555934] font-semibold mb-1"
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-[#1C4CA1] font-semibold mb-1"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back to Cadre Selection</span>
@@ -436,7 +436,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
             {/* OTP Entry */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Enter 6-Digit Email OTP <span className="text-red-500">*</span>
               </label>
               <input
@@ -445,14 +445,14 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                 value={otpValue}
                 onChange={(e) => setOtpValue(e.target.value)}
                 placeholder="123456"
-                className="w-full h-11 px-4 font-mono text-center tracking-[0.3em] text-base font-bold border border-[#BF9B7A]/40 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934]"
+                className="w-full h-11 px-4 font-mono text-center tracking-[0.3em] text-base font-bold border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1]"
                 required
               />
             </div>
 
             {/* Officer Name */}
             <div>
-              <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+              <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                 Full Officer Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -460,7 +460,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Smt. Sunita Devi / Shri Amit Sharma"
-                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934]"
+                className="w-full h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1]"
                 required
               />
             </div>
@@ -468,7 +468,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             {/* Phone & Parichay ID in 2 columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
-                <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+                <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                   Mobile Number
                 </label>
                 <input
@@ -476,12 +476,12 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="10-digit phone"
-                  className="w-full h-11 px-4 text-xs sm:text-sm border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934]"
+                  className="w-full h-11 px-4 text-xs sm:text-sm border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-chart-5 mb-1 ml-1">
+                <label className="block text-xs font-semibold text-[#1F273A] mb-1 ml-1">
                   Parichay / Employee ID
                 </label>
                 <input
@@ -489,40 +489,40 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
                   value={parichayId}
                   onChange={(e) => setParichayId(e.target.value)}
                   placeholder="JPID-2024-XXXX"
-                  className="w-full h-11 px-4 text-xs sm:text-sm font-mono border border-[#BF9B7A]/35 rounded-2xl bg-white text-[#2d1f17] focus:ring-2 focus:ring-[#555934]"
+                  className="w-full h-11 px-4 text-xs sm:text-sm font-mono border border-[#D8DFEE] rounded-2xl bg-white text-[#1F273A] focus:ring-2 focus:ring-[#1C4CA1]"
                 />
               </div>
             </div>
 
             {/* FRAC COMPETENCY ALLOCATION PREVIEW */}
-            <div className="p-3.5 rounded-2xl border border-[#BF9B7A]/35 bg-[#FAF6F0] space-y-2">
+            <div className="p-3.5 rounded-2xl border border-[#D8DFEE] bg-[#EDF0F7]/50 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#555934] flex items-center gap-1.5">
+                <span className="text-xs font-bold text-[#1C4CA1] flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>FRAC Competency Framework Auto-Mapping</span>
                 </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#555934]/12 text-[#555934]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1]">
                   Mission Karmayogi
                 </span>
               </div>
 
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                Allocating competencies for <strong className="text-[#2d1f17]">{designation}</strong> ({organisation}):
+                Allocating competencies for <strong className="text-[#1F273A]">{designation}</strong> ({organisation}):
               </p>
 
               <div className="space-y-1.5 pt-0.5">
                 {isFieldRole && (
                   <>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Census Boundary Demarcation & Listing (Schedule 0.0)</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>CAPI Tablet Operations & Sync Protocols</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Household Consumption Recall Probing (Hindi-First)</span>
                     </div>
                   </>
@@ -530,12 +530,12 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
                 {isTrainerRole && (
                   <>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Statistical Pedagogy & Assessment Formulation</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Curriculum Gap Identification (NSSTA Induction)</span>
                     </div>
                   </>
@@ -543,12 +543,12 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
 
                 {!isFieldRole && !isTrainerRole && (
                   <>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Statistical Scrutiny & Outlier Detection</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#2d1f17]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-[#555934] shrink-0" />
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#1F273A]">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#1C4CA1] shrink-0" />
                       <span>Multi-Stage Sampling Design & DEFF Variance</span>
                     </div>
                   </>
@@ -559,7 +559,7 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-12 rounded-full bg-[#F8C858] hover:bg-[#ebb83b] text-[#2d1f17] text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-2 disabled:opacity-50"
+              className="w-full h-12 rounded-full bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-2 disabled:opacity-50"
             >
               {loading ? (
                 'Approving Credentials...'
@@ -575,10 +575,10 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
       </div>
 
       {/* Footer */}
-      <div className="mt-8 pt-4 border-t border-[#BF9B7A]/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+      <div className="mt-8 pt-4 border-t border-[#D8DFEE] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
         <p>
           Already have an account?{' '}
-          <Link href="/auth/login" className="font-bold text-[#555934] hover:underline">
+          <Link href="/auth/login" className="font-bold text-[#1C4CA1] hover:underline">
             Sign in here
           </Link>
         </p>

@@ -166,7 +166,7 @@ export function DocumentPracticeCard({
           <div className="pt-4 mt-2 border-t border-stone-200/60 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-stone-700">
-                {isHindi ? 'प्रश्न' : 'Question'} <strong className="text-[#555934]">{currentIndex + 1}</strong> {isHindi ? 'कुल' : 'of'}{' '}
+                {isHindi ? 'प्रश्न' : 'Question'} <strong className="text-[#1C4CA1]">{currentIndex + 1}</strong> {isHindi ? 'कुल' : 'of'}{' '}
                 <strong>{totalCount}</strong>
               </span>
               <span className="text-stone-500">
@@ -183,7 +183,7 @@ export function DocumentPracticeCard({
 
                 let bubbleStyle = 'bg-stone-100 text-stone-600 border-stone-200 hover:bg-stone-200';
                 if (isCurrent) {
-                  bubbleStyle = 'bg-[#555934] text-white border-[#555934] ring-2 ring-[#555934]/30';
+                  bubbleStyle = 'bg-[#1C4CA1] text-white border-[#1C4CA1] ring-2 ring-[#1C4CA1]/30';
                 } else if (isAnswered) {
                   bubbleStyle = 'bg-emerald-600 text-white border-emerald-600';
                 }
@@ -259,8 +259,8 @@ export function DocumentPracticeCard({
               if (!isSubmitted) {
                 if (isChosen) {
                   cardStyle =
-                    'border-[#555934] ring-2 ring-[#555934]/20 bg-[#555934]/5 text-stone-950 font-medium';
-                  badgeStyle = 'bg-[#555934] text-white border-[#555934]';
+                    'border-[#1C4CA1] ring-2 ring-[#1C4CA1]/20 bg-[#1C4CA1]/5 text-stone-950 font-medium';
+                  badgeStyle = 'bg-[#1C4CA1] text-white border-[#1C4CA1]';
                 }
               } else {
                 if (isTargetAnswer) {
@@ -329,7 +329,7 @@ export function DocumentPracticeCard({
               <button
                 onClick={handleCheckAnswer}
                 disabled={selectedOption === null}
-                className="flex-1 sm:flex-none px-6 py-3 bg-[#555934] hover:bg-primary-dark disabled:bg-stone-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
+                className="flex-1 sm:flex-none px-6 py-3 bg-[#1C4CA1] hover:bg-[#1164BE] disabled:bg-stone-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
               >
                 {isHindi ? 'उत्तर जांचें' : 'Check Answer'}
                 <ArrowRight className="h-4 w-4" />
@@ -337,7 +337,7 @@ export function DocumentPracticeCard({
             ) : hasNext ? (
               <button
                 onClick={onNextQuestion}
-                className="flex-1 sm:flex-none px-6 py-3 bg-[#555934] hover:bg-primary-dark text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
+                className="flex-1 sm:flex-none px-6 py-3 bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
               >
                 {isHindi ? 'अगला प्रश्न' : 'Next Question'}
                 <ChevronRight className="h-4 w-4" />
@@ -346,7 +346,7 @@ export function DocumentPracticeCard({
               <button
                 onClick={onResetSession || onNextQuestion}
                 disabled={isGeneratingNext}
-                className="flex-1 sm:flex-none px-6 py-3 bg-[#555934] hover:bg-primary-dark text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
+                className="flex-1 sm:flex-none px-6 py-3 bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold rounded-xl shadow-xs transition active:scale-95 flex items-center justify-center gap-2"
               >
                 {isGeneratingNext ? (
                   <>

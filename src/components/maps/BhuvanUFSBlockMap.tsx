@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { Satellite, MapPin, CheckCircle2, AlertTriangle, RotateCcw, Crosshair, Shield, Eye } from 'lucide-react';
+import React, { useState } from 'react';
+import { Satellite, CheckCircle2, AlertTriangle, RotateCcw, Crosshair, Eye } from 'lucide-react';
 
 interface Point {
   x: number;
@@ -260,7 +260,7 @@ export function BhuvanUFSBlockMap() {
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#EDF0F7] bg-[#FAF6F0] hover:bg-[#EDF0F7] text-xs font-bold text-[#1F273A] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#D8DFEE] bg-[#EDF0F7] hover:bg-[#D8DFEE]/60 text-xs font-bold text-[#1F273A] transition-colors cursor-pointer"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Reset Pegs</span>

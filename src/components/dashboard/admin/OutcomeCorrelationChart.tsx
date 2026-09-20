@@ -153,7 +153,7 @@ export function OutcomeCorrelationChart() {
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
                 activeMetricId === series.id
                   ? 'bg-[#1C4CA1] text-white shadow-xs'
-                  : 'bg-[#FAF6F0] text-muted-foreground border border-[#EDF0F7] hover:bg-[#EDF0F7]'
+                  : 'bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE] hover:bg-[#D8DFEE]/60'
               }`}
             >
               {series.metricName}
@@ -365,7 +365,7 @@ export function OutcomeCorrelationChart() {
         )}
 
         {/* Narrative Insight Footer */}
-        <p className="text-xs text-muted-foreground italic bg-[#FAF6F0]/50 p-3 rounded-xl border border-[#EDF0F7] mt-3">
+        <p className="text-xs text-muted-foreground italic bg-[#EDF0F7]/60 p-3 rounded-xl border border-[#D8DFEE] mt-3">
           <Info className="h-3.5 w-3.5 inline mr-1 text-[#FFA72F]" />
           {selectedSeries.narrativeInsight}
         </p>

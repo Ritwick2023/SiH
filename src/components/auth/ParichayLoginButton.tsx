@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Shield, ChevronDown, Check, UserCheck, Loader2 } from 'lucide-react';
+import { Shield, ChevronDown, Check, Loader2 } from 'lucide-react';
 import { DEMO_PERSONAS } from '@/lib/demoPersonas';
 
 interface ParichayLoginButtonProps {

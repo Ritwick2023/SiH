@@ -361,8 +361,8 @@ function GlobalSearchModalContent({
         onKeyDown={handleKeyDown}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-stone-200 bg-stone-50/50">
-          <Search className="h-5 w-5 text-[#555934] shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#D8DFEE] bg-stone-50/50">
+          <Search className="h-5 w-5 text-[#1C4CA1] shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -385,13 +385,13 @@ function GlobalSearchModalContent({
               <X className="h-4 w-4" />
             </button>
           )}
-          <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-stone-200 bg-white px-2 py-0.5 text-[10px] font-mono text-stone-500 shadow-2xs">
+          <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-[#D8DFEE] bg-white px-2 py-0.5 text-[10px] font-mono text-stone-500 shadow-2xs">
             ESC
           </kbd>
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-stone-100 overflow-x-auto">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-[#D8DFEE] overflow-x-auto">
           {[
             { id: 'all', label: isHindi ? 'सभी' : 'All Results', count: SEARCH_REGISTRY.length },
             {
@@ -416,8 +416,8 @@ function GlobalSearchModalContent({
               onClick={() => handleCategoryChange(cat.id as typeof activeCategory)}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                 activeCategory === cat.id
-                  ? 'bg-[#555934] text-white shadow-2xs'
-                  : 'bg-stone-100/70 text-stone-600 hover:bg-stone-200/70'
+                  ? 'bg-[#1C4CA1] text-white shadow-2xs'
+                  : 'bg-[#EDF0F7] text-stone-600 hover:bg-[#D8DFEE]/60'
               }`}
             >
               {cat.label} <span className="opacity-70 text-[10px]">({cat.count})</span>
@@ -451,7 +451,7 @@ function GlobalSearchModalContent({
                   onClick={() => handleSelectItem(item)}
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-colors ${
-                    isSelected ? 'bg-[#FAF6F0] border border-[#BF9B7A]/40' : 'hover:bg-stone-50 border border-transparent'
+                    isSelected ? 'bg-[#EDF0F7] border border-[#D8DFEE]' : 'hover:bg-stone-50 border border-transparent'
                   }`}
                 >
                   <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -473,7 +473,7 @@ function GlobalSearchModalContent({
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-sm font-bold text-stone-900 truncate">{title}</span>
                         {item.cadreTag && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#555934]/12 text-[#555934] border border-[#555934]/25 shrink-0">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 shrink-0">
                             {isHindi ? item.cadreTag_hi || item.cadreTag : item.cadreTag}
                           </span>
                         )}
@@ -487,7 +487,7 @@ function GlobalSearchModalContent({
                     </div>
                   </div>
 
-                  <div className="shrink-0 ml-3 flex items-center gap-1.5 text-xs font-semibold text-[#555934]">
+                  <div className="shrink-0 ml-3 flex items-center gap-1.5 text-xs font-semibold text-[#1C4CA1]">
                     <span className="hidden sm:inline">
                       {item.category === 'competency'
                         ? isHindi
@@ -511,7 +511,7 @@ function GlobalSearchModalContent({
 
         {/* Quick Suggestion Pills when query is empty */}
         {!query && (
-          <div className="p-3 bg-stone-50/80 border-t border-stone-200 text-xs text-stone-500">
+          <div className="p-3 bg-stone-50/80 border-t border-[#D8DFEE] text-xs text-stone-500">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-3.5 w-3.5 text-amber-600" />
               <span className="font-bold text-stone-700">
@@ -531,7 +531,7 @@ function GlobalSearchModalContent({
                   key={pill.label}
                   type="button"
                   onClick={() => handleQueryChange(pill.q)}
-                  className="px-2.5 py-1 bg-white border border-stone-200 rounded-lg hover:border-[#555934] hover:text-stone-900 transition text-[11px] font-medium text-stone-600 cursor-pointer"
+                  className="px-2.5 py-1 bg-white border border-[#D8DFEE] rounded-lg hover:border-[#1C4CA1] hover:text-[#1C4CA1] transition text-[11px] font-medium text-stone-600 cursor-pointer"
                 >
                   {pill.label}
                 </button>

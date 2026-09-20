@@ -180,21 +180,21 @@ export function ManualReaderModal({
       aria-labelledby="reader-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/65 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-4xl rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden flex flex-col h-[85vh]">
+      <div className="relative w-full max-w-4xl rounded-3xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden flex flex-col h-[85vh]">
         {/* Header */}
-        <div className="bg-[#555934] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#1C4CA1] text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20 shrink-0">
-              <BookOpen className="h-5 w-5 text-[#F8C858]" />
+              <BookOpen className="h-5 w-5 text-[#FFA72F]" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold bg-white/20 text-[#F8C858] px-2 py-0.5 rounded-full shrink-0">
+                <span className="text-[10px] font-mono font-bold bg-white/20 text-[#FFA72F] px-2 py-0.5 rounded-full shrink-0">
                   {manual.version}
                 </span>
-                <span className="text-xs text-white/70 hidden sm:inline">{manual.division}</span>
+                <span className="text-xs text-white/80 hidden sm:inline">{manual.division}</span>
               </div>
-              <h2 id="reader-modal-title" className="text-sm sm:text-base font-black tracking-tight text-[#FAF6F0] truncate mt-0.5">
+              <h2 id="reader-modal-title" className="text-sm sm:text-base font-black tracking-tight text-white truncate mt-0.5">
                 {isHindi ? manual.title_hi : manual.title}
               </h2>
             </div>
@@ -210,7 +210,7 @@ export function ManualReaderModal({
         </div>
 
         {/* Search & Actions Bar */}
-        <div className="px-6 py-2.5 bg-white border-b border-[#BF9B7A]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shrink-0">
+        <div className="px-6 py-2.5 bg-white border-b border-[#D8DFEE] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shrink-0">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <input
@@ -218,7 +218,7 @@ export function ManualReaderModal({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={isHindi ? 'अध्याय या नियम खोजें...' : 'Search handbook sections or rules...'}
-              className="w-full h-8 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/25 pl-8 pr-3 text-xs text-[#2d1f17] placeholder:text-muted-foreground focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#555934]"
+              className="w-full h-8 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] pl-8 pr-3 text-xs text-[#1F273A] placeholder:text-muted-foreground focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1C4CA1]"
             />
           </div>
 
@@ -226,7 +226,7 @@ export function ManualReaderModal({
             <button
               type="button"
               onClick={handleCopyCitation}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 font-semibold text-muted-foreground hover:text-[#2d1f17] hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] font-semibold text-[#475569] hover:text-[#1F273A] hover:bg-[#D8DFEE] transition-colors cursor-pointer"
             >
               <Copy className="h-3 w-3" />
               <span>{copied ? (isHindi ? 'कॉपी हो गया!' : 'Copied!') : (isHindi ? 'उद्धरण कॉपी करें' : 'Copy Citation')}</span>
@@ -235,9 +235,9 @@ export function ManualReaderModal({
             <button
               type="button"
               onClick={handleDownloadPDF}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#555934] font-bold text-white hover:bg-[#434728] transition-colors shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1C4CA1] font-bold text-white hover:bg-[#1164BE] transition-colors shadow-2xs cursor-pointer"
             >
-              <Download className="h-3 w-3 text-[#F8C858]" />
+              <Download className="h-3 w-3 text-[#FFA72F]" />
               <span>{isHindi ? 'पीडीएफ डाउनलोड' : 'Download Official PDF'}</span>
             </button>
           </div>
@@ -246,8 +246,8 @@ export function ManualReaderModal({
         {/* 2-Column Reader Body */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Column: Chapter Navigation (hidden on mobile, visible sm+) */}
-          <div className="w-64 border-r border-[#BF9B7A]/25 bg-[#FAF6F0]/60 overflow-y-auto p-3 space-y-1.5 shrink-0 hidden sm:block">
-            <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          <div className="w-64 border-r border-[#D8DFEE] bg-[#EDF0F7]/40 overflow-y-auto p-3 space-y-1.5 shrink-0 hidden sm:block">
+            <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#475569]">
               {isHindi ? 'अध्याय सूची' : 'Table of Contents'}
             </div>
             {chapters.map((ch, idx) => {
@@ -262,13 +262,13 @@ export function ManualReaderModal({
                   onClick={() => setActiveChapterIndex(idx)}
                   className={`w-full p-2.5 rounded-xl text-left transition-all text-xs flex items-start gap-2 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#555934] text-white font-bold shadow-2xs'
-                      : 'hover:bg-white text-[#2d1f17]'
+                      ? 'bg-[#1C4CA1] text-white font-bold shadow-2xs'
+                      : 'hover:bg-white text-[#1F273A]'
                   }`}
                 >
                   <span
                     className={`h-5 w-5 rounded-md flex items-center justify-center font-mono text-[10px] shrink-0 font-bold ${
-                      isSelected ? 'bg-white/20 text-white' : 'bg-[#BF9B7A]/20 text-chart-5'
+                      isSelected ? 'bg-white/20 text-white' : 'bg-[#D8DFEE] text-[#1F273A]'
                     }`}
                   >
                     {ch.number}
@@ -279,7 +279,7 @@ export function ManualReaderModal({
                   {isRead && (
                     <CheckCircle2
                       className={`h-3.5 w-3.5 shrink-0 mt-0.5 ${
-                        isSelected ? 'text-[#F8C858]' : 'text-emerald-600'
+                        isSelected ? 'text-[#FFA72F]' : 'text-emerald-600'
                       }`}
                     />
                   )}
@@ -290,45 +290,45 @@ export function ManualReaderModal({
 
           {/* Right Column: Reading Canvas */}
           <div className="flex-1 bg-white p-6 sm:p-8 overflow-y-auto space-y-6">
-            <div className="space-y-2 pb-4 border-b border-[#BF9B7A]/20">
+            <div className="space-y-2 pb-4 border-b border-[#D8DFEE]">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md bg-[#555934]/15 text-[#555934] text-[10px] font-bold uppercase tracking-wider">
+                <span className="px-2.5 py-0.5 rounded-md bg-[#1C4CA1]/10 text-[#1C4CA1] text-[10px] font-bold uppercase tracking-wider">
                   {isHindi ? `अध्याय ${currentChapter.number}` : `Chapter ${currentChapter.number}`}
                 </span>
-                <span className="text-[11px] text-muted-foreground font-mono">{manual.pages}</span>
+                <span className="text-[11px] text-[#475569] font-mono">{manual.pages}</span>
               </div>
-              <h3 className="text-xl font-black text-[#2d1f17] tracking-tight">
+              <h3 className="text-xl font-black text-[#1F273A] tracking-tight">
                 {isHindi ? currentChapter.title_hi : currentChapter.title}
               </h3>
             </div>
 
             {/* Chapter Text */}
-            <div className="prose prose-sm max-w-none text-[#2d1f17] leading-relaxed space-y-4">
-              <p className="text-sm leading-relaxed text-[#2d1f17]/90 font-sans">
+            <div className="prose prose-sm max-w-none text-[#1F273A] leading-relaxed space-y-4">
+              <p className="text-sm leading-relaxed text-[#1F273A]/90 font-sans">
                 {isHindi ? currentChapter.content_hi : currentChapter.content}
               </p>
             </div>
 
             {/* Statutory Rule Callout */}
-            <div className="rounded-2xl bg-[#F8C858]/15 border-2 border-[#F8C858]/35 p-4 space-y-1.5 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#8C5B3E] uppercase tracking-wider">
+            <div className="rounded-2xl bg-[#FFA72F]/15 border-2 border-[#FFA72F]/35 p-4 space-y-1.5 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1C4CA1] uppercase tracking-wider">
                 <ShieldCheck className="h-4 w-4" />
                 <span>{isHindi ? 'वैधानिक फील्ड नियम' : 'Statutory Field Directive'}</span>
               </div>
-              <p className="text-xs font-bold text-[#2d1f17] leading-normal">
+              <p className="text-xs font-bold text-[#1F273A] leading-normal">
                 {isHindi ? currentChapter.statutoryRule_hi : currentChapter.statutoryRule}
               </p>
             </div>
 
             {/* Bottom Actions inside Reader */}
-            <div className="pt-4 border-t border-[#BF9B7A]/20 flex items-center justify-between">
+            <div className="pt-4 border-t border-[#D8DFEE] flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => handleToggleRead(currentChapter.id)}
                 className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   readChapters[currentChapter.id]
                     ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-800'
-                    : 'bg-[#FAF6F0] border border-[#BF9B7A]/40 text-[#555934] hover:bg-[#F2E6D8]'
+                    : 'bg-[#EDF0F7] border border-[#D8DFEE] text-[#1C4CA1] hover:bg-[#D8DFEE]'
                 }`}
               >
                 <CheckCircle2 className="h-3.5 w-3.5" />
@@ -343,7 +343,7 @@ export function ManualReaderModal({
                 </span>
               </button>
 
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-[11px] text-[#475569]">
                 MoSPI Civil Cadre Repository
               </span>
             </div>

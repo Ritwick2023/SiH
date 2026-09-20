@@ -69,23 +69,23 @@ export function Breadcrumb() {
         <li>
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 font-semibold text-[#555934] hover:text-[#434728] transition-colors"
+            className="flex items-center gap-1.5 font-semibold text-[#1C4CA1] hover:text-[#1164BE] transition-colors"
           >
-            <Home className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <Home className="h-3.5 w-3.5 text-[#1C4CA1]" />
             <span>{rootLabel}</span>
           </Link>
         </li>
         {crumbs.map((crumb, idx) => (
           <li key={crumb.href + idx} className="flex items-center gap-1.5">
-            <ChevronRight className="h-3 w-3 text-[#BF9B7A]" aria-hidden="true" />
+            <ChevronRight className="h-3 w-3 text-slate-400" aria-hidden="true" />
             {idx === crumbs.length - 1 ? (
-              <span className="font-bold text-[#2d1f17] capitalize">
+              <span className="font-bold text-[#1F273A] capitalize">
                 {crumb.label}
               </span>
             ) : (
               <Link
                 href={crumb.href}
-                className="hover:text-[#555934] transition-colors capitalize"
+                className="hover:text-[#1C4CA1] transition-colors capitalize"
               >
                 {crumb.label}
               </Link>

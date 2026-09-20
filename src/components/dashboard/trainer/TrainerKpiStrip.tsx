@@ -25,8 +25,8 @@ export function TrainerKpiStrip({
       value: pendingReviewCount.toString(),
       subtext: 'Needs Faculty QA',
       icon: HelpCircle,
-      bgColor: 'bg-[#F8C858]/20',
-      textColor: 'text-[#8C5B3E]',
+      bgColor: 'bg-[#FFA72F]/15',
+      textColor: 'text-[#FFA72F]',
     },
     {
       id: 'approved',
@@ -43,8 +43,8 @@ export function TrainerKpiStrip({
       value: ingestedManualsCount.toString(),
       subtext: 'Official MoSPI SOPs',
       icon: FileStack,
-      bgColor: 'bg-[#8C5B3E]/15',
-      textColor: 'text-chart-5',
+      bgColor: 'bg-[#1164BE]/10',
+      textColor: 'text-[#1164BE]',
     },
     {
       id: 'officers',
@@ -52,8 +52,8 @@ export function TrainerKpiStrip({
       value: assessedOfficersCount.toLocaleString(),
       subtext: 'Across FOD & SSS Cadres',
       icon: Users,
-      bgColor: 'bg-[#555934]/15',
-      textColor: 'text-[#555934]',
+      bgColor: 'bg-[#1C4CA1]/10',
+      textColor: 'text-[#1C4CA1]',
     },
     {
       id: 'passrate',
@@ -73,19 +73,19 @@ export function TrainerKpiStrip({
         return (
           <div
             key={kpi.id}
-            className="rounded-2xl bg-white border border-[#BF9B7A]/30 p-4 shadow-2xs hover:shadow-xs transition-all hover:scale-101 flex items-center gap-3.5"
+            className="rounded-2xl bg-white border border-[#D8DFEE] p-4 shadow-2xs hover:shadow-xs transition-all hover:scale-101 flex items-center gap-3.5 hover:border-[#1164BE]/40"
           >
             <div className={`h-11 w-11 rounded-2xl ${kpi.bgColor} flex items-center justify-center shrink-0`}>
               <Icon className={`h-5 w-5 ${kpi.textColor}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold text-muted-foreground truncate leading-tight">
+              <p className="text-[11px] font-semibold text-[#475569] truncate leading-tight">
                 {kpi.label}
               </p>
-              <p className="text-xl sm:text-2xl font-extrabold text-[#2d1f17] tracking-tight mt-0.5 font-mono">
+              <p className="text-xl sm:text-2xl font-extrabold text-[#1F273A] tracking-tight mt-0.5 font-mono">
                 {kpi.value}
               </p>
-              <p className="text-[10px] font-medium text-muted-foreground/80 truncate">
+              <p className="text-[10px] font-medium text-[#475569]/80 truncate">
                 {kpi.subtext}
               </p>
             </div>

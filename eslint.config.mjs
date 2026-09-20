@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     // Auto-generated Firebase Data Connect SDK files:
     "src/dataconnect-generated/**",
     "src/dataconnect-admin-generated/**",
+    // Python microservices & virtual environments:
+    "services/**",
   ]),
 ]);
 

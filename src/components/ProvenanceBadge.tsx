@@ -29,33 +29,33 @@ const PROVENANCE_CONFIG: Record<
   VERIFIED_OFFICIAL: {
     label: 'Verified Official',
     IconComponent: ShieldCheck,
-    bgColor: 'bg-[#555934]/12',
-    borderColor: '',
-    textColor: 'text-[#555934]',
+    bgColor: 'bg-[#1C4CA1]/10',
+    borderColor: 'border-[#1C4CA1]/20',
+    textColor: 'text-[#1C4CA1]',
     description: 'Matches real government structure or fact from official sources (MoSPI, NSSTA, FRAC)',
   },
   PROPOSED_FRAMEWORK: {
     label: 'Proposed Framework',
     IconComponent: FileEdit,
-    bgColor: 'bg-[#BF9B7A]/20',
-    borderColor: '',
-    textColor: 'text-[#593E2E]',
+    bgColor: 'bg-[#FFA72F]/15',
+    borderColor: 'border-[#FFA72F]/30',
+    textColor: 'text-amber-800',
     description: 'Structurally grounded in official methodology, but specific content is our proposal',
   },
   PROPOSED_METHODOLOGY: {
     label: 'Proposed Methodology',
     IconComponent: FlaskConical,
-    bgColor: 'bg-[#BF9B7A]/20',
-    borderColor: '',
-    textColor: 'text-[#593E2E]',
+    bgColor: 'bg-[#1164BE]/10',
+    borderColor: 'border-[#1164BE]/20',
+    textColor: 'text-[#1164BE]',
     description: 'Our team proposed formula or methodology (e.g., gap severity calculation)',
   },
   SYNTHETIC_DEMO_DATA: {
     label: 'Demo Data',
     IconComponent: AlertTriangle,
-    bgColor: 'bg-[#8C5B3E]/12',
-    borderColor: '',
-    textColor: 'text-[#8C5B3E]',
+    bgColor: 'bg-rose-500/10',
+    borderColor: 'border-rose-500/20',
+    textColor: 'text-rose-700',
     description: 'Fabricated for demonstration; no claim to real-world accuracy',
   },
   EMPIRICAL_NSS78_BOOTSTRAP: {
@@ -174,8 +174,8 @@ export function ProvenanceIndicator({ provenance }: Pick<ProvenanceBadgeProps, '
  */
 export function ProvenanceDisclosure() {
   return (
-    <div className="space-y-4 rounded-2xl bg-[#F2E6D8]/50 p-6 shadow-card">
-      <h3 className="text-lg font-semibold text-foreground">Data Provenance & Transparency</h3>
+    <div className="space-y-4 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] p-6 shadow-2xs">
+      <h3 className="text-lg font-bold text-[#1F273A]">Data Provenance & Transparency</h3>
 
       <p className="text-sm text-muted-foreground">
         StatVidya explicitly labels every domain data element with its origin and verification status. This
@@ -190,7 +190,7 @@ export function ProvenanceDisclosure() {
             return (
               <div
                 key={type}
-                className={`rounded-xl p-4 shadow-2xs ${cfg.bgColor}`}
+                className={`rounded-xl p-4 border border-[#D8DFEE] shadow-2xs ${cfg.bgColor}`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <IconComponent className="w-5 h-5 text-inherit" />
@@ -206,7 +206,7 @@ export function ProvenanceDisclosure() {
       <div className="text-xs text-muted-foreground pt-4">
         <p>
           <strong className="text-foreground">Questions?</strong> Read more about our framework alignment in the{' '}
-          <a href="/docs/frac" className="font-medium text-primary hover:text-primary-dark transition-colors underline">
+          <a href="/docs/frac" className="font-medium text-[#1C4CA1] hover:text-[#1164BE] transition-colors underline">
             FRAC documentation
           </a>
           .

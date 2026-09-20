@@ -27,16 +27,16 @@ export function PriorityGapsCard({
   });
 
   return (
-    <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-xs">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-[#BF9B7A]/20">
+    <div className="rounded-3xl bg-white border border-[#D8DFEE] p-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-[#D8DFEE]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-            <h2 className="text-lg font-bold text-[#2d1f17]">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h2 className="text-lg font-bold text-[#1F273A]">
               {isHindi ? 'प्राथमिकता क्षमता अंतराल (FRAC ढांचा)' : 'Priority Competency Gaps (FRAC Framework)'}
             </h2>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-[#475569] mt-0.5">
             {isHindi
               ? 'आधिकारिक कर्तव्यों और फील्ड संवीक्षा के आधार पर व्यवस्थित'
               : 'Grounded in MoSPI Cadre Rules • Severity = (Target − Current) × Priority'}
@@ -47,7 +47,7 @@ export function PriorityGapsCard({
           <button
             type="button"
             onClick={onViewAllGaps}
-            className="text-xs font-bold text-[#555934] hover:text-[#434728] inline-flex items-center gap-1 shrink-0 cursor-pointer"
+            className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1 shrink-0 cursor-pointer"
           >
             <span>{isHindi ? 'सभी अंतर देखें' : 'View Detailed Matrix'}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -55,7 +55,7 @@ export function PriorityGapsCard({
         ) : (
           <Link
             href="/skill-gap"
-            className="text-xs font-bold text-[#555934] hover:text-[#434728] inline-flex items-center gap-1 shrink-0"
+            className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1 shrink-0"
           >
             <span>{isHindi ? 'सभी अंतर देखें' : 'View Detailed Matrix'}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -74,13 +74,13 @@ export function PriorityGapsCard({
           return (
             <div
               key={comp.id}
-              className="rounded-2xl border border-[#BF9B7A]/30 bg-[#FAF6F0]/60 p-4 sm:p-5 hover:border-[#BF9B7A] transition-all"
+              className="rounded-2xl border border-[#D8DFEE] bg-[#EDF0F7]/40 p-4 sm:p-5 hover:border-[#1C4CA1]/30 hover:bg-white transition-all shadow-2xs"
             >
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="space-y-1.5 flex-1 min-w-0">
                   {/* Category & Badges */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#555934]/15 text-[#555934]">
+                    <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1]">
                       {comp.category}
                     </span>
 
@@ -111,7 +111,7 @@ export function PriorityGapsCard({
                         {isHindi ? '🛡️ सत्यापित' : '🛡️ Verified'}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#BF9B7A]/20 text-chart-5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]">
                         <UserCheck className="h-3 w-3" />
                         {isHindi ? '✍️ स्व-मूल्यांकित' : '✍️ Self-Assessed'}
                       </span>
@@ -119,14 +119,14 @@ export function PriorityGapsCard({
                   </div>
 
                   {/* Competency Name */}
-                  <h3 className="text-base font-bold text-[#2d1f17]">{compName}</h3>
+                  <h3 className="text-base font-bold text-[#1F273A]">{compName}</h3>
 
                   {/* FR-COMP-4 FRAC Activity Attribution */}
-                  <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <span className="font-semibold text-[#8C5B3E]">
+                  <div className="text-xs text-[#475569] flex items-center gap-1.5">
+                    <span className="font-semibold text-[#1164BE]">
                       {isHindi ? 'संबद्ध गतिविधि:' : 'Linked Activity:'}
                     </span>
-                    <span className="font-medium text-[#2d1f17]/80 truncate">
+                    <span className="font-medium text-[#1F273A]/80 truncate">
                       {activityName}
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export function PriorityGapsCard({
                     <button
                       type="button"
                       onClick={() => onBridgeGap(comp.id)}
-                      className="px-3.5 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                      className="px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
                     >
                       <span>{isHindi ? 'मूल्यांकन दें' : 'Bridge Gap'}</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
@@ -146,7 +146,7 @@ export function PriorityGapsCard({
                   ) : (
                     <Link
                       href={`/assessment/${comp.id}`}
-                      className="px-3.5 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs inline-flex items-center gap-1"
+                      className="px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs inline-flex items-center gap-1"
                     >
                       <span>{isHindi ? 'मूल्यांकन दें' : 'Bridge Gap'}</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
@@ -156,16 +156,16 @@ export function PriorityGapsCard({
               </div>
 
               {/* Stepped Level Progression Bar (L1 to L5) */}
-              <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="mt-4 pt-3 border-t border-[#D8DFEE] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-4 text-xs font-mono">
-                  <span className="text-muted-foreground">
+                  <span className="text-[#475569]">
                     {isHindi ? 'वर्तमान स्तर:' : 'Current:'}{' '}
-                    <strong className="text-[#2d1f17] font-bold">L{comp.currentLevel}</strong>
+                    <strong className="text-[#1F273A] font-bold">L{comp.currentLevel}</strong>
                   </span>
-                  <span className="text-[#BF9B7A]">→</span>
-                  <span className="text-muted-foreground">
+                  <span className="text-[#94A3B8]">→</span>
+                  <span className="text-[#475569]">
                     {isHindi ? 'लक्ष्य स्तर:' : 'Target:'}{' '}
-                    <strong className="text-[#555934] font-bold">L{comp.targetLevel}</strong>
+                    <strong className="text-[#1C4CA1] font-bold">L{comp.targetLevel}</strong>
                   </span>
                 </div>
 
@@ -181,12 +181,12 @@ export function PriorityGapsCard({
                         key={lvl}
                         className={`h-2.5 w-7 sm:w-9 rounded-full transition-all ${
                           isPassed
-                            ? 'bg-[#555934]'
+                            ? 'bg-[#1C4CA1]'
                             : isTarget
-                              ? 'bg-[#F8C858] ring-2 ring-[#F8C858]/40'
+                              ? 'bg-[#FFA72F] ring-2 ring-[#FFA72F]/40'
                               : isPending
-                                ? 'bg-[#BF9B7A]/40'
-                                : 'bg-[#BF9B7A]/15'
+                                ? 'bg-[#94A3B8]'
+                                : 'bg-[#D8DFEE]'
                         }`}
                         title={`Level ${lvl}`}
                       />

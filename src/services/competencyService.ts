@@ -13,7 +13,6 @@ import type {
   Activity,
   Competency,
 } from '@/lib/types';
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
 
 // ============================================================================
 // CONSTANTS

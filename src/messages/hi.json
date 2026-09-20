@@ -32,7 +32,8 @@
     "scrutinyCorrelation": "जांच सहसंबंध",
     "regionalOfficeHealth": "क्षेत्रीय कार्यालय स्वास्थ्य",
     "nationalCompetencyMatrix": "राष्ट्रीय योग्यता मैट्रिक्स",
-    "statutoryAssessmentAudit": "वैधानिक मूल्यांकन ऑडिट"
+    "statutoryAssessmentAudit": "वैधानिक मूल्यांकन ऑडिट",
+    "credentials": "कर्मयोगी पासपोर्ट"
   },
   "notifications": {
     "title": "सूचनाएं",

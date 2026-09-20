@@ -32,16 +32,16 @@ export function FlaggedRegionsModal({
       aria-labelledby="flagged-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col rounded-2xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden">
         {/* Header Ribbon */}
         <div className="bg-red-800 text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20">
-              <Flag className="h-6 w-6 text-[#F8C858]" />
+              <Flag className="h-6 w-6 text-[#FFA72F]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-[#FAF6F0] uppercase">
+                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-white uppercase">
                   Cadre Scrutiny Alert
                 </span>
               </div>
@@ -61,20 +61,20 @@ export function FlaggedRegionsModal({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 text-xs text-[#2d1f17]">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 text-xs text-[#1F273A]">
           <p className="text-muted-foreground leading-relaxed">
             The following two regional offices have exceeded the statutory 12.0% scrutiny error threshold 
             and fallen below 60.0% workforce readiness, triggering mandatory executive intervention.
           </p>
 
           {/* Card 1: FOD Bihar */}
-          <div className="p-4 rounded-2xl bg-white border-2 border-red-500/30 space-y-3 shadow-2xs">
+          <div className="p-4 rounded-xl bg-white border-2 border-red-500/30 space-y-3 shadow-2xs">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded border border-red-200 uppercase">
                   Critical Gap • Eastern Zone
                 </span>
-                <h3 className="text-sm font-bold text-[#2d1f17] mt-1">
+                <h3 className="text-sm font-bold text-[#1F273A] mt-1">
                   FOD Bihar Regional Office (Patna)
                 </h3>
                 <p className="text-[11px] text-muted-foreground">
@@ -87,8 +87,8 @@ export function FlaggedRegionsModal({
               </div>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/20 text-[11px] text-muted-foreground space-y-1">
-              <span className="font-bold text-[#2d1f17] block">Primary Error Driver:</span>
+            <div className="p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-[11px] text-muted-foreground space-y-1">
+              <span className="font-bold text-[#1F273A] block">Primary Error Driver:</span>
               <p>Schedule 0.0 CEB listing demarcation in rural flood zones; hamlet-group identification bypass.</p>
             </div>
 
@@ -113,13 +113,13 @@ export function FlaggedRegionsModal({
           </div>
 
           {/* Card 2: FOD UP East */}
-          <div className="p-4 rounded-2xl bg-white border-2 border-amber-500/30 space-y-3 shadow-2xs">
+          <div className="p-4 rounded-xl bg-white border-2 border-amber-500/30 space-y-3 shadow-2xs">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 uppercase">
                   High Risk • Central-East Zone
                 </span>
-                <h3 className="text-sm font-bold text-[#2d1f17] mt-1">
+                <h3 className="text-sm font-bold text-[#1F273A] mt-1">
                   FOD UP East Regional Office (Prayagraj)
                 </h3>
                 <p className="text-[11px] text-muted-foreground">
@@ -132,8 +132,8 @@ export function FlaggedRegionsModal({
               </div>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/20 text-[11px] text-muted-foreground space-y-1">
-              <span className="font-bold text-[#2d1f17] block">Primary Error Driver:</span>
+            <div className="p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-[11px] text-muted-foreground space-y-1">
+              <span className="font-bold text-[#1F273A] block">Primary Error Driver:</span>
               <p>NIC-2008 5-digit industrial classification ambiguity in informal manufacturing enterprises.</p>
             </div>
 
@@ -148,7 +148,7 @@ export function FlaggedRegionsModal({
                 <button
                   type="button"
                   onClick={() => handleTriage('FOD UP East')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#8C5B3E] text-white font-bold text-xs hover:bg-[#734a32] transition-all cursor-pointer shadow-xs active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white font-bold text-xs hover:bg-[#1164BE] transition-all cursor-pointer shadow-xs active:scale-95"
                 >
                   <Send className="h-3 w-3" />
                   <span>Dispatch Intervention</span>
@@ -159,12 +159,12 @@ export function FlaggedRegionsModal({
         </div>
 
         {/* Footer */}
-        <div className="bg-[#FAF6F0] border-t border-[#BF9B7A]/30 px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
+        <div className="bg-[#EDF0F7]/60 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
           <span className="text-[11px]">Directives enforceable under NSC Protocol</span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl border border-[#BF9B7A]/40 text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
             Close
           </button>

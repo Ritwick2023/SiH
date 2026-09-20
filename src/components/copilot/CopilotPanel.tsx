@@ -128,8 +128,9 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Online/offline detection
+  // Online/offline detection – reads initial state from browser Navigator API (external system)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOffline(typeof navigator !== 'undefined' ? !navigator.onLine : false);
     const goOnline = () => setIsOffline(false);
     const goOffline = () => setIsOffline(true);
@@ -337,10 +338,10 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
         }}
       >
         {/* ─── Header ─── */}
-        <div className="flex items-center justify-between bg-linear-to-r from-[#555934] to-primary-dark px-4 py-3">
+        <div className="flex items-center justify-between bg-[#1F273A] border-b border-[#2C3B59] px-4 py-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-white" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm border border-white/15">
+              <Sparkles className="h-4 w-4 text-[#FFA72F]" />
             </div>
             <div>
               <h2 className="text-sm font-bold text-white leading-tight">
@@ -384,7 +385,7 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
 
         {/* ─── Offline Banner ─── */}
         {isOffline && (
-          <div className="flex items-center gap-2 bg-[#BF9B7A]/15 px-3 py-1.5 text-[11px] text-chart-5">
+          <div className="flex items-center gap-2 bg-[#FFA72F]/15 px-3 py-1.5 text-[11px] text-amber-800">
             <WifiOff className="h-3 w-3 shrink-0" />
             <span>Offline — using built-in navigation assistance</span>
           </div>
@@ -412,9 +413,9 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
 
             {/* ─── Quick Actions ─── */}
             {showQuickActions && (
-              <div className="px-3 py-2 bg-[#F2E6D8]/30">
+              <div className="px-3 py-2 bg-[#EDF0F7]/60 border-t border-[#D8DFEE]">
                 <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                  <Zap className="h-3 w-3 text-[#555934]" /> {isHindi ? 'त्वरित विकल्प' : 'Quick Actions'}
+                  <Zap className="h-3 w-3 text-[#FFA72F]" /> {isHindi ? 'त्वरित विकल्प' : 'Quick Actions'}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {quickActions.map((action) => (
@@ -422,7 +423,7 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
                       key={action.label}
                       onClick={() => handleQuickAction(action.prompt)}
                       disabled={isLoading}
-                      className="rounded-full bg-[#F2E6D8] px-2.5 py-1 text-[11px] font-medium text-[#2d1f17] transition-all hover:bg-[#BF9B7A]/30 hover:shadow-xs active:scale-95 disabled:opacity-50"
+                      className="rounded-full bg-white border border-[#D8DFEE] px-2.5 py-1 text-[11px] font-medium text-[#1F273A] transition-all hover:bg-[#1C4CA1] hover:text-white hover:shadow-xs active:scale-95 disabled:opacity-50"
                     >
                       {action.label}
                     </button>
@@ -436,7 +437,7 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
         {/* ─── Input ─── */}
         <form
           onSubmit={handleSubmit}
-          className="flex items-center gap-2 bg-[#F2E6D8]/60 px-3 py-2.5"
+          className="flex items-center gap-2 bg-[#EDF0F7] border-t border-[#D8DFEE] px-3 py-2.5"
         >
           <input
             ref={inputRef}
@@ -449,7 +450,7 @@ export function CopilotPanel({ isOpen, onClose, userContext }: CopilotPanelProps
                 : 'Ask about FRAC, pathways, navigation...'
             }
             disabled={isLoading}
-            className="flex-1 rounded-xl bg-white px-3 py-2 text-[13px] text-[#2d1f17] placeholder:text-stone-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#555934]/20 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-white border border-[#D8DFEE] px-3 py-2 text-[13px] text-[#1F273A] placeholder:text-stone-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/30 disabled:opacity-50"
             style={{ minHeight: '36px' }}
           />
           <VoiceInputButton

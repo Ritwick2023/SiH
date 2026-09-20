@@ -158,11 +158,11 @@ function LearningHubContent({ user }: PathwaysClientProps) {
   return (
     <div className="space-y-8 pb-12">
       {/* Hub Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#BF9B7A]/20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#D8DFEE]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#555934]" />
-            <h1 className="text-2xl sm:text-3xl font-black text-[#2d1f17] tracking-tight">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h1 className="text-2xl sm:text-3xl font-black text-[#1F273A] tracking-tight">
               {isHindi ? 'आधिकारिक सांख्यिकी शिक्षण एवं पाठ्यक्रम केंद्र' : 'Official Learning & Courses Hub'}
             </h1>
           </div>
@@ -174,7 +174,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <span className="px-3 py-1.5 rounded-xl bg-[#555934]/10 text-[#555934] text-xs font-bold inline-flex items-center gap-1.5">
+          <span className="px-3 py-1.5 rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1] text-xs font-bold inline-flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4" />
             <span>Mission Karmayogi FRAC</span>
           </span>
@@ -184,72 +184,72 @@ function LearningHubContent({ user }: PathwaysClientProps) {
       {/* 3 Executive Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Readiness Index */}
-        <div className="rounded-2xl bg-white p-5 border border-[#BF9B7A]/30 shadow-card flex items-center justify-between">
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
           <div>
             <span className="text-xs text-muted-foreground font-semibold block">
               {isHindi ? 'समग्र कैडर तत्परता' : 'Cadre Readiness Index'}
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-[#555934] font-mono mt-0.5 block">
+            <span className="text-2xl sm:text-3xl font-black text-[#1C4CA1] font-mono mt-0.5 block">
               {readinessIndex}%
             </span>
             <span className="text-[11px] text-muted-foreground">
               {readinessIndex >= 70 ? (isHindi ? 'अधिकांश क्षमताएं पूरी हैं' : 'Field ready') : (isHindi ? 'प्राथमिकता अंतर मौजूद' : 'Gaps to address')}
             </span>
           </div>
-          <div className="h-11 w-11 rounded-2xl bg-[#555934]/10 text-[#555934] flex items-center justify-center shrink-0">
+          <div className="h-11 w-11 rounded-2xl bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center shrink-0">
             <GraduationCap className="h-5 w-5" />
           </div>
         </div>
 
         {/* Priority Gaps */}
-        <div className="rounded-2xl bg-white p-5 border border-[#BF9B7A]/30 shadow-card flex items-center justify-between">
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
           <div>
             <span className="text-xs text-muted-foreground font-semibold block">
               {isHindi ? 'सक्रिय क्षमता अंतर' : 'Active Competency Gaps'}
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-[#8C5B3E] font-mono mt-0.5 block">
+            <span className="text-2xl sm:text-3xl font-black text-[#FFA72F] font-mono mt-0.5 block">
               {activeGapsCount}
             </span>
             <span className="text-[11px] text-muted-foreground">
               {isHindi ? 'लक्षित शिक्षण से सुधारें' : 'Targeted by official courses'}
             </span>
           </div>
-          <div className="h-11 w-11 rounded-2xl bg-[#8C5B3E]/10 text-[#8C5B3E] flex items-center justify-center shrink-0">
+          <div className="h-11 w-11 rounded-2xl bg-[#FFA72F]/15 text-[#FFA72F] flex items-center justify-center shrink-0">
             <Sparkles className="h-5 w-5" />
           </div>
         </div>
 
         {/* Official Resources */}
-        <div className="rounded-2xl bg-white p-5 border border-[#BF9B7A]/30 shadow-card flex items-center justify-between">
+        <div className="rounded-2xl bg-white p-5 border border-[#D8DFEE] shadow-card flex items-center justify-between">
           <div>
             <span className="text-xs text-muted-foreground font-semibold block">
               {isHindi ? 'सत्यापित सरकारी संसाधन' : 'Verified Official Catalog'}
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-[#2d1f17] font-mono mt-0.5 block">
+            <span className="text-2xl sm:text-3xl font-black text-[#1F273A] font-mono mt-0.5 block">
               10
             </span>
             <span className="text-[11px] text-muted-foreground">
               NSSTA (G. Noida) & MoSPI
             </span>
           </div>
-          <div className="h-11 w-11 rounded-2xl bg-[#F2E6D8] text-[#2d1f17] flex items-center justify-center shrink-0">
+          <div className="h-11 w-11 rounded-2xl bg-[#EDF0F7] text-[#1F273A] flex items-center justify-center shrink-0">
             <Building2 className="h-5 w-5" />
           </div>
         </div>
       </div>
 
       {/* Main View Switcher Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-[#BF9B7A]/25 text-xs font-bold scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-[#D8DFEE] text-xs font-bold scrollbar-none">
         <button
           type="button"
           onClick={() => setActiveTab('recommended')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
             activeTab === 'recommended'
-              ? 'bg-[#555934] text-white shadow-2xs font-black'
-              : 'bg-white text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] border border-[#BF9B7A]/20'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
           }`}
         >
-          <Sparkles className="h-3.5 w-3.5 text-[#F8C858]" />
+          <Sparkles className="h-3.5 w-3.5 text-[#FFA72F]" />
           <span>{isHindi ? 'आपके अंतर के लिए अनुशंसित' : 'Recommended for Your Gaps'}</span>
           <span className="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]">
             {rankedRecommendations.length}
@@ -261,11 +261,11 @@ function LearningHubContent({ user }: PathwaysClientProps) {
           onClick={() => setActiveTab('courses')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
             activeTab === 'courses'
-              ? 'bg-[#555934] text-white shadow-2xs font-black'
-              : 'bg-white text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] border border-[#BF9B7A]/20'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
           }`}
         >
-          <GraduationCap className="h-3.5 w-3.5 text-[#8C5B3E]" />
+          <GraduationCap className="h-3.5 w-3.5 text-[#1164BE]" />
           <span>{isHindi ? 'एनएसएसटीए प्रशिक्षण एवं कार्यशालाएं' : 'NSSTA Courses & Workshops'}</span>
         </button>
 
@@ -274,11 +274,11 @@ function LearningHubContent({ user }: PathwaysClientProps) {
           onClick={() => setActiveTab('manuals')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
             activeTab === 'manuals'
-              ? 'bg-[#555934] text-white shadow-2xs font-black'
-              : 'bg-white text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] border border-[#BF9B7A]/20'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
           }`}
         >
-          <BookOpen className="h-3.5 w-3.5 text-[#555934]" />
+          <BookOpen className="h-3.5 w-3.5 text-[#1C4CA1]" />
           <span>{isHindi ? 'आधिकारिक फील्ड नियमावलियां (MoSPI)' : 'Official Field Manuals (MoSPI)'}</span>
         </button>
 
@@ -287,8 +287,8 @@ function LearningHubContent({ user }: PathwaysClientProps) {
           onClick={() => setActiveTab('all')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
             activeTab === 'all'
-              ? 'bg-[#555934] text-white shadow-2xs font-black'
-              : 'bg-white text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] border border-[#BF9B7A]/20'
+              ? 'bg-[#1C4CA1] text-white shadow-2xs font-black'
+              : 'bg-white text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] border border-[#D8DFEE]'
           }`}
         >
           <span>{isHindi ? 'समस्त संसाधन (कैटलॉग)' : 'All Resources'}</span>
@@ -296,7 +296,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
       </div>
 
       {/* Search & Multi-Criteria Filter Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-[#BF9B7A]/30 shadow-xs space-y-3">
+      <div className="bg-white p-4 rounded-2xl border border-[#D8DFEE] shadow-xs space-y-3">
         <div className="flex flex-col md:flex-row items-center gap-3">
           {/* Live Search Bar */}
           <div className="relative flex-1 w-full">
@@ -310,7 +310,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                   ? 'पाठ्यक्रम, मैनुअल, विषय या कीवर्ड खोजें (उदा. CAPI, PLFS, Scrutiny)...'
                   : 'Search by title, topic, manual, or competency (e.g., CAPI, PLFS, Scrutiny)...'
               }
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 focus:outline-none focus:ring-2 focus:ring-[#555934]/30 focus:border-[#555934] text-[#2d1f17] placeholder:text-muted-foreground"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/30 focus:border-[#1C4CA1] text-[#1F273A] placeholder:text-muted-foreground"
             />
           </div>
 
@@ -320,7 +320,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="text-xs px-3 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-[#2d1f17] font-semibold focus:outline-none"
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
             >
               <option value="all">{isHindi ? 'सभी प्रदाता' : 'All Providers'}</option>
               <option value="NSSTA">NSSTA (Academy)</option>
@@ -332,7 +332,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="text-xs px-3 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-[#2d1f17] font-semibold focus:outline-none"
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
             >
               <option value="all">{isHindi ? 'सभी भाषाएँ' : 'All Languages'}</option>
               <option value="Hindi">{isHindi ? 'हिंदी / द्विभाषी' : 'Hindi / Bilingual'}</option>
@@ -343,7 +343,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
             <select
               value={selectedCompetency}
               onChange={(e) => setSelectedCompetency(e.target.value)}
-              className="text-xs px-3 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-[#2d1f17] font-semibold focus:outline-none"
+              className="text-xs px-3 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] font-semibold focus:outline-none"
             >
               <option value="all">{isHindi ? 'सभी FRAC क्षमताएं' : 'All Competencies'}</option>
               <option value="comp-capi">{isHindi ? 'कैपी टैबलेट संचालन' : 'CAPI Operations'}</option>
@@ -358,7 +358,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="px-2.5 py-2 text-xs text-muted-foreground hover:text-[#8C5B3E] font-semibold inline-flex items-center gap-1 cursor-pointer"
+                className="px-2.5 py-2 text-xs text-muted-foreground hover:text-[#FFA72F] font-semibold inline-flex items-center gap-1 cursor-pointer"
                 title="Reset Filters"
               >
                 <RefreshCw className="h-3 w-3" />
@@ -373,12 +373,12 @@ function LearningHubContent({ user }: PathwaysClientProps) {
       <div className="space-y-4">
         {displayedItems.length === 0 ? (
           /* Empty State */
-          <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-12 text-center space-y-4">
-            <div className="h-12 w-12 rounded-full bg-[#FAF6F0] text-muted-foreground flex items-center justify-center mx-auto">
+          <div className="rounded-3xl bg-white border border-[#D8DFEE] p-12 text-center space-y-4">
+            <div className="h-12 w-12 rounded-full bg-[#EDF0F7] text-muted-foreground flex items-center justify-center mx-auto">
               <Filter className="h-6 w-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-[#2d1f17]">
+              <h3 className="text-base font-bold text-[#1F273A]">
                 {isHindi ? 'कोई मेल खाता शिक्षण संसाधन नहीं मिला' : 'No matching learning resources found'}
               </h3>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">
@@ -390,7 +390,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
             <button
               type="button"
               onClick={resetFilters}
-              className="px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer"
             >
               {isHindi ? 'फ़िल्टर रीसेट करें' : 'Clear All Filters'}
             </button>
@@ -415,18 +415,18 @@ function LearningHubContent({ user }: PathwaysClientProps) {
               return (
                 <div
                   key={item.id}
-                  className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between"
+                  className="rounded-3xl bg-white border border-[#D8DFEE] p-6 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between"
                 >
                   <div className="space-y-4">
                     {/* Header Strip: Type + Provenance */}
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#555934]/15 text-[#555934]">
+                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1]">
                           {item.source_type.replace('_', ' ')}
                         </span>
 
                         {isOfficial ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#555934]/10 text-[#555934]">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1]">
                             <ShieldCheck className="h-3 w-3" />
                             <span>{item.source_domain}</span>
                           </span>
@@ -437,7 +437,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                           </span>
                         )}
 
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#F2E6D8] text-[#2d1f17]">
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#EDF0F7] text-[#1F273A]">
                           {item.language}
                         </span>
                       </div>
@@ -453,14 +453,14 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                     <div className="space-y-1">
                       <Link
                         href={`/pathways/${item.id}`}
-                        className="group-hover:text-[#555934] transition-colors"
+                        className="group-hover:text-[#1C4CA1] transition-colors"
                       >
-                        <h3 className="text-base font-bold text-[#2d1f17] hover:text-[#555934] transition-colors line-clamp-2">
+                        <h3 className="text-base font-bold text-[#1F273A] hover:text-[#1C4CA1] transition-colors line-clamp-2">
                           {title}
                         </h3>
                       </Link>
-                      <div className="flex items-center gap-1.5 text-xs text-[#8C5B3E] font-medium">
-                        <Building2 className="h-3.5 w-3.5 shrink-0" />
+                      <div className="flex items-center gap-1.5 text-xs text-[#FFA72F] font-semibold">
+                        <Building2 className="h-3.5 w-3.5 shrink-0 text-[#1C4CA1]" />
                         <span className="truncate">{provider}</span>
                       </div>
                     </div>
@@ -472,11 +472,11 @@ function LearningHubContent({ user }: PathwaysClientProps) {
 
                     {/* Explainability / Why Recommended Callout */}
                     {whyRecommended && (
-                      <div className="rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 p-3 space-y-1">
-                        <span className="text-[10px] font-bold text-[#8C5B3E] uppercase tracking-wider block">
+                      <div className="rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] p-3 space-y-1">
+                        <span className="text-[10px] font-bold text-[#FFA72F] uppercase tracking-wider block">
                           {isHindi ? 'आपके अंतर के लिए अनुशंसित' : 'Recommended for Your Gap'}
                         </span>
-                        <p className="text-xs text-[#2d1f17] leading-relaxed">
+                        <p className="text-xs text-[#1F273A] leading-relaxed">
                           {whyRecommended}
                         </p>
                       </div>
@@ -490,7 +490,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                       {item.targetCompetencies.map((cId) => (
                         <span
                           key={cId}
-                          className="px-2.5 py-0.5 rounded-lg bg-[#FAF6F0] border border-[#BF9B7A]/30 text-[11px] font-semibold text-[#2d1f17]"
+                          className="px-2.5 py-0.5 rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-[11px] font-semibold text-[#1F273A]"
                         >
                           {cId}
                         </span>
@@ -499,10 +499,10 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="mt-6 pt-4 border-t border-[#BF9B7A]/20 flex items-center justify-between gap-3">
+                  <div className="mt-6 pt-4 border-t border-[#D8DFEE] flex items-center justify-between gap-3">
                     <Link
                       href={`/pathways/${item.id}`}
-                      className="text-xs font-bold text-[#555934] hover:text-[#434728] inline-flex items-center gap-1"
+                      className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1"
                     >
                       <span>{isHindi ? 'विवरण देखें' : 'View Details'}</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -513,7 +513,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
                         href={item.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-xl bg-white border border-[#BF9B7A]/40 text-[#2d1f17] hover:bg-[#FAF6F0] text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-white border border-[#D8DFEE] text-[#1F273A] hover:bg-[#EDF0F7] text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
                         title="Open source website"
                       >
                         <span>{isHindi ? 'आधिकारिक स्रोत' : 'Source'}</span>
@@ -522,7 +522,7 @@ function LearningHubContent({ user }: PathwaysClientProps) {
 
                       <Link
                         href={`/assessment/${primaryCompId}`}
-                        className="px-3.5 py-1.5 rounded-xl bg-[#555934] text-white hover:bg-[#434728] text-xs font-bold transition-all inline-flex items-center gap-1 shadow-2xs active:scale-95"
+                        className="px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white hover:bg-[#1164BE] text-xs font-bold transition-all inline-flex items-center gap-1 shadow-2xs active:scale-95"
                       >
                         <PlayCircle className="h-3.5 w-3.5" />
                         <span>{isHindi ? 'मूल्यांकन' : 'Assess'}</span>

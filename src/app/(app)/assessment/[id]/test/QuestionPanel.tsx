@@ -98,15 +98,15 @@ export default function QuestionPanel({
                 htmlFor={`option-${idx}`}
                 className={`flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all min-h-14 ${
                   isSelected
-                    ? 'border-[#555934] bg-[#555934]/10'
-                    : 'border-border bg-white hover:border-[#BF9B7A] hover:bg-[#F2E6D8]/30'
+                    ? 'border-[#1C4CA1] bg-[#1C4CA1]/10'
+                    : 'border-border bg-white hover:border-[#1C4CA1]/40 hover:bg-[#EDF0F7]'
                 }`}
               >
                 {/* Option letter circle */}
                 <span
                   className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold border-2 transition-colors mt-0.5 ${
                     isSelected
-                      ? 'border-[#555934] bg-[#555934] text-white'
+                      ? 'border-[#1C4CA1] bg-[#1C4CA1] text-white'
                       : 'border-stone-300 bg-white text-stone-500'
                   }`}
                   aria-hidden="true"

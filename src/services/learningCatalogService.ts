@@ -8,8 +8,6 @@
 import {
   OFFICIAL_LEARNING_CATALOG,
   type OfficialLearningItem,
-  type LearningItemType,
-  type ItemLanguage,
 } from '@/data/officialLearningCatalog';
 import type { CompetencyGap } from '@/lib/types';
 import type { AppUser } from '@/lib/auth';
@@ -225,5 +223,16 @@ export class LearningCatalogService {
     }
 
     return recommendations.sort((a, b) => b.score - a.score);
+  }
+
+  /**
+   * Helper to return top N recommendations for competency gaps
+   */
+  static getRecommendedForGaps(
+    gaps: CompetencyGap[],
+    limit: number = 4,
+    user?: AppUser | null
+  ): RankedLearningRecommendation[] {
+    return this.rankForGaps(gaps, user).slice(0, limit);
   }
 }

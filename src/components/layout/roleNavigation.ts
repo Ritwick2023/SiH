@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Target,
   ClipboardCheck,
-  Flag,
   UserCircle,
   FileText,
   Brain,
@@ -12,6 +11,7 @@ import {
   TrendingUp,
   Layers,
   GraduationCap,
+  Award,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -59,6 +59,13 @@ export const LEARNER_NAV_ITEMS: RoleNavItem[] = [
     icon: GraduationCap,
     badge: '10 Modules',
     badgeType: 'default',
+  },
+  {
+    href: '/credentials',
+    label: 'nav.credentials',
+    icon: Award,
+    badge: 'W3C VC',
+    badgeType: 'accent',
   },
   {
     href: '/profile',
@@ -186,7 +193,7 @@ export function getRoleIdentity(role: UserRole = 'learner', isHindi = false) {
         title: isHindi ? 'स्टैटविद्या' : 'StatVidya',
         subtitle: isHindi ? 'NSSTA संकाय स्टूडियो' : 'NSSTA Faculty Studio',
         emblemTag: isHindi ? 'NSSTA • सांख्यिकी मंत्रालय' : 'NSSTA • MoSPI',
-        themeColor: '#8C5B3E',
+        themeColor: '#1164BE',
         roleLabel: isHindi ? 'संकाय प्रशिक्षक' : 'Faculty Trainer',
       };
     case 'admin':
@@ -194,7 +201,7 @@ export function getRoleIdentity(role: UserRole = 'learner', isHindi = false) {
         title: isHindi ? 'स्टैटविद्या' : 'StatVidya',
         subtitle: isHindi ? 'कार्यकारी कमान डेस्क' : 'Executive Command Desk',
         emblemTag: isHindi ? 'MoSPI मुख्यालय • ADG' : 'MoSPI HQ • ADG',
-        themeColor: '#2d1f17',
+        themeColor: '#1C4CA1',
         roleLabel: isHindi ? 'नीति प्रशासक' : 'Policy Administrator',
       };
     case 'learner':
@@ -203,7 +210,7 @@ export function getRoleIdentity(role: UserRole = 'learner', isHindi = false) {
         title: isHindi ? 'स्टैटविद्या' : 'StatVidya',
         subtitle: isHindi ? 'MoSPI क्षमता विकास' : 'MoSPI Capacity Building',
         emblemTag: isHindi ? 'सिविल सेवा • FOD' : 'Civil Services • FOD',
-        themeColor: '#555934',
+        themeColor: '#1C4CA1',
         roleLabel: isHindi ? 'संवर्ग अधिकारी' : 'Cadre Officer',
       };
   }

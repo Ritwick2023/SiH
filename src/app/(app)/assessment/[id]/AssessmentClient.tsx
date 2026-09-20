@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   initializeAssessment,
@@ -50,6 +50,18 @@ interface AssessmentClientProps {
 
 type UIState = 'LOADING' | 'ANSWERING' | 'REVIEW' | 'SUBMITTED' | 'ERROR';
 
+const subscribeOnline = (callback: () => void) => {
+  window.addEventListener('online', callback);
+  window.addEventListener('offline', callback);
+  return () => {
+    window.removeEventListener('online', callback);
+    window.removeEventListener('offline', callback);
+  };
+};
+
+const getOfflineSnapshot = () => (typeof navigator !== 'undefined' ? !navigator.onLine : false);
+const getOfflineServerSnapshot = () => false;
+
 export default function AssessmentClient({
   competencyId,
   competencyName,
@@ -72,24 +84,9 @@ export default function AssessmentClient({
   const [timeRemaining, setTimeRemaining] = useState(30 * 60); // 30 minutes in seconds
   const [isAnimating, setIsAnimating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOffline, setIsOffline] = useState(false);
+  const isOffline = useSyncExternalStore(subscribeOnline, getOfflineSnapshot, getOfflineServerSnapshot);
 
   const handleSubmitAssessmentRef = useRef<(() => void) | null>(null);
-
-  // Offline detection without SSR hydration mismatch
-  useEffect(() => {
-    setIsOffline(typeof navigator !== 'undefined' ? !navigator.onLine : false);
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   // Timer effect
   useEffect(() => {

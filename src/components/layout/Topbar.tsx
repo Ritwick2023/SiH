@@ -15,6 +15,7 @@ import {
   Globe,
   Sparkles,
   Check,
+  Menu,
   Wifi,
   ClipboardCheck,
   GraduationCap,
@@ -22,6 +23,7 @@ import {
   Flag,
   Download,
   FileUp,
+  Mic,
 } from 'lucide-react';
 import { Notification } from '@/components/notifications/types';
 import { getInitialNotifications } from '@/components/notifications/notification-data';
@@ -244,27 +246,30 @@ export function Topbar({ initialRole }: TopbarProps) {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }, []);
 
-  const handleLanguageToggle = useCallback(() => {
-    const nextLang = locale === 'en' ? 'hi' : 'en';
-    document.cookie = `locale=${nextLang};path=/;max-age=31536000;SameSite=Lax`;
-    // Also update demo_user cookie if active so both client and server stay in sync
-    try {
-      const match = document.cookie.match(/(?:^|;\s*)demo_user=([^;]+)/);
-      if (match) {
-        const demoUser = JSON.parse(decodeURIComponent(match[1]));
-        demoUser.preferred_language = nextLang;
-        if (demoUser.user_metadata) {
-          demoUser.user_metadata.preferred_language = nextLang;
+  const handleLanguageToggle = useCallback(
+    (targetLang?: 'en' | 'hi') => {
+      const nextLang = targetLang || (locale === 'en' ? 'hi' : 'en');
+      document.cookie = `locale=${nextLang};path=/;max-age=31536000;SameSite=Lax`;
+      // Also update demo_user cookie if active so both client and server stay in sync
+      try {
+        const match = document.cookie.match(/(?:^|;\s*)demo_user=([^;]+)/);
+        if (match) {
+          const demoUser = JSON.parse(decodeURIComponent(match[1]));
+          demoUser.preferred_language = nextLang;
+          if (demoUser.user_metadata) {
+            demoUser.user_metadata.preferred_language = nextLang;
+          }
+          document.cookie = `demo_user=${encodeURIComponent(
+            JSON.stringify(demoUser)
+          )};path=/;max-age=604800;SameSite=Lax`;
         }
-        document.cookie = `demo_user=${encodeURIComponent(
-          JSON.stringify(demoUser)
-        )};path=/;max-age=604800;SameSite=Lax`;
+      } catch {
+        // Ignore cookie JSON parse error
       }
-    } catch {
-      // Ignore cookie JSON parse error
-    }
-    window.location.reload();
-  }, [locale]);
+      window.location.reload();
+    },
+    [locale]
+  );
 
   const handleSelectPersona = (persona: DemoPersona) => {
     setActivePersona(persona);
@@ -280,19 +285,19 @@ export function Topbar({ initialRole }: TopbarProps) {
     { bg: string; text: string; badge: string }
   > = {
     learner: {
-      bg: 'bg-[#555934]/15',
-      text: 'text-[#555934]',
-      badge: 'bg-[#555934]/12 text-[#555934]',
+      bg: 'bg-[#1C4CA1]/10',
+      text: 'text-[#1C4CA1]',
+      badge: 'bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20',
     },
     trainer: {
-      bg: 'bg-[#8C5B3E]/15',
-      text: 'text-[#8C5B3E]',
-      badge: 'bg-[#8C5B3E]/15 text-[#8C5B3E]',
+      bg: 'bg-[#1164BE]/10',
+      text: 'text-[#1164BE]',
+      badge: 'bg-[#1164BE]/10 text-[#1164BE] border border-[#1164BE]/20',
     },
     admin: {
-      bg: 'bg-[#2d1f17]/15',
-      text: 'text-[#2d1f17]',
-      badge: 'bg-[#F8C858]/25 text-[#8C5B3E]',
+      bg: 'bg-[#1F273A]/10',
+      text: 'text-[#1F273A]',
+      badge: 'bg-[#F9EAC1] text-[#1F273A] border border-[#FFA72F]/40',
     },
   };
 
@@ -301,30 +306,64 @@ export function Topbar({ initialRole }: TopbarProps) {
   const badgeLabel = unreadCount > 99 ? '99+' : unreadCount.toString();
 
   return (
-    <header className="flex h-16 items-center justify-between bg-white border-b border-[#BF9B7A]/30 px-4 sm:px-6 z-10 select-none shadow-2xs">
+    <header className="flex h-16 items-center justify-between bg-white border-b border-[#D8DFEE] px-4 sm:px-6 z-10 select-none shadow-xs">
       {/* Search / Context Area */}
-      <div className="flex items-center gap-4 min-w-0">
-        {/* Global Search Command Trigger Button */}
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+        {/* Mobile Hamburger Navigation Button */}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('toggle-mobile-sidebar'))}
+          aria-label="Open Navigation Drawer"
+          className="md:hidden flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7]/80 border border-[#D8DFEE] text-[#1F273A] hover:bg-white hover:border-[#1C4CA1]/40 transition-colors cursor-pointer shrink-0"
+        >
+          <Menu className="h-4 w-4" />
+        </button>
+
+        {/* Global Search Command Trigger Button (Desktop & Tablet) */}
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="flex items-center justify-between h-9 w-52 sm:w-64 lg:w-72 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 px-3 text-xs text-[#2d1f17] hover:bg-white hover:border-[#555934]/40 transition-all shadow-2xs cursor-pointer group"
+          className="hidden sm:flex items-center justify-between h-9 sm:w-56 lg:w-68 rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] px-3 text-xs text-[#1F273A] hover:bg-white hover:border-[#1C4CA1]/50 transition-all shadow-2xs cursor-pointer group shrink-0 sm:shrink"
           title={locale === 'hi' ? 'दक्षताएं, मैनुअल या पेज खोजें (⌘K)' : 'Search competencies, manuals, or pages (⌘K)'}
           aria-label="Open Search Palette"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <Search className="h-3.5 w-3.5 text-stone-400 group-hover:text-[#555934] shrink-0 transition-colors" />
-            <span className="truncate text-stone-500 group-hover:text-stone-700">
+            <Search className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1C4CA1] shrink-0 transition-colors" />
+            <span className="truncate text-slate-500 group-hover:text-slate-700">
               {locale === 'hi' ? 'खोजें (दक्षता, मैनुअल)...' : 'Search competencies, manuals...'}
             </span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[#BF9B7A]/30 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-stone-500 shadow-2xs">
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[#D8DFEE] bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-500 shadow-2xs">
             ⌘K
           </kbd>
         </button>
 
-        {/* Role-Specific Context Badge Strip */}
-        <div className="flex items-center gap-2 overflow-x-auto py-1">
+        {/* Global Search Icon Button (Mobile Only) */}
+        <button
+          type="button"
+          onClick={() => setSearchModalOpen(true)}
+          className="sm:hidden flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7]/80 border border-[#D8DFEE] text-slate-600 hover:text-[#1C4CA1] hover:bg-white transition-colors cursor-pointer shrink-0"
+          aria-label="Open Search Palette"
+          title={locale === 'hi' ? 'खोजें' : 'Search'}
+        >
+          <Search className="h-4 w-4" />
+        </button>
+
+        {/* Project Bhashini Voice Assistant Trigger */}
+        <button
+          type="button"
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent('toggle-copilot-voice'));
+          }}
+          className="hidden md:flex items-center gap-1.5 h-9 px-3 rounded-xl bg-[#1C4CA1]/10 border border-[#1C4CA1]/25 text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all shadow-2xs cursor-pointer active:scale-95 shrink-0"
+          title={locale === 'hi' ? 'प्रोजेक्ट भाषिणी वॉइस असिस्टेंट (हिन्दी / English)' : 'Project Bhashini Voice Assistant (Hindi / English)'}
+        >
+          <Mic className="h-3.5 w-3.5" />
+          <span>{locale === 'hi' ? 'भाषिणी वॉइस' : 'Bhashini Voice'}</span>
+        </button>
+
+        {/* Role-Specific Context Badge Strip (Desktop lg+ only) */}
+        <div className="hidden lg:flex items-center gap-2 overflow-x-auto py-1">
           {role === 'learner' && (
             <>
               {/* Interactive Karma Points Counter */}
@@ -332,11 +371,11 @@ export function Topbar({ initialRole }: TopbarProps) {
                 type="button"
                 onClick={() => setKarmaModalOpen(true)}
                 title="View Karma Points Ledger & Badges"
-                className="flex items-center gap-1.5 rounded-xl bg-[#F8C858]/20 border border-[#F8C858]/35 px-3 py-1.5 text-xs font-bold text-[#8C5B3E] hover:bg-[#F8C858]/30 transition-all cursor-pointer shadow-2xs active:scale-95"
+                className="flex items-center gap-1.5 rounded-xl bg-[#F9EAC1] border border-[#FFA72F]/40 px-3 py-1.5 text-xs font-bold text-[#1F273A] hover:bg-[#F9EAC1]/80 transition-all cursor-pointer shadow-2xs active:scale-95"
               >
-                <Award className="h-3.5 w-3.5 text-[#8C5B3E]" />
-                <span className="font-mono">+550</span>
-                <span className="text-[10px] text-muted-foreground">Karma Points</span>
+                <Award className="h-3.5 w-3.5 text-[#D97706]" />
+                <span className="font-mono font-bold">+550</span>
+                <span className="text-[10px] text-slate-600">Karma Points</span>
               </button>
 
               {/* Interactive CAPI & Offline Vault Engine (Task D1) */}
@@ -376,8 +415,8 @@ export function Topbar({ initialRole }: TopbarProps) {
           {role === 'trainer' && (
             <>
               {/* NSSTA Faculty Studio Badge */}
-              <div className="flex items-center gap-1.5 rounded-xl bg-[#8C5B3E]/12 border border-[#8C5B3E]/25 px-3 py-1.5 text-xs font-bold text-[#8C5B3E]">
-                <GraduationCap className="h-3.5 w-3.5 text-[#8C5B3E]" />
+              <div className="flex items-center gap-1.5 rounded-xl bg-[#1164BE]/10 border border-[#1164BE]/25 px-3 py-1.5 text-xs font-bold text-[#1164BE]">
+                <GraduationCap className="h-3.5 w-3.5 text-[#1164BE]" />
                 <span>NSSTA Faculty Studio</span>
               </div>
 
@@ -393,7 +432,7 @@ export function Topbar({ initialRole }: TopbarProps) {
               {/* Ingest Manual Quick CTA */}
               <Link
                 href="/documents"
-                className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#555934] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#434728] transition-colors shadow-2xs"
+                className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#1164BE] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#0d519d] transition-colors shadow-2xs"
               >
                 <FileUp className="h-3.5 w-3.5" />
                 <span>Ingest Manual</span>
@@ -430,9 +469,9 @@ export function Topbar({ initialRole }: TopbarProps) {
                 type="button"
                 onClick={() => setAdminBriefingOpen(true)}
                 title="Preview Official Secretary Briefing Memo (PDF)"
-                className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#2d1f17] px-3 py-1.5 text-xs font-bold text-[#FAF6F0] hover:bg-black transition-all cursor-pointer shadow-2xs active:scale-95"
+                className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#1C4CA1] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#153c82] transition-all cursor-pointer shadow-2xs active:scale-95"
               >
-                <Download className="h-3.5 w-3.5 text-[#F8C858]" />
+                <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
                 <span>Ministerial PDF</span>
               </button>
             </>
@@ -450,14 +489,14 @@ export function Topbar({ initialRole }: TopbarProps) {
             onClick={toggleSwitcher}
             aria-label="Switch persona or cadre role"
             aria-expanded={switcherOpen}
-            className="flex items-center gap-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 px-3 py-1.5 text-xs font-semibold hover:bg-[#FAF6F0]/80 transition shadow-2xs cursor-pointer"
+            className="flex items-center gap-2 rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] px-3 py-1.5 text-xs font-semibold hover:bg-white hover:border-[#1C4CA1]/40 transition shadow-2xs cursor-pointer"
             title="Switch Persona / Cadre Role"
           >
-            <span className="flex h-2 w-2 rounded-full bg-[#555934] animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-[#1C4CA1] animate-pulse" />
             <span className="text-muted-foreground hidden lg:inline">
               Active Persona:
             </span>
-            <span className="font-bold text-[#2d1f17] truncate max-w-28 sm:max-w-40">
+            <span className="font-bold text-[#1F273A] truncate max-w-20 sm:max-w-40">
               {activePersona.name}
             </span>
             <span
@@ -469,13 +508,13 @@ export function Topbar({ initialRole }: TopbarProps) {
           </button>
 
           {switcherOpen && (
-            <div className="absolute right-0 mt-2 w-84 rounded-2xl bg-white border border-[#BF9B7A]/30 p-2 shadow-card-elevated z-50 animate-in fade-in zoom-in-95 duration-100">
-              <div className="px-3 py-2 border-b border-[#BF9B7A]/20 mb-1">
+            <div className="absolute right-0 mt-2 w-84 rounded-2xl bg-white border border-[#D8DFEE] p-2 shadow-card-elevated z-50 animate-in fade-in zoom-in-95 duration-100">
+              <div className="px-3 py-2 border-b border-[#D8DFEE] mb-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#2d1f17]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#1F273A]">
                     Switch Official Cadre
                   </span>
-                  <span className="text-[10px] font-mono font-bold bg-[#BF9B7A]/20 text-chart-5 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-mono font-bold bg-[#EDF0F7] text-[#1C4CA1] px-2 py-0.5 rounded-full border border-[#D8DFEE]">
                     Role-Gated
                   </span>
                 </div>
@@ -496,8 +535,8 @@ export function Topbar({ initialRole }: TopbarProps) {
                       onClick={() => handleSelectPersona(persona)}
                       className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition cursor-pointer ${
                         isSelected
-                          ? 'bg-[#555934]/10 text-[#2d1f17] border border-[#555934]/20'
-                          : 'hover:bg-[#FAF6F0]'
+                          ? 'bg-[#1C4CA1]/10 text-[#1F273A] border border-[#1C4CA1]/25'
+                          : 'hover:bg-[#EDF0F7]'
                       }`}
                     >
                       <div
@@ -507,7 +546,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-bold text-[#2d1f17] truncate">
+                          <p className="text-xs font-bold text-[#1F273A] truncate">
                             {persona.name}
                           </p>
                           <span
@@ -520,13 +559,13 @@ export function Topbar({ initialRole }: TopbarProps) {
                           {persona.designation} • {persona.cadre}
                         </p>
                         {persona.preferred_language === 'hi' && (
-                          <span className="inline-block mt-1 text-[9px] font-bold text-[#8C5B3E] bg-[#8C5B3E]/12 px-2 py-0.5 rounded-full">
+                          <span className="inline-block mt-1 text-[9px] font-bold text-[#1C4CA1] bg-[#1C4CA1]/10 px-2 py-0.5 rounded-full">
                             🇮🇳 हिन्दी First (NSSO FOD)
                           </span>
                         )}
                       </div>
                       {isSelected && (
-                        <Check className="h-4 w-4 text-[#555934] mt-1 shrink-0" />
+                        <Check className="h-4 w-4 text-[#1C4CA1] mt-1 shrink-0" />
                       )}
                     </button>
                   );
@@ -536,15 +575,19 @@ export function Topbar({ initialRole }: TopbarProps) {
           )}
         </div>
 
-        {/* Language Switch Button */}
+        {/* Global Language Switcher - Desktop & Tablet (Hidden on mobile to keep topbar uncluttered) */}
         <button
           type="button"
-          onClick={handleLanguageToggle}
-          aria-label="Switch Language"
-          className="flex items-center gap-1.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 px-3 py-1.5 text-xs font-semibold text-[#2d1f17] hover:bg-[#FAF6F0]/80 transition-colors cursor-pointer"
+          onClick={() => handleLanguageToggle()}
+          aria-label={locale === 'en' ? 'Switch interface to Hindi (हिन्दी)' : 'Switch interface to English'}
+          title={locale === 'en' ? 'सम्पूर्ण इंटरफ़ेस हिन्दी में बदलें (Global)' : 'Switch entire interface to English (Global)'}
+          className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#EDF0F7]/80 hover:bg-white border border-[#D8DFEE] hover:border-[#1C4CA1]/40 px-3 py-1.5 text-xs font-bold text-[#1F273A] transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer group"
         >
-          <Globe className="h-3.5 w-3.5 text-[#555934]" />
-          <span>{locale === 'en' ? 'हिन्दी' : 'English'}</span>
+          <Globe className="h-3.5 w-3.5 text-[#1C4CA1] transition-transform duration-300 group-hover:rotate-45" />
+          <span className="tracking-tight">{locale === 'en' ? 'हिन्दी' : 'English'}</span>
+          <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded-md bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/15">
+            {locale === 'en' ? 'HI' : 'EN'}
+          </span>
         </button>
 
         {/* Functional Notification Center Bell Button */}
@@ -556,12 +599,12 @@ export function Topbar({ initialRole }: TopbarProps) {
               unreadCount > 0 ? `, ${unreadCount} unread` : ''
             }`}
             aria-expanded={notificationsOpen}
-            className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0]/80 hover:text-[#2d1f17] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#555934] cursor-pointer"
+            className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] text-[#475569] hover:bg-white hover:text-[#1F273A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1C4CA1] cursor-pointer"
           >
             <Bell className="h-4 w-4" />
             {unreadCount > 0 && (
               <span
-                className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#8C5B3E] px-1 text-[9px] font-bold text-white shadow-2xs"
+                className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#B91C1C] px-1 text-[9px] font-bold text-white shadow-2xs"
                 aria-hidden="true"
               >
                 {badgeLabel}
@@ -587,13 +630,13 @@ export function Topbar({ initialRole }: TopbarProps) {
             onClick={toggleMenu}
             aria-label="User account menu"
             aria-expanded={menuOpen}
-            className="flex items-center gap-2 rounded-xl bg-white border border-[#BF9B7A]/30 px-2.5 py-1 text-[#2d1f17] shadow-2xs hover:bg-[#FAF6F0] transition-all active:scale-98 cursor-pointer"
+            className="flex items-center gap-2 rounded-xl bg-white border border-[#D8DFEE] px-2.5 py-1 text-[#1F273A] shadow-2xs hover:bg-[#EDF0F7] transition-all active:scale-98 cursor-pointer"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#555934] text-white text-xs font-bold shadow-2xs">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C4CA1] text-white text-xs font-bold shadow-2xs">
               {activePersona.name.charAt(0)}
             </div>
             <div className="hidden md:flex flex-col text-left">
-              <span className="text-xs font-semibold text-[#2d1f17] leading-tight truncate max-w-28">
+              <span className="text-xs font-semibold text-[#1F273A] leading-tight truncate max-w-28">
                 {activePersona.name}
               </span>
               <span className="text-[10px] text-muted-foreground -mt-0.5 truncate max-w-28">
@@ -604,9 +647,9 @@ export function Topbar({ initialRole }: TopbarProps) {
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#BF9B7A]/30 p-2 shadow-card-elevated z-50 animate-in fade-in zoom-in-95 duration-100">
-              <div className="px-3 py-2 border-b border-[#BF9B7A]/20">
-                <p className="text-xs font-bold text-[#2d1f17]">
+            <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-white border border-[#D8DFEE] p-2 shadow-card-elevated z-50 animate-in fade-in zoom-in-95 duration-100">
+              <div className="px-3 py-2 border-b border-[#D8DFEE]">
+                <p className="text-xs font-bold text-[#1F273A]">
                   {activePersona.name}
                 </p>
                 <p className="text-[11px] text-muted-foreground truncate">
@@ -615,8 +658,47 @@ export function Topbar({ initialRole }: TopbarProps) {
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {activePersona.designation}
                 </p>
-                <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#555934]/12 px-2.5 py-0.5 text-[9px] font-semibold text-[#555934]">
+                <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[#1C4CA1]/10 px-2.5 py-0.5 text-[9px] font-semibold text-[#1C4CA1] border border-[#1C4CA1]/20">
                   {activePersona.cadre} • L1-L5 Track
+                </div>
+              </div>
+
+              {/* Interface Language Segmented Switcher (Visible on both mobile & desktop inside menu) */}
+              <div className="p-2.5 mx-1 my-2 rounded-xl bg-[#EDF0F7]/60 border border-[#D8DFEE]">
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#1F273A]">
+                    <Globe className="h-3.5 w-3.5 text-[#1C4CA1]" />
+                    <span>{locale === 'hi' ? 'भाषा (Language)' : 'Interface Language'}</span>
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#1C4CA1] bg-white px-2 py-0.5 rounded-full border border-[#D8DFEE]">
+                    {locale === 'hi' ? '🇮🇳 हिन्दी' : '🇬🇧 English'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageToggle('en')}
+                    className={`flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      locale === 'en'
+                        ? 'bg-[#1C4CA1] text-white shadow-xs font-black'
+                        : 'bg-white text-[#475569] hover:text-[#1F273A] hover:bg-slate-50 border border-[#D8DFEE]'
+                    }`}
+                  >
+                    <span>English</span>
+                    {locale === 'en' && <Check className="h-3.5 w-3.5 text-white" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageToggle('hi')}
+                    className={`flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      locale === 'hi'
+                        ? 'bg-[#1C4CA1] text-white shadow-xs font-black'
+                        : 'bg-white text-[#475569] hover:text-[#1F273A] hover:bg-slate-50 border border-[#D8DFEE]'
+                    }`}
+                  >
+                    <span>हिन्दी</span>
+                    {locale === 'hi' && <Check className="h-3.5 w-3.5 text-white" />}
+                  </button>
                 </div>
               </div>
 
@@ -624,19 +706,28 @@ export function Topbar({ initialRole }: TopbarProps) {
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#2d1f17] hover:bg-[#FAF6F0] transition-colors"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#1F273A] hover:bg-[#EDF0F7] transition-colors"
                 >
-                  <User className="h-3.5 w-3.5 text-[#555934]" />
+                  <User className="h-3.5 w-3.5 text-[#1C4CA1]" />
                   <span>{t('profile')}</span>
+                </Link>
+
+                <Link
+                  href="/credentials"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#1F273A] hover:bg-[#EDF0F7] transition-colors"
+                >
+                  <Award className="h-3.5 w-3.5 text-[#FFA72F]" />
+                  <span>Karmayogi Digital Passport</span>
                 </Link>
 
                 {role === 'learner' && (
                   <Link
                     href="/pathways"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#2d1f17] hover:bg-[#FAF6F0] transition-colors"
+                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#1F273A] hover:bg-[#EDF0F7] transition-colors"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-[#BF9B7A]" />
+                    <Sparkles className="h-3.5 w-3.5 text-[#FFA72F]" />
                     <span>My Learning Pathways</span>
                   </Link>
                 )}
@@ -645,9 +736,9 @@ export function Topbar({ initialRole }: TopbarProps) {
                   <Link
                     href="/documents"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#2d1f17] hover:bg-[#FAF6F0] transition-colors"
+                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#1F273A] hover:bg-[#EDF0F7] transition-colors"
                   >
-                    <FileUp className="h-3.5 w-3.5 text-[#8C5B3E]" />
+                    <FileUp className="h-3.5 w-3.5 text-[#1164BE]" />
                     <span>Faculty Documents Repository</span>
                   </Link>
                 )}
@@ -656,7 +747,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                   href="https://igotkarmayogi.gov.in"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-colors"
+                  className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors"
                 >
                   <span className="flex items-center gap-2">
                     <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
@@ -666,7 +757,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 </a>
               </div>
 
-              <div className="pt-1 border-t border-[#BF9B7A]/20">
+              <div className="pt-1 border-t border-[#D8DFEE]">
                 <button
                   type="button"
                   onClick={() => {
@@ -674,7 +765,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                     setMenuOpen(false);
                     router.push('/auth/login');
                   }}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#8C5B3E] hover:bg-[#8C5B3E]/10 transition-colors cursor-pointer"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#B91C1C] hover:bg-red-50 transition-colors cursor-pointer"
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   <span>{t('logout')}</span>
