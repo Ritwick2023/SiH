@@ -11,5 +11,9 @@
   "python.autoComplete.extraPaths": [
     "${workspaceFolder}/services/analytics-engine",
     "${workspaceFolder}/services/analytics-engine/venv/lib/python3.13/site-packages"
+  ],
+  "pyrefly.interpreter": "${workspaceFolder}/services/analytics-engine/venv/bin/python",
+  "pyrefly.searchPaths": [
+    "${workspaceFolder}/services/analytics-engine"
   ]
 }

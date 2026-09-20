@@ -1,0 +1,11 @@
+python-interpreter-path = "services/analytics-engine/venv/bin/python"
+search-path = [
+  "services/analytics-engine",
+  "services/analytics-engine/routers",
+  "services/analytics-engine/ml",
+  "services/analytics-engine/nlp",
+  "services/analytics-engine/tasks"
+]
+site-package-path = [
+  "services/analytics-engine/venv/lib/python3.13/site-packages"
+]
