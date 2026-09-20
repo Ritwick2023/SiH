@@ -6,7 +6,7 @@
   "nav": {
     "dashboard": "डैशबोर्ड",
     "skillGap": "कौशल अंतर",
-    "pathways": "अध्ययन पथ",
+    "pathways": "पाठ्यक्रम एवं शिक्षण",
     "profile": "प्रोफ़ाइल",
     "documents": "दस्तावेज़ एवं नियमावली",
     "assessment": "मूल्यांकन",
@@ -32,7 +32,8 @@
     "scrutinyCorrelation": "जांच सहसंबंध",
     "regionalOfficeHealth": "क्षेत्रीय कार्यालय स्वास्थ्य",
     "nationalCompetencyMatrix": "राष्ट्रीय योग्यता मैट्रिक्स",
-    "statutoryAssessmentAudit": "वैधानिक मूल्यांकन ऑडिट"
+    "statutoryAssessmentAudit": "वैधानिक मूल्यांकन ऑडिट",
+    "credentials": "कर्मयोगी पासपोर्ट"
   },
   "notifications": {
     "title": "सूचनाएं",
@@ -390,7 +391,7 @@
     "profile": "प्रोफ़ाइल",
     "onboarding": "ऑनबोर्डिंग",
     "assessment": "मूल्यांकन",
-    "assignments": "असाइनमेंट",
+    "assignments": "मूल्यांकन",
     "instructions": "निर्देश",
     "test": "परीक्षा",
     "documents": "दस्तावेज़",

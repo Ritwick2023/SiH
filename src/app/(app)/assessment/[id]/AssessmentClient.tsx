@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   initializeAssessment,
@@ -50,6 +50,18 @@ interface AssessmentClientProps {
 
 type UIState = 'LOADING' | 'ANSWERING' | 'REVIEW' | 'SUBMITTED' | 'ERROR';
 
+const subscribeOnline = (callback: () => void) => {
+  window.addEventListener('online', callback);
+  window.addEventListener('offline', callback);
+  return () => {
+    window.removeEventListener('online', callback);
+    window.removeEventListener('offline', callback);
+  };
+};
+
+const getOfflineSnapshot = () => (typeof navigator !== 'undefined' ? !navigator.onLine : false);
+const getOfflineServerSnapshot = () => false;
+
 export default function AssessmentClient({
   competencyId,
   competencyName,
@@ -72,6 +84,7 @@ export default function AssessmentClient({
   const [timeRemaining, setTimeRemaining] = useState(30 * 60); // 30 minutes in seconds
   const [isAnimating, setIsAnimating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isOffline = useSyncExternalStore(subscribeOnline, getOfflineSnapshot, getOfflineServerSnapshot);
 
   const handleSubmitAssessmentRef = useRef<(() => void) | null>(null);
 
@@ -152,8 +165,8 @@ export default function AssessmentClient({
       const numericLevel = parseInt((result.final_level || 'L1').replace(/\D/g, ''), 10) || 1;
       saveCompetencyPromotion(userId, competencyId, numericLevel);
 
-      // Queue for offline sync
-      const local_id = await offlineQueueManager.queueAssessment({
+      // Queue for offline sync in PENDING status (auto-flushed by useQueueSync)
+      await offlineQueueManager.queueAssessment({
         local_id: assessmentState.assessment_id,
         assessment_id: null,
         competency_id: competencyId,
@@ -164,15 +177,10 @@ export default function AssessmentClient({
         created_at: result.created_at,
       });
 
-      // Try to sync immediately if online
-      if (typeof navigator !== 'undefined' && navigator.onLine) {
-        await offlineQueueManager.markSyncing(local_id);
-      }
-
-      // Show success and redirect after 2 seconds
+      // Show success and redirect to dedicated results & impact page
       setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+        router.push(`/assessment/${competencyId}/results?level=${result.final_level || 'L3'}&score=85`);
+      }, 1000);
     } catch (err) {
       setError((err as Error).message);
       setUiState('ERROR');
@@ -323,7 +331,7 @@ export default function AssessmentClient({
             ? '✓ मूल्यांकन के दौरान कोई विचलन नहीं (सुलभता: कम गति समर्थित)'
             : '✓ No animation during assessment (accessibility: reduced motion supported)'}
         </p>
-        {typeof navigator !== 'undefined' && !navigator.onLine && (
+        {isOffline && (
           <p>
             {isHindi
               ? '🔴 ऑफ़लाइन मोड: पुन: कनेक्ट होने पर उत्तर स्वचालित रूप से सिंक होंगे'

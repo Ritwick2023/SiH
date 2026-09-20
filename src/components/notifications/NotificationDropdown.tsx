@@ -37,7 +37,7 @@ export function NotificationDropdown({
             {t('title')}
           </h2>
           {unreadCount > 0 && (
-            <span className="inline-flex items-center rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-[#728056]">
+            <span className="inline-flex items-center rounded-full bg-[#1C4CA1]/10 border border-[#1C4CA1]/20 px-2 py-0.5 text-[11px] font-bold text-[#1C4CA1]">
               {unreadCount}
             </span>
           )}
@@ -59,7 +59,7 @@ export function NotificationDropdown({
       <div className="max-h-[380px] overflow-y-auto divide-y divide-accent">
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8b9a6e]/15 text-[#8b9a6e] mb-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] mb-3">
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <p className="text-sm font-semibold text-stone-900">
@@ -81,7 +81,7 @@ export function NotificationDropdown({
       </div>
 
       {/* Footer */}
-      <div className="border-t border-accent bg-[#fbf9f6] p-2">
+      <div className="border-t border-accent bg-[#EDF0F7]/40 p-2">
         <Link
           href="/notifications"
           onClick={onClose}

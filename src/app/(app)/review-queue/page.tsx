@@ -272,7 +272,7 @@ export default function ReviewQueuePage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#555934]/15 text-[#555934] flex items-center gap-1">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 flex items-center gap-1">
               <ShieldCheck className="h-3.5 w-3.5" />
               {isHindi ? 'संकाय गुणवत्ता आश्वासन' : 'Faculty Quality Assurance'}
             </span>
@@ -308,9 +308,9 @@ export default function ReviewQueuePage() {
             <span className="text-[11px] font-semibold text-stone-500 block uppercase tracking-wider">
               {isHindi ? 'प्रमाणित स्वीकृत' : 'Certified Approved'}
             </span>
-            <span className="text-2xl font-bold text-[#555934] font-mono mt-0.5 block">{approvedCount}</span>
+            <span className="text-2xl font-bold text-[#1C4CA1] font-mono mt-0.5 block">{approvedCount}</span>
           </div>
-          <CheckCircle2 className="h-6 w-6 text-[#555934]/70" />
+          <CheckCircle2 className="h-6 w-6 text-[#1C4CA1]/80" />
         </div>
         <div className="p-4 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
           <div>
@@ -369,7 +369,7 @@ export default function ReviewQueuePage() {
               }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition flex items-center gap-1.5 ${
                 filter === tab.key
-                  ? 'bg-[#555934] text-white shadow-2xs'
+                  ? 'bg-[#1C4CA1] text-white shadow-xs'
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200 hover:text-stone-900'
               }`}
             >
@@ -393,7 +393,7 @@ export default function ReviewQueuePage() {
             placeholder={isHindi ? 'विषय, मैनुअल या प्रश्न द्वारा खोजें...' : 'Search by topic, manual, or text...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-200 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#555934]"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-200 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
           />
         </div>
       </div>
@@ -431,7 +431,7 @@ export default function ReviewQueuePage() {
                     }}
                     className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                       isSelected
-                        ? 'border-[#555934] bg-stone-50/90 ring-1 ring-[#555934] shadow-xs'
+                        ? 'border-[#1C4CA1] bg-[#EDF0F7]/70 ring-1 ring-[#1C4CA1] shadow-xs'
                         : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50 shadow-2xs'
                     }`}
                   >
@@ -450,7 +450,7 @@ export default function ReviewQueuePage() {
                         </span>
                       )}
                       {item.status === 'PUBLISHED' && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#555934] text-white flex items-center gap-1">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#1C4CA1] text-white flex items-center gap-1">
                           <FileCheck className="h-2.5 w-2.5" /> {isHindi ? 'सक्रिय' : 'Live'}
                         </span>
                       )}
@@ -489,7 +489,7 @@ export default function ReviewQueuePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#555934]/15 text-[#555934]">
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                         {activeItem.competency}
                       </span>
                       <span className="text-[11px] px-2 py-0.5 rounded-md bg-stone-200 text-stone-700 font-mono">
@@ -593,7 +593,7 @@ export default function ReviewQueuePage() {
                             : null
                         );
                       }}
-                      className="w-full p-3 text-sm rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#555934] font-medium"
+                      className="w-full p-3 text-sm rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#1C4CA1] font-medium"
                     />
                   ) : (
                     <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
@@ -654,7 +654,7 @@ export default function ReviewQueuePage() {
                                   }
                                 });
                               }}
-                              className="flex-1 p-1 text-sm border-b border-stone-300 focus:outline-none focus:border-[#555934] bg-transparent"
+                              className="flex-1 p-1 text-sm border-b border-stone-300 focus:outline-none focus:border-[#1C4CA1] bg-transparent"
                             />
                           ) : (
                             <span className="leading-snug">{opt}</span>
@@ -724,7 +724,7 @@ export default function ReviewQueuePage() {
                       </span>
                     )}
                     {activeItem.status === 'PUBLISHED' && (
-                      <span className="font-semibold text-[#555934] bg-[#555934]/15 px-2 py-0.5 rounded">
+                      <span className="font-semibold text-[#1C4CA1] bg-[#1C4CA1]/10 px-2 py-0.5 rounded">
                         {isHindi ? 'मूल्यांकन पूल में सक्रिय' : 'Active in Assessment Pool'}
                       </span>
                     )}
@@ -746,7 +746,7 @@ export default function ReviewQueuePage() {
                         </button>
                         <button
                           onClick={() => handleStatusChange(activeItem.id, 'APPROVED')}
-                          className="px-5 py-2 rounded-xl bg-[#555934] hover:bg-[#3e4225] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs"
+                          className="px-5 py-2 rounded-xl bg-[#1C4CA1] hover:bg-[#153a7b] text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs"
                         >
                           <CheckCircle2 className="h-4 w-4" /> {isHindi ? 'प्रमाणित एवं स्वीकृत करें' : 'Certify & Approve'}
                         </button>

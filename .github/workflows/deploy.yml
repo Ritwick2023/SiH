@@ -1,0 +1,22 @@
+name: NIC MeghRaj Deploy Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-meghraj:
+    name: Build Containers & Deploy Helm Chart
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: "v3.14.0"
+      - name: Helm Lint
+        run: |
+          helm lint k8s/meghraj-helm-chart
+      - name: Helm Dry-Run Template Validation
+        run: |
+          helm template statvidya k8s/meghraj-helm-chart

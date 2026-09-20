@@ -80,16 +80,16 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
       aria-labelledby="briefing-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden">
         {/* Header Ribbon */}
-        <div className="bg-[#2d1f17] text-[#FAF6F0] px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#1F273A] text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 p-1 border border-[#F8C858]/30">
-              <KarmayogiEmblemIcon className="h-8 w-8 text-[#F8C858]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 p-1 border border-[#FFA72F]/30">
+              <KarmayogiEmblemIcon className="h-8 w-8 text-[#FFA72F]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-[#F8C858]/20 text-[#F8C858] border border-[#F8C858]/30 uppercase">
+                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-[#FFA72F]/20 text-[#FFA72F] border border-[#FFA72F]/30 uppercase">
                   CONFIDENTIAL // CABINET LEVEL
                 </span>
                 <span className="text-[10px] text-white/60 font-mono">Ref: MoSPI/HQ/ADG/2026/8821</span>
@@ -110,16 +110,16 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
         </div>
 
         {/* Scrollable Document Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-[#2d1f17] text-xs">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-[#1F273A] text-xs">
           {/* Official Letterhead */}
-          <div className="text-center pb-4 border-b border-[#BF9B7A]/30 space-y-1">
+          <div className="text-center pb-4 border-b border-[#D8DFEE] space-y-1">
             <div className="flex justify-center mb-1">
-              <KarmayogiEmblemIcon className="h-10 w-10 text-[#555934]" />
+              <KarmayogiEmblemIcon className="h-10 w-10 text-[#1C4CA1]" />
             </div>
-            <p className="font-serif font-black text-sm text-[#2d1f17] tracking-wider uppercase">
+            <p className="font-serif font-black text-sm text-[#1F273A] tracking-wider uppercase">
               Government of India • Ministry of Statistics &amp; Programme Implementation
             </p>
-            <p className="text-[11px] font-semibold text-[#8C5B3E]">
+            <p className="text-[11px] font-semibold text-[#FFA72F]">
               National Statistical Commission (NSC) • Workforce Quality Triage Directorate
             </p>
             <p className="text-[10px] text-muted-foreground font-mono">
@@ -128,18 +128,18 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
           </div>
 
           {/* Memorandum Meta Table */}
-          <div className="p-3.5 rounded-2xl bg-white border border-[#BF9B7A]/30 grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+          <div className="p-3.5 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
             <div>
               <span className="text-muted-foreground font-semibold block text-[10px]">Addressed To:</span>
-              <span className="font-bold text-[#2d1f17]">Secretary (MoSPI)</span>
+              <span className="font-bold text-[#1F273A]">Secretary (MoSPI)</span>
             </div>
             <div>
               <span className="text-muted-foreground font-semibold block text-[10px]">Originating Officer:</span>
-              <span className="font-bold text-[#2d1f17]">Rajesh Kumar, ADG</span>
+              <span className="font-bold text-[#1F273A]">Rajesh Kumar, ADG</span>
             </div>
             <div>
               <span className="text-muted-foreground font-semibold block text-[10px]">Date of Audit:</span>
-              <span className="font-bold font-mono text-[#2d1f17]">07 Sep 2026</span>
+              <span className="font-bold font-mono text-[#1F273A]">07 Sep 2026</span>
             </div>
             <div>
               <span className="text-muted-foreground font-semibold block text-[10px]">Security Clearance:</span>
@@ -149,8 +149,8 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
 
           {/* Executive Summary */}
           <div className="space-y-2">
-            <h3 className="font-bold text-sm text-[#555934] uppercase tracking-wide flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-[#555934]" />
+            <h3 className="font-bold text-sm text-[#1C4CA1] uppercase tracking-wide flex items-center gap-1.5">
+              <ShieldCheck className="h-4 w-4 text-[#1C4CA1]" />
               1. Executive Summary &amp; Empirical Findings
             </h3>
             <p className="leading-relaxed text-muted-foreground text-[11.5px]">
@@ -158,14 +158,14 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
               subsequent NSS Schedule scrutiny returns validates the core hypothesis of the National Capacity Building Commission:
               <strong> higher verified competency levels systematically drive down field scrutiny error rates</strong>.
             </p>
-            <div className="p-3 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 grid grid-cols-3 gap-2 font-mono text-center">
+            <div className="p-3 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] grid grid-cols-3 gap-2 font-mono text-center">
               <div>
                 <span className="text-[9px] text-muted-foreground block">Regression Pearson r</span>
-                <span className="text-sm font-black text-[#8C5B3E]">-0.84</span>
+                <span className="text-sm font-black text-[#1C4CA1]">-0.84</span>
               </div>
               <div>
                 <span className="text-[9px] text-muted-foreground block">Coefficient of Det. (R²)</span>
-                <span className="text-sm font-black text-[#2d1f17]">0.706</span>
+                <span className="text-sm font-black text-[#1F273A]">0.706</span>
               </div>
               <div>
                 <span className="text-[9px] text-muted-foreground block">Statistical Significance</span>
@@ -176,13 +176,13 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
 
           {/* Regional Office Status */}
           <div className="space-y-2">
-            <h3 className="font-bold text-sm text-[#555934] uppercase tracking-wide flex items-center gap-1.5">
-              <FileCheck className="h-4 w-4 text-[#555934]" />
+            <h3 className="font-bold text-sm text-[#1C4CA1] uppercase tracking-wide flex items-center gap-1.5">
+              <FileCheck className="h-4 w-4 text-[#1C4CA1]" />
               2. Zonal Office Triage Matrix
             </h3>
-            <div className="overflow-x-auto rounded-xl border border-[#BF9B7A]/30">
+            <div className="overflow-x-auto rounded-xl border border-[#D8DFEE]">
               <table className="w-full text-left text-[11px] bg-white">
-                <thead className="bg-[#FAF6F0] border-b border-[#BF9B7A]/30 font-bold text-muted-foreground">
+                <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] font-bold text-muted-foreground">
                   <tr>
                     <th className="p-2.5">Regional Office</th>
                     <th className="p-2.5">Headcount</th>
@@ -191,7 +191,7 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
                     <th className="p-2.5 text-right">Cadre Health</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#BF9B7A]/15 font-mono">
+                <tbody className="divide-y divide-[#D8DFEE] font-mono">
                   <tr>
                     <td className="p-2.5 font-sans font-bold">FOD Bihar RO (Patna)</td>
                     <td className="p-2.5">520</td>
@@ -226,11 +226,11 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
           </div>
 
           {/* Statutory Signoff */}
-          <div className="p-3.5 rounded-2xl bg-white border border-[#BF9B7A]/30 flex items-center justify-between text-[11px]">
+          <div className="p-3.5 rounded-xl bg-[#EDF0F7]/30 border border-[#D8DFEE] flex items-center justify-between text-[11px]">
             <div>
-              <p className="font-bold text-[#2d1f17]">Rajesh Kumar, ISS</p>
+              <p className="font-bold text-[#1F273A]">Rajesh Kumar, ISS</p>
               <p className="text-muted-foreground">Additional Director General, MoSPI</p>
-              <p className="text-[10px] font-mono text-[#555934]">Digital Certificate Hash: SHA256:7f4a...91b8</p>
+              <p className="text-[10px] font-mono text-[#1C4CA1]">Digital Certificate Hash: SHA256:7f4a...91b8</p>
             </div>
             <div className="text-right">
               <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -242,11 +242,11 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
         </div>
 
         {/* Action Footer */}
-        <div className="bg-[#FAF6F0] border-t border-[#BF9B7A]/30 px-6 py-4 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="bg-[#EDF0F7]/60 border-t border-[#D8DFEE] px-6 py-4 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-[#BF9B7A]/40 text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
             Close Document
           </button>
@@ -255,7 +255,7 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
             <button
               type="button"
               onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#FAF6F0] transition-colors cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors cursor-pointer shadow-2xs"
             >
               <Printer className="h-3.5 w-3.5" />
               <span>Print Memo</span>
@@ -264,9 +264,9 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
             <button
               type="button"
               onClick={handleDownloadPdf}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-all cursor-pointer shadow-xs active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-all cursor-pointer shadow-xs active:scale-95"
             >
-              <Download className="h-3.5 w-3.5 text-[#F8C858]" />
+              <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
               <span>{downloadSuccess ? 'Downloaded!' : 'Download Official PDF'}</span>
             </button>
           </div>

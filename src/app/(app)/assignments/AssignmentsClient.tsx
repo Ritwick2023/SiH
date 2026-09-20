@@ -25,10 +25,10 @@ const iconByIndex = [
 ];
 
 const accentByIndex = [
-  { badge: 'bg-[#555934]/12 text-[#555934]', btn: 'bg-[#555934] hover:bg-[#3e4225]' },
-  { badge: 'bg-[#BF9B7A]/25 text-[#593E2E]', btn: 'bg-[#8C5B3E] hover:bg-[#734830]' },
-  { badge: 'bg-[#8C5B3E]/15 text-[#8C5B3E]', btn: 'bg-[#8C5B3E] hover:bg-[#734830]' },
-  { badge: 'bg-[#593E2E]/15 text-[#593E2E]', btn: 'bg-[#593E2E] hover:bg-[#432d20]' },
+  { badge: 'bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20', btn: 'bg-[#1C4CA1] hover:bg-[#153a7b]' },
+  { badge: 'bg-[#1164BE]/10 text-[#1164BE] border border-[#1164BE]/20', btn: 'bg-[#1164BE] hover:bg-[#0e529d]' },
+  { badge: 'bg-[#FFA72F]/15 text-[#b86f0a] border border-[#FFA72F]/30', btn: 'bg-[#1C4CA1] hover:bg-[#153a7b]' },
+  { badge: 'bg-[#1F273A]/10 text-[#1F273A] border border-[#1F273A]/20', btn: 'bg-[#1F273A] hover:bg-[#2C3B59]' },
 ];
 
 export default function AssignmentsClient() {
@@ -41,10 +41,15 @@ export default function AssignmentsClient() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-foreground">
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
+            🏛️ MoSPI Statutory Assessments
+          </span>
+        </div>
+        <h1 className="text-3xl font-bold text-[#1F273A]">
           {t('nav.assessment')}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-[#1F273A]/70">
           {isHindi
             ? 'नीचे दिए गए परीक्षणों में से एक चुनें। प्रत्येक परीक्षण का अपना टाइमर होता है जो केवल "परीक्षा शुरू करें" पर क्लिक करने के बाद प्रारंभ होता है।'
             : 'Select an assessment below. Each test has its own timer that begins only after you click "Start Test".'}
@@ -54,14 +59,14 @@ export default function AssignmentsClient() {
       {/* Stats strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: isHindi ? 'उपलब्ध परीक्षण' : 'Available Tests', value: metas.length.toString(), color: 'text-[#555934]' },
-          { label: isHindi ? 'प्रत्येक में प्रश्न' : 'Questions Each', value: '10', color: 'text-[#BF9B7A]' },
-          { label: isHindi ? 'समय सीमा' : 'Time Limit', value: isHindi ? '5-10 मिनट' : '5-10 min', color: 'text-[#8C5B3E]' },
-          { label: isHindi ? 'प्रश्न प्रकार' : 'Question Type', value: isHindi ? 'बहुविकल्पीय' : 'MCQ', color: 'text-[#593E2E]' },
+          { label: isHindi ? 'उपलब्ध परीक्षण' : 'Available Tests', value: metas.length.toString(), color: 'text-[#1C4CA1]' },
+          { label: isHindi ? 'प्रत्येक में प्रश्न' : 'Questions Each', value: '10', color: 'text-[#1164BE]' },
+          { label: isHindi ? 'समय सीमा' : 'Time Limit', value: isHindi ? '5-10 मिनट' : '5-10 min', color: 'text-[#FFA72F]' },
+          { label: isHindi ? 'प्रश्न प्रकार' : 'Question Type', value: isHindi ? 'बहुविकल्पीय' : 'MCQ', color: 'text-[#1F273A]' },
         ].map((stat) => (
           <div
             key={stat.label}
-            className="rounded-2xl bg-white p-4 shadow-card hover:shadow-card-hover transition-all text-center"
+            className="rounded-2xl bg-white border border-[#D8DFEE] p-4 shadow-card hover:shadow-card-hover transition-all text-center"
           >
             <p className={`text-2xl font-bold font-mono ${stat.color}`}>{stat.value}</p>
             <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
@@ -70,21 +75,21 @@ export default function AssignmentsClient() {
       </div>
 
       {/* Self-paced Quiz & Practice Station Banner */}
-      <div className="rounded-2xl border border-[#BF9B7A]/30 bg-gradient-to-r from-[#FAF6F0] via-white to-[#FAF6F0] p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-2xl border border-[#D8DFEE] bg-gradient-to-r from-[#EDF0F7] via-white to-[#EDF0F7] p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3.5">
-          <div className="h-10 w-10 rounded-xl bg-[#555934]/12 flex items-center justify-center text-[#555934] shrink-0">
+          <div className="h-10 w-10 rounded-xl bg-[#1C4CA1]/10 flex items-center justify-center text-[#1C4CA1] shrink-0">
             <Brain className="h-5 w-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm sm:text-base font-bold text-[#2d1f17]">
+              <h3 className="text-sm sm:text-base font-bold text-[#1F273A]">
                 {isHindi ? 'स्व-गति अभ्यास एवं एमसीक्यू स्टेशन' : 'Self-Paced Practice & MCQ Station'}
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#555934]/15 text-[#555934]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#1C4CA1]/10 text-[#1C4CA1]">
                 {isHindi ? 'MoSPI आधारित' : 'MoSPI Grounded'}
               </span>
             </div>
-            <p className="text-xs text-[#705849] mt-0.5">
+            <p className="text-xs text-[#1F273A]/70 mt-0.5">
               {isHindi
                 ? 'मूल्यांकन से पहले आधिकारिक MoSPI मैनुअल (CAPI, अनुसूची 0.0, PLFS) से कस्टम अभ्यास प्रश्न उत्पन्न करें।'
                 : 'Generate targeted practice questions and test knowledge from MoSPI field manuals before statutory assessments.'}
@@ -93,7 +98,7 @@ export default function AssignmentsClient() {
         </div>
         <Link
           href="/mcq-generator"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#3e4225] transition-all shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#153a7b] transition-all shadow-xs shrink-0 cursor-pointer"
         >
           <span>{isHindi ? 'अभ्यास स्टेशन खोलें' : 'Launch Practice Station'}</span>
           <ChevronRight className="w-3.5 h-3.5" />
@@ -102,7 +107,7 @@ export default function AssignmentsClient() {
 
       {/* Assessment Cards */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-foreground">
+        <h2 className="text-xl font-semibold text-[#1F273A]">
           {isHindi ? 'उपलब्ध मूल्यांकन' : 'Available Assessments'}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,7 +120,7 @@ export default function AssignmentsClient() {
             return (
               <div
                 key={meta.id}
-                className="rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all group"
+                className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-card hover:shadow-card-hover transition-all group"
               >
                 {/* Card Header */}
                 <div className="flex items-start justify-between gap-4 mb-4">
@@ -124,7 +129,7 @@ export default function AssignmentsClient() {
                       <span className="text-3xl" role="img" aria-label={title}>
                         {iconByIndex[idx % iconByIndex.length]}
                       </span>
-                      <h3 className="text-xl font-bold text-foreground group-hover:text-[#555934] transition-colors">
+                      <h3 className="text-xl font-bold text-[#1F273A] group-hover:text-[#1C4CA1] transition-colors">
                         {title}
                       </h3>
                     </div>
@@ -136,20 +141,20 @@ export default function AssignmentsClient() {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+                <p className="text-sm text-[#1F273A]/70 leading-relaxed mb-5">
                   {description}
                 </p>
 
                 {/* Meta Pills */}
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+                <div className="flex items-center gap-4 text-sm text-[#1F273A]/70 mb-6">
                   <span className="flex items-center gap-1.5">
-                    <BookOpen className="w-4 h-4" />
-                    <span className="font-medium text-foreground">{meta.totalQuestions}</span> {isHindi ? 'प्रश्न' : 'Questions'}
+                    <BookOpen className="w-4 h-4 text-[#1C4CA1]" />
+                    <span className="font-medium text-[#1F273A]">{meta.totalQuestions}</span> {isHindi ? 'प्रश्न' : 'Questions'}
                   </span>
-                  <span className="text-stone-300">•</span>
+                  <span className="text-slate-300">•</span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    <span className="font-medium text-foreground">{durationMins}</span> {isHindi ? 'मिनट' : 'Minutes'}
+                    <Clock className="w-4 h-4 text-[#1C4CA1]" />
+                    <span className="font-medium text-[#1F273A]">{durationMins}</span> {isHindi ? 'मिनट' : 'Minutes'}
                   </span>
                 </div>
 
@@ -170,9 +175,9 @@ export default function AssignmentsClient() {
       </div>
 
       {/* Footer note */}
-      <div className="rounded-2xl bg-[#BF9B7A]/15 px-5 py-4 text-sm text-[#593E2E]">
+      <div className="rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] px-5 py-4 text-sm text-[#1F273A]/80">
         <p>
-          <strong className="text-foreground">{isHindi ? 'नोट:' : 'Note:'}</strong>{' '}
+          <strong className="text-[#1F273A]">{isHindi ? 'नोट:' : 'Note:'}</strong>{' '}
           {isHindi
             ? 'प्रत्येक मूल्यांकन के लिए टाइमर निर्देश पढ़ने और "परीक्षा शुरू करें" पर क्लिक करने के बाद ही शुरू होता है। आप अंतिम सबमिशन से पहले अपने उत्तरों की समीक्षा कर सकते हैं।'
             : 'The timer for each assessment begins only after you read the instructions and click Start Test. You can review your answers before final submission.'}

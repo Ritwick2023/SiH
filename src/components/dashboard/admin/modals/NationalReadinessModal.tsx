@@ -19,16 +19,16 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
       aria-labelledby="readiness-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col rounded-3xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden">
         {/* Header Ribbon */}
-        <div className="bg-[#555934] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#1F273A] text-white px-6 py-4 flex items-center justify-between shrink-0 border-b border-[#2C3B59]">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20">
-              <KarmayogiEmblemIcon className="h-8 w-8 text-[#F8C858]" />
+              <KarmayogiEmblemIcon className="h-8 w-8 text-[#FFA72F]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-[#FAF6F0] border border-white/30 uppercase">
+                <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-[#1C4CA1]/40 text-blue-200 border border-blue-400/30 uppercase">
                   FRAC Strategic KPI • 2026 Mandate
                 </span>
               </div>
@@ -48,15 +48,15 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs text-[#2d1f17]">
+        <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs text-[#1F273A]">
           {/* Top Macro Banner */}
-          <div className="p-4 rounded-2xl bg-white border border-[#BF9B7A]/30 flex items-center justify-between gap-4 shadow-2xs">
+          <div className="p-4 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] flex items-center justify-between gap-4 shadow-2xs">
             <div>
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
                 Aggregated National Readiness
               </span>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-3xl font-black font-mono text-[#555934]">72.4%</span>
+                <span className="text-3xl font-black font-mono text-[#1C4CA1]">72.4%</span>
                 <span className="text-xs font-bold text-emerald-700 flex items-center gap-0.5">
                   <TrendingUp className="h-3.5 w-3.5" /> +4.2% QoQ
                 </span>
@@ -72,41 +72,41 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
 
           {/* Cadre by Cadre Breakdown */}
           <div className="space-y-3">
-            <h3 className="font-bold text-[#555934] uppercase tracking-wider text-[11px]">
+            <h3 className="font-bold text-[#1C4CA1] uppercase tracking-wider text-[11px]">
               Cadre-Wise FRAC Competency Baseline
             </h3>
 
             {/* ISS */}
-            <div className="p-3.5 rounded-2xl bg-white border border-[#BF9B7A]/30 space-y-1.5">
+            <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#2d1f17]">Indian Statistical Service (ISS Cadre)</span>
+                <span className="font-bold text-[#1F273A]">Indian Statistical Service (ISS Cadre)</span>
                 <span className="font-mono font-bold text-emerald-700">84.2% (Target Met)</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+              <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                 <div className="h-full rounded-full bg-emerald-600" style={{ width: '84.2%' }} />
               </div>
               <p className="text-[10px] text-muted-foreground">820 Senior Officers • Level 4-5 Macro Scrutiny Qualified</p>
             </div>
 
             {/* SSS */}
-            <div className="p-3.5 rounded-2xl bg-white border border-[#BF9B7A]/30 space-y-1.5">
+            <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#2d1f17]">Subordinate Statistical Service (SSS Cadre)</span>
-                <span className="font-mono font-bold text-[#8C5B3E]">71.8% (Target 75%)</span>
+                <span className="font-bold text-[#1F273A]">Subordinate Statistical Service (SSS Cadre)</span>
+                <span className="font-mono font-bold text-amber-700">71.8% (Target 75%)</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
-                <div className="h-full rounded-full bg-[#8C5B3E]" style={{ width: '71.8%' }} />
+              <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
+                <div className="h-full rounded-full bg-[#FFA72F]" style={{ width: '71.8%' }} />
               </div>
               <p className="text-[10px] text-muted-foreground">2,150 JSOs and SSOs • Level 3 Demarcation &amp; Scrutiny</p>
             </div>
 
             {/* FOD */}
-            <div className="p-3.5 rounded-2xl bg-white border border-[#BF9B7A]/30 space-y-1.5">
+            <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#2d1f17]">Field Operations Division (FOD Rural Cadre)</span>
+                <span className="font-bold text-[#1F273A]">Field Operations Division (FOD Rural Cadre)</span>
                 <span className="font-mono font-bold text-red-700">58.4% (Needs Focus)</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+              <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                 <div className="h-full rounded-full bg-red-600" style={{ width: '58.4%' }} />
               </div>
               <p className="text-[10px] text-muted-foreground">1,880 Field Investigators • Primary bottleneck in Schedule 0.0 CEB listing</p>
@@ -114,10 +114,10 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
           </div>
 
           {/* Strategic Insight Box */}
-          <div className="p-3.5 rounded-2xl bg-[#FAF6F0] border border-[#BF9B7A]/30 flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-[#8C5B3E] shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-[#FFA72F] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-bold text-[#2d1f17] text-[11px]">Executive Recommendation</h4>
+              <h4 className="font-bold text-[#1F273A] text-[11px]">Executive Recommendation</h4>
               <p className="text-[10.5px] text-muted-foreground leading-relaxed mt-0.5">
                 Reallocating 15 faculty trainers from Headquarters to Patna and Prayagraj ROs will close the 
                 16.6% competency deficit in the FOD Rural Cadre within 4 weeks.
@@ -127,12 +127,12 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
         </div>
 
         {/* Footer */}
-        <div className="bg-[#FAF6F0] border-t border-[#BF9B7A]/30 px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
+        <div className="bg-[#EDF0F7]/40 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
           <span className="text-[11px]">Registry Timestamp: 07 Sep 2026</span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors cursor-pointer shadow-xs"
+            className="px-4 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer shadow-xs"
           >
             Close
           </button>

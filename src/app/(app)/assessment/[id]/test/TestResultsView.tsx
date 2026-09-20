@@ -61,7 +61,7 @@ export default function TestResultsView({
       <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-border">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#8b9a6e]/15 text-[#5f6c48] mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 mb-2">
               <Award className="w-3.5 h-3.5" />
               {isHindi ? 'आधिकारिक सांख्यिकी मूल्यांकन परिणाम' : 'Official MoSPI Assessment Result'}
             </div>
@@ -126,7 +126,7 @@ export default function TestResultsView({
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {isHindi ? 'कर्म अंक' : 'Karma Points'}
             </p>
-            <p className="text-3xl font-extrabold text-[#c9963a] mt-1 font-mono">
+            <p className="text-3xl font-extrabold text-[#FFA72F] mt-1 font-mono">
               +{karmaPointsEarned}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -288,7 +288,7 @@ export default function TestResultsView({
 
                 {/* Grounding & Citation Note */}
                 <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg text-xs text-stone-700 flex items-start gap-2">
-                  <BookOpen className="w-4 h-4 text-[#8b9a6e] shrink-0 mt-0.5" />
+                  <BookOpen className="w-4 h-4 text-[#1C4CA1] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-stone-900">
                       {isHindi ? 'MoSPI नियमावली संदर्भ: ' : 'MoSPI Manual Reference: '}
@@ -342,7 +342,7 @@ export default function TestResultsView({
 
           <Link
             href="/pathways"
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#1b365d] hover:bg-[#132742] text-white text-sm font-bold transition-colors shadow-xs"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#1C4CA1] hover:bg-[#153a7b] text-white text-sm font-bold transition-colors shadow-xs"
           >
             {isHindi ? 'अनुशंसित मार्ग' : 'Recommended Pathways'}
             <ArrowRight className="w-4 h-4" />

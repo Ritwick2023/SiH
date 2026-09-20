@@ -56,7 +56,12 @@ export class DocumentService {
     // 1. Upload to Firebase Storage
     try {
       const storageRef = ref(storage, storagePath);
-      await uploadBytes(storageRef, fileBuffer, { contentType: 'application/pdf' });
+      await Promise.race([
+        uploadBytes(storageRef, fileBuffer, { contentType: 'application/pdf' }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Storage timeout')), 600)
+        ),
+      ]);
       storageUrl = await getDownloadURL(storageRef);
     } catch {
       // In mock/local dev mode without active Firebase storage credentials
@@ -98,19 +103,24 @@ export class DocumentService {
 
     // 2. Map metadata to Firestore DB
     try {
-      const docRef = await addDoc(collection(db, 'documents'), {
-        title: docRecord.title,
-        filename,
-        storagePath,
-        storageUrl,
-        sizeBytes: fileBuffer.length,
-        status: 'INDEXED',
-        chunkCount: chunks.length || 1,
-        targetCompetencies,
-        chunks: chunks.slice(0, 15),
-        userId: userId || 'public',
-        createdAt: docRecord.uploadedAt,
-      });
+      const docRef = await Promise.race([
+        addDoc(collection(db, 'documents'), {
+          title: docRecord.title,
+          filename,
+          storagePath,
+          storageUrl,
+          sizeBytes: fileBuffer.length,
+          status: 'INDEXED',
+          chunkCount: chunks.length || 1,
+          targetCompetencies,
+          chunks: chunks.slice(0, 15),
+          userId: userId || 'public',
+          createdAt: docRecord.uploadedAt,
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Firestore timeout')), 600)
+        ),
+      ]);
       docRecord.id = docRef.id;
     } catch {
       // Local fallback if Firestore offline
@@ -126,7 +136,12 @@ export class DocumentService {
     try {
       const docsRef = collection(db, 'documents');
       const q = query(docsRef, orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
+      const snapshot = await Promise.race([
+        getDocs(q),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Firestore timeout')), 1000)
+        ),
+      ]);
 
       if (!snapshot.empty) {
         const firestoreDocs = snapshot.docs

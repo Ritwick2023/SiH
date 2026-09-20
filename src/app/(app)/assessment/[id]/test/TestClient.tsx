@@ -267,7 +267,7 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
           <button
             id="review-assessment"
             onClick={() => dispatch({ type: 'OPEN_CONFIRM_MODAL' })}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#555934] hover:bg-[#3e4225] text-white text-sm font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold transition-colors cursor-pointer"
           >
             <ClipboardList className="w-4 h-4" />
             {isHindi ? 'मूल्यांकन समीक्षा' : 'Review Assessment'}

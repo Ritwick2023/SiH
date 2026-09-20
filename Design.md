@@ -63,28 +63,30 @@ Source: https://colorhunt.co/palette/8b9a6ef7f2ebeae2d6eeeeee
 
 ---
 
-## 4. Typography (Bilingual)
+## 4. Typography (Bilingual — Sovereign Civic Modern)
 
-- **Latin / English**: `Inter`, 400/500/600/700.
-- **Devanagari / Hindi**: `Noto Sans Devanagari`, min 14px (`text-sm`), `line-height: 1.65`.
-- **Monospace / IDs**: `JetBrains Mono`, `font-feature-settings: "tnum"` for all scores/percentages/IDs.
+- **Sovereign Displays / Headings**: `Plus Jakarta Sans`, 600/700 (Clean, geometric, authoritative statecraft).
+- **Body & Data UI (Latin)**: `Public Sans`, 400/500/600 (Civic digital infrastructure standard, 15% more table data density).
+- **Devanagari / Hindi**: `Mukta` (by Ek Type, Mumbai), min 14px (`text-sm`), `line-height: 1.65`. Fallback: `Noto Sans Devanagari`.
+- **Monospace / Tabular IDs**: `IBM Plex Mono`, `font-feature-settings: "tnum"` for all scores/percentages/IDs/IRT $\theta$.
 - **Type scale**:
 
 | Token | Size | Weight | Line-height | Usage |
 |---|---|---|---|---|
-| `text-display` | 2.25rem (36px) | 700 | 1.20 | Hero (landing only) |
+| `text-display` | 2.25rem (36px) | 700 | 1.25 | Hero (landing only), MoSPI readiness statement |
 | `text-h1` | 1.875rem (30px) | 700 | 1.30 | Page headers |
-| `text-h2` | 1.5rem (24px) | 600 | 1.35 | Section headers |
-| `text-h3` | 1.25rem (20px) | 600 | 1.40 | Card headers |
-| `text-body` | 1.0rem (16px) | 400 | 1.60 | Primary body, assessment text |
-| `text-sm` | 0.875rem (14px) | 500 | 1.50 | Subtext, labels, table cells |
-| `text-xs` | 0.75rem (12px) | 600 | 1.40 | Badges, provenance |
+| `text-h2` | 1.5rem (24px) | 600 | 1.35 | Section headers, Question stems |
+| `text-h3` | 1.25rem (20px) | 600 | 1.40 | Card headers, Modal titles |
+| `text-body` | 1.0rem (16px) | 400 | 1.60 | Primary body, assessment text, manual reader |
+| `text-sm` | 0.875rem (14px) | 500 | 1.50 | Subtext, labels, table cells (Hindi minimum) |
+| `text-xs` | 0.75rem (12px) | 600 | 1.40 | Badges, provenance, timestamps (Latin only) |
 
 **Hindi expansion handling** (concrete CSS):
-- Use `min-height` on buttons/labels instead of fixed `h-` where Hindi may expand.
-- No `w-` fixed widths on labels; allow wrap.
+- Devanagari minimum size rule: Never render Hindi below 14px (`text-sm`).
+- Use `min-height` (`min-h-[44px]` desktop, `min-h-[56px]` mobile thumb zone) on buttons/labels instead of fixed `h-` where Hindi may expand.
+- No `w-` fixed widths on labels; allow horizontal wrap.
 - Headings: `text-wrap: balance`.
-- Containers: `line-height: 1.65` minimum for Devanagari content.
+- Containers: `line-height: 1.65` minimum for Devanagari content to prevent matra clipping.
 
 ---
 

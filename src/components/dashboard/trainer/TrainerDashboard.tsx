@@ -63,35 +63,35 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
       {/* ════════════════════════════════════════════════════════════════
           1. HERO FACULTY HEADER & PROFILE
           ════════════════════════════════════════════════════════════════ */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 sm:p-7 shadow-xs">
+      <div className="rounded-3xl bg-white border border-[#D8DFEE] p-6 sm:p-7 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
             <button
               type="button"
               onClick={() => setDossierOpen(true)}
-              className="h-14 w-14 rounded-2xl bg-[#8C5B3E] text-white flex items-center justify-center text-xl font-bold font-serif shrink-0 shadow-xs hover:scale-105 transition-transform cursor-pointer"
+              className="h-14 w-14 rounded-2xl bg-[#1164BE] text-white flex items-center justify-center text-xl font-bold font-serif shrink-0 shadow-xs hover:scale-105 transition-transform cursor-pointer"
               title="Click to view Official Faculty Dossier"
             >
               PV
             </button>
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#1164BE]/10 text-[#1164BE] border border-[#1164BE]/20">
                   <GraduationCap className="h-3.5 w-3.5" />
                   {facultyCadre}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FAF6F0] text-muted-foreground border border-[#BF9B7A]/30">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]">
                   National Statistical Systems Training Academy (NSSTA)
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2d1f17] tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#1F273A] tracking-tight">
                 {facultyName}
               </h1>
-              <p className="text-xs sm:text-sm font-semibold text-[#8C5B3E] mt-0.5">
-                {facultyDesignation} • MoSPI Capacity Building & Examination Board
+              <p className="text-xs sm:text-sm font-semibold text-[#1164BE] mt-0.5">
+                {facultyDesignation} • MoSPI Capacity Building &amp; Examination Board
               </p>
-              <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                <MapPin className="h-3.5 w-3.5 shrink-0 text-[#8C5B3E]" />
+              <p className="text-xs text-[#475569] flex items-center gap-1 mt-1">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-[#1164BE]" />
                 NSSTA Campus, Plot No. 22, Knowledge Park II, Greater Noida, UP
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
             <button
               type="button"
               onClick={() => setDossierOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#8C5B3E] hover:bg-[#FAF6F0]/80 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1164BE] hover:bg-[#D8DFEE] transition-colors cursor-pointer"
             >
               <UserCheck className="h-3.5 w-3.5" />
               <span>{isHindi ? 'संकाय डोजियर' : 'Faculty Dossier'}</span>
@@ -109,7 +109,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
 
             <Link
               href="/documents"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#FAF6F0]/80 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors"
             >
               <BookOpen className="h-3.5 w-3.5" />
               <span>{isHindi ? 'MoSPI नियमावली संग्रह' : 'MoSPI Manuals Repository'}</span>
@@ -117,7 +117,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
 
             <Link
               href="/assignments"
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1164BE] text-white text-xs font-bold hover:bg-[#1C4CA1] transition-colors shadow-2xs"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>{isHindi ? 'मूल्यांकन प्रकाशित करें' : 'Publish Assessment'}</span>
@@ -165,8 +165,8 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
               onClick={() => setActiveTab(tab.id as 'command' | 'cohorts' | 'curriculum' | 'diagnostics')}
               className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer shadow-2xs ${
                 isActive
-                  ? 'bg-[#8C5B3E] text-white shadow-xs'
-                  : 'bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17]'
+                  ? 'bg-[#1164BE] text-white shadow-xs font-black'
+                  : 'bg-white border border-[#D8DFEE] text-[#475569] hover:bg-[#EDF0F7] hover:text-[#1164BE]'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -175,7 +175,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
                 className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${
                   isActive
                     ? 'bg-white/20 text-white'
-                    : 'bg-[#FAF6F0] text-[#8C5B3E] border border-[#BF9B7A]/25'
+                    : 'bg-[#EDF0F7] text-[#1164BE] border border-[#D8DFEE]'
                 }`}
               >
                 {tab.badge}

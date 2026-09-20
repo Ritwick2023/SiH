@@ -132,15 +132,15 @@ export function HorizontalZonalHealthCarousel({
       <div className="flex items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#555934]" />
-            <h2 className="text-sm sm:text-base font-black text-[#2d1f17] tracking-tight">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+            <h2 className="text-sm sm:text-base font-black text-[#1F273A] tracking-tight">
               National Zonal Health &amp; Cadre Readiness
             </h2>
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#555934]/15 text-[#555934] border border-[#555934]/30">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
               7 Zones Monitored
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-xs text-[#475569] mt-0.5">
             Cross-zonal statistical capacity, scrutiny error rates, and rapid remedial intervention routing.
           </p>
         </div>
@@ -151,7 +151,7 @@ export function HorizontalZonalHealthCarousel({
             type="button"
             onClick={scrollLeft}
             aria-label="Previous zones"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] hover:bg-[#D8DFEE] transition-all shadow-2xs cursor-pointer active:scale-95"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -159,7 +159,7 @@ export function HorizontalZonalHealthCarousel({
             type="button"
             onClick={scrollRight}
             aria-label="Next zones"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-all shadow-2xs cursor-pointer active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-[#1F273A] hover:bg-[#D8DFEE] transition-all shadow-2xs cursor-pointer active:scale-95"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -185,14 +185,14 @@ export function HorizontalZonalHealthCarousel({
                   ? 'border-red-500/40 bg-linear-to-b from-red-500/3 to-white shadow-2xs'
                   : isHighRisk
                   ? 'border-amber-500/40 bg-linear-to-b from-amber-500/3 to-white shadow-2xs'
-                  : 'border-[#BF9B7A]/30 shadow-2xs'
+                  : 'border-[#D8DFEE] shadow-2xs'
               }`}
             >
               <div className="space-y-3">
                 {/* Zone Tag & Status Badge */}
                 <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold tracking-wider uppercase text-muted-foreground">
-                    <MapPin className="h-3 w-3 text-[#8C5B3E]" />
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold tracking-wider uppercase text-[#475569]">
+                    <MapPin className="h-3 w-3 text-[#1C4CA1]" />
                     {zone.zoneName}
                   </span>
 
@@ -216,42 +216,42 @@ export function HorizontalZonalHealthCarousel({
 
                 {/* Subtitle & Headcount */}
                 <div>
-                  <h3 className="font-bold text-sm text-[#2d1f17] truncate">
+                  <h3 className="font-bold text-sm text-[#1F273A] truncate">
                     {zone.regionalOffices}
                   </h3>
-                  <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5 font-mono">
-                    <Users className="h-3.5 w-3.5 text-[#8C5B3E]" />
+                  <p className="text-[11px] text-[#475569] flex items-center gap-1.5 mt-0.5 font-mono">
+                    <Users className="h-3.5 w-3.5 text-[#1C4CA1]" />
                     <span>{zone.headcount.toLocaleString()} Cadre Officers</span>
                     <span>•</span>
-                    <span className="font-bold text-[#555934]">{zone.avgLevel}</span>
+                    <span className="font-bold text-[#1C4CA1]">{zone.avgLevel}</span>
                   </p>
                 </div>
 
                 {/* Readiness Gauge & Error Rate */}
-                <div className="space-y-1.5 p-3 rounded-xl bg-[#FAF6F0]/70 border border-[#BF9B7A]/20">
+                <div className="space-y-1.5 p-3 rounded-xl bg-[#EDF0F7]/60 border border-[#D8DFEE]">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-muted-foreground font-medium">Readiness Index</span>
-                    <span className="font-mono font-bold text-[#2d1f17]">
+                    <span className="text-[#475569] font-medium">Readiness Index</span>
+                    <span className="font-mono font-bold text-[#1F273A]">
                       {zone.readinessPercent}%
                     </span>
                   </div>
-                  <div className="h-1.5 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                  <div className="h-1.5 w-full rounded-full bg-[#D8DFEE] overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         isOptimal
                           ? 'bg-emerald-600'
                           : isHighRisk
-                          ? 'bg-[#8C5B3E]'
+                          ? 'bg-[#FFA72F]'
                           : 'bg-red-600'
                       }`}
                       style={{ width: `${zone.readinessPercent}%` }}
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] pt-1">
-                    <span className="text-muted-foreground">Scrutiny Error Rate:</span>
+                    <span className="text-[#475569]">Scrutiny Error Rate:</span>
                     <span
                       className={`font-mono font-bold ${
-                        zone.errorRate > 12 ? 'text-red-700' : 'text-[#555934]'
+                        zone.errorRate > 12 ? 'text-red-700' : 'text-[#1C4CA1]'
                       }`}
                     >
                       {zone.errorRate}%
@@ -261,11 +261,11 @@ export function HorizontalZonalHealthCarousel({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#BF9B7A]/20">
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#D8DFEE]">
                 <button
                   type="button"
                   onClick={() => handleInspect(zone)}
-                  className="flex-1 py-1.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/40 text-xs font-bold text-[#555934] hover:bg-[#555934] hover:text-white transition-all cursor-pointer text-center"
+                  className="flex-1 py-1.5 px-3 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all cursor-pointer text-center"
                 >
                   Inspect Zone
                 </button>

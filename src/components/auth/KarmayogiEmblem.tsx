@@ -9,7 +9,7 @@ import Image from 'next/image';
  */
 export function KarmayogiHorizontalLogo({ className = 'h-12 w-auto' }: { className?: string }) {
   return (
-    <div className="inline-flex items-center">
+    <div className="inline-flex items-center" suppressHydrationWarning>
       <Image
         src="/images/karmayogi-logo-horizontal.jpg"
         alt="कर्मयोगी भारत — लोकहितं मम करणीयम्"
@@ -17,6 +17,7 @@ export function KarmayogiHorizontalLogo({ className = 'h-12 w-auto' }: { classNa
         height={65}
         className={`object-contain mix-blend-multiply ${className}`}
         priority
+        suppressHydrationWarning
       />
     </div>
   );
@@ -28,7 +29,7 @@ export function KarmayogiHorizontalLogo({ className = 'h-12 w-auto' }: { classNa
  */
 export function KarmayogiEmblemIcon({ className = 'h-9 w-9' }: { className?: string }) {
   return (
-    <div className="inline-flex items-center justify-center shrink-0">
+    <div className="inline-flex items-center justify-center shrink-0" suppressHydrationWarning>
       <Image
         src="/images/karmayogi-emblem.jpg"
         alt="Karmayogi Bharat Emblem"
@@ -36,6 +37,7 @@ export function KarmayogiEmblemIcon({ className = 'h-9 w-9' }: { className?: str
         height={80}
         className={`object-contain mix-blend-multiply ${className}`}
         priority
+        suppressHydrationWarning
       />
     </div>
   );

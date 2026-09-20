@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Check, X, Edit3, ShieldAlert, Sparkles, BookOpen, ArrowRight, ArrowLeft, BarChart3 } from 'lucide-react';
 import type { ItemAnalysisData } from './modals/ItemAnalysisModal';
 
@@ -67,12 +67,74 @@ const INITIAL_QUEUE: QuestionItem[] = [
   },
 ];
 
+function loadQueueFromStorage(): QuestionItem[] {
+  if (typeof window === 'undefined') return INITIAL_QUEUE;
+  try {
+    const raw = localStorage.getItem('statvidya_review_queue');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const mapped: QuestionItem[] = parsed.map((item: {
+          id: string;
+          stem: string;
+          options?: string[];
+          correctIndex?: number;
+          consensusScore?: number;
+          competency?: string;
+          sourceDoc?: string;
+          citation?: string;
+          status?: string;
+        }) => ({
+          id: item.id,
+          stem: item.stem,
+          options: item.options || [],
+          correctIndex: item.correctIndex ?? 0,
+          confidence: Math.round((item.consensusScore ?? 0.8) * 100),
+          competencyTag: item.competency || 'MoSPI Competency',
+          sourceDoc: item.sourceDoc || 'Official MoSPI Manual',
+          section: item.citation || 'Statutory Guidelines',
+          status: (item.status?.toLowerCase() === 'approved' || item.status?.toLowerCase() === 'published')
+            ? 'approved' as const
+            : item.status?.toLowerCase() === 'rejected'
+              ? 'rejected' as const
+              : 'pending' as const,
+        }));
+
+        const existingIds = new Set(mapped.map((m) => m.id));
+        const nonDup = INITIAL_QUEUE.filter((q) => !existingIds.has(q.id));
+        return [...mapped, ...nonDup];
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load review queue for triage card:', e);
+  }
+  return INITIAL_QUEUE;
+}
+
+function syncToLocalStorage(id: string, newStatus: 'APPROVED' | 'REJECTED') {
+  if (typeof window === 'undefined') return;
+  try {
+    const raw = localStorage.getItem('statvidya_review_queue');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        const updated = parsed.map((item: { id: string; status: string }) =>
+          item.id === id ? { ...item, status: newStatus } : item
+        );
+        localStorage.setItem('statvidya_review_queue', JSON.stringify(updated));
+      }
+    }
+  } catch {
+    // ignore
+  }
+}
+
 interface TrainerReviewTriageCardProps {
   onInspectItem?: (item: ItemAnalysisData) => void;
 }
 
 export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCardProps) {
-  const [queue, setQueue] = useState<QuestionItem[]>(INITIAL_QUEUE);
+  const [queue, setQueue] = useState<QuestionItem[]>(() => loadQueueFromStorage());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editedStem, setEditedStem] = useState('');
@@ -81,18 +143,22 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
   const pendingCount = queue.filter((q) => q.status === 'pending').length;
 
   const handleApprove = (id: string) => {
-    setQueue((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, status: 'approved' } : q))
-    );
+    setQueue((prev) => {
+      const updated = prev.map((q) => (q.id === id ? { ...q, status: 'approved' as const } : q));
+      syncToLocalStorage(id, 'APPROVED');
+      return updated;
+    });
     if (currentIndex < queue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handleReject = (id: string) => {
-    setQueue((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, status: 'rejected' } : q))
-    );
+    setQueue((prev) => {
+      const updated = prev.map((q) => (q.id === id ? { ...q, status: 'rejected' as const } : q));
+      syncToLocalStorage(id, 'REJECTED');
+      return updated;
+    });
     if (currentIndex < queue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
@@ -131,16 +197,16 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
     : null;
 
   return (
-    <div className="rounded-3xl bg-[#2d1f17] text-white p-6 sm:p-7 shadow-md border border-[#BF9B7A]/20 flex flex-col justify-between">
+    <div className="rounded-2xl bg-[#1F273A] text-white p-6 sm:p-7 shadow-md border border-[#2C3B59] flex flex-col justify-between">
       <div>
         {/* Top Header Pill & Counter */}
         <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#F8C858]/20 text-[#F8C858] border border-[#F8C858]/30">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#FFA72F]/15 text-[#FFA72F] border border-[#FFA72F]/30">
               <Sparkles className="h-3.5 w-3.5" />
               Question Review & QA Triage
             </span>
-            <span className="text-xs font-mono text-[#FAF6F0]/70">
+            <span className="text-xs font-mono text-slate-300">
               ({currentIndex + 1} of {queue.length})
             </span>
           </div>
@@ -167,10 +233,10 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                 <ShieldAlert className="h-3 w-3" />
                 Confidence: {currentItem.confidence}%
               </span>
-              <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-white/10 text-[#FAF6F0]/80">
+              <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-white/10 text-slate-200">
                 {currentItem.competencyTag}
               </span>
-              <span className="text-[11px] text-[#FAF6F0]/60 flex items-center gap-1 ml-auto">
+              <span className="text-[11px] text-slate-400 flex items-center gap-1 ml-auto">
                 <BookOpen className="h-3 w-3" />
                 {currentItem.sourceDoc} • {currentItem.section}
               </span>
@@ -183,7 +249,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                   <textarea
                     value={editedStem}
                     onChange={(e) => setEditedStem(e.target.value)}
-                    className="w-full h-24 p-3 rounded-xl bg-white/10 border border-white/20 text-sm text-[#FAF6F0] font-medium focus:outline-none focus:ring-2 focus:ring-[#F8C858]"
+                    className="w-full h-24 p-3 rounded-xl bg-white/10 border border-white/20 text-sm text-white font-medium focus:outline-none focus:ring-2 focus:ring-[#FFA72F]"
                   />
                   <div className="flex justify-end gap-2">
                     <button
@@ -196,7 +262,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                     <button
                       type="button"
                       onClick={handleSaveEdit}
-                      className="px-3 py-1 rounded-lg bg-[#F8C858] text-[#2d1f17] text-xs font-bold hover:bg-[#e6b94e] cursor-pointer"
+                      className="px-3 py-1 rounded-lg bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] cursor-pointer"
                     >
                       Save Changes
                     </button>
@@ -204,13 +270,13 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                 </div>
               ) : (
                 <div className="relative group">
-                  <p className="text-sm sm:text-base font-medium text-[#FAF6F0] leading-relaxed">
+                  <p className="text-sm sm:text-base font-medium text-white leading-relaxed">
                     {currentItem.stem}
                   </p>
                   <button
                     type="button"
                     onClick={handleStartEdit}
-                    className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-white/10 text-xs text-[#FAF6F0] hover:bg-white/20 transition-opacity cursor-pointer"
+                    className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-white/10 text-xs text-white hover:bg-white/20 transition-opacity cursor-pointer"
                     title="Edit question text"
                   >
                     <Edit3 className="h-3.5 w-3.5" />
@@ -229,14 +295,14 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                     className={`p-3 rounded-xl border text-xs font-medium flex items-start gap-2.5 transition-all ${
                       isCorrect
                         ? 'bg-emerald-900/30 border-emerald-500/40 text-emerald-200'
-                        : 'bg-white/5 border-white/10 text-[#FAF6F0]/80'
+                        : 'bg-white/5 border-white/10 text-slate-200'
                     }`}
                   >
                     <span
                       className={`h-5 w-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold font-mono ${
                         isCorrect
-                          ? 'bg-emerald-500 text-[#2d1f17]'
-                          : 'bg-white/10 text-[#FAF6F0]/70'
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-white/10 text-slate-300'
                       }`}
                     >
                       {String.fromCharCode(65 + optIdx)}
@@ -277,7 +343,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
           >
             <ArrowRight className="h-4 w-4" />
           </button>
-          <span className="text-xs text-[#FAF6F0]/70 font-mono ml-2">
+          <span className="text-xs text-slate-300 font-mono ml-2">
             Status:{' '}
             <strong
               className={`uppercase ${
@@ -301,7 +367,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
               onClick={() => onInspectItem(currentAnalysisData)}
               className="px-3.5 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              <BarChart3 className="h-3.5 w-3.5 text-[#F8C858]" />
+              <BarChart3 className="h-3.5 w-3.5 text-[#FFA72F]" />
               <span>Psychometrics</span>
             </button>
           )}

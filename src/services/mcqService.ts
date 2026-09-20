@@ -7,6 +7,7 @@
  */
 
 import { GroqService } from './groqService';
+import { semanticSearch } from '@/lib/db/pgvectorClient';
 
 export interface GeneratedQuestion {
   id: string;
@@ -39,9 +40,35 @@ export interface GenerationRequest {
 
 export class MCQService {
   /**
+   * Enriches generation request with grounded semantic chunks from pgvector / manual knowledge base
+   */
+  private static async enrichWithRagContext(request: GenerationRequest): Promise<void> {
+    if (!request.docText) {
+      try {
+        const query = request.topicPrompt || request.docTitle || request.competencyId;
+        const chunks = await semanticSearch(query, 3);
+        if (chunks && chunks.length > 0) {
+          request.docText = chunks
+            .map((c) => `[${c.section_title || 'Section'} - Page ${c.page_number}]:\n${c.chunk_text}`)
+            .join('\n\n');
+          if (!request.docTitle && chunks[0]?.document_id) {
+            request.docTitle = chunks[0].document_id;
+          }
+          if (!request.citationSource && chunks[0]) {
+            request.citationSource = `${chunks[0].document_id}, Page ${chunks[0].page_number}`;
+          }
+        }
+      } catch (err) {
+        console.warn('[MCQService] RAG context enrichment fallback:', err);
+      }
+    }
+  }
+
+  /**
    * Generates a consensus-verified bilingual MCQ item
    */
   static async generateMCQ(request: GenerationRequest): Promise<GeneratedQuestion> {
+    await this.enrichWithRagContext(request);
     try {
       const groqResult = await this.generateWithGroq(request);
       if (groqResult) {
@@ -61,6 +88,7 @@ export class MCQService {
     request: GenerationRequest,
     count: number = 1
   ): Promise<GeneratedQuestion[]> {
+    await this.enrichWithRagContext(request);
     const targetCount = Math.max(1, Math.min(25, Math.floor(count || request.count || 1)));
 
     if (targetCount === 1) {

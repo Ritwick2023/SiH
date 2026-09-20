@@ -7,8 +7,8 @@ const PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/pathways': ['learner', 'trainer', 'admin'],
   '/profile': ['learner', 'trainer', 'admin'],
   '/assessment': ['learner', 'trainer', 'admin'],
-  '/documents': ['trainer', 'admin'],
-  '/mcq-generator': ['trainer', 'admin'],
+  '/documents': ['learner', 'trainer', 'admin'],
+  '/mcq-generator': ['learner', 'trainer', 'admin'],
   '/review-queue': ['trainer', 'admin'],
   '/admin': ['admin'],
   '/onboarding': ['learner', 'trainer', 'admin'],
@@ -126,7 +126,8 @@ export async function middleware(request: NextRequest) {
       (routePath === '/documents' ||
         routePath === '/mcq-generator' ||
         routePath === '/review-queue' ||
-        routePath.startsWith('/admin/analytics'))
+        routePath === '/admin' ||
+        request.nextUrl.pathname.startsWith('/admin'))
     ) {
       // Allow demo inspection
     } else {

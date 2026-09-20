@@ -148,24 +148,24 @@ export function BatchInspectionModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-[#BF9B7A]/40 flex flex-col overflow-hidden"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-[#D8DFEE] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-start justify-between p-6 border-b border-[#BF9B7A]/20 bg-[#FAF6F0]/90">
+        <div className="flex items-start justify-between p-6 border-b border-[#D8DFEE] bg-[#EDF0F7]/60">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30 font-mono">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 font-mono">
                 {cohort.code}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white text-muted-foreground border border-[#BF9B7A]/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white text-muted-foreground border border-[#D8DFEE]">
                 {cohort.center}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#555934]/15 text-[#555934]">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#1164BE]/10 text-[#1164BE]">
                 Director: {cohort.director}
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#2d1f17] tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#1F273A] tracking-tight">
               {cohort.name}
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -175,33 +175,33 @@ export function BatchInspectionModal({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#F2E6D8] transition-colors"
+            className="p-2 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Quick Cohort Stats Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-[#FAF6F0]/40 border-b border-[#BF9B7A]/20">
-          <div className="p-3 rounded-2xl bg-white border border-[#BF9B7A]/20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-[#EDF0F7]/40 border-b border-[#D8DFEE]">
+          <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Enrolled Cadre</p>
-            <p className="text-xl font-extrabold text-[#2d1f17] font-mono mt-0.5">
+            <p className="text-xl font-extrabold text-[#1F273A] font-mono mt-0.5">
               {cohort.enrolled} <span className="text-xs font-normal text-muted-foreground">Officers</span>
             </p>
           </div>
-          <div className="p-3 rounded-2xl bg-white border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Cohort Mean Score</p>
-            <p className="text-xl font-extrabold text-[#555934] font-mono mt-0.5">
+            <p className="text-xl font-extrabold text-[#1C4CA1] font-mono mt-0.5">
               {cohort.avgScore}% <span className="text-xs font-normal text-muted-foreground">Pass Rate</span>
             </p>
           </div>
-          <div className="p-3 rounded-2xl bg-white border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-muted-foreground">Syllabus Progress</p>
-            <p className="text-xl font-extrabold text-[#8C5B3E] font-mono mt-0.5">
+            <p className="text-xl font-extrabold text-[#FFA72F] font-mono mt-0.5">
               {cohort.progress}% <span className="text-xs font-normal text-muted-foreground">Completed</span>
             </p>
           </div>
-          <div className="p-3 rounded-2xl bg-white border border-[#BF9B7A]/20">
+          <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
             <p className="text-[10px] font-bold uppercase text-red-700">At-Risk Deficit</p>
             <p className="text-xl font-extrabold text-red-600 font-mono mt-0.5">
               {cohort.atRiskCount} <span className="text-xs font-normal text-muted-foreground">Officers &lt;60%</span>
@@ -210,15 +210,15 @@ export function BatchInspectionModal({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center justify-between px-6 pt-3 border-b border-[#BF9B7A]/20 bg-white">
+        <div className="flex items-center justify-between px-6 pt-3 border-b border-[#D8DFEE] bg-white">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setActiveTab('roster')}
               className={`pb-3 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'roster'
-                  ? 'border-[#8C5B3E] text-[#8C5B3E]'
-                  : 'border-transparent text-muted-foreground hover:text-[#2d1f17]'
+                  ? 'border-[#1C4CA1] text-[#1C4CA1]'
+                  : 'border-transparent text-muted-foreground hover:text-[#1F273A]'
               }`}
             >
               <Users className="h-4 w-4" />
@@ -229,8 +229,8 @@ export function BatchInspectionModal({
               onClick={() => setActiveTab('competencies')}
               className={`pb-3 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'competencies'
-                  ? 'border-[#8C5B3E] text-[#8C5B3E]'
-                  : 'border-transparent text-muted-foreground hover:text-[#2d1f17]'
+                  ? 'border-[#1C4CA1] text-[#1C4CA1]'
+                  : 'border-transparent text-muted-foreground hover:text-[#1F273A]'
               }`}
             >
               <BarChart3 className="h-4 w-4" />
@@ -241,8 +241,8 @@ export function BatchInspectionModal({
               onClick={() => setActiveTab('timeline')}
               className={`pb-3 text-xs font-bold transition-all border-b-2 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'timeline'
-                  ? 'border-[#8C5B3E] text-[#8C5B3E]'
-                  : 'border-transparent text-muted-foreground hover:text-[#2d1f17]'
+                  ? 'border-[#1C4CA1] text-[#1C4CA1]'
+                  : 'border-transparent text-muted-foreground hover:text-[#1F273A]'
               }`}
             >
               <Calendar className="h-4 w-4" />
@@ -254,7 +254,7 @@ export function BatchInspectionModal({
             <button
               type="button"
               onClick={handleExportCSV}
-              className="px-3 py-1 rounded-lg bg-[#FAF6F0] border border-[#BF9B7A]/30 text-xs font-semibold text-[#555934] hover:bg-[#F2E6D8] transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1 rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-semibold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
               <span>Export Roster</span>
@@ -282,7 +282,7 @@ export function BatchInspectionModal({
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search officer, designation or center..."
-                    className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] focus:outline-none focus:ring-1 focus:ring-[#8C5B3E]"
+                    className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
                   />
                 </div>
 
@@ -294,8 +294,8 @@ export function BatchInspectionModal({
                       onClick={() => setFilterStatus(st)}
                       className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                         filterStatus === st
-                          ? 'bg-[#8C5B3E] text-white'
-                          : 'bg-[#FAF6F0] text-muted-foreground hover:bg-[#F2E6D8]'
+                          ? 'bg-[#1C4CA1] text-white'
+                          : 'bg-[#EDF0F7] text-muted-foreground hover:bg-[#D8DFEE]'
                       }`}
                     >
                       {st === 'ALL' ? 'All Trainees' : st}
@@ -305,9 +305,9 @@ export function BatchInspectionModal({
               </div>
 
               {/* Trainee Table */}
-              <div className="overflow-x-auto rounded-2xl border border-[#BF9B7A]/25">
+              <div className="overflow-x-auto rounded-xl border border-[#D8DFEE]">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#FAF6F0] border-b border-[#BF9B7A]/20 text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
+                  <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-2.5 px-3">Officer</th>
                       <th className="py-2.5 px-3">Cadre & Center</th>
@@ -316,12 +316,12 @@ export function BatchInspectionModal({
                       <th className="py-2.5 px-3 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#BF9B7A]/15 bg-white">
+                  <tbody className="divide-y divide-[#D8DFEE] bg-white">
                     {filteredTrainees.map((trainee) => (
-                      <tr key={trainee.id} className="hover:bg-[#FAF6F0]/40 transition-colors">
+                      <tr key={trainee.id} className="hover:bg-[#EDF0F7]/40 transition-colors">
                         <td className="py-2.5 px-3">
                           <div className="flex items-center gap-2">
-                            <div className="h-7 w-7 rounded-lg bg-[#8C5B3E]/15 text-[#8C5B3E] flex items-center justify-center font-bold text-[11px] font-mono shrink-0">
+                            <div className="h-7 w-7 rounded-lg bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center font-bold text-[11px] font-mono shrink-0">
                               {trainee.name
                                 .split(' ')
                                 .map((n) => n[0])
@@ -329,18 +329,18 @@ export function BatchInspectionModal({
                                 .slice(0, 2)}
                             </div>
                             <div>
-                              <p className="font-bold text-[#2d1f17]">{trainee.name}</p>
+                              <p className="font-bold text-[#1F273A]">{trainee.name}</p>
                               <p className="text-[10px] text-muted-foreground">{trainee.designation}</p>
                             </div>
                           </div>
                         </td>
                         <td className="py-2.5 px-3">
-                          <p className="text-[#2d1f17] font-medium">{trainee.cadre}</p>
+                          <p className="text-[#1F273A] font-medium">{trainee.cadre}</p>
                           <p className="text-[10px] text-muted-foreground">{trainee.center}</p>
                         </td>
                         <td className="py-2.5 px-3">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold font-mono text-[#2d1f17] text-sm">
+                            <span className="font-bold font-mono text-[#1F273A] text-sm">
                               {trainee.score}%
                             </span>
                             <span
@@ -357,7 +357,7 @@ export function BatchInspectionModal({
                           </div>
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="text-[11px] font-mono text-[#8C5B3E] font-medium">
+                          <span className="text-[11px] font-mono text-[#1C4CA1] font-medium">
                             {trainee.weakCompetency}
                           </span>
                         </td>
@@ -368,7 +368,7 @@ export function BatchInspectionModal({
                               onClose();
                               onOpenRemediation?.(cohort);
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-[#FAF6F0] hover:bg-[#555934] hover:text-white text-[#555934] text-[11px] font-bold border border-[#BF9B7A]/30 transition-all cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg bg-[#EDF0F7] hover:bg-[#1C4CA1] hover:text-white text-[#1C4CA1] text-[11px] font-bold border border-[#D8DFEE] transition-all cursor-pointer"
                           >
                             Remediate
                           </button>
@@ -429,16 +429,16 @@ export function BatchInspectionModal({
                     critical: false,
                   },
                 ].map((c) => (
-                  <div key={c.code} className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/25 space-y-2">
+                  <div key={c.code} className="p-4 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <div>
-                        <span className="font-mono text-[10px] font-bold text-[#8C5B3E] mr-2">
+                        <span className="font-mono text-[10px] font-bold text-[#1C4CA1] mr-2">
                           {c.code}
                         </span>
-                        <span className="font-bold text-[#2d1f17]">{c.title}</span>
+                        <span className="font-bold text-[#1F273A]">{c.title}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-sm text-[#2d1f17]">{c.score}%</span>
+                        <span className="font-mono font-bold text-sm text-[#1F273A]">{c.score}%</span>
                         <span className="text-[10px] text-muted-foreground">(Target: {c.target}%)</span>
                         <span
                           className={`font-mono text-[10px] font-bold px-1.5 py-0.2 rounded ${
@@ -449,10 +449,10 @@ export function BatchInspectionModal({
                         </span>
                       </div>
                     </div>
-                    <div className="w-full bg-[#EAE0D0] h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-[#D8DFEE] h-2 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
-                          c.critical ? 'bg-amber-600' : 'bg-[#555934]'
+                          c.critical ? 'bg-amber-600' : 'bg-[#1C4CA1]'
                         }`}
                         style={{ width: `${c.score}%` }}
                       />
@@ -492,15 +492,15 @@ export function BatchInspectionModal({
                     date: '02 Sep 2026',
                   },
                 ].map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl bg-[#FAF6F0]/60 border border-[#BF9B7A]/25 flex items-start justify-between">
+                  <div key={idx} className="p-4 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] flex items-start justify-between">
                     <div>
-                      <span className="text-[10px] font-bold font-mono text-[#8C5B3E] uppercase tracking-wider">
+                      <span className="text-[10px] font-bold font-mono text-[#1C4CA1] uppercase tracking-wider">
                         {item.week}
                       </span>
-                      <p className="text-xs font-bold text-[#2d1f17] mt-0.5">{item.milestone}</p>
+                      <p className="text-xs font-bold text-[#1F273A] mt-0.5">{item.milestone}</p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">{item.status}</p>
                     </div>
-                    <span className="text-[10px] font-mono text-muted-foreground bg-white px-2 py-1 rounded-lg border border-[#BF9B7A]/25">
+                    <span className="text-[10px] font-mono text-muted-foreground bg-white px-2 py-1 rounded-lg border border-[#D8DFEE]">
                       {item.date}
                     </span>
                   </div>
@@ -511,9 +511,9 @@ export function BatchInspectionModal({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 border-t border-[#BF9B7A]/20 bg-[#FAF6F0]/80 flex items-center justify-between">
+        <div className="p-4 border-t border-[#D8DFEE] bg-[#EDF0F7]/60 flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <GraduationCap className="h-4 w-4 text-[#8C5B3E]" />
+            <GraduationCap className="h-4 w-4 text-[#1C4CA1]" />
             <span>NSSTA Course Director Academic Governance</span>
           </div>
 
@@ -521,7 +521,7 @@ export function BatchInspectionModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white border border-[#BF9B7A]/30 text-xs font-bold text-muted-foreground hover:bg-[#F2E6D8] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-[#EDF0F7] transition-colors cursor-pointer"
             >
               Close
             </button>
@@ -531,7 +531,7 @@ export function BatchInspectionModal({
                 onClose();
                 onOpenRemediation?.(cohort);
               }}
-              className="px-4 py-2 rounded-xl bg-[#8C5B3E] text-white text-xs font-bold hover:bg-[#704830] transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Dispatch Remedial Drill</span>

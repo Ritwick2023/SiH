@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-analytics
+  labels:
+    app.kubernetes.io/name: statvidya-analytics
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.analytics.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: statvidya-analytics
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: statvidya-analytics
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: analytics
+          image: "{{ .Values.analytics.image.repository }}:{{ .Values.analytics.image.tag }}"
+          imagePullPolicy: {{ .Values.analytics.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "8000"
+            - name: DATABASE_URL
+              value: "postgresql://statvidya_admin:statvidya_secure_prod@{{ .Release.Name }}-postgres:5432/statvidya_db"
+            - name: REDIS_URL
+              value: "redis://{{ .Release.Name }}-redis:6379/0"
+          resources:
+            {{- toYaml .Values.analytics.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-analytics
+  labels:
+    app.kubernetes.io/name: statvidya-analytics
+spec:
+  type: {{ .Values.analytics.service.type }}
+  ports:
+    - port: {{ .Values.analytics.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: statvidya-analytics

@@ -2,5 +2,18 @@
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",
   "less.lint.unknownAtRules": "ignore",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "python.defaultInterpreterPath": "${workspaceFolder}/services/analytics-engine/venv/bin/python",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/services/analytics-engine",
+    "${workspaceFolder}/services/analytics-engine/venv/lib/python3.13/site-packages"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/services/analytics-engine",
+    "${workspaceFolder}/services/analytics-engine/venv/lib/python3.13/site-packages"
+  ],
+  "pyrefly.interpreter": "${workspaceFolder}/services/analytics-engine/venv/bin/python",
+  "pyrefly.searchPaths": [
+    "${workspaceFolder}/services/analytics-engine"
+  ]
 }

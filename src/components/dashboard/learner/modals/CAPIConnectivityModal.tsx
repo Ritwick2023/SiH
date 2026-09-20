@@ -1,22 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Wifi, WifiOff, RefreshCw, CheckCircle2, ShieldCheck, Database, HardDrive } from 'lucide-react';
+import { X, Wifi, WifiOff, RefreshCw, CheckCircle2, HardDrive, ShieldCheck, Database } from 'lucide-react';
 
 interface CAPIConnectivityModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isOfflineSimulated: boolean;
+  onToggleOfflineSimulated: () => void;
   isHindi?: boolean;
-  isOfflineSimulated?: boolean;
-  onToggleOfflineSimulated?: () => void;
 }
 
 export function CAPIConnectivityModal({
   isOpen,
   onClose,
-  isHindi = false,
-  isOfflineSimulated = false,
+  isOfflineSimulated,
   onToggleOfflineSimulated,
+  isHindi = false,
 }: CAPIConnectivityModalProps) {
   const [syncing, setSyncing] = useState(false);
   const [syncProgress, setSyncProgress] = useState(0);
@@ -25,32 +25,18 @@ export function CAPIConnectivityModal({
   if (!isOpen) return null;
 
   const handleStartSync = () => {
-    if (isOfflineSimulated) {
-      alert(
-        isHindi
-          ? 'ऑफ़लाइन सिम्युलेटर सक्रिय है! कृपया सर्वर से सिंक करने से पहले नेटवर्क पुनः कनेक्ट करें।'
-          : 'Offline field simulation is currently active! Please reconnect signal to synchronize with MoSPI central server.'
-      );
-      return;
-    }
-
+    if (isOfflineSimulated) return;
     setSyncing(true);
     setSyncProgress(15);
     setSyncDone(false);
 
-    setTimeout(() => {
-      setSyncProgress(45);
-    }, 400);
-
-    setTimeout(() => {
-      setSyncProgress(85);
-    }, 900);
-
+    setTimeout(() => setSyncProgress(55), 400);
+    setTimeout(() => setSyncProgress(85), 800);
     setTimeout(() => {
       setSyncProgress(100);
       setSyncing(false);
       setSyncDone(true);
-    }, 1400);
+    }, 1200);
   };
 
   return (
@@ -60,18 +46,18 @@ export function CAPIConnectivityModal({
       aria-labelledby="capi-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="relative w-full max-w-lg rounded-3xl bg-[#FAF6F0] border-2 border-[#BF9B7A]/40 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-lg rounded-3xl bg-white border border-[#D8DFEE] shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="bg-[#555934] text-white px-6 py-4 flex items-center justify-between">
+        <div className="bg-[#1C4CA1] text-white px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 p-1 border border-white/20">
-              <Wifi className="h-5 w-5 text-[#F8C858]" />
+              <Wifi className="h-5 w-5 text-[#FFA72F]" />
             </div>
             <div>
-              <h2 id="capi-modal-title" className="text-sm font-black tracking-wide uppercase text-[#F8C858]">
+              <h2 id="capi-modal-title" className="text-sm font-black tracking-wide uppercase text-[#FFA72F]">
                 {isHindi ? 'CAPI ऑफ़लाइन इंजन एवं फील्ड कैश' : 'CAPI Field Engine & Local Cache'}
               </h2>
-              <p className="text-[11px] text-white/80">
+              <p className="text-[11px] text-white/90">
                 {isHindi
                   ? 'एनबीएफसी, पीएलएफएस एवं एएसएचई स्थानीय डेटा तुल्यकालन'
                   : 'Encrypted IndexedDB Cache & MoSPI Central Node Sync'}
@@ -89,21 +75,21 @@ export function CAPIConnectivityModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-5">
+        <div className="p-6 space-y-5 bg-[#EDF0F7]/40">
           {/* Status Bento */}
-          <div className="rounded-2xl bg-white border border-[#BF9B7A]/30 p-5 shadow-xs">
+          <div className="rounded-2xl bg-white border border-[#D8DFEE] p-5 shadow-xs">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">
                   {isHindi ? 'स्थानीय कैश्ड अनुसूचियां' : 'Local Form Cache'}
                 </span>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-3xl font-black font-mono text-[#2d1f17]">38</span>
-                  <span className="text-xs font-bold text-[#555934]">
+                  <span className="text-3xl font-black font-mono text-[#1F273A]">38</span>
+                  <span className="text-xs font-bold text-[#1C4CA1]">
                     {isHindi ? 'प्रपत्र सुरक्षित' : 'Forms Secured'}
                   </span>
                 </div>
-                <p className="text-[11px] text-muted-foreground mt-1">
+                <p className="text-[11px] text-[#475569] mt-1">
                   24 PLFS Schedules • 14 ASHE Enterprise returns
                 </p>
               </div>
@@ -131,9 +117,9 @@ export function CAPIConnectivityModal({
 
             {/* Sync progress bar */}
             {syncing && (
-              <div className="mt-4 pt-3 border-t border-[#BF9B7A]/20 space-y-1.5">
+              <div className="mt-4 pt-3 border-t border-[#D8DFEE] space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-[#555934] font-bold">
+                  <span className="text-[#1C4CA1] font-bold">
                     {syncProgress < 50
                       ? isHindi
                         ? 'डेटा एन्क्रिप्ट किया जा रहा है...'
@@ -142,11 +128,11 @@ export function CAPIConnectivityModal({
                         ? 'MoSPI सर्वर पर 38 प्रपत्र अपलोड हो रहे हैं...'
                         : 'Transmitting 38 schedules to Central Server...'}
                   </span>
-                  <span className="font-bold">{syncProgress}%</span>
+                  <span className="font-bold text-[#1F273A]">{syncProgress}%</span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-[#BF9B7A]/20 overflow-hidden">
+                <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#555934] transition-all duration-300"
+                    className="h-full rounded-full bg-[#1C4CA1] transition-all duration-300"
                     style={{ width: `${syncProgress}%` }}
                   />
                 </div>
@@ -166,12 +152,12 @@ export function CAPIConnectivityModal({
           </div>
 
           {/* Offline Simulator Switch */}
-          <div className="p-4 rounded-2xl bg-white border border-[#BF9B7A]/30 flex items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl bg-white border border-[#D8DFEE] flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-bold text-[#2d1f17]">
+              <p className="text-xs font-bold text-[#1F273A]">
                 {isHindi ? 'ग्रामीण फील्ड डिस्कनेक्ट सिमुलेशन' : 'Simulate Rural Network Disconnect'}
               </p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
+              <p className="text-[11px] text-[#475569] mt-0.5">
                 {isHindi
                   ? 'परीक्षण करें कि शून्य 4G/5G सिग्नल में कैपी कैसे काम करता है'
                   : 'Test CAPI behavior when network signal drops to zero in remote survey villages'}
@@ -181,7 +167,7 @@ export function CAPIConnectivityModal({
               type="button"
               onClick={onToggleOfflineSimulated}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                isOfflineSimulated ? 'bg-[#8C5B3E]' : 'bg-[#BF9B7A]/40'
+                isOfflineSimulated ? 'bg-[#1C4CA1]' : 'bg-[#D8DFEE]'
               }`}
               role="switch"
               aria-checked={isOfflineSimulated}
@@ -196,20 +182,20 @@ export function CAPIConnectivityModal({
 
           {/* Security & Cryptographic Details */}
           <div className="space-y-2 text-xs">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <HardDrive className="h-3.5 w-3.5 text-[#8C5B3E]" />
+            <div className="flex items-center gap-2 text-[#475569]">
+              <HardDrive className="h-3.5 w-3.5 text-[#1C4CA1]" />
               <span>
                 <strong>Storage:</strong> W3C IndexedDB with SQLite Local Fallback
               </span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-[#475569]">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               <span>
                 <strong>Encryption:</strong> AES-256 GCM Hardware Keystore Protected
               </span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Database className="h-3.5 w-3.5 text-[#555934]" />
+            <div className="flex items-center gap-2 text-[#475569]">
+              <Database className="h-3.5 w-3.5 text-[#1164BE]" />
               <span>
                 <strong>Last Cloud Handshake:</strong> 14m ago (Server Node FOD-Patna-02)
               </span>
@@ -218,12 +204,12 @@ export function CAPIConnectivityModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#F2E6D8]/50 border-t border-[#BF9B7A]/25 flex items-center justify-between">
+        <div className="px-6 py-4 bg-white border-t border-[#D8DFEE] flex items-center justify-between">
           <button
             type="button"
             disabled={syncing}
             onClick={handleStartSync}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#555934] text-white text-xs font-bold hover:bg-[#434728] transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
             <span>
@@ -239,7 +225,7 @@ export function CAPIConnectivityModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white border border-[#BF9B7A]/40 text-xs font-bold text-muted-foreground hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#475569] hover:bg-[#EDF0F7] transition-colors cursor-pointer"
           >
             {isHindi ? 'बंद करें' : 'Close'}
           </button>

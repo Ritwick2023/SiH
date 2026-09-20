@@ -36,13 +36,13 @@ export function LanguageSwitcher() {
   );
 
   return (
-    <div className="fixed bottom-4 left-4 md:hidden flex items-center gap-1.5 bg-white rounded-full shadow-card px-2 py-1.5 z-40">
+    <div className="fixed bottom-4 left-4 md:hidden flex items-center gap-1.5 bg-white border border-[#D8DFEE] rounded-full shadow-lg px-2 py-1.5 z-40">
       <button
         onClick={() => handleLanguageChange('en')}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${
           currentLocale === 'en'
-            ? 'bg-primary text-white'
-            : 'text-[#705849] hover:bg-background'
+            ? 'bg-[#1C4CA1] text-white'
+            : 'text-muted-foreground hover:bg-[#EDF0F7]'
         }`}
         aria-pressed={currentLocale === 'en'}
       >
@@ -50,16 +50,16 @@ export function LanguageSwitcher() {
       </button>
       <button
         onClick={() => handleLanguageChange('hi')}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${
           currentLocale === 'hi'
-            ? 'bg-primary text-white'
-            : 'text-[#705849] hover:bg-background'
+            ? 'bg-[#1C4CA1] text-white'
+            : 'text-muted-foreground hover:bg-[#EDF0F7]'
         }`}
         aria-pressed={currentLocale === 'hi'}
       >
         HI
       </button>
-      <Globe className="h-3.5 w-3.5 text-[#BF9B7A]" />
+      <Globe className="h-3.5 w-3.5 text-[#FFA72F] mr-1" />
     </div>
   );
 }

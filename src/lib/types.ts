@@ -1,6 +1,6 @@
 // Data models and TypeScript interfaces for Firebase Cloud Firestore schema
 
-export type ProvenanceType = 'VERIFIED_OFFICIAL' | 'PROPOSED_FRAMEWORK' | 'PROPOSED_METHODOLOGY' | 'SYNTHETIC_DEMO_DATA';
+export type ProvenanceType = 'VERIFIED_OFFICIAL' | 'PROPOSED_FRAMEWORK' | 'PROPOSED_METHODOLOGY' | 'SYNTHETIC_DEMO_DATA' | 'EMPIRICAL_NSS78_BOOTSTRAP' | 'LIVE_OLS_REGRESSION';
 export type UserRole = 'learner' | 'trainer' | 'admin';
 export type CompetencyCategory = 'Behavioural' | 'Functional' | 'Domain';
 export type ActivityPriority = 'critical' | 'important' | 'desirable';

@@ -229,8 +229,8 @@ export function HorizontalTrainerCarousels({
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-              <h2 className="text-base sm:text-lg font-bold text-[#2d1f17] tracking-tight">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+              <h2 className="text-base sm:text-lg font-bold text-[#1F273A] tracking-tight">
                 Active Training Cohorts & Academy Batches
               </h2>
             </div>
@@ -244,7 +244,7 @@ export function HorizontalTrainerCarousels({
               type="button"
               onClick={() => scroll(cohortsRef, 'left')}
               aria-label="Previous cohorts"
-              className="p-1.5 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-colors cursor-pointer shadow-2xs"
+              className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -252,7 +252,7 @@ export function HorizontalTrainerCarousels({
               type="button"
               onClick={() => scroll(cohortsRef, 'right')}
               aria-label="Next cohorts"
-              className="p-1.5 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-colors cursor-pointer shadow-2xs"
+              className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -270,12 +270,12 @@ export function HorizontalTrainerCarousels({
             return (
               <div
                 key={cohort.id}
-                className="w-77.5 sm:w-82.5 shrink-0 snap-start rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-[#BF9B7A]"
+                className="w-77.5 sm:w-82.5 shrink-0 snap-start rounded-2xl bg-white border border-[#D8DFEE] p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-[#1C4CA1]/40"
               >
                 <div>
                   {/* Top Bar: Code & Center */}
                   <div className="flex items-center justify-between mb-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                       {cohort.code}
                     </span>
                     <span className="text-[10px] text-muted-foreground font-medium truncate max-w-35">
@@ -283,22 +283,22 @@ export function HorizontalTrainerCarousels({
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-sm text-[#2d1f17] tracking-tight line-clamp-1 group-hover:text-[#8C5B3E] transition-colors">
+                  <h3 className="font-bold text-sm text-[#1F273A] tracking-tight line-clamp-1 group-hover:text-[#1C4CA1] transition-colors">
                     {cohort.name}
                   </h3>
                   <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{cohort.cadre}</p>
 
                   {/* Metrics Row */}
-                  <div className="grid grid-cols-3 gap-2 my-3.5 p-2.5 rounded-2xl bg-[#FAF6F0]/70 border border-[#BF9B7A]/20">
+                  <div className="grid grid-cols-3 gap-2 my-3.5 p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE]">
                     <div className="text-center">
                       <p className="text-[9px] font-bold uppercase text-muted-foreground">Enrolled</p>
-                      <p className="text-sm font-bold font-mono text-[#2d1f17] mt-0.5">
+                      <p className="text-sm font-bold font-mono text-[#1F273A] mt-0.5">
                         {cohort.enrolled}
                       </p>
                     </div>
-                    <div className="text-center border-x border-[#BF9B7A]/20">
+                    <div className="text-center border-x border-[#D8DFEE]">
                       <p className="text-[9px] font-bold uppercase text-muted-foreground">Avg Score</p>
-                      <p className="text-sm font-bold font-mono text-[#555934] mt-0.5">
+                      <p className="text-sm font-bold font-mono text-[#1C4CA1] mt-0.5">
                         {cohort.avgScore}%
                       </p>
                     </div>
@@ -306,7 +306,7 @@ export function HorizontalTrainerCarousels({
                       <p className="text-[9px] font-bold uppercase text-muted-foreground">At-Risk</p>
                       <p
                         className={`text-sm font-bold font-mono mt-0.5 ${
-                          isAtRiskHigh ? 'text-red-600' : 'text-[#8C5B3E]'
+                          isAtRiskHigh ? 'text-red-600' : 'text-[#FFA72F]'
                         }`}
                       >
                         {cohort.atRiskCount}
@@ -318,11 +318,11 @@ export function HorizontalTrainerCarousels({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-[11px]">
                       <span className="text-muted-foreground font-medium">Syllabus Completion</span>
-                      <span className="font-mono font-bold text-[#2d1f17]">{cohort.progress}%</span>
+                      <span className="font-mono font-bold text-[#1F273A]">{cohort.progress}%</span>
                     </div>
-                    <div className="w-full bg-[#EAE0D0] h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-[#D8DFEE] h-1.5 rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-[#8C5B3E]"
+                        className="h-full rounded-full bg-[#1C4CA1]"
                         style={{ width: `${cohort.progress}%` }}
                       />
                     </div>
@@ -330,18 +330,18 @@ export function HorizontalTrainerCarousels({
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#BF9B7A]/20">
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#D8DFEE]">
                   <button
                     type="button"
                     onClick={() => onInspectCohort(cohort)}
-                    className="flex-1 py-2 px-3 rounded-xl bg-[#FAF6F0] hover:bg-[#F2E6D8] text-[#555934] text-xs font-bold transition-colors cursor-pointer text-center"
+                    className="flex-1 py-2 px-3 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center"
                   >
                     Inspect Batch
                   </button>
                   <button
                     type="button"
                     onClick={() => onRemediateCohort(cohort)}
-                    className="py-2 px-3 rounded-xl bg-[#8C5B3E] hover:bg-[#704830] text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
+                    className="py-2 px-3 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
                     title="Dispatch Emergency Remedial Drill"
                   >
                     <Sparkles className="h-3 w-3" />
@@ -361,8 +361,8 @@ export function HorizontalTrainerCarousels({
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#555934]" />
-              <h2 className="text-base sm:text-lg font-bold text-[#2d1f17] tracking-tight">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
+              <h2 className="text-base sm:text-lg font-bold text-[#1F273A] tracking-tight">
                 Curated MoSPI Question Bank Decks
               </h2>
             </div>
@@ -376,7 +376,7 @@ export function HorizontalTrainerCarousels({
               type="button"
               onClick={() => scroll(decksRef, 'left')}
               aria-label="Previous question decks"
-              className="p-1.5 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-colors cursor-pointer shadow-2xs"
+              className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -384,7 +384,7 @@ export function HorizontalTrainerCarousels({
               type="button"
               onClick={() => scroll(decksRef, 'right')}
               aria-label="Next question decks"
-              className="p-1.5 rounded-xl bg-white border border-[#BF9B7A]/30 text-muted-foreground hover:bg-[#FAF6F0] hover:text-[#2d1f17] transition-colors cursor-pointer shadow-2xs"
+              className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -400,11 +400,11 @@ export function HorizontalTrainerCarousels({
           {QUESTION_DECKS.map((deck) => (
             <div
               key={deck.id}
-              className="w-77.5 sm:w-82.5 shrink-0 snap-start rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-[#BF9B7A]"
+              className="w-77.5 sm:w-82.5 shrink-0 snap-start rounded-2xl bg-white border border-[#D8DFEE] p-5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-[#1C4CA1]/40"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#555934]/15 text-[#555934] border border-[#555934]/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#1164BE]/10 text-[#1164BE] border border-[#1164BE]/20">
                     {deck.code}
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-500/15 px-2 py-0.5 rounded-full">
@@ -413,7 +413,7 @@ export function HorizontalTrainerCarousels({
                   </span>
                 </div>
 
-                <h3 className="font-bold text-sm text-[#2d1f17] tracking-tight line-clamp-1 group-hover:text-[#555934] transition-colors">
+                <h3 className="font-bold text-sm text-[#1F273A] tracking-tight line-clamp-1 group-hover:text-[#1164BE] transition-colors">
                   {deck.title}
                 </h3>
                 <p className="text-[11px] text-muted-foreground mt-0.5 truncate font-serif">
@@ -421,16 +421,16 @@ export function HorizontalTrainerCarousels({
                 </p>
 
                 {/* Deck Metadata Pill */}
-                <div className="my-3 p-2.5 rounded-2xl bg-[#FAF6F0]/70 border border-[#BF9B7A]/20 space-y-1.5 text-xs">
+                <div className="my-3 p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground font-medium text-[11px]">Item Count</span>
-                    <span className="font-mono font-bold text-[#2d1f17] text-xs">
+                    <span className="font-mono font-bold text-[#1F273A] text-xs">
                       {deck.questionsCount} MCQs
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground font-medium text-[11px]">Cognitive Target</span>
-                    <span className="text-[10px] font-mono text-[#8C5B3E] font-semibold">
+                    <span className="text-[10px] font-mono text-[#FFA72F] font-semibold">
                       {deck.bloomsLevel}
                     </span>
                   </div>
@@ -441,7 +441,7 @@ export function HorizontalTrainerCarousels({
                   {deck.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded-md text-[9px] font-semibold bg-[#FAF6F0] text-muted-foreground border border-[#BF9B7A]/25"
+                      className="px-2 py-0.5 rounded-md text-[9px] font-semibold bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE]"
                     >
                       #{tag}
                     </span>
@@ -450,11 +450,11 @@ export function HorizontalTrainerCarousels({
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#BF9B7A]/20">
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#D8DFEE]">
                 <button
                   type="button"
                   onClick={() => onInspectItem(deck.sampleItem)}
-                  className="flex-1 py-2 px-3 rounded-xl bg-[#FAF6F0] hover:bg-[#F2E6D8] text-[#555934] text-xs font-bold transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2 px-3 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5"
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
                   <span>Item Analysis</span>
@@ -462,7 +462,7 @@ export function HorizontalTrainerCarousels({
                 <button
                   type="button"
                   onClick={() => onOpenDeckStudio?.(deck.id)}
-                  className="py-2 px-3 rounded-xl bg-[#555934] hover:bg-[#434728] text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
+                  className="py-2 px-3 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
                 >
                   <span>MCQ Studio</span>
                   <ArrowRight className="h-3 w-3" />

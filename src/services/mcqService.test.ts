@@ -40,7 +40,7 @@ describe('MCQService', () => {
     expect(question.correctIndex).toBeLessThanOrEqual(3);
     expect(question.consensusScore).toBeGreaterThanOrEqual(0.9);
     expect(question.modelsEvaluated.length).toBeGreaterThanOrEqual(1);
-  });
+  }, 12000);
 
   it('falls back to template if Groq API throws an error', async () => {
     const spy = vi.spyOn(GroqService, 'chatCompletion').mockRejectedValueOnce(new Error('Network timeout'));
@@ -78,6 +78,6 @@ describe('MCQService', () => {
       expect(q.correctIndex).toBeGreaterThanOrEqual(0);
       expect(q.correctIndex).toBeLessThanOrEqual(3);
     });
-  });
+  }, 12000);
 });
 

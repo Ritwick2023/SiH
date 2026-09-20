@@ -100,12 +100,12 @@ export function TrainerCohortStudio({
   return (
     <div className="space-y-6">
       {/* Top Banner & Filters */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#8C5B3E]" />
-              <h2 className="text-lg font-bold text-[#2d1f17] tracking-tight">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+              <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
                 National Academy Cohorts & Training Batches
               </h2>
             </div>
@@ -117,7 +117,7 @@ export function TrainerCohortStudio({
           <button
             type="button"
             onClick={handleExportRosters}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FAF6F0] border border-[#BF9B7A]/30 text-xs font-bold text-[#555934] hover:bg-[#F2E6D8] transition-colors cursor-pointer self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors cursor-pointer self-start sm:self-auto"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export All Rosters</span>
@@ -125,13 +125,13 @@ export function TrainerCohortStudio({
         </div>
 
         {toastMsg && (
-          <div className="p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{toastMsg}</span>
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-[#BF9B7A]/20">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-[#D8DFEE]">
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -139,7 +139,7 @@ export function TrainerCohortStudio({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search batch name, code or center..."
-              className="w-full pl-10 pr-3 py-2 rounded-xl border border-[#BF9B7A]/30 text-xs text-[#2d1f17] focus:outline-none focus:ring-1 focus:ring-[#8C5B3E]"
+              className="w-full pl-10 pr-3 py-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
             />
           </div>
 
@@ -157,8 +157,8 @@ export function TrainerCohortStudio({
                 onClick={() => setSelectedCadre(cd.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
                   selectedCadre === cd.id
-                    ? 'bg-[#8C5B3E] text-white shadow-2xs'
-                    : 'bg-[#FAF6F0] text-muted-foreground hover:bg-[#F2E6D8]'
+                    ? 'bg-[#1C4CA1] text-white shadow-2xs'
+                    : 'bg-[#EDF0F7] text-muted-foreground hover:bg-[#D8DFEE]'
                 }`}
               >
                 {cd.label}
@@ -173,35 +173,35 @@ export function TrainerCohortStudio({
         {filteredCohorts.map((cohort) => (
           <div
             key={cohort.id}
-            className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-5 shadow-2xs hover:shadow-xs transition-all space-y-4 flex flex-col justify-between"
+            className="rounded-2xl bg-white border border-[#D8DFEE] p-5 shadow-2xs hover:shadow-xs transition-all space-y-4 flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#8C5B3E]/15 text-[#8C5B3E] border border-[#8C5B3E]/30">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                   {cohort.code}
                 </span>
                 <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                  <Building2 className="h-3.5 w-3.5 text-[#8C5B3E]" />
+                  <Building2 className="h-3.5 w-3.5 text-[#1C4CA1]" />
                   {cohort.center}
                 </span>
               </div>
 
-              <h3 className="font-bold text-base text-[#2d1f17] tracking-tight mt-2">
+              <h3 className="font-bold text-base text-[#1F273A] tracking-tight mt-2">
                 {cohort.name}
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5">{cohort.cadre}</p>
 
               {/* Stats Strip */}
-              <div className="grid grid-cols-3 gap-2 my-3 p-3 rounded-2xl bg-[#FAF6F0]/70 border border-[#BF9B7A]/20 text-center">
+              <div className="grid grid-cols-3 gap-2 my-3 p-3 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-center">
                 <div>
                   <p className="text-[10px] font-bold uppercase text-muted-foreground">Enrolled</p>
-                  <p className="text-base font-bold font-mono text-[#2d1f17] mt-0.5">
+                  <p className="text-base font-bold font-mono text-[#1F273A] mt-0.5">
                     {cohort.enrolled}
                   </p>
                 </div>
-                <div className="border-x border-[#BF9B7A]/20">
+                <div className="border-x border-[#D8DFEE]">
                   <p className="text-[10px] font-bold uppercase text-muted-foreground">Pass Rate</p>
-                  <p className="text-base font-bold font-mono text-[#555934] mt-0.5">
+                  <p className="text-base font-bold font-mono text-[#1C4CA1] mt-0.5">
                     {cohort.avgScore}%
                   </p>
                 </div>
@@ -217,29 +217,29 @@ export function TrainerCohortStudio({
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Syllabus Progress</span>
-                  <span className="font-mono font-bold text-[#2d1f17]">{cohort.progress}%</span>
+                  <span className="font-mono font-bold text-[#1F273A]">{cohort.progress}%</span>
                 </div>
-                <div className="w-full bg-[#EAE0D0] h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-[#D8DFEE] h-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#8C5B3E]"
+                    className="h-full rounded-full bg-[#1C4CA1]"
                     style={{ width: `${cohort.progress}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-3 border-t border-[#BF9B7A]/20">
+            <div className="flex items-center gap-2 pt-3 border-t border-[#D8DFEE]">
               <button
                 type="button"
                 onClick={() => onInspectCohort(cohort)}
-                className="flex-1 py-2 rounded-xl bg-[#FAF6F0] hover:bg-[#F2E6D8] text-[#555934] text-xs font-bold transition-colors cursor-pointer text-center"
+                className="flex-1 py-2 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center"
               >
                 Inspect Batch Details
               </button>
               <button
                 type="button"
                 onClick={() => onRemediateCohort(cohort)}
-                className="py-2 px-3.5 rounded-xl bg-[#8C5B3E] hover:bg-[#704830] text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                className="py-2 px-3.5 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Remediate</span>
@@ -250,12 +250,12 @@ export function TrainerCohortStudio({
       </div>
 
       {/* At-Risk Trainee Deficit Table */}
-      <div className="rounded-3xl bg-white border border-[#BF9B7A]/30 p-6 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between pb-4 border-b border-[#BF9B7A]/20">
+      <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between pb-4 border-b border-[#D8DFEE]">
           <div>
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <h3 className="text-base font-bold text-[#2d1f17]">
+              <h3 className="text-base font-bold text-[#1F273A]">
                 At-Risk Trainee Intervention Queue (&lt;60% Score)
               </h3>
             </div>
@@ -268,9 +268,9 @@ export function TrainerCohortStudio({
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-[#BF9B7A]/20">
+        <div className="overflow-x-auto rounded-xl border border-[#D8DFEE]">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF6F0] border-b border-[#BF9B7A]/20 text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
+            <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="py-3 px-4">Trainee</th>
                 <th className="py-3 px-4">Cadre & Center</th>
@@ -279,17 +279,17 @@ export function TrainerCohortStudio({
                 <th className="py-3 px-4 text-right">Intervention</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#BF9B7A]/15">
+            <tbody className="divide-y divide-[#D8DFEE]">
               {AT_RISK_ROSTER.map((trainee) => (
-                <tr key={trainee.id} className="hover:bg-[#FAF6F0]/40 transition-colors">
-                  <td className="py-3 px-4 font-bold text-[#2d1f17]">
+                <tr key={trainee.id} className="hover:bg-[#EDF0F7]/40 transition-colors">
+                  <td className="py-3 px-4 font-bold text-[#1F273A]">
                     <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-lg bg-[#8C5B3E]/15 text-[#8C5B3E] flex items-center justify-center font-bold text-xs font-mono">
+                      <div className="h-7 w-7 rounded-lg bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center font-bold text-xs font-mono">
                         {trainee.name
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')
-                          .slice(0, 2)}
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')
+                            .slice(0, 2)}
                       </div>
                       <div>
                         <p>{trainee.name}</p>
@@ -300,7 +300,7 @@ export function TrainerCohortStudio({
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <p className="text-[#2d1f17]">{trainee.cadre}</p>
+                    <p className="text-[#1F273A]">{trainee.cadre}</p>
                     <p className="text-[10px] text-muted-foreground">{trainee.center}</p>
                   </td>
                   <td className="py-3 px-4">
@@ -308,14 +308,14 @@ export function TrainerCohortStudio({
                       {trainee.score}%
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-[#8C5B3E] font-medium">
+                  <td className="py-3 px-4 font-mono text-[11px] text-[#1C4CA1] font-medium">
                     {trainee.weakCompetency}
                   </td>
                   <td className="py-3 px-4 text-right">
                     <button
                       type="button"
                       onClick={() => onRemediateCohort(ACTIVE_COHORTS[0])}
-                      className="px-3 py-1 rounded-xl bg-[#8C5B3E] hover:bg-[#704830] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
+                      className="px-3 py-1 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
                     >
                       <Sparkles className="h-3 w-3" />
                       <span>Dispatch Drill</span>
