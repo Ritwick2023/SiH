@@ -407,7 +407,7 @@ export default function ReviewQueuePage() {
             <span>{isHindi ? 'समीक्षा के लिए चुनें' : 'Select item to review'}</span>
           </div>
 
-          <div className="space-y-2 max-h-[720px] overflow-y-auto pr-1">
+          <div className="space-y-2 max-h-180 overflow-y-auto pr-1">
             {filteredItems.length === 0 ? (
               <div className="p-8 text-center bg-white rounded-xl border border-stone-200 text-stone-500">
                 <Layers className="h-6 w-6 mx-auto mb-2 text-stone-400" />
@@ -436,7 +436,7 @@ export default function ReviewQueuePage() {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 truncate max-w-[170px]">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 truncate max-w-42.5">
                         {item.competency}
                       </span>
                       {item.status === 'PENDING' && (
@@ -466,7 +466,7 @@ export default function ReviewQueuePage() {
                     </p>
 
                     <div className="flex items-center justify-between text-[11px] text-stone-400 mt-2.5 pt-2 border-t border-stone-100">
-                      <span className="truncate max-w-[180px] text-stone-500 font-sans">
+                      <span className="truncate max-w-45 text-stone-500 font-sans">
                         {item.sourceDoc || (isHindi ? 'आधिकारिक MoSPI मैनुअल' : 'Official MoSPI Manual')}
                       </span>
                       <span className="font-mono text-stone-400 font-medium">

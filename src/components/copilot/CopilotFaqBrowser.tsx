@@ -57,7 +57,7 @@ export function CopilotFaqBrowser({ isHindi, onSelectQuestion }: CopilotFaqBrows
                 <span className="flex-1 text-[12px] font-semibold text-[#1F273A] group-hover:text-[#1C4CA1] transition-colors">
                   {isHindi ? cat.title_hi : cat.title}
                 </span>
-                <span className="flex h-4 min-w-[18px] items-center justify-center rounded-full bg-[#1C4CA1]/10 px-1 text-[9px] font-bold text-[#1C4CA1]">
+                <span className="flex h-4 min-w-4.5 items-center justify-center rounded-full bg-[#1C4CA1]/10 px-1 text-[9px] font-bold text-[#1C4CA1]">
                   {cat.questions.length}
                 </span>
                 <ChevronDown

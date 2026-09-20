@@ -249,6 +249,8 @@ export interface Notification {
 // DOMAIN MODELS (Application-level types)
 // ============================================================================
 
+export type ConfidenceTier = 'VERIFIED_RECENT' | 'VERIFIED_AGING' | 'VERIFIED_STALE' | 'SELF_REPORTED' | 'UNASSESSED';
+
 export interface CompetencyGap {
   competencyId: string;
   competency: Competency;
@@ -259,6 +261,13 @@ export interface CompetencyGap {
   priority: ActivityPriority;
   severity: SeverityBucket;
   evidenceType: 'self-assessed' | 'assessment-verified';
+  bayesianWeightedScore?: number;
+  evidenceWeight?: number;
+  decayFactor?: number;
+  confidenceTier?: ConfidenceTier;
+  daysSinceAssessment?: number;
+  irtTheta?: number;
+  irtStandardError?: number;
 }
 
 export interface WorkforceReadinessProfile {

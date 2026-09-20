@@ -241,8 +241,8 @@ export function AdminOverviewClient({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-foreground">{item.department}</span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {new Date(item.flagged_at).toLocaleDateString()}
+                        <span className="text-[10px] text-muted-foreground" suppressHydrationWarning>
+                          {item.flagged_at ? item.flagged_at.slice(0, 10) : ''}
                         </span>
                       </div>
                       <p className="text-muted-foreground">{item.reason}</p>

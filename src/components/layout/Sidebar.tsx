@@ -283,7 +283,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
                     item.badgeType === 'warning'
                       ? 'bg-amber-500/15 text-amber-800 border border-amber-500/30'
                       : item.badgeType === 'accent'
-                        ? 'bg-[#F9EAC1] text-[#1F273A] border border-[#FFA72F]/40'
+                        ? 'bg-soft-gold text-[#1F273A] border border-[#FFA72F]/40'
                         : 'bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]'
                   }`}
                 >

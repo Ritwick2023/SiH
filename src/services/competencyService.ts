@@ -12,7 +12,9 @@ import type {
   SeverityBucket,
   Activity,
   Competency,
+  ConfidenceTier,
 } from '@/lib/types';
+import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
 
 // ============================================================================
 // CONSTANTS
@@ -320,11 +322,130 @@ export function getSeverityLabel(severity: SeverityBucket): string {
 }
 
 /**
+ * Maps evidence type and age to UI confidence tier
+ */
+export function getConfidenceTier(evidenceType?: string, daysSinceAssessment: number = 0): ConfidenceTier {
+  if (!evidenceType || evidenceType === 'unassessed') {
+    return 'UNASSESSED';
+  }
+  if (evidenceType === 'self-assessed' || evidenceType === 'SELF_REPORTED') {
+    return 'SELF_REPORTED';
+  }
+  if (daysSinceAssessment < 30) {
+    return 'VERIFIED_RECENT';
+  }
+  if (daysSinceAssessment <= 90) {
+    return 'VERIFIED_AGING';
+  }
+  return 'VERIFIED_STALE';
+}
+
+/**
+ * Simulates readiness score when user drags sliders in the What-If sandbox.
+ * Pure TypeScript synchronous execution (0ms round-trip).
+ */
+export function simulateReadinessScore(
+  requiredCompetencies: Array<{ competencyId: string; targetLevel: number; priority?: ActivityPriority }>,
+  baseLevels: Map<string, number>,
+  simulatedOverrides: Record<string, number>,
+  evidenceMap?: Map<string, { evidenceType?: string; daysSinceAssessment?: number }>
+): {
+  simulatedReadiness: number;
+  baselineReadiness: number;
+  delta: number;
+  criticalGapsRemaining: number;
+  meetsPromotionThreshold: boolean;
+} {
+  const effectiveLevels = new Map(baseLevels);
+  for (const [compId, level] of Object.entries(simulatedOverrides)) {
+    effectiveLevels.set(compId, level);
+  }
+
+  const baselineReadiness = computeWeightedReadinessIndex(requiredCompetencies, baseLevels, evidenceMap);
+  const simulatedReadiness = computeWeightedReadinessIndex(requiredCompetencies, effectiveLevels, evidenceMap);
+
+  let criticalGapsRemaining = 0;
+  for (const req of requiredCompetencies) {
+    const cur = effectiveLevels.get(req.competencyId) ?? 0;
+    const ev = evidenceMap?.get(req.competencyId);
+    const score = computeBayesianWeightedGap(cur, req.targetLevel, req.priority ?? 'important', ev);
+    if (score >= 3.5) {
+      criticalGapsRemaining++;
+    }
+  }
+
+  return {
+    simulatedReadiness,
+    baselineReadiness,
+    delta: simulatedReadiness - baselineReadiness,
+    criticalGapsRemaining,
+    meetsPromotionThreshold: simulatedReadiness >= 80,
+  };
+}
+
+/**
+ * FastAPI bridge for Bayesian gap scoring using executeWithFallback
+ */
+export async function computeGapWithFastAPI(
+  currentLevel: number,
+  targetLevel: number,
+  priority: ActivityPriority,
+  options?: { evidenceType?: string; daysSinceAssessment?: number }
+): Promise<{
+  weighted_gap_score: number;
+  evidence_weight: number;
+  decay_factor: number;
+  severity_bucket: SeverityBucket;
+}> {
+  const days = options?.daysSinceAssessment ?? 0;
+  const evType = options?.evidenceType;
+  const isIrt = evType === 'assessment-verified' || evType === 'IRT_VERIFIED';
+
+  return executeWithFallback(
+    async () => {
+      const analyticsUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
+      const res = await fetch(`${analyticsUrl}/api/v1/analytics/gap-score`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          current_level: currentLevel,
+          target_level: targetLevel,
+          priority,
+          evidence_type: isIrt ? 'IRT_VERIFIED' : 'SELF_REPORTED',
+          days_since_assessment: days,
+        }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    },
+    () => {
+      const weightedScore = computeBayesianWeightedGap(currentLevel, targetLevel, priority, options);
+      const evWeight = computeEvidenceWeight(evType, days);
+      const decay = Number(Math.exp(-0.35 * (days / 180)).toFixed(3));
+      return {
+        weighted_gap_score: weightedScore,
+        evidence_weight: evWeight,
+        decay_factor: decay,
+        severity_bucket: classifySeverity(weightedScore),
+      };
+    },
+    'BayesianGapScoreFastAPI',
+    1500
+  );
+}
+
+/**
  * Export all public functions and types
  */
 export const CompetencyService = {
   analyzeCompetencyGaps,
   computeGapSeverity,
+  computeBayesianWeightedGap,
+  computeEvidenceWeight,
+  computeWeightedReadinessIndex,
+  getConfidenceTier,
+  simulateReadinessScore,
+  computeGapWithFastAPI,
   classifySeverity,
   computeReadinessIndex,
   promoteCompetencyLevel,

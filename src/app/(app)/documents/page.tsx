@@ -467,7 +467,7 @@ export default function DocumentsPage() {
       {selectedChunkDoc && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl border border-[#D8DFEE]">
-            <div className="p-4 bg-gradient-to-r from-[#1F273A] to-[#2C3B59] rounded-t-2xl flex items-center justify-between text-white">
+            <div className="p-4 bg-linear-to-r from-[#1F273A] to-[#2C3B59] rounded-t-2xl flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-[#FFA72F]" />
                 <h3 className="text-base font-bold text-white">

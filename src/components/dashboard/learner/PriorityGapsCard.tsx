@@ -140,15 +140,15 @@ export function PriorityGapsCard({
                       onClick={() => onBridgeGap(comp.id)}
                       className="px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
                     >
-                      <span>{isHindi ? 'मूल्यांकन दें' : 'Bridge Gap'}</span>
+                      <span>{isHindi ? 'कौशल अंतर दूर करें' : 'Bridge Gap'}</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </button>
                   ) : (
                     <Link
-                      href={`/assessment/${comp.id}`}
+                      href="/skill-gap"
                       className="px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs inline-flex items-center gap-1"
                     >
-                      <span>{isHindi ? 'मूल्यांकन दें' : 'Bridge Gap'}</span>
+                      <span>{isHindi ? 'कौशल अंतर दूर करें' : 'Bridge Gap'}</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </Link>
                   )}

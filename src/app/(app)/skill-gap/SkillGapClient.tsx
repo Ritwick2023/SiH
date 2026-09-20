@@ -1,20 +1,35 @@
 'use client';
 
+import React, { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { PlayCircle, BookOpen, GraduationCap, ArrowRight, PieChart, Compass } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { 
+  BarChart3, 
+  SlidersHorizontal, 
+  Calendar, 
+  PieChart, 
+  Compass, 
+  Search, 
+  GraduationCap, 
+  ArrowRight
+} from 'lucide-react';
+
 import type { RadarDataPoint } from '@/components/RadarChart';
-import { LearningCatalogService, type RankedLearningRecommendation } from '@/services/learningCatalogService';
-import type { OfficialLearningItem } from '@/data/officialLearningCatalog';
 import { FracSunburstHierarchy } from '@/components/charts/FracSunburstHierarchy';
-import { ProvenanceBadge } from '@/components/ProvenanceBadge';
-import { CompetencyService } from '@/services/competencyService';
+import { computeBayesianWeightedGap, computeWeightedReadinessIndex, classifySeverity } from '@/services/competencyService';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import type { CompetencyGap } from '@/lib/types';
 import type { AppUser } from '@/lib/auth';
 import { useSafeLocale } from '@/lib/useSafeLocale';
+import { LearningCatalogService, type RankedLearningRecommendation } from '@/services/learningCatalogService';
+
+import { ReadinessHeroBento } from '@/components/skill-gap/ReadinessHeroBento';
+import { EnhancedGapCard } from '@/components/skill-gap/EnhancedGapCard';
+import { CompetencyRubricModal } from '@/components/skill-gap/CompetencyRubricModal';
+import { SkillGapSimulator } from '@/components/skill-gap/SkillGapSimulator';
+import { RemediationRoadmap } from '@/components/skill-gap/RemediationRoadmap';
+import { CadreBenchmarkSelector } from '@/components/skill-gap/CadreBenchmarkSelector';
 
 const RadarChart = dynamic(
   () => import('@/components/RadarChart').then((mod) => mod.RadarChart),
@@ -22,192 +37,76 @@ const RadarChart = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-64 w-64 items-center justify-center">
-        <div className="h-48 w-48 rounded-full bg-muted/40 animate-pulse" />
+        <div className="h-48 w-48 rounded-full bg-slate-100 animate-pulse" />
       </div>
     ),
   }
 );
-
-interface GapCardProps {
-  gap: CompetencyGap;
-  isHindi?: boolean;
-}
-
-function GapCard({ gap, isHindi }: GapCardProps) {
-  const matchingCourses = useMemo(
-    () => LearningCatalogService.getByCompetency(gap.competencyId),
-    [gap.competencyId]
-  );
-  const severityPillColors = {
-    HIGH: 'text-red-700 bg-red-500/15 border border-red-500/30',
-    MODERATE: 'text-amber-700 bg-amber-500/15 border border-amber-500/30',
-    PROFICIENT: 'text-emerald-700 bg-emerald-500/15 border border-emerald-500/30',
-  };
-
-  return (
-    <div className="rounded-2xl bg-white p-6 border border-[#D8DFEE] shadow-xs transition-all hover:shadow-sm">
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-[#1F273A]">
-              {gap.competency.name}
-            </h3>
-            <ProvenanceBadge provenance={gap.competency.provenance} showLabel={false} size="sm" />
-          </div>
-          <p className="text-sm text-[#475569] mb-2">
-            {isHindi ? 'गतिविधि:' : 'Activity:'} {gap.activity.name}
-          </p>
-        </div>
-        <div className="text-right">
-          <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${severityPillColors[gap.severity]}`}>
-            {gap.severity === 'HIGH' && (isHindi ? '🔴 उच्च गंभीरता' : '🔴 Critical')}
-            {gap.severity === 'MODERATE' && (isHindi ? '🟡 मध्यम' : '🟡 Moderate')}
-            {gap.severity === 'PROFICIENT' && (isHindi ? '🟢 प्रवीण' : '🟢 Proficient')}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3 bg-[#EDF0F7]/60 px-4 py-2.5 rounded-xl text-xs border border-[#D8DFEE]">
-        <div className="flex items-center gap-3 font-mono">
-          <span className="text-[#475569]">{isHindi ? 'वर्तमान:' : 'Current:'} <strong className="text-[#1F273A] font-bold text-sm">L{gap.currentLevel}</strong></span>
-          <span className="text-[#94A3B8]">→</span>
-          <span className="text-[#475569]">{isHindi ? 'लक्षित:' : 'Target:'} <strong className="text-[#1C4CA1] font-bold text-sm">L{gap.targetLevel}</strong></span>
-        </div>
-        <div className="flex items-center gap-3 text-[11px] text-[#475569]">
-          <span className="capitalize">{isHindi ? 'प्राथमिकता:' : 'Priority:'} <strong className="text-[#1F273A] font-semibold">{gap.priority}</strong></span>
-          <span>•</span>
-          <span>{isHindi ? 'अंतर स्कोर:' : 'Severity Score:'} <strong className="text-[#1C4CA1] font-bold">{CompetencyService.computeGapSeverity(gap.currentLevel, gap.targetLevel, gap.priority)}</strong></span>
-        </div>
-      </div>
-
-      <details className="group mb-2">
-        <summary className="text-xs font-semibold text-[#1C4CA1] hover:text-[#1164BE] cursor-pointer inline-flex items-center gap-1 select-none">
-          <span>{isHindi ? 'यह क्यों महत्वपूर्ण है' : 'Why this matters'}</span>
-          <span className="text-[10px] group-open:rotate-180 transition-transform">▾</span>
-        </summary>
-        <p className="text-xs text-[#475569] leading-relaxed mt-1.5 pl-2 border-l-2 border-[#1C4CA1]/30">
-          {gap.evidenceType === 'assessment-verified'
-            ? isHindi
-              ? `आपके ${gap.activity.name} प्रदर्शन मूल्यांकन ने स्तर ${gap.currentLevel} दर्शाया, जबकि प्रभावी निष्पादन हेतु स्तर ${gap.targetLevel} आवश्यक है।`
-              : `Your verified proficiency is Level ${gap.currentLevel}. Cadre duties for ${gap.activity.name} require Level ${gap.targetLevel} for field data consistency.`
-            : isHindi
-              ? `स्व-मूल्यांकन के आधार पर, स्तर ${gap.targetLevel} की आवश्यकताओं को पूरा करने के लिए ${gap.competency.name} विकसित करना आवश्यक है।`
-              : `Self-assessed baseline is Level ${gap.currentLevel}. Take the diagnostic assessment to certify Level ${gap.targetLevel} for ${gap.activity.name}.`
-          }
-        </p>
-      </details>
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-2 border-t border-[#D8DFEE]">
-        <div className="flex items-center gap-2 text-xs text-[#475569]">
-          <span className="px-2.5 py-1 rounded-full bg-[#EDF0F7] text-[#1F273A] border border-[#D8DFEE]">
-            {gap.evidenceType === 'assessment-verified' ? (
-              isHindi ? 'मूल्यांकन-सत्यापित' : 'Assessment-verified'
-            ) : (
-              isHindi ? 'स्व-मूल्यांकित' : 'Self-assessed'
-            )}
-          </span>
-          <span className="px-2.5 py-1 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] font-medium">
-            {gap.competency.category}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          {gap.severity !== 'PROFICIENT' && (
-            <>
-              <Link
-                href={`/pathways?competency=${gap.competencyId}`}
-                className="inline-flex items-center gap-1 text-xs text-[#1C4CA1] hover:text-[#1164BE] font-bold"
-              >
-                <BookOpen className="h-3.5 w-3.5" />
-                <span>{isHindi ? 'पाठ्यक्रम' : 'Courses'}</span>
-              </Link>
-              <Link
-                href={`/assessment/${gap.competencyId}`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs text-white bg-[#1C4CA1] hover:bg-[#1164BE] font-bold rounded-xl transition-all shadow-2xs active:scale-[0.98]"
-              >
-                <PlayCircle className="h-3.5 w-3.5" />
-                <span>{isHindi ? 'मूल्यांकन दें' : 'Take Assessment'}</span>
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-
-      {matchingCourses.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-[#D8DFEE]">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[11px] font-bold text-[#1C4CA1] uppercase tracking-wider flex items-center gap-1.5">
-              <GraduationCap className="h-3.5 w-3.5 text-[#1C4CA1]" />
-              <span>Recommended MoSPI Modules</span>
-            </span>
-            <span className="text-[10px] font-mono text-[#475569]">
-              {matchingCourses.length} Curricula
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {matchingCourses.slice(0, 2).map((course: OfficialLearningItem) => (
-              <Link
-                key={course.id}
-                href={`/pathways/${course.id}`}
-                className="group flex flex-col justify-between p-3 rounded-xl bg-white border border-[#D8DFEE] hover:border-[#1C4CA1]/50 hover:bg-[#EDF0F7]/30 transition-all shadow-2xs"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#1C4CA1]/10 text-[#1C4CA1]">
-                      {course.provider}
-                    </span>
-                    <span className="text-[10px] font-mono text-[#475569]">
-                      Target L{course.targetLevel}
-                    </span>
-                  </div>
-                  <p className="font-bold text-xs text-[#1F273A] group-hover:text-[#1C4CA1] transition-colors line-clamp-1">
-                    {course.title}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#D8DFEE]/60 text-[10px]">
-                  <span className="text-[#475569]">{course.duration || 'Handbook'}</span>
-                  <span className="text-[#1C4CA1] font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                    <span>Study</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 interface SkillGapClientProps {
   user: AppUser;
 }
 
 export default function SkillGapClient({ user }: SkillGapClientProps) {
-  const t = useTranslations();
+  const t = useTranslations('skillGap');
   const locale = useSafeLocale();
   const isHindi = locale === 'hi';
-  const [filter, setFilter] = useState<'all' | 'HIGH' | 'MODERATE' | 'PROFICIENT'>('all');
+
+  // Navigation Tab State
+  const [activeTab, setActiveTab] = useState<'overview' | 'simulator' | 'roadmap'>('overview');
+
+  // Active Cadre Benchmark
+  const [selectedCadre, setSelectedCadre] = useState<string>(() => {
+    if (user?.email?.toLowerCase().includes('sunita')) return 'demo-sunita';
+    if (user?.email?.toLowerCase().includes('priya')) return 'demo-priya';
+    return 'demo-amit';
+  });
+
+  // Visualization sub-view in Overview tab
   const [activeViz, setActiveViz] = useState<'radar' | 'sunburst'>('radar');
 
-  const profile = useMemo(() => {
-    return getPersonaFRAC(user);
-  }, [user]);
+  // Filter & Search states
+  const [severityFilter, setSeverityFilter] = useState<'all' | 'HIGH' | 'MODERATE' | 'PROFICIENT'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'severity' | 'gap' | 'name'>('severity');
 
+  // Modal & Focus States
+  const [inspectingGap, setInspectingGap] = useState<CompetencyGap | null>(null);
+  const [simulatorFocusedId, setSimulatorFocusedId] = useState<string | null>(null);
+  const [simulatedPlanOverrides, setSimulatedPlanOverrides] = useState<Record<string, number>>({});
+
+  // Active Cadre Profile
+  const profile = useMemo(() => {
+    return getPersonaFRAC(selectedCadre);
+  }, [selectedCadre]);
+
+  // Bayesian Evidence-Weighted Gaps
   const gaps: CompetencyGap[] = useMemo(() => {
     return profile.competencies.map((comp) => {
-      const gap = Math.max(0, comp.targetLevel - comp.currentLevel);
-      const severityScore = CompetencyService.computeGapSeverity(comp.currentLevel, comp.targetLevel, comp.priority);
-      const severity = CompetencyService.classifySeverity(severityScore);
+      const gapSize = Math.max(0, comp.targetLevel - comp.currentLevel);
+      const daysSince = comp.evidenceType === 'assessment-verified' ? 14 : 90;
+      const bayesianScore = computeBayesianWeightedGap(
+        comp.currentLevel,
+        comp.targetLevel,
+        comp.priority,
+        {
+          evidenceType: comp.evidenceType,
+          daysSinceAssessment: daysSince,
+        }
+      );
+      const severity = classifySeverity(bayesianScore);
+      const evidenceWeight = comp.evidenceType === 'assessment-verified' ? (daysSince < 30 ? 1.00 : 0.85) : 0.50;
+      const decayFactor = Number(Math.exp(-0.35 * (daysSince / 180)).toFixed(2));
 
       return {
         competencyId: comp.id,
         competency: {
           id: comp.id,
-          name: isHindi ? comp.name_hi : comp.name,
+          name: isHindi && comp.name_hi ? comp.name_hi : comp.name,
           name_hi: comp.name_hi,
           category: comp.category,
-          description: isHindi ? comp.description_hi : comp.description,
+          description: isHindi && comp.description_hi ? comp.description_hi : comp.description,
           description_hi: comp.description_hi,
           levels: comp.levels,
           provenance: comp.provenance,
@@ -215,7 +114,7 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
         },
         activity: {
           id: `act-${comp.id}`,
-          name: isHindi ? comp.activityName_hi : comp.activityName,
+          name: isHindi && comp.activityName_hi ? comp.activityName_hi : comp.activityName,
           name_hi: comp.activityName_hi,
           description: comp.description,
           role_id: profile.personaId,
@@ -224,14 +123,90 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
         },
         currentLevel: comp.currentLevel,
         targetLevel: comp.targetLevel,
-        gap,
+        gap: gapSize,
         priority: comp.priority,
         severity,
         evidenceType: comp.evidenceType,
+        bayesianWeightedScore: bayesianScore,
+        evidenceWeight,
+        decayFactor,
+        daysSinceAssessment: daysSince,
       };
     });
   }, [profile, isHindi]);
 
+  // Priority-Weighted Readiness Index
+  const weightedReadiness = useMemo(() => {
+    const required = gaps.map((g) => ({
+      competencyId: g.competencyId,
+      targetLevel: g.targetLevel,
+      priority: g.priority,
+    }));
+    const levelsMap = new Map<string, number>();
+    const evMap = new Map<string, { evidenceType?: string; daysSinceAssessment?: number }>();
+    gaps.forEach((g) => {
+      levelsMap.set(g.competencyId, g.currentLevel);
+      evMap.set(g.competencyId, {
+        evidenceType: g.evidenceType,
+        daysSinceAssessment: g.daysSinceAssessment,
+      });
+    });
+    return computeWeightedReadinessIndex(required, levelsMap, evMap);
+  }, [gaps]);
+
+  // Counts & Summaries
+  const severityCounts = useMemo(() => ({
+    HIGH: gaps.filter((g) => g.severity === 'HIGH').length,
+    MODERATE: gaps.filter((g) => g.severity === 'MODERATE').length,
+    PROFICIENT: gaps.filter((g) => g.severity === 'PROFICIENT').length,
+  }), [gaps]);
+
+  const verifiedCount = useMemo(
+    () => gaps.filter((g) => g.evidenceType === 'assessment-verified').length,
+    [gaps]
+  );
+  const selfReportedCount = gaps.length - verifiedCount;
+
+  // Filtered & Sorted Gaps for Overview tab
+  const filteredGaps = useMemo(() => {
+    let list = [...gaps];
+
+    // Severity Filter
+    if (severityFilter !== 'all') {
+      list = list.filter((g) => g.severity === severityFilter);
+    }
+
+    // Category Filter
+    if (categoryFilter !== 'all') {
+      list = list.filter((g) => g.competency.category.toLowerCase() === categoryFilter.toLowerCase());
+    }
+
+    // Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (g) =>
+          g.competency.name.toLowerCase().includes(q) ||
+          g.activity.name.toLowerCase().includes(q) ||
+          g.competencyId.toLowerCase().includes(q)
+      );
+    }
+
+    // Sorting
+    list.sort((a, b) => {
+      if (sortBy === 'severity') {
+        return (b.bayesianWeightedScore ?? 0) - (a.bayesianWeightedScore ?? 0);
+      }
+      if (sortBy === 'gap') {
+        return b.gap - a.gap;
+      }
+      return a.competency.name.localeCompare(b.competency.name);
+    });
+
+    return list;
+  }, [gaps, severityFilter, categoryFilter, searchQuery, sortBy]);
+
+  // Radar chart data points
   const radarData: RadarDataPoint[] = useMemo(() => {
     return gaps.map((gap: CompetencyGap) => ({
       label: gap.competency.name.length > 20
@@ -243,240 +218,326 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
     }));
   }, [gaps]);
 
+  // Top course recommendations
   const topRecommendations: RankedLearningRecommendation[] = useMemo(() => {
     return LearningCatalogService.getRecommendedForGaps(gaps, 4, user);
   }, [gaps, user]);
 
-  const severityCounts = useMemo(() => ({
-    HIGH: gaps.filter((g: CompetencyGap) => g.severity === 'HIGH').length,
-    MODERATE: gaps.filter((g: CompetencyGap) => g.severity === 'MODERATE').length,
-    PROFICIENT: gaps.filter((g: CompetencyGap) => g.severity === 'PROFICIENT').length,
-  }), [gaps]);
+  // Interactivity Handlers
+  const handleInspectRubric = (gap: CompetencyGap) => {
+    setInspectingGap(gap);
+  };
 
-  const filteredGaps = useMemo(() => {
-    return filter === 'all' ? gaps : gaps.filter((gap: CompetencyGap) => gap.severity === filter);
-  }, [gaps, filter]);
+  const handleSimulateLevelUp = (competencyId: string, targetLevel: number) => {
+    setSimulatorFocusedId(competencyId);
+    setActiveTab('simulator');
+  };
+
+  const handleGeneratePlanFromSimulator = (simulatedLevels: Record<string, number>) => {
+    setSimulatedPlanOverrides(simulatedLevels);
+    setActiveTab('roadmap');
+  };
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
-            Cadre: {profile.cadre}
-          </span>
-          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#FFA72F]/15 text-[#1F273A] border border-[#FFA72F]/30">
-            MoSPI FRAC Framework
-          </span>
-        </div>
-        <h1 className="text-3xl font-black text-[#1F273A] tracking-tight">
-          {t('skillGap.title')}
-        </h1>
-        <p className="text-[#475569] max-w-3xl">
-          {t('skillGap.subtitle')}
-        </p>
+    <div className="w-full space-y-6 pb-12">
+      {/* 1. Readiness Hero Bento Grid */}
+      <ReadinessHeroBento
+        weightedReadiness={weightedReadiness}
+        criticalCount={severityCounts.HIGH}
+        moderateCount={severityCounts.MODERATE}
+        proficientCount={severityCounts.PROFICIENT}
+        verifiedCount={verifiedCount}
+        selfReportedCount={selfReportedCount}
+        totalCompetencies={gaps.length}
+        cadreName={profile.cadre}
+        designationName={isHindi && profile.designation_hi ? profile.designation_hi : profile.designation}
+        promotionThreshold={80}
+        activeSeverityFilter={severityFilter}
+        onFilterChange={setSeverityFilter}
+        isHindi={isHindi}
+      />
+
+      {/* 2. Cross-Cadre Mobility Benchmark Selector */}
+      <CadreBenchmarkSelector
+        selectedCadre={selectedCadre}
+        onSelectCadre={setSelectedCadre}
+        isHindi={isHindi}
+      />
+
+      {/* 3. Primary Navigation Tabs */}
+      <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] max-w-xl mx-auto sm:mx-0 shadow-inner">
+        <button
+          type="button"
+          onClick={() => setActiveTab('overview')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+            activeTab === 'overview'
+              ? 'bg-white text-[#1C4CA1] shadow-xs border border-[#D8DFEE]'
+              : 'text-[#475569] hover:text-[#1F273A]'
+          }`}
+        >
+          <BarChart3 className="w-4 h-4" />
+          <span>{t('tabs.overview')}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('simulator')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+            activeTab === 'simulator'
+              ? 'bg-white text-[#1C4CA1] shadow-xs border border-[#D8DFEE]'
+              : 'text-[#475569] hover:text-[#1F273A]'
+          }`}
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+          <span>{t('tabs.simulator')}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('roadmap')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+            activeTab === 'roadmap'
+              ? 'bg-white text-[#1C4CA1] shadow-xs border border-[#D8DFEE]'
+              : 'text-[#475569] hover:text-[#1F273A]'
+          }`}
+        >
+          <Calendar className="w-4 h-4" />
+          <span>{t('tabs.roadmap')}</span>
+        </button>
       </div>
 
-      {/* Visualization Card with View Toggle */}
-      <div className="rounded-3xl bg-white p-6 sm:p-8 border border-[#D8DFEE] shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#D8DFEE]">
-          <div>
-            <h2 className="text-lg font-bold text-[#1F273A]">
-              {activeViz === 'radar'
-                ? isHindi
-                  ? 'दक्षता रडार — वर्तमान बनाम अपेक्षित स्तर'
-                  : 'Competency Radar — Current vs Required Levels'
-                : isHindi
-                  ? 'D3.js FRAC श्रेणीबद्ध सनबर्स्ट पदानुक्रम'
-                  : 'D3.js Interactive FRAC Sunburst Competency Hierarchy'}
-            </h2>
-            <p className="text-xs text-[#475569] mt-0.5">
-              {activeViz === 'radar'
-                ? 'Spider graph comparing 5-level proficiency baseline to MoSPI cadre mandate'
-                : 'Multi-tiered structural partition of Domain, Behavioral, and Functional competencies'}
-            </p>
-          </div>
+      {/* 4. Tab Contents */}
 
-          {/* Viz Toggle Buttons */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] shrink-0 self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setActiveViz('radar')}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeViz === 'radar'
-                  ? 'bg-[#1C4CA1] text-white shadow-xs'
-                  : 'text-[#475569] hover:text-[#1F273A]'
-              }`}
-            >
-              <PieChart className="h-3.5 w-3.5" />
-              <span>Radar Chart</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveViz('sunburst')}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeViz === 'sunburst'
-                  ? 'bg-[#1C4CA1] text-white shadow-xs'
-                  : 'text-[#475569] hover:text-[#1F273A]'
-              }`}
-            >
-              <Compass className="h-3.5 w-3.5" />
-              <span>D3 Sunburst Hierarchy</span>
-            </button>
-          </div>
-        </div>
-
-        {activeViz === 'radar' ? (
-          <div className="flex justify-center py-2">
-            <RadarChart data={radarData} size={450} showLegend />
-          </div>
-        ) : (
-          <div className="py-2">
-            <FracSunburstHierarchy />
-          </div>
-        )}
-      </div>
-
-      {/* Filter Bar */}
-      <div className="rounded-3xl bg-white p-4 border border-[#D8DFEE] shadow-xs">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-bold text-[#475569]">
-            {isHindi ? 'गंभीरता अनुसार फ़िल्टर करें:' : 'Filter by severity:'}
-          </span>
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              filter === 'all'
-                ? 'bg-[#1C4CA1] text-white shadow-2xs'
-                : 'bg-[#EDF0F7] text-[#475569] hover:bg-[#D8DFEE]'
-            }`}
-          >
-            {isHindi ? 'सभी' : 'All'} ({gaps.length})
-          </button>
-          <button
-            onClick={() => setFilter('HIGH')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              filter === 'HIGH'
-                ? 'bg-red-600 text-white shadow-2xs'
-                : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
-            }`}
-          >
-            {isHindi ? '🔴 उच्च गंभीरता' : '🔴 High'} ({severityCounts.HIGH})
-          </button>
-          <button
-            onClick={() => setFilter('MODERATE')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              filter === 'MODERATE'
-                ? 'bg-amber-600 text-white shadow-2xs'
-                : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'
-            }`}
-          >
-            {isHindi ? '🟡 मध्यम' : '🟡 Moderate'} ({severityCounts.MODERATE})
-          </button>
-          <button
-            onClick={() => setFilter('PROFICIENT')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              filter === 'PROFICIENT'
-                ? 'bg-emerald-600 text-white shadow-2xs'
-                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
-            }`}
-          >
-            {isHindi ? '🟢 प्रवीण' : '🟢 Proficient'} ({severityCounts.PROFICIENT})
-          </button>
-        </div>
-      </div>
-
-      {/* Gap Cards */}
-      <div className="space-y-4">
-        {filteredGaps.map((gap) => (
-          <GapCard key={gap.competencyId} gap={gap} isHindi={isHindi} />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {filteredGaps.length === 0 && (
-        <div className="text-center py-12 rounded-3xl bg-white border border-[#D8DFEE] shadow-xs">
-          <div className="text-4xl mb-4">🎉</div>
-          <h3 className="text-lg font-bold text-[#1F273A] mb-2">
-            {isHindi ? 'इस श्रेणी में कोई कमी नहीं है' : 'No gaps in this category'}
-          </h3>
-          <p className="text-[#475569]">
-            {isHindi
-              ? 'इस फ़िल्टर के लिए सभी दक्षताएं लक्षित स्तर पर या उससे अधिक हैं।'
-              : 'All competencies are at or above target level for this filter.'}
-          </p>
-        </div>
-      )}
-
-      {/* Recommended Government Courses to Bridge All Gaps */}
-      {topRecommendations.length > 0 && (
-        <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-xs space-y-5 border border-[#D8DFEE]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center">
-                  <GraduationCap className="h-4 w-4" />
-                </div>
-                <h2 className="text-lg sm:text-xl font-bold text-[#1F273A]">
-                  Recommended Government Courses &amp; Modules
+      {/* TAB A: Overview & Visualizations */}
+      {activeTab === 'overview' && (
+        <div className="space-y-6">
+          {/* Visualization Container */}
+          <div className="rounded-3xl bg-white p-6 sm:p-8 border border-[#D8DFEE] shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#E2E8F0]">
+              <div>
+                <h2 className="text-lg font-bold text-[#1F273A]">
+                  {activeViz === 'radar'
+                    ? (isHindi ? 'दक्षता रडार — वर्तमान बनाम लक्षित स्तर' : 'Competency Radar — Baseline vs Mandate')
+                    : (isHindi ? 'D3.js FRAC श्रेणीबद्ध सनबर्स्ट पदानुक्रम' : 'D3.js Zoomable FRAC Sunburst Hierarchy')}
                 </h2>
+                <p className="text-xs text-[#475569] mt-0.5">
+                  {activeViz === 'radar'
+                    ? (isHindi ? '5-स्तरीय मानक के विरुद्ध आपकी दक्षताओं का तुलनात्मक स्पाइडर आरेख' : 'Multi-axis radar comparing your baseline against MoSPI cadre standards')
+                    : (isHindi ? 'कार्यक्षेत्र, कार्यात्मक एवं व्यवहारिक दक्षताओं का संवादात्मक विभाजन' : 'Interactive multi-tiered partition of Domain, Functional, and Behavioural competencies')}
+                </p>
               </div>
-              <p className="text-xs text-[#475569] mt-1">
-                Official curricula from NSSTA &amp; MoSPI prioritized by your critical competency gaps
-              </p>
+
+              {/* Viz Toggle */}
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EDF0F7] border border-[#D8DFEE] shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setActiveViz('radar')}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    activeViz === 'radar'
+                      ? 'bg-[#1C4CA1] text-white shadow-xs'
+                      : 'text-[#475569] hover:text-[#1F273A]'
+                  }`}
+                >
+                  <PieChart className="h-3.5 w-3.5" />
+                  <span>Radar Chart</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveViz('sunburst')}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    activeViz === 'sunburst'
+                      ? 'bg-[#1C4CA1] text-white shadow-xs'
+                      : 'text-[#475569] hover:text-[#1F273A]'
+                  }`}
+                >
+                  <Compass className="h-3.5 w-3.5" />
+                  <span>D3 Sunburst</span>
+                </button>
+              </div>
             </div>
-            <Link
-              href="/pathways"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shrink-0 shadow-2xs"
-            >
-              <span>Explore All 10 Courses</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+
+            {activeViz === 'radar' ? (
+              <div className="flex justify-center py-2">
+                <RadarChart data={radarData} size={420} showLegend />
+              </div>
+            ) : (
+              <div className="py-2">
+                <FracSunburstHierarchy />
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {topRecommendations.map(({ item, whyRecommended }: RankedLearningRecommendation) => (
-              <div
-                key={item.id}
-                className="p-4 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] flex flex-col justify-between hover:border-[#1C4CA1]/40 hover:bg-white transition-all shadow-2xs"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1]">
-                      {item.provider}
-                    </span>
-                    <span className="text-xs font-mono font-bold text-[#1C4CA1]">
-                      Target L{item.targetLevel} • {item.difficulty}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-sm text-[#1F273A] line-clamp-1 mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-[#475569] line-clamp-2 mb-3">
-                    {item.description}
-                  </p>
-                  <div className="p-2.5 rounded-xl bg-white border border-[#D8DFEE] text-[11px] text-[#1C4CA1] font-medium mb-3">
-                    <strong>Why Recommended:</strong> {whyRecommended}
-                  </div>
-                </div>
+          {/* Search, Filter & Sort Toolbar */}
+          <div className="rounded-2xl bg-white p-4 border border-[#D8DFEE] shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('filters.searchPlaceholder')}
+                className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-[#F8FAFC] border border-border text-[#1F273A] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/20 focus:border-[#1C4CA1]"
+              />
+            </div>
 
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#D8DFEE] text-xs">
-                  <span className="text-[#475569] text-[11px]">
-                    {item.duration || 'Official Publication'} • {item.content_type}
-                  </span>
-                  <Link
-                    href={`/pathways/${item.id}`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors"
-                  >
-                    <span>View Course</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
+            {/* Category Dropdown & Sort Dropdown */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="px-3 py-2 rounded-xl text-xs font-semibold bg-[#F8FAFC] border border-border text-[#1F273A] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/20"
+              >
+                <option value="all">All Categories</option>
+                <option value="domain">Domain</option>
+                <option value="functional">Functional</option>
+                <option value="behavioural">Behavioural</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'severity' | 'gap' | 'name')}
+                className="px-3 py-2 rounded-xl text-xs font-semibold bg-[#F8FAFC] border border-border text-[#1F273A] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]/20"
+              >
+                <option value="severity">{t('filters.sortSeverity')}</option>
+                <option value="gap">{t('filters.sortGap')}</option>
+                <option value="name">{t('filters.sortName')}</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Enhanced Gap Cards List */}
+          <div className="space-y-4">
+            {filteredGaps.map((gap) => (
+              <EnhancedGapCard
+                key={gap.competencyId}
+                gap={gap}
+                isHindi={isHindi}
+                onInspectRubric={handleInspectRubric}
+                onSimulateLevelUp={handleSimulateLevelUp}
+              />
             ))}
           </div>
+
+          {/* Empty State */}
+          {filteredGaps.length === 0 && (
+            <div className="text-center py-12 rounded-3xl bg-white border border-[#D8DFEE] shadow-xs">
+              <div className="text-4xl mb-3">🎉</div>
+              <h3 className="text-base font-bold text-[#1F273A] mb-1">
+                {isHindi ? 'इस फ़िल्टर में कोई अंतर नहीं मिला' : 'No competency gaps in this filter'}
+              </h3>
+              <p className="text-xs text-[#475569] max-w-sm mx-auto">
+                {isHindi
+                  ? 'सभी संबंधित दक्षताएं आपके चयनित मापदंडों पर खरी उतरती हैं।'
+                  : 'All competencies meet or exceed targets under the selected filter criteria.'}
+              </p>
+            </div>
+          )}
+
+          {/* Recommended Government Courses Section */}
+          {topRecommendations.length > 0 && (
+            <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-xs space-y-5 border border-[#D8DFEE]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1] flex items-center justify-center">
+                      <GraduationCap className="h-4 w-4" />
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-bold text-[#1F273A]">
+                      Recommended MoSPI &amp; NSSTA Learning Modules
+                    </h2>
+                  </div>
+                  <p className="text-xs text-[#475569] mt-1">
+                    Multi-signal recommended curricula aligned with your Bayesian critical gaps
+                  </p>
+                </div>
+
+                <Link
+                  href="/pathways"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-primary-dark transition-colors shrink-0 shadow-xs"
+                >
+                  <span>Explore All Pathways</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {topRecommendations.map(({ item, whyRecommended }: RankedLearningRecommendation) => (
+                  <div
+                    key={item.id}
+                    className="p-5 rounded-2xl bg-[#F8FAFC] border border-[#D8DFEE] flex flex-col justify-between hover:border-[#1C4CA1]/40 hover:bg-white transition-all shadow-xs"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
+                          {item.provider}
+                        </span>
+                        <span className="text-xs font-mono font-bold text-[#1C4CA1]">
+                          Target L{item.targetLevel} • {item.difficulty}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-sm text-[#1F273A] line-clamp-1 mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-[#475569] line-clamp-2 mb-3">
+                        {item.description}
+                      </p>
+                      <div className="p-2.5 rounded-xl bg-white border border-[#D8DFEE] text-[11px] text-[#1C4CA1] font-semibold mb-3">
+                        <strong>Why Recommended:</strong> {whyRecommended}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#E2E8F0] text-xs">
+                      <span className="text-muted-foreground text-[11px]">
+                        {item.duration || 'Official Manual'} • {item.content_type}
+                      </span>
+                      <Link
+                        href={`/pathways?courseId=${item.id}`}
+                        className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-primary-dark transition-colors"
+                      >
+                        <span>View Module</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
+
+      {/* TAB B: What-If Simulator Sandbox */}
+      {activeTab === 'simulator' && (
+        <SkillGapSimulator
+          gaps={gaps}
+          onGeneratePlan={handleGeneratePlanFromSimulator}
+          isHindi={isHindi}
+          focusedCompetencyId={simulatorFocusedId}
+        />
+      )}
+
+      {/* TAB C: 30/60/90-Day Remediation Roadmap */}
+      {activeTab === 'roadmap' && (
+        <RemediationRoadmap
+          gaps={gaps}
+          simulatedOverrides={simulatedPlanOverrides}
+          userId={user?.id || 'demo-official'}
+          isHindi={isHindi}
+        />
+      )}
+
+      {/* 5. Competency Rubric Modal (Full L1–L5 Behavioral Descriptions) */}
+      <CompetencyRubricModal
+        gap={inspectingGap}
+        isOpen={!!inspectingGap}
+        onClose={() => setInspectingGap(null)}
+        onSimulateLevel={(compId, lvl) => {
+          setInspectingGap(null);
+          setSimulatorFocusedId(compId);
+          setActiveTab('simulator');
+        }}
+      />
     </div>
   );
 }

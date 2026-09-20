@@ -75,7 +75,7 @@ export default function AssignmentsClient() {
       </div>
 
       {/* Self-paced Quiz & Practice Station Banner */}
-      <div className="rounded-2xl border border-[#D8DFEE] bg-gradient-to-r from-[#EDF0F7] via-white to-[#EDF0F7] p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-2xl border border-[#D8DFEE] bg-linear-to-r from-[#EDF0F7] via-white to-[#EDF0F7] p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3.5">
           <div className="h-10 w-10 rounded-xl bg-[#1C4CA1]/10 flex items-center justify-center text-[#1C4CA1] shrink-0">
             <Brain className="h-5 w-5" />

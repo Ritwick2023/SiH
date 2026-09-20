@@ -130,7 +130,7 @@ export function DigiLockerBadge({ credential, className = '' }: DigiLockerBadgeP
               <span>{showQr ? 'Hide QR' : 'View QR'}</span>
             </button>
           </div>
-          <div className="p-2 rounded-xl bg-[#EDF0F7]/60 font-mono text-[10px] text-[#64748B] break-all select-all">
+          <div className="p-2 rounded-xl bg-[#EDF0F7]/60 font-mono text-[10px] text-muted-foreground break-all select-all">
             {cred.proof.credentialHash}
           </div>
         </div>
@@ -143,7 +143,7 @@ export function DigiLockerBadge({ credential, className = '' }: DigiLockerBadgeP
               <div className="w-full h-full border-2 border-dashed border-[#1C4CA1] rounded flex flex-col items-center justify-center text-center p-1">
                 <ShieldCheck className="h-8 w-8 text-[#1C4CA1] mb-1" />
                 <span className="text-[8px] font-mono text-[#1F273A] font-bold">SCAN VC HASH</span>
-                <span className="text-[7px] text-muted-foreground font-mono truncate max-w-[80px]">
+                <span className="text-[7px] text-muted-foreground font-mono truncate max-w-20">
                   {cred.id.replace('urn:uuid:', '')}
                 </span>
               </div>

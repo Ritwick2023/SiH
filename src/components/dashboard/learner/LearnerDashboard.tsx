@@ -17,10 +17,12 @@ import { ManualReaderModal } from './modals/ManualReaderModal';
 import { OfficerDossierModal } from './modals/OfficerDossierModal';
 import { CAPIConnectivityModal } from './modals/CAPIConnectivityModal';
 import { LearnerKarmaLedgerModal } from './modals/LearnerKarmaLedgerModal';
+import { BridgeGapRemediationModal } from './modals/BridgeGapRemediationModal';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 import { LayoutDashboard, BookOpen, Target, GraduationCap, Wifi, Award, X } from 'lucide-react';
 import { FracSunburstHierarchy } from '@/components/charts/FracSunburstHierarchy';
 import type { DemoPersona } from '@/lib/types';
+import type { FRACCompetencyDef } from '@/data/fracCadres';
 
 export default function LearnerDashboard({ user }: { user: DashboardUserProps }) {
   const router = useRouter();
@@ -42,6 +44,7 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
   const [dossierModalOpen, setDossierModalOpen] = useState(false);
   const [capiModalOpen, setCapiModalOpen] = useState(false);
   const [karmaModalOpen, setKarmaModalOpen] = useState(false);
+  const [selectedBridgeGapComp, setSelectedBridgeGapComp] = useState<FRACCompetencyDef | null>(null);
   const [isOfflineSimulated, setIsOfflineSimulated] = useState(false);
   const [drillToast, setDrillToast] = useState<{ points: number; message: string } | null>(null);
 
@@ -74,6 +77,15 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
 
   const handleOpenManual = (manualId: string) => {
     setActiveManualId(manualId);
+  };
+
+  const handleBridgeGap = (competencyId: string) => {
+    const comp = profile.competencies.find((c) => c.id === competencyId);
+    if (comp) {
+      setSelectedBridgeGapComp(comp);
+    } else {
+      router.push('/skill-gap');
+    }
   };
 
   const handleDrillComplete = (points: number) => {
@@ -194,7 +206,7 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
               <PriorityGapsCard
                 competencies={profile.competencies}
                 isHindi={isHindi}
-                onBridgeGap={(competencyId) => router.push(`/assessment/${competencyId}`)}
+                onBridgeGap={handleBridgeGap}
                 onViewAllGaps={() => setActiveTab('competencies')}
               />
             </div>
@@ -302,7 +314,7 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
           <PriorityGapsCard
             competencies={profile.competencies}
             isHindi={isHindi}
-            onBridgeGap={(competencyId) => router.push(`/assessment/${competencyId}`)}
+            onBridgeGap={handleBridgeGap}
           />
           <HorizontalDrillsCarousel
             onStartDrill={handleStartDrill}
@@ -327,6 +339,15 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
       )}
 
       {/* Active Interactive Modals */}
+      <BridgeGapRemediationModal
+        isOpen={!!selectedBridgeGapComp}
+        onClose={() => setSelectedBridgeGapComp(null)}
+        competency={selectedBridgeGapComp}
+        isHindi={isHindi}
+        onOpenManual={handleOpenManual}
+        onStartDrill={handleStartDrill}
+      />
+
       <LearnerDrillModal
         isOpen={!!activeDrillId}
         onClose={() => setActiveDrillId(null)}

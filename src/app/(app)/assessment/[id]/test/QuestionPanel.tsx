@@ -104,7 +104,7 @@ export default function QuestionPanel({
               >
                 {/* Option letter circle */}
                 <span
-                  className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold border-2 transition-colors mt-0.5 ${
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold border-2 transition-colors mt-0.5 ${
                     isSelected
                       ? 'border-[#1C4CA1] bg-[#1C4CA1] text-white'
                       : 'border-stone-300 bg-white text-stone-500'
