@@ -159,7 +159,9 @@ export function useQueueSync(): QueueSyncState {
       // Get Firebase Auth user token
       const user = auth.currentUser;
       const accessToken = user ? await user.getIdToken() : 'demo-token';
-      const syncUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/assessment/sync`;
+      const syncUrl = process.env.NEXT_PUBLIC_APP_URL
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/api/assessment/sync`
+        : '/api/assessment/sync';
 
       // Fetch pending + failed (below retry cap) assessments
       const pending = await getPendingAssessments(SYNC_BATCH_SIZE);

@@ -10,6 +10,8 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV !== "production",
 });
 
+process.env.SERWIST_SUPPRESS_TURBOPACK_WARNING = '1';
+
 const nextConfig: NextConfig = {
   turbopack: {},
   compress: true,
@@ -20,12 +22,31 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [
       'lucide-react',
-      'recharts',
-      'date-fns',
       'clsx',
       'tailwind-merge',
       'unpdf',
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
   },
 };
 

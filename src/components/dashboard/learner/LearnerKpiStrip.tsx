@@ -16,7 +16,6 @@ interface LearnerKpiStripProps {
 
 export function LearnerKpiStrip({
   readinessIndex,
-  activeModulesCount,
   isHindi = false,
 }: LearnerKpiStripProps) {
   const nextCourseLabel = isHindi

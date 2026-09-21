@@ -9,7 +9,6 @@ import {
   Circle, 
   Clock, 
   ArrowRight, 
-  Compass, 
   ChevronRight
 } from 'lucide-react';
 import { CompetencyGap } from '@/lib/types';

@@ -195,10 +195,6 @@ export function Topbar({ initialRole }: TopbarProps) {
         setMenuOpen(false);
         setSwitcherOpen(false);
       }
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        router.push('/pathways');
-      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -323,17 +319,17 @@ export function Topbar({ initialRole }: TopbarProps) {
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="hidden sm:flex items-center justify-between h-9 sm:w-32 md:w-36 lg:w-40 rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] px-2.5 text-xs text-[#1F273A] hover:bg-white hover:border-[#1C4CA1]/50 transition-all shadow-2xs cursor-pointer group shrink-0"
+          className="hidden sm:flex items-center justify-between h-9 sm:w-36 md:w-44 lg:w-48 rounded-xl bg-slate-100/70 hover:bg-white border border-slate-200/80 hover:border-slate-300/90 px-2.5 text-xs text-slate-700 transition-all shadow-2xs hover:shadow-xs cursor-pointer group shrink-0"
           title={locale === 'hi' ? 'दक्षताएं, मैनुअल खोजें... (⌘K)' : 'Search competencies, manuals... (⌘K)'}
           aria-label={locale === 'hi' ? 'दक्षताएं, मैनुअल खोजें' : 'Search competencies, manuals...'}
         >
           <div className="flex items-center gap-1.5 min-w-0">
             <Search className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1C4CA1] shrink-0 transition-colors" />
-            <span className="truncate text-slate-500 group-hover:text-slate-700">
+            <span className="truncate text-slate-500 group-hover:text-slate-700 font-normal">
               {locale === 'hi' ? 'दक्षताएं, मैनुअल...' : 'Search competencies, manuals...'}
             </span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-[#D8DFEE] bg-white px-1 py-0.5 font-mono text-[9px] font-semibold text-slate-500 shadow-2xs">
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[9px] font-medium text-slate-400 group-hover:text-slate-600 shadow-2xs">
             ⌘K
           </kbd>
         </button>
@@ -342,7 +338,7 @@ export function Topbar({ initialRole }: TopbarProps) {
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="sm:hidden flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7]/80 border border-[#D8DFEE] text-slate-600 hover:text-[#1C4CA1] hover:bg-white transition-colors cursor-pointer shrink-0"
+          className="sm:hidden flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100/70 hover:bg-white border border-slate-200/80 hover:border-slate-300 text-slate-500 hover:text-slate-800 transition-all cursor-pointer shadow-2xs shrink-0"
           aria-label="Open Search Palette"
           title={locale === 'hi' ? 'खोजें' : 'Search'}
         >
@@ -814,6 +810,8 @@ export function Topbar({ initialRole }: TopbarProps) {
         isOpen={searchModalOpen}
         onClose={() => setSearchModalOpen(false)}
         isHindi={locale === 'hi'}
+        userRole={role}
+        userCadre={activePersona.cadre}
       />
     </header>
   );

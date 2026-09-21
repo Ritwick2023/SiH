@@ -8,7 +8,6 @@ import { getPersonaFRAC } from '@/data/fracCadres';
 import {
   ArrowLeft,
   ExternalLink,
-  AlertCircle,
   PlayCircle,
   Building2,
   ShieldCheck,

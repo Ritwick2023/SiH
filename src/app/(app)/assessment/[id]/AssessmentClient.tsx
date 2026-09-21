@@ -13,7 +13,6 @@ import {
   initializeAssessment,
   nextStage,
   recordAnswer,
-  getCompletionPercentage,
   type AssessmentState,
   type AssessmentResult,
 } from '@/services/assessmentService';
@@ -24,9 +23,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import AssessmentQuestion from './AssessmentQuestion';
 import AssessmentTimer from './AssessmentTimer';
-import AssessmentProgress from './AssessmentProgress';
 import AssessmentReview from './AssessmentReview';
-import { AlertCircle, ChevronLeft, ChevronRight, ShieldCheck, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ChevronRight, ShieldCheck, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface Question {
@@ -190,13 +188,6 @@ export default function AssessmentClient({
   useEffect(() => {
     handleSubmitAssessmentRef.current = handleSubmitAssessment;
   }, [handleSubmitAssessment]);
-
-  const handlePrevious = useCallback(() => {
-    // In real implementation, could allow review of previous answers
-    // For now, disable (assessments are forward-only)
-  }, []);
-
-  const progress = getCompletionPercentage(assessmentState);
 
   if (uiState === 'REVIEW') {
     return (
