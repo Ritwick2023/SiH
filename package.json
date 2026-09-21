@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:agents": "node --test \".agents/skills/**/scripts/*.test.mjs\"",
+    "test:ci": "npm run test -- --run && npm run test:agents"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1136.0",

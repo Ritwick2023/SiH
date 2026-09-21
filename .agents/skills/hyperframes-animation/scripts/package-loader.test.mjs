@@ -74,16 +74,20 @@ test("hyperframesPackageSpec: env override wins", async () => {
   }
 });
 
-// (b) resolvable version (in-repo) pins the bundled hyperframes/@hyperframes/cli version.
-test("hyperframesPackageSpec: resolvable in-repo version pins it", async () => {
-  const prev = process.env[ENV];
+// (b) unavailable package falls back to @latest without throwing.
+test("hyperframesPackageSpec: unavailable package falls back to @latest", async () => {
+  const previous = process.env[ENV];
   delete process.env[ENV];
+
   try {
     const { hyperframesPackageSpec } = await import("./package-loader.mjs");
-    const spec = hyperframesPackageSpec("@hyperframes/producer");
-    assert.match(spec, /^@hyperframes\/producer@\d+\.\d+\.\d+/);
+    assert.equal(
+      hyperframesPackageSpec("@hyperframes/producer"),
+      "@hyperframes/producer@latest",
+    );
   } finally {
-    if (prev !== undefined) process.env[ENV] = prev;
+    if (previous === undefined) delete process.env[ENV];
+    else process.env[ENV] = previous;
   }
 });
 

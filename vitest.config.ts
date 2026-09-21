@@ -10,6 +10,15 @@ export default defineConfig({
     environment: 'jsdom', // Use jsdom for browser APIs (IndexedDB, etc.)
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.next/**',
+      '**/.agents/**',
+      '**/.claude/**',
+      '**/.superpowers/**',
+    ],
   },
   resolve: {
     alias: {
