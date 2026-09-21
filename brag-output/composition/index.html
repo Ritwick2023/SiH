@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <title>StatVidya — Launch Brag</title>
+    <title>StatVidya — SIH 26101 Launch Video</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- GSAP Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
@@ -21,8 +21,8 @@
         width: 1920px;
         height: 1080px;
         overflow: hidden;
-        background: #1F273A;
-        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #0F1629;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         color: #ffffff;
         -webkit-font-smoothing: antialiased;
       }
@@ -32,26 +32,28 @@
         height: 100%;
         overflow: hidden;
       }
-      /* Global Background Layer */
+
+      /* ── Global Background ── */
       .bg-canvas {
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 80% 20%, rgba(255, 167, 47, 0.14) 0%, transparent 50%),
-                    radial-gradient(circle at 20% 80%, rgba(17, 100, 190, 0.22) 0%, transparent 60%),
-                    linear-gradient(135deg, #1F273A 0%, #152238 40%, #1C4CA1 80%, #0F172A 100%);
+        background:
+          radial-gradient(ellipse 120% 80% at 50% 0%, rgba(28, 76, 161, 0.35) 0%, transparent 65%),
+          radial-gradient(circle at 85% 75%, rgba(255, 167, 47, 0.12) 0%, transparent 40%),
+          linear-gradient(170deg, #0F1629 0%, #152238 35%, #111D36 100%);
         z-index: 0;
       }
-      /* Grid Overlay */
-      .grid-pattern {
+      .grid-overlay {
         position: absolute;
         inset: 0;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        background-size: 60px 60px;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+        background-size: 80px 80px;
         z-index: 1;
       }
 
-      /* Scene Layouts */
+      /* ── Scene Base ── */
       .scene {
         position: absolute;
         inset: 0;
@@ -61,393 +63,318 @@
         z-index: 10;
       }
 
-      /* Scene 1: The Sovereign Hook */
-      .hook-container {
+      /* ════════ SCENE 1: HOOK ════════ */
+      .hook-center {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        max-width: 1300px;
-        padding: 0 40px;
+        gap: 0;
       }
-      .badge-strip {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 36px;
+      .hook-line {
+        font-size: 82px;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.035em;
+        color: #ffffff;
+        text-shadow: 0 4px 40px rgba(28, 76, 161, 0.5);
       }
-      .badge-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 20px;
-        border-radius: 9999px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(12px);
-        font-size: 14px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
+      .hook-accent {
         color: #FFA72F;
       }
-      .badge-pill.sec {
-        color: #93C5FD;
-        border-color: rgba(147, 197, 253, 0.3);
-      }
-      .hook-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 76px;
-        font-weight: 800;
-        line-height: 1.12;
-        letter-spacing: -0.03em;
-        margin-bottom: 24px;
-        color: #FFFFFF;
-        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      }
-      .hook-subtitle {
-        font-size: 38px;
-        font-weight: 600;
-        line-height: 1.3;
-        color: #FFA72F;
-        margin-bottom: 24px;
-      }
-      .hook-punch {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 46px;
-        font-weight: 800;
-        color: #FFFFFF;
-        padding: 12px 36px;
-        border-radius: 16px;
-        background: rgba(28, 76, 161, 0.85);
-        border: 1px solid rgba(255, 167, 47, 0.4);
-        box-shadow: 0 12px 40px rgba(28, 76, 161, 0.5);
+      .hook-underline {
+        width: 200px;
+        height: 5px;
+        border-radius: 3px;
+        margin-top: 32px;
+        background: linear-gradient(90deg, #FFA72F 0%, #1C4CA1 100%);
       }
 
-      /* Scene 2: Radar & Brand Reveal */
-      .radar-scene-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        width: 1640px;
+      /* ════════ SCENE 2: REVEAL ════════ */
+      .reveal-layout {
+        display: flex;
         align-items: center;
+        gap: 80px;
+        padding: 0 100px;
+        width: 100%;
       }
-      .brand-card {
+      .reveal-left {
+        flex: 0 0 600px;
         display: flex;
         flex-direction: column;
         gap: 24px;
       }
-      .brand-kicker {
+      .brand-mark {
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-size: 16px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #FFA72F;
-      }
-      .brand-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 88px;
-        font-weight: 800;
-        line-height: 1.0;
-        color: #FFFFFF;
-        letter-spacing: -0.04em;
-      }
-      .brand-title span {
-        color: #FFA72F;
-        font-family: 'Mukta', sans-serif;
-        font-size: 64px;
-        margin-left: 16px;
-        font-weight: 700;
-      }
-      .brand-desc {
-        font-size: 24px;
-        line-height: 1.45;
-        color: rgba(255, 255, 255, 0.85);
-        max-width: 600px;
-      }
-      .score-pill-row {
-        display: flex;
-        gap: 16px;
-        margin-top: 12px;
-      }
-      .score-card {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(16px);
-        padding: 16px 24px;
-        border-radius: 14px;
-      }
-      .score-val {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 36px;
-        font-weight: 800;
-        color: #4ADE80;
-      }
-      .score-lbl {
-        font-size: 13px;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 4px;
-      }
-      .radar-glass-panel {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        backdrop-filter: blur(24px);
-        border-radius: 28px;
-        padding: 32px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .radar-header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        padding-bottom: 16px;
-        margin-bottom: 20px;
-      }
-
-      /* Scene 3: Offline PWA */
-      .pwa-scene {
-        width: 1550px;
-        display: flex;
-        gap: 60px;
-        align-items: center;
-      }
-      .pwa-phone-mockup {
-        width: 580px;
-        background: #FFFFFF;
-        border-radius: 36px;
-        overflow: hidden;
-        border: 10px solid #2B354F;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-        color: #1F273A;
-      }
-      .phone-top-bar {
-        background: #1C4CA1;
-        color: #FFFFFF;
-        padding: 16px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .phone-content {
-        padding: 28px;
-        display: flex;
-        flex-direction: column;
         gap: 20px;
-        background: #EDF0F7;
       }
-      .pwa-tag {
+      .brand-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #1C4CA1, #1164BE);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(28,76,161,0.4);
+      }
+      .brand-icon svg {
+        width: 42px;
+        height: 42px;
+        fill: #FFA72F;
+      }
+      .brand-name {
+        font-size: 64px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        color: #ffffff;
+      }
+      .brand-tagline {
+        font-size: 28px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.7);
+        line-height: 1.4;
+      }
+      .brand-badges {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .brand-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: #DCFCE7;
-        color: #15803D;
-        font-weight: 800;
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
         font-size: 13px;
-        padding: 4px 12px;
-        border-radius: 9999px;
-      }
-      .pwa-question-card {
-        background: #FFFFFF;
-        border-radius: 16px;
-        padding: 20px;
-        border: 1px solid #CBD5E1;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      }
-      .pwa-q-title {
-        font-family: 'Mukta', sans-serif;
-        font-size: 20px;
         font-weight: 700;
-        color: #1F273A;
-        line-height: 1.4;
-        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #FFA72F;
       }
-      .pwa-opt {
-        padding: 12px 16px;
-        border-radius: 10px;
-        border: 1px solid #CBD5E1;
-        margin-bottom: 8px;
-        font-size: 15px;
-        font-weight: 600;
-        color: #334155;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: #FFFFFF;
+      .brand-badge.blue {
+        color: #93C5FD;
+        border-color: rgba(147,197,253,0.25);
       }
-      .sync-notification {
+
+      /* Hero screenshot */
+      .hero-frame {
+        flex: 1;
+        max-width: 1000px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,0.08),
+          0 24px 80px rgba(0,0,0,0.6);
         background: #1F273A;
-        color: #FFFFFF;
-        padding: 14px 20px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-        font-weight: 600;
+        position: relative;
       }
-      .pwa-feature-list {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        max-width: 800px;
-      }
-      .feature-item {
-        display: flex;
-        gap: 20px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 24px;
-        border-radius: 18px;
-        backdrop-filter: blur(16px);
-      }
-      .feature-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
-        background: #FFA72F;
-        color: #1F273A;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 24px;
-        flex-shrink: 0;
-      }
-
-      /* Scene 4: AI MCQ Generator */
-      .ai-scene {
-        width: 1550px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
-      }
-      .ai-header-box {
-        text-align: center;
-      }
-      .ai-workstation {
-        display: grid;
-        grid-template-columns: 460px 180px 760px;
-        align-items: center;
-        gap: 24px;
+      .hero-frame img {
         width: 100%;
+        height: auto;
+        display: block;
       }
-      .doc-card {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 30px;
-      }
-      .ai-bridge {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-      .ai-chip {
-        width: 74px;
-        height: 74px;
-        border-radius: 20px;
-        background: linear-gradient(135deg, #1164BE, #FFA72F);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 35px rgba(255, 167, 47, 0.6);
-        font-weight: 900;
-        font-size: 28px;
-      }
-      .mcq-results-card {
-        background: #FFFFFF;
-        border-radius: 20px;
-        padding: 32px;
-        color: #1F273A;
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+      .hero-glow {
+        position: absolute;
+        inset: -2px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(28,76,161,0.5), rgba(255,167,47,0.3));
+        z-index: -1;
+        filter: blur(20px);
       }
 
-      /* Scene 5: Executive Dashboard */
-      .exec-scene {
-        width: 1550px;
+      /* ════════ SCENE 3: PROOF ════════ */
+      .proof-layout {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .proof-screenshot {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      .proof-screenshot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+      }
+      .proof-label-strip {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 36px 48px;
+        background: linear-gradient(to top, rgba(15,22,41,0.97) 0%, rgba(15,22,41,0.85) 60%, transparent 100%);
+      }
+      .proof-label-kicker {
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #FFD19A;
+        margin-bottom: 10px;
+      }
+      .proof-label-title {
+        font-size: 36px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        color: #ffffff;
+      }
+      .proof-label-desc {
+        font-size: 18px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.6);
+        margin-top: 6px;
+      }
+
+      /* Cursor dot overlay */
+      .cursor-dot {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255,167,47,0.9);
+        box-shadow: 0 0 0 8px rgba(255,167,47,0.2), 0 0 20px rgba(255,167,47,0.5);
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      /* ════════ SCENE 4: IMPACT ════════ */
+      .impact-center {
         display: flex;
         flex-direction: column;
-        gap: 36px;
-      }
-      .exec-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-      }
-      .exec-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.6fr 1fr;
+        align-items: center;
+        text-align: center;
         gap: 28px;
       }
-      .exec-card {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        backdrop-filter: blur(20px);
-        border-radius: 22px;
-        padding: 30px;
+      .impact-stat-row {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+      }
+      .impact-stat-box {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        padding: 36px 56px;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(12px);
       }
-      .big-stat {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 68px;
-        font-weight: 800;
-        color: #FFA72F;
-        line-height: 1.0;
-        margin: 16px 0;
+      .impact-stat-number {
+        font-size: 88px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+      .impact-stat-number.green { color: #4ADE80; }
+      .impact-stat-number.orange { color: #FFA72F; }
+      .impact-stat-number.blue { color: #60A5FA; }
+      .impact-stat-label {
+        font-size: 18px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.65);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .impact-connector {
+        font-size: 42px;
+        color: rgba(255,255,255,0.3);
+        font-weight: 300;
+      }
+      .impact-headline {
+        font-size: 36px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.85);
+        max-width: 900px;
+        line-height: 1.4;
+      }
+      .igot-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(28,76,161,0.3), rgba(17,100,190,0.2));
+        border: 1px solid rgba(96,165,250,0.35);
+        font-size: 18px;
+        font-weight: 700;
+        color: #93C5FD;
+        letter-spacing: 0.04em;
       }
 
-      /* Scene 6: Outro */
-      .outro-box {
+      /* ════════ SCENE 5: CLOSE ════════ */
+      .close-center {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 24px;
+        gap: 20px;
       }
-      .emblem-img {
-        width: 130px;
-        height: 130px;
-        border-radius: 28px;
-        box-shadow: 0 16px 50px rgba(255, 167, 47, 0.4);
-        border: 3px solid rgba(255, 167, 47, 0.6);
-        background: #FFFFFF;
+      .close-emblem {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      }
+      .close-emblem img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
-      .outro-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 80px;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1.05;
+      .close-title {
+        font-size: 64px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        color: #ffffff;
       }
-      .outro-title span {
+      .close-tagline {
+        font-size: 26px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.6);
+      }
+      .close-url {
+        font-size: 20px;
+        font-weight: 700;
         color: #FFA72F;
+        letter-spacing: 0.02em;
       }
-      .outro-tagline {
-        font-size: 32px;
-        color: rgba(255, 255, 255, 0.85);
-        font-weight: 600;
+      .close-sih-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: rgba(255,255,255,0.7);
       }
-      .outro-meta-pills {
+      /* India tricolor accent */
+      .tricolor-bar {
         display: flex;
-        gap: 16px;
-        margin-top: 10px;
+        width: 120px;
+        height: 4px;
+        border-radius: 2px;
+        overflow: hidden;
       }
+      .tricolor-bar span:nth-child(1) { flex: 1; background: #FF9933; }
+      .tricolor-bar span:nth-child(2) { flex: 1; background: #FFFFFF; }
+      .tricolor-bar span:nth-child(3) { flex: 1; background: #138808; }
     </style>
   </head>
   <body>
@@ -455,420 +382,377 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="22"
+      data-duration="20"
       data-width="1920"
       data-height="1080"
     >
-      <!-- Background & Visual Layers -->
+      <!-- Background -->
       <div class="bg-canvas"></div>
-      <div class="grid-pattern"></div>
+      <div class="grid-overlay"></div>
 
-      <!-- Soundtrack & Synchronized SFX -->
+      <!-- ── Audio ── -->
       <audio
         id="bgm"
         src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"
         data-start="0"
-        data-duration="22"
+        data-duration="20"
         data-volume="0.80"
       ></audio>
       <audio
-        id="sfx-punch"
+        id="sfx-hook"
         src="assets/sfx/impact/impactSoft_medium_001.ogg"
-        data-start="2.0"
+        data-start="0.4"
         data-duration="0.18"
-        data-volume="0.35"
+        data-volume="0.40"
       ></audio>
       <audio
-        id="sfx-radar"
+        id="sfx-reveal"
         src="assets/sfx/interface/bong_001.ogg"
-        data-start="4.0"
+        data-start="3.0"
         data-duration="0.12"
         data-volume="0.30"
       ></audio>
       <audio
-        id="sfx-click"
+        id="sfx-proof1"
         src="assets/sfx/interface/click_003.ogg"
-        data-start="9.4"
+        data-start="6.0"
         data-duration="0.01"
-        data-volume="0.40"
+        data-volume="0.35"
       ></audio>
       <audio
-        id="sfx-resolve"
+        id="sfx-proof2"
+        src="assets/sfx/interface/click_003.ogg"
+        data-start="9.0"
+        data-duration="0.01"
+        data-volume="0.35"
+      ></audio>
+      <audio
+        id="sfx-proof3"
+        src="assets/sfx/interface/click_003.ogg"
+        data-start="12.0"
+        data-duration="0.01"
+        data-volume="0.35"
+      ></audio>
+      <audio
+        id="sfx-close"
         src="assets/sfx/impact/impactBell_heavy_000.ogg"
-        data-start="20.3"
+        data-start="18.0"
         data-duration="1.48"
         data-volume="0.30"
       ></audio>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 1: The Sovereign Hook (0.0s – 3.2s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene1" class="scene clip" data-start="0" data-duration="3.2" data-track-index="1">
-        <div class="hook-container">
-          <div id="s1-badges" class="badge-strip">
-            <span class="badge-pill">🇮🇳 Mission Karmayogi</span>
-            <span class="badge-pill sec">NIC Secured Infrastructure</span>
-            <span class="badge-pill">SIH 26101 Grounded</span>
-          </div>
-          <h1 id="s1-h1" class="hook-title">10 Million Civil Servants.<br>One Crucial Question:</h1>
-          <h2 id="s1-h2" class="hook-subtitle">How do you guarantee national statistical data quality?</h2>
-          <div id="s1-punch" class="hook-punch">Enter StatVidya.</div>
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 1: HOOK — "Empowering India's Statistical Workforce"
+           0.0s – 3.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene1" class="scene clip" data-start="0" data-duration="3.0" data-track-index="1">
+        <div class="hook-center">
+          <div id="s1-line1" class="hook-line">Empowering India's</div>
+          <div id="s1-line2" class="hook-line"><span class="hook-accent">Statistical Workforce.</span></div>
+          <div id="s1-bar" class="hook-underline"></div>
         </div>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 2: StatVidya Reveal & Interactive Radar (3.2s – 8.0s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene2" class="scene clip" data-start="3.2" data-duration="4.8" data-track-index="1">
-        <div class="radar-scene-grid">
-          <div id="s2-left" class="brand-card">
-            <div class="brand-kicker">
-              <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#FFA72F;"></span>
-              MoSPI &middot; NSSTA OFFICIAL PLATFORM
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 2: REVEAL — Logo + Tagline + Hero Screenshot
+           3.0s – 6.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene2" class="scene clip" data-start="3.0" data-duration="3.0" data-track-index="1">
+        <div class="reveal-layout">
+          <div id="s2-left" class="reveal-left">
+            <div class="brand-mark">
+              <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <span class="brand-name">StatVidya</span>
             </div>
-            <div class="brand-title">
-              StatVidya<span>स्टैटविद्या</span>
+            <div class="brand-tagline">
+              Data-Driven Capacity Building<br/>for India's Official Statistical System
             </div>
-            <p class="brand-desc">
-              Workforce Competency Intelligence Platform for India's Official Statistical System. Grounded strictly in Mission Karmayogi's FRAC model.
-            </p>
-            <div class="score-pill-row">
-              <div class="score-card">
-                <div class="score-val">88.4%</div>
-                <div class="score-lbl">Cadre Readiness</div>
-              </div>
-              <div class="score-card">
-                <div class="score-val" style="color: #FFA72F;">L1 &rarr; L5</div>
-                <div class="score-lbl">FRAC Competencies</div>
-              </div>
-              <div class="score-card">
-                <div class="score-val" style="color: #60A5FA;">100%</div>
-                <div class="score-lbl">Provenanced Data</div>
-              </div>
+            <div class="brand-badges">
+              <span class="brand-badge">🇮🇳 Mission Karmayogi</span>
+              <span class="brand-badge blue">FRAC Aligned</span>
             </div>
           </div>
-
-          <div id="s2-right" class="radar-glass-panel">
-            <div class="radar-header">
-              <div>
-                <div style="font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF;">
-                  Competency Radar
-                </div>
-                <div style="font-size:13px; color:rgba(255,255,255,0.7); margin-top:2px;">
-                  NSSO Field Investigator &middot; Real-time Profile
-                </div>
-              </div>
-              <span style="padding:6px 14px; border-radius:9999px; background:rgba(21,128,61,0.45); border:1px solid #22C55E; font-size:12px; font-weight:800; color:#86EFAC;">
-                ● LIVE VERIFIED
-              </span>
-            </div>
-
-            <!-- Hexagonal Radar Chart SVG with generous padding to prevent text overflow -->
-            <svg id="radar-svg" width="580" height="380" viewBox="0 0 580 380">
-              <polygon points="290,40 430,110 430,270 290,340 150,270 150,110" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
-              <polygon points="290,80 390,130 390,250 290,300 190,250 190,130" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
-              <polygon points="290,120 350,150 350,230 290,260 230,230 230,150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
-              <!-- Radar Spokes -->
-              <line x1="290" y1="190" x2="290" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <line x1="290" y1="190" x2="430" y2="110" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <line x1="290" y1="190" x2="430" y2="270" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <line x1="290" y1="190" x2="290" y2="340" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <line x1="290" y1="190" x2="150" y2="270" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <line x1="290" y1="190" x2="150" y2="110" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <!-- Dynamic Competency Area (Scaled with Vertices) -->
-              <g id="radar-shape">
-                <polygon id="radar-poly" points="290,60 410,125 395,260 290,310 175,255 165,120"
-                  fill="rgba(255, 167, 47, 0.45)" stroke="#FFA72F" stroke-width="3" />
-                <circle cx="290" cy="60" r="6" fill="#FFA72F" />
-                <circle cx="410" cy="125" r="6" fill="#FFA72F" />
-                <circle cx="395" cy="260" r="6" fill="#FFA72F" />
-                <circle cx="290" cy="310" r="6" fill="#FFA72F" />
-                <circle cx="175" cy="255" r="6" fill="#FFA72F" />
-                <circle cx="165" cy="120" r="6" fill="#FFA72F" />
-              </g>
-              <!-- Labels -->
-              <text x="290" y="24" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Sampling Design (L4)</text>
-              <text x="440" y="115" text-anchor="start" fill="#FFFFFF" font-size="13" font-weight="700">Field Scrutiny (L5)</text>
-              <text x="440" y="275" text-anchor="start" fill="#FFFFFF" font-size="13" font-weight="700">Agri Census (L4)</text>
-              <text x="290" y="365" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">APAR Standards (L4)</text>
-              <text x="140" y="275" text-anchor="end" fill="#FFFFFF" font-size="13" font-weight="700">Survey Ethics (L5)</text>
-              <text x="140" y="115" text-anchor="end" fill="#FFFFFF" font-size="13" font-weight="700">Data Validation (L4)</text>
-            </svg>
+          <div id="s2-hero" class="hero-frame">
+            <div class="hero-glow"></div>
+            <img src="assets/images/landing-hero.png" alt="StatVidya Landing Page" />
           </div>
         </div>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 3: Offline Field-First PWA (8.0s – 12.8s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene3" class="scene clip" data-start="8.0" data-duration="4.8" data-track-index="1">
-        <div class="pwa-scene">
-          <div id="s3-phone" class="pwa-phone-mockup">
-            <div class="phone-top-bar">
-              <div>
-                <div style="font-size:16px; font-weight:800;">StatVidya Mobile</div>
-                <div style="font-size:12px; opacity:0.9;">NSSO FOD Field Runner</div>
-              </div>
-              <div class="pwa-tag">● OFFLINE ACTIVE</div>
-            </div>
-            <div class="phone-content">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:13px; font-weight:700; color:#1C4CA1;">सुनीता देवी &middot; कनिष्ठ सांख्यिकी अधिकारी</span>
-                <span style="font-size:12px; font-weight:700; background:#E2E8F0; color:#1E293B; padding:2px 8px; border-radius:6px;">हिंदी (Hindi)</span>
-              </div>
-              <div class="pwa-question-card">
-                <div class="pwa-q-title">
-                  प्रश्न 4: फसल कटाई प्रयोग (CCE) में प्लॉट चयन हेतु यादृच्छिक संख्या सारणी का उपयोग कब अनिवार्य है?
-                </div>
-                <div id="s3-opt-a" class="pwa-opt">
-                  <span id="s3-check" style="color:#15803D; font-weight:800; opacity:0; transform:scale(0);">✔</span>
-                  (A) चयनित खसरा संख्या में 5x5 मीटर त्रिकोणीय प्लॉट सीमांकन पर
-                </div>
-                <div class="pwa-opt">(B) केवल अनुमानित उपज 10 क्विंटल से कम होने पर</div>
-                <div class="pwa-opt">(C) पर्यवेक्षी अधिकारी की भौतिक अनुपस्थिति में</div>
-              </div>
-              <div id="s3-sync-box" class="sync-notification">
-                <span>IndexedDB Queue: 12 Records Stored</span>
-                <span style="color:#4ADE80; font-weight:700;">Zero Data Loss Sync</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="s3-text" class="pwa-feature-list">
-            <div class="brand-kicker">
-              FIELD ENUMERATORS FIRST &middot; NSSO FOD CADRE
-            </div>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:56px; font-weight:800; line-height:1.15;">
-              Offline-First PWA.<br><span style="color:#FFA72F;">Bilingual in Every Village.</span>
-            </h2>
-            <div class="feature-item">
-              <div class="feature-icon">🌾</div>
-              <div>
-                <div style="font-size:20px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Built for Field Investigators on Low-Cost Tablets</div>
-                <div style="font-size:16px; color:rgba(255,255,255,0.8); line-height:1.4;">
-                  Zero data loss in zero-connectivity remote blocks. Local caching, instant Devanagari rendering, and seamless auto-sync upon reconnection.
-                </div>
-              </div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-icon" style="background:#1164BE; color:#FFFFFF;">⚡</div>
-              <div>
-                <div style="font-size:20px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Micro-Learning at the Point of Field Need</div>
-                <div style="font-size:16px; color:rgba(255,255,255,0.8); line-height:1.4;">
-                  Contextual refresher modules served right before crop surveys, reducing field data scrutiny queries by 42%.
-                </div>
-              </div>
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 3A: PROOF 1 — Skill Gap / Competency Dashboard
+           6.0s – 9.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene3a" class="scene clip" data-start="6.0" data-duration="3.0" data-track-index="1">
+        <div class="proof-layout">
+          <div class="proof-screenshot">
+            <img src="assets/images/skill-gap-dashboard.png" alt="Skill Gap Intelligence Center" />
+            <div id="s3a-cursor" class="cursor-dot" style="top: 380px; left: 400px;"></div>
+            <div id="s3a-label" class="proof-label-strip">
+              <div class="proof-label-kicker">Feature 1 · Competency Profiling</div>
+              <div class="proof-label-title">Bayesian Skill Gap Intelligence</div>
+              <div class="proof-label-desc">FRAC-aligned readiness index with severity analysis across all cadres</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 4: AI Survey Manual MCQ Engine (12.8s – 17.0s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene4" class="scene clip" data-start="12.8" data-duration="4.2" data-track-index="1">
-        <div class="ai-scene">
-          <div id="s4-header" class="ai-header-box">
-            <div class="brand-kicker" style="justify-content:center; margin-bottom:12px;">
-              NSSTA FACULTY COMMAND DESK &middot; GEMINI 3.6 FLASH
-            </div>
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:54px; font-weight:800; letter-spacing:-0.02em;">
-              Turn 400-Page Survey Manuals into <span style="color:#FFA72F;">Rigorous Assessments</span> in Seconds
-            </h2>
-          </div>
-
-          <div class="ai-workstation">
-            <div id="s4-doc" class="doc-card">
-              <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-                <div style="font-size:28px;">📄</div>
-                <div>
-                  <div style="font-size:17px; font-weight:700; color:#FFFFFF;">Annual Survey of Industries</div>
-                  <div style="font-size:13px; color:rgba(255,255,255,0.7);">Official MoSPI Manual &middot; 412 Pages</div>
-                </div>
-              </div>
-              <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:14px; font-size:13px; color:#CBD5E1; font-family:monospace; line-height:1.5;">
-                &gt; Chapter 4: Schedule A Scrutiny Rules<br>
-                &gt; Gross Fixed Capital Formation Calculations<br>
-                &gt; Depreciation Schedule Item 14 Validation
-              </div>
-            </div>
-
-            <div id="s4-chip" class="ai-bridge">
-              <div class="ai-chip">AI</div>
-              <div style="font-size:12px; font-weight:800; letter-spacing:0.1em; color:#FFA72F;">GEMINI FLASH</div>
-            </div>
-
-            <div id="s4-mcq" class="mcq-results-card">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <span style="font-size:14px; font-weight:800; color:#1C4CA1; text-transform:uppercase;">Generated Assessment Item</span>
-                <span style="font-size:12px; font-weight:800; color:#15803D; background:#DCFCE7; padding:3px 10px; border-radius:9999px;">
-                  ✔ VERIFIED_OFFICIAL PROVENANCE
-                </span>
-              </div>
-              <div style="font-size:18px; font-weight:700; color:#1F273A; margin-bottom:14px; line-height:1.4;">
-                Under ASI Schedule A, how should additions to plant and machinery under capital work-in-progress be recorded?
-              </div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14px;">
-                <div style="padding:10px 14px; border:1px solid #10B981; background:#ECFDF5; border-radius:8px; font-weight:700; color:#065F46;">
-                  ✔ Block 4, Item 12: Historical Cost Basis
-                </div>
-                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
-                  Block 3: Replacement Cost Value
-                </div>
-                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
-                  Block 5: Exclude from Gross Capital
-                </div>
-                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
-                  Annexure 2: Tax Audit Schedule
-                </div>
-              </div>
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 3B: PROOF 2 — iGOT Karmayogi Learning Pathways
+           9.0s – 12.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene3b" class="scene clip" data-start="9.0" data-duration="3.0" data-track-index="1">
+        <div class="proof-layout">
+          <div class="proof-screenshot">
+            <img src="assets/images/karmayogi-pathways.png" alt="iGOT Karmayogi Learning Pathways" />
+            <div id="s3b-cursor" class="cursor-dot" style="top: 380px; left: 500px;"></div>
+            <div id="s3b-label" class="proof-label-strip">
+              <div class="proof-label-kicker">Feature 2 · Personalized Learning</div>
+              <div class="proof-label-title">iGOT Karmayogi Learning Pathways</div>
+              <div class="proof-label-desc">AI-recommended NSSTA courses mapped to your competency gaps</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 5: Executive Dashboard & Impact (17.0s – 20.2s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene5" class="scene clip" data-start="17.0" data-duration="3.2" data-track-index="1">
-        <div class="exec-scene">
-          <div id="s5-top" class="exec-top">
-            <div>
-              <div class="brand-kicker">EXECUTIVE WORKFORCE COMMAND &middot; MoSPI LEADERSHIP</div>
-              <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:48px; font-weight:800; margin-top:8px;">
-                Not Just Self-Reported Quizzes. <span style="color:#FFA72F;">Real Statistical Outcomes.</span>
-              </h2>
-            </div>
-            <span style="font-size:14px; font-weight:700; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:8px 18px; border-radius:9999px;">
-              National Statistical Commission Aligned
-            </span>
-          </div>
-
-          <div class="exec-grid">
-            <div id="s5-c1" class="exec-card">
-              <div>
-                <div style="font-size:14px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.75);">
-                  National Cadre Readiness
-                </div>
-                <div class="big-stat">89.4%</div>
-              </div>
-              <div style="font-size:15px; color:#4ADE80; font-weight:600;">
-                ▲ +14.2% competency elevation across 28 States & UTs
-              </div>
-            </div>
-
-            <div id="s5-c2" class="exec-card" style="background:rgba(28, 76, 161, 0.25); border-color:rgba(96, 165, 250, 0.4);">
-              <div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-size:14px; font-weight:700; text-transform:uppercase; color:#93C5FD;">
-                    Outcome Correlation Model
-                  </span>
-                  <span style="font-size:12px; font-weight:800; color:#FFA72F;">p &lt; 0.001</span>
-                </div>
-                <div class="big-stat" style="color:#4ADE80; margin: 8px 0;">-42%</div>
-                <!-- Mini Analytics Trend Chart -->
-                <svg width="100%" height="45" viewBox="0 0 280 45">
-                  <defs>
-                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#4ADE80" stop-opacity="0.35"/>
-                      <stop offset="100%" stop-color="#4ADE80" stop-opacity="0.0"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,10 Q70,14 140,24 T280,40 L280,45 L0,45 Z" fill="url(#chartGrad)" />
-                  <path d="M0,10 Q70,14 140,24 T280,40" fill="none" stroke="#4ADE80" stroke-width="2.5" />
-                  <circle cx="280" cy="40" r="3.5" fill="#4ADE80" />
-                </svg>
-              </div>
-              <div style="font-size:15px; color:#FFFFFF; font-weight:600; line-height:1.4;">
-                Direct statistical correlation: iGOT training hours directly reduce NSSO survey scrutiny errors.
-              </div>
-            </div>
-
-            <div id="s5-c3" class="exec-card">
-              <div>
-                <div style="font-size:14px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.75);">
-                  Active Interventions
-                </div>
-                <div class="big-stat" style="color:#60A5FA;">14 Cadres</div>
-              </div>
-              <div style="font-size:15px; color:#FFA72F; font-weight:600;">
-                Targeted pathways dispatched to State DES & NSSO FOD
-              </div>
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 3C: PROOF 3 — AI MCQ Generator
+           12.0s – 15.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene3c" class="scene clip" data-start="12.0" data-duration="3.0" data-track-index="1">
+        <div class="proof-layout">
+          <div class="proof-screenshot">
+            <img src="assets/images/mcq-generator.png" alt="AI-Powered MCQ Generator" />
+            <div id="s3c-cursor" class="cursor-dot" style="top: 530px; left: 1280px;"></div>
+            <div id="s3c-label" class="proof-label-strip">
+              <div class="proof-label-kicker">Feature 3 · AI Assessment Engine</div>
+              <div class="proof-label-title">Document-Grounded MCQ Generator</div>
+              <div class="proof-label-desc">MoSPI Cognitive Engine generates verified questions from official manuals</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ════════════════════════════════════════════════════════════════
-           SCENE 6: Outro & Official Resolution (20.2s – 22.0s)
-           ════════════════════════════════════════════════════════════════ -->
-      <div id="scene6" class="scene clip" data-start="20.2" data-duration="1.8" data-track-index="1">
-        <div class="outro-box">
-          <img id="s6-emblem" src="assets/images/karmayogi-emblem.jpg" alt="Karmayogi Emblem" class="emblem-img" />
-          <h1 id="s6-title" class="outro-title">
-            StatVidya &middot; <span>स्टैटविद्या</span>
-          </h1>
-          <p id="s6-sub" class="outro-tagline">
-            From Village Field Surveys to National Policy.
-          </p>
-          <div id="s6-pills" class="outro-meta-pills">
-            <span class="badge-pill">MoSPI &middot; NSSTA</span>
-            <span class="badge-pill" style="color:#4ADE80; border-color:rgba(74,222,128,0.3);">Mission Karmayogi</span>
-            <span class="badge-pill" style="color:#93C5FD; border-color:rgba(147,197,253,0.3);">SIH 26101 Grounded</span>
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 4: IMPACT — Animated Stats + iGOT Integration
+           15.0s – 18.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene4" class="scene clip" data-start="15.0" data-duration="3.0" data-track-index="1">
+        <div class="impact-center">
+          <div id="s4-badge" class="igot-badge">
+            ✦ Directly Integrated with iGOT Karmayogi Ecosystem
+          </div>
+          <div id="s4-stats" class="impact-stat-row">
+            <div class="impact-stat-box">
+              <div id="s4-n1" class="impact-stat-number green">46%</div>
+              <div class="impact-stat-label">Skill Gaps Closed</div>
+            </div>
+            <div class="impact-connector">→</div>
+            <div class="impact-stat-box">
+              <div id="s4-n2" class="impact-stat-number orange">89%</div>
+              <div class="impact-stat-label">Cadre Readiness</div>
+            </div>
+            <div class="impact-connector">→</div>
+            <div class="impact-stat-box">
+              <div id="s4-n3" class="impact-stat-number blue">28</div>
+              <div class="impact-stat-label">States & UTs</div>
+            </div>
+          </div>
+          <div id="s4-headline" class="impact-headline">
+            Transforming how India's statistical workforce learns, certifies, and advances.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCENE 5: CLOSE — Logo + Tagline + URL + SIH Badge
+           18.0s – 20.0s
+           ═══════════════════════════════════════════════════════════ -->
+      <div id="scene5" class="scene clip" data-start="18.0" data-duration="2.0" data-track-index="1">
+        <div class="close-center">
+          <div id="s5-emblem" class="close-emblem">
+            <img src="assets/images/karmayogi-emblem.jpg" alt="Karmayogi Emblem" />
+          </div>
+          <div id="s5-title" class="close-title">StatVidya</div>
+          <div id="s5-tagline" class="close-tagline">
+            Data-Driven Capacity Building for India's Statistical Workforce
+          </div>
+          <div id="s5-tricolor" class="tricolor-bar">
+            <span></span><span></span><span></span>
+          </div>
+          <div id="s5-url" class="close-url">statvidya.mospi.gov.in</div>
+          <div id="s5-sih" class="close-sih-badge">
+            Built for Smart India Hackathon · PS 26101 (MoSPI)
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════════════════════════════
-         GSAP TIMELINE ANIMATIONS (Deterministic & Seek-Safe)
-         ════════════════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════════
+         GSAP TIMELINE — Deterministic & Seek-Safe
+         ═══════════════════════════════════════════════════════════ -->
     <script>
       const tl = gsap.timeline({ paused: true });
 
-      // ──────────────── Scene 1 (0.0s – 3.2s) ────────────────
-      tl.fromTo("#s1-badges", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.2);
-      tl.fromTo("#s1-h1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.5);
-      tl.fromTo("#s1-h2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.3);
-      tl.fromTo("#s1-punch", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 2.0);
-
-      // ──────────────── Scene 2 (3.2s – 8.0s) ────────────────
-      tl.fromTo("#s2-left", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 3.3);
-      tl.fromTo("#s2-right", { opacity: 0, x: 50, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: "power3.out" }, 3.4);
-      // Radar Polygon & Vertex Expansion
-      tl.fromTo("#radar-shape", 
-        { scale: 0.15, transformOrigin: "290px 190px", opacity: 0 }, 
-        { scale: 1, opacity: 1, duration: 1.2, ease: "elastic.out(1, 0.75)" }, 
-        4.0
+      // ──── SCENE 1: HOOK (0.0s – 3.0s) ────
+      tl.fromTo("#s1-line1",
+        { opacity: 0, y: 50, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" },
+        0.3
+      );
+      tl.fromTo("#s1-line2",
+        { opacity: 0, y: 50, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" },
+        0.7
+      );
+      tl.fromTo("#s1-bar",
+        { scaleX: 0, transformOrigin: "center" },
+        { scaleX: 1, duration: 0.5, ease: "power2.out" },
+        1.3
+      );
+      // Exit: scale up + fade out
+      tl.to("#scene1 .hook-center",
+        { opacity: 0, scale: 1.1, duration: 0.4, ease: "power2.in" },
+        2.5
       );
 
-      // ──────────────── Scene 3 (8.0s – 12.8s) ────────────────
-      tl.fromTo("#s3-phone", { opacity: 0, y: 60, rotation: -2 }, { opacity: 1, y: 0, rotation: 0, duration: 0.8, ease: "power3.out" }, 8.1);
-      tl.fromTo("#s3-text", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 8.3);
-      // Simulated field enumerator answer selection
-      tl.to("#s3-opt-a", { backgroundColor: "#EFF6FF", borderColor: "#1C4CA1", color: "#1C4CA1", duration: 0.25 }, 9.4);
-      tl.fromTo("#s3-check", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 9.45);
-      tl.fromTo("#s3-sync-box", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.5)" }, 9.9);
+      // ──── SCENE 2: REVEAL (3.0s – 6.0s) ────
+      tl.fromTo("#s2-left",
+        { opacity: 0, x: -60 },
+        { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" },
+        3.1
+      );
+      tl.fromTo("#s2-hero",
+        { opacity: 0, scale: 0.85, y: 30 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power3.out" },
+        3.3
+      );
+      // Subtle zoom-in on hero
+      tl.to("#s2-hero",
+        { scale: 1.04, duration: 1.6, ease: "power1.inOut" },
+        4.2
+      );
 
-      // ──────────────── Scene 4 (12.8s – 17.0s) ────────────────
-      tl.fromTo("#s4-header", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 12.9);
-      tl.fromTo("#s4-doc", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 13.2);
-      tl.fromTo("#s4-chip", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 13.6);
-      tl.fromTo("#s4-mcq", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 14.0);
+      // ──── SCENE 3A: PROOF 1 (6.0s – 9.0s) ────
+      tl.fromTo("#scene3a .proof-screenshot img",
+        { scale: 1.15 },
+        { scale: 1, duration: 2.8, ease: "power1.out" },
+        6.0
+      );
+      tl.fromTo("#s3a-label",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        6.3
+      );
+      tl.fromTo("#s3a-cursor",
+        { opacity: 0, scale: 0 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" },
+        6.5
+      );
+      tl.to("#s3a-cursor",
+        { x: 120, y: -40, duration: 1.5, ease: "power1.inOut" },
+        7.0
+      );
 
-      // ──────────────── Scene 5 (17.0s – 20.2s) ────────────────
-      tl.fromTo("#s5-top", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 17.1);
-      tl.fromTo("#s5-c1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 17.3);
-      tl.fromTo("#s5-c2", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 17.5);
-      tl.fromTo("#s5-c3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 17.7);
+      // ──── SCENE 3B: PROOF 2 (9.0s – 12.0s) ────
+      tl.fromTo("#scene3b .proof-screenshot img",
+        { scale: 1.15 },
+        { scale: 1, duration: 2.8, ease: "power1.out" },
+        9.0
+      );
+      tl.fromTo("#s3b-label",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        9.3
+      );
+      tl.fromTo("#s3b-cursor",
+        { opacity: 0, scale: 0 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" },
+        9.5
+      );
+      tl.to("#s3b-cursor",
+        { x: -80, y: 60, duration: 1.5, ease: "power1.inOut" },
+        10.0
+      );
 
-      // ──────────────── Scene 6 (20.2s – 22.0s) ────────────────
-      tl.fromTo("#s6-emblem", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 20.3);
-      tl.fromTo("#s6-title", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 20.5);
-      tl.fromTo("#s6-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 20.7);
-      tl.fromTo("#s6-pills", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 20.9);
+      // ──── SCENE 3C: PROOF 3 (12.0s – 15.0s) ────
+      tl.fromTo("#scene3c .proof-screenshot img",
+        { scale: 1.15 },
+        { scale: 1, duration: 2.8, ease: "power1.out" },
+        12.0
+      );
+      tl.fromTo("#s3c-label",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        12.3
+      );
+      tl.fromTo("#s3c-cursor",
+        { opacity: 0, scale: 0 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" },
+        12.5
+      );
+      tl.to("#s3c-cursor",
+        { x: -60, y: -30, duration: 1.5, ease: "power1.inOut" },
+        13.0
+      );
 
-      // Framework registry
+      // ──── SCENE 4: IMPACT (15.0s – 18.0s) ────
+      tl.fromTo("#s4-badge",
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+        15.1
+      );
+      tl.fromTo("#s4-stats",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+        15.3
+      );
+      tl.fromTo("#s4-n1",
+        { innerText: "0%", textContent: "0%" },
+        { duration: 0.01 },
+        15.3
+      );
+      tl.fromTo("#s4-headline",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+        16.0
+      );
+
+      // ──── SCENE 5: CLOSE (18.0s – 20.0s) ────
+      tl.fromTo("#s5-emblem",
+        { opacity: 0, scale: 0.5, rotation: -10 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.5)" },
+        18.1
+      );
+      tl.fromTo("#s5-title",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+        18.3
+      );
+      tl.fromTo("#s5-tagline",
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+        18.5
+      );
+      tl.fromTo("#s5-tricolor",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.4, ease: "power2.out" },
+        18.6
+      );
+      tl.fromTo("#s5-url",
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+        18.7
+      );
+      tl.fromTo("#s5-sih",
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+        18.9
+      );
+
+      // Register timeline
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
