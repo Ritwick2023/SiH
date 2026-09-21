@@ -1,0 +1,27 @@
+# StatVidya (स्टैटविद्या) — Share Copy
+
+## 1. Short & Punchy (Twitter / X)
+India has 10 million civil servants making decisions from national statistical data. How do you guarantee the data is flawless?
+
+Meet StatVidya: workforce competency intelligence for MoSPI & NSSTA under Mission Karmayogi (SIH 26101).
+
+From rural field enumeration to national policy. 🇮🇳📊
+
+## 2. Professional & Governance (LinkedIn)
+Excited to unveil StatVidya (स्टैटविद्या) — an adaptive workforce competency intelligence platform engineered for India's Official Statistical System (MoSPI, NSSO, ISS/SSS cadres, and State DES offices).
+
+Key Capabilities:
+🌾 Offline-First Bilingual PWA: Zero data loss for NSSO FOD field enumerators on low-cost tablets with native Hindi (Devanagari) interface.
+🏛️ Grounded in Mission Karmayogi's FRAC: Complete alignment across Role ➔ Activity ➔ Competency taxonomies.
+🤖 AI-Powered Survey Manual Ingestion: Instantly transforming 400+ page official statistical manuals into validated, provenanced MCQs.
+📈 Outcome-Driven Analytics: Direct correlation between iGOT Karmayogi learning hours and a 42% reduction in field survey scrutiny errors.
+
+Built for Smart India Hackathon 2024 / Mission Karmayogi (Problem SIH 26101).
+
+#MissionKarmayogi #MoSPI #GovTech #CivicTech #DataScience #SIH2024 #StatVidya
+
+## 3. Developer & Community (Discord / Hackathons)
+Just wrapped up the launch video for StatVidya! 🇮🇳
+Next.js 15 App Router + Tailwind CSS v4 + @serwist/next PWA + Firebase Cloud + Gemini 3.6 Flash.
+Solving workforce competency intelligence for 10M+ government statisticians across India.
+Check out the full demo in the repository!
