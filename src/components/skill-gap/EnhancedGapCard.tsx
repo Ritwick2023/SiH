@@ -2,10 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
 import { 
-  ShieldCheck, 
-  Clock, 
   BookOpen, 
   PlayCircle, 
   SlidersHorizontal, 
@@ -31,7 +28,6 @@ export function EnhancedGapCard({
   onInspectRubric,
   onSimulateLevelUp,
 }: EnhancedGapCardProps) {
-  const t = useTranslations('skillGap');
   const [showFormulaTooltip, setShowFormulaTooltip] = useState(false);
 
   const matchingCourses = useMemo(
@@ -42,7 +38,6 @@ export function EnhancedGapCard({
   const daysSince = gap.daysSinceAssessment ?? (gap.evidenceType === 'assessment-verified' ? 14 : 90);
   const evidenceWeight = gap.evidenceWeight ?? (gap.evidenceType === 'assessment-verified' ? (daysSince < 30 ? 1.00 : 0.85) : 0.50);
   const decayFactor = gap.decayFactor ?? Number(Math.exp(-0.35 * (daysSince / 180)).toFixed(2));
-  const freshnessPercent = Math.max(0, Math.min(100, Math.round(decayFactor * 100)));
   const priorityWeight = GAP_PRIORITY_WEIGHTS[gap.priority] ?? 2;
   const bayesianScore = gap.bayesianWeightedScore ?? Number((gap.gap * priorityWeight * evidenceWeight * decayFactor).toFixed(1));
 

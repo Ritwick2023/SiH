@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { DashboardUserProps } from '@/components/dashboard/RoleDashboardRouter';
-import { getPersonaFRAC } from '@/data/fracCadres';
+import { getPersonaFRAC, OFFICIAL_FRAC_COMPETENCIES } from '@/data/fracCadres';
 import { LearnerKpiStrip } from './LearnerKpiStrip';
 import { PriorityGapsCard } from './PriorityGapsCard';
 import { LearnerCoursesTable } from './LearnerCoursesTable';
@@ -62,14 +62,37 @@ export default function LearnerDashboard({ user }: { user: DashboardUserProps })
   const handleStartDrill = (drillId: string) => setActiveDrillId(drillId);
   const handleOpenManual = (manualId: string) => setActiveManualId(manualId);
 
-  const handleBridgeGap = (competencyId: string) => {
+  const handleBridgeGap = useCallback((competencyId: string) => {
     const comp = profile.competencies.find((c) => c.id === competencyId);
     if (comp) {
       setSelectedBridgeGapComp(comp);
+    } else if (OFFICIAL_FRAC_COMPETENCIES[competencyId]) {
+      const base = OFFICIAL_FRAC_COMPETENCIES[competencyId];
+      setSelectedBridgeGapComp({
+        ...base,
+        currentLevel: 1,
+        targetLevel: 3,
+        priority: 'critical',
+        evidenceType: 'self-assessed',
+        activityName: base.name,
+        activityName_hi: base.name_hi,
+      });
     } else {
-      router.push('/skill-gap');
+      router.push(`/skill-gap?comp=${competencyId}`);
     }
-  };
+  }, [profile.competencies, router, setSelectedBridgeGapComp]);
+
+  // Listen for open-bridge-gap events (from GlobalSearchModal or other components)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const customEvent = e as CustomEvent<{ competencyId: string }>;
+      if (customEvent.detail?.competencyId) {
+        handleBridgeGap(customEvent.detail.competencyId);
+      }
+    };
+    window.addEventListener('open-bridge-gap', handler);
+    return () => window.removeEventListener('open-bridge-gap', handler);
+  }, [handleBridgeGap]);
 
   const handleDrillComplete = (points: number) => {
     setDrillToast({

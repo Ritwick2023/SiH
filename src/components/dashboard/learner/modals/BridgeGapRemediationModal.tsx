@@ -13,7 +13,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  ShieldCheck,
   Compass,
   FileText,
   ExternalLink,
@@ -53,6 +52,16 @@ export function BridgeGapRemediationModal({
 
   // Map competency to relevant manuals and drills
   const manualMapping: Record<string, { id: string; title: string; desc: string }> = {
+    'comp-demarcation': {
+      id: 'manual-schedule-0',
+      title: 'Schedule 0.0 Demarcation Handbook & UFS SOP',
+      desc: 'SDRD standard operational procedure for block formation, boundary description, and sub-unit listing.',
+    },
+    'comp-scrutiny': {
+      id: 'manual-asi-scrutiny',
+      title: 'MoSPI Field Scrutiny & Validation Manual (Vol. II)',
+      desc: 'Mathematical consistency rules, outlier scrub routines, and schedule verification checks.',
+    },
     'comp-data': {
       id: 'manual-asi-scrutiny',
       title: 'MoSPI Field Scrutiny & Validation Manual (Vol. II)',
@@ -76,6 +85,16 @@ export function BridgeGapRemediationModal({
   };
 
   const drillMapping: Record<string, { id: string; title: string; points: number }> = {
+    'comp-demarcation': {
+      id: 'drill-schedule-0',
+      title: 'Schedule 0.0: Household Demarcation & Listing',
+      points: 50,
+    },
+    'comp-scrutiny': {
+      id: 'drill-outlier-scrub',
+      title: 'Field Schedule 1.0 Outlier Scrubbing & Validation',
+      points: 50,
+    },
     'comp-data': {
       id: 'drill-outlier-scrub',
       title: 'Field Schedule 1.0 Outlier Scrubbing & Cook\'s Distance',
