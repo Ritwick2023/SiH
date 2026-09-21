@@ -110,7 +110,7 @@
         font-weight: 600;
         line-height: 1.3;
         color: #FFA72F;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
       .hook-punch {
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -282,12 +282,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-      }
-      .pwa-opt.selected {
-        border-color: #1C4CA1;
-        background: #EFF6FF;
-        color: #1C4CA1;
-        font-weight: 700;
+        background: #FFFFFF;
       }
       .sync-notification {
         background: #1F273A;
@@ -468,13 +463,41 @@
       <div class="bg-canvas"></div>
       <div class="grid-pattern"></div>
 
-      <!-- Soundtrack -->
+      <!-- Soundtrack & Synchronized SFX -->
       <audio
         id="bgm"
         src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"
         data-start="0"
         data-duration="22"
-        data-volume="0.85"
+        data-volume="0.80"
+      ></audio>
+      <audio
+        id="sfx-punch"
+        src="assets/sfx/impact/impactSoft_medium_001.ogg"
+        data-start="2.0"
+        data-duration="0.18"
+        data-volume="0.35"
+      ></audio>
+      <audio
+        id="sfx-radar"
+        src="assets/sfx/interface/bong_001.ogg"
+        data-start="4.0"
+        data-duration="0.12"
+        data-volume="0.30"
+      ></audio>
+      <audio
+        id="sfx-click"
+        src="assets/sfx/interface/click_003.ogg"
+        data-start="9.4"
+        data-duration="0.01"
+        data-volume="0.40"
+      ></audio>
+      <audio
+        id="sfx-resolve"
+        src="assets/sfx/impact/impactBell_heavy_000.ogg"
+        data-start="20.3"
+        data-duration="1.48"
+        data-volume="0.30"
       ></audio>
 
       <!-- ════════════════════════════════════════════════════════════════
@@ -552,16 +575,17 @@
               <line x1="290" y1="190" x2="290" y2="340" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
               <line x1="290" y1="190" x2="150" y2="270" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
               <line x1="290" y1="190" x2="150" y2="110" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
-              <!-- Dynamic Competency Area -->
-              <polygon id="radar-poly" points="290,60 410,125 395,260 290,310 175,255 165,120"
-                fill="rgba(255, 167, 47, 0.45)" stroke="#FFA72F" stroke-width="3" />
-              <!-- Vertices -->
-              <circle cx="290" cy="60" r="6" fill="#FFA72F" />
-              <circle cx="410" cy="125" r="6" fill="#FFA72F" />
-              <circle cx="395" cy="260" r="6" fill="#FFA72F" />
-              <circle cx="290" cy="310" r="6" fill="#FFA72F" />
-              <circle cx="175" cy="255" r="6" fill="#FFA72F" />
-              <circle cx="165" cy="120" r="6" fill="#FFA72F" />
+              <!-- Dynamic Competency Area (Scaled with Vertices) -->
+              <g id="radar-shape">
+                <polygon id="radar-poly" points="290,60 410,125 395,260 290,310 175,255 165,120"
+                  fill="rgba(255, 167, 47, 0.45)" stroke="#FFA72F" stroke-width="3" />
+                <circle cx="290" cy="60" r="6" fill="#FFA72F" />
+                <circle cx="410" cy="125" r="6" fill="#FFA72F" />
+                <circle cx="395" cy="260" r="6" fill="#FFA72F" />
+                <circle cx="290" cy="310" r="6" fill="#FFA72F" />
+                <circle cx="175" cy="255" r="6" fill="#FFA72F" />
+                <circle cx="165" cy="120" r="6" fill="#FFA72F" />
+              </g>
               <!-- Labels -->
               <text x="290" y="24" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Sampling Design (L4)</text>
               <text x="440" y="115" text-anchor="start" fill="#FFFFFF" font-size="13" font-weight="700">Field Scrutiny (L5)</text>
@@ -596,8 +620,8 @@
                 <div class="pwa-q-title">
                   प्रश्न 4: फसल कटाई प्रयोग (CCE) में प्लॉट चयन हेतु यादृच्छिक संख्या सारणी का उपयोग कब अनिवार्य है?
                 </div>
-                <div class="pwa-opt selected">
-                  <span style="color:#15803D; font-weight:800;">✔</span>
+                <div id="s3-opt-a" class="pwa-opt">
+                  <span id="s3-check" style="color:#15803D; font-weight:800; opacity:0; transform:scale(0);">✔</span>
                   (A) चयनित खसरा संख्या में 5x5 मीटर त्रिकोणीय प्लॉट सीमांकन पर
                 </div>
                 <div class="pwa-opt">(B) केवल अनुमानित उपज 10 क्विंटल से कम होने पर</div>
@@ -741,9 +765,21 @@
                   </span>
                   <span style="font-size:12px; font-weight:800; color:#FFA72F;">p &lt; 0.001</span>
                 </div>
-                <div class="big-stat" style="color:#4ADE80;">-42%</div>
+                <div class="big-stat" style="color:#4ADE80; margin: 8px 0;">-42%</div>
+                <!-- Mini Analytics Trend Chart -->
+                <svg width="100%" height="45" viewBox="0 0 280 45">
+                  <defs>
+                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#4ADE80" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#4ADE80" stop-opacity="0.0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,10 Q70,14 140,24 T280,40 L280,45 L0,45 Z" fill="url(#chartGrad)" />
+                  <path d="M0,10 Q70,14 140,24 T280,40" fill="none" stroke="#4ADE80" stroke-width="2.5" />
+                  <circle cx="280" cy="40" r="3.5" fill="#4ADE80" />
+                </svg>
               </div>
-              <div style="font-size:16px; color:#FFFFFF; font-weight:600; line-height:1.4;">
+              <div style="font-size:15px; color:#FFFFFF; font-weight:600; line-height:1.4;">
                 Direct statistical correlation: iGOT training hours directly reduce NSSO survey scrutiny errors.
               </div>
             </div>
@@ -793,15 +829,15 @@
       // ──────────────── Scene 1 (0.0s – 3.2s) ────────────────
       tl.fromTo("#s1-badges", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.2);
       tl.fromTo("#s1-h1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.5);
-      tl.fromTo("#s1-h2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.5);
-      tl.fromTo("#s1-punch", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 2.4);
+      tl.fromTo("#s1-h2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.3);
+      tl.fromTo("#s1-punch", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 2.0);
 
       // ──────────────── Scene 2 (3.2s – 8.0s) ────────────────
       tl.fromTo("#s2-left", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 3.3);
       tl.fromTo("#s2-right", { opacity: 0, x: 50, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: "power3.out" }, 3.4);
-      // Radar Polygon Expansion
-      tl.fromTo("#radar-poly", 
-        { scale: 0.2, transformOrigin: "290px 190px", opacity: 0 }, 
+      // Radar Polygon & Vertex Expansion
+      tl.fromTo("#radar-shape", 
+        { scale: 0.15, transformOrigin: "290px 190px", opacity: 0 }, 
         { scale: 1, opacity: 1, duration: 1.2, ease: "elastic.out(1, 0.75)" }, 
         4.0
       );
@@ -809,7 +845,10 @@
       // ──────────────── Scene 3 (8.0s – 12.8s) ────────────────
       tl.fromTo("#s3-phone", { opacity: 0, y: 60, rotation: -2 }, { opacity: 1, y: 0, rotation: 0, duration: 0.8, ease: "power3.out" }, 8.1);
       tl.fromTo("#s3-text", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 8.3);
-      tl.fromTo("#s3-sync-box", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" }, 9.8);
+      // Simulated field enumerator answer selection
+      tl.to("#s3-opt-a", { backgroundColor: "#EFF6FF", borderColor: "#1C4CA1", color: "#1C4CA1", duration: 0.25 }, 9.4);
+      tl.fromTo("#s3-check", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 9.45);
+      tl.fromTo("#s3-sync-box", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.5)" }, 9.9);
 
       // ──────────────── Scene 4 (12.8s – 17.0s) ────────────────
       tl.fromTo("#s4-header", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 12.9);
