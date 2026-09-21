@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>StatVidya — Launch Brag</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP Runtime -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #1F273A;
+        font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #ffffff;
+        -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      /* Global Background Layer */
+      .bg-canvas {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 80% 20%, rgba(255, 167, 47, 0.14) 0%, transparent 50%),
+                    radial-gradient(circle at 20% 80%, rgba(17, 100, 190, 0.22) 0%, transparent 60%),
+                    linear-gradient(135deg, #1F273A 0%, #152238 40%, #1C4CA1 80%, #0F172A 100%);
+        z-index: 0;
+      }
+      /* Grid Overlay */
+      .grid-pattern {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        z-index: 1;
+      }
+
+      /* Scene Layouts */
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+      }
+
+      /* Scene 1: The Sovereign Hook */
+      .hook-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 1300px;
+        padding: 0 40px;
+      }
+      .badge-strip {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 36px;
+      }
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #FFA72F;
+      }
+      .badge-pill.sec {
+        color: #93C5FD;
+        border-color: rgba(147, 197, 253, 0.3);
+      }
+      .hook-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 76px;
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        margin-bottom: 24px;
+        color: #FFFFFF;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      }
+      .hook-subtitle {
+        font-size: 38px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #FFA72F;
+        margin-bottom: 20px;
+      }
+      .hook-punch {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 46px;
+        font-weight: 800;
+        color: #FFFFFF;
+        padding: 12px 36px;
+        border-radius: 16px;
+        background: rgba(28, 76, 161, 0.85);
+        border: 1px solid rgba(255, 167, 47, 0.4);
+        box-shadow: 0 12px 40px rgba(28, 76, 161, 0.5);
+      }
+
+      /* Scene 2: Radar & Brand Reveal */
+      .radar-scene-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        width: 1640px;
+        align-items: center;
+      }
+      .brand-card {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .brand-kicker {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #FFA72F;
+      }
+      .brand-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 88px;
+        font-weight: 800;
+        line-height: 1.0;
+        color: #FFFFFF;
+        letter-spacing: -0.04em;
+      }
+      .brand-title span {
+        color: #FFA72F;
+        font-family: 'Mukta', sans-serif;
+        font-size: 64px;
+        margin-left: 16px;
+        font-weight: 700;
+      }
+      .brand-desc {
+        font-size: 24px;
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.85);
+        max-width: 600px;
+      }
+      .score-pill-row {
+        display: flex;
+        gap: 16px;
+        margin-top: 12px;
+      }
+      .score-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        padding: 16px 24px;
+        border-radius: 14px;
+      }
+      .score-val {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 36px;
+        font-weight: 800;
+        color: #4ADE80;
+      }
+      .score-lbl {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 4px;
+      }
+      .radar-glass-panel {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(24px);
+        border-radius: 28px;
+        padding: 32px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .radar-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+      }
+
+      /* Scene 3: Offline PWA */
+      .pwa-scene {
+        width: 1550px;
+        display: flex;
+        gap: 60px;
+        align-items: center;
+      }
+      .pwa-phone-mockup {
+        width: 580px;
+        background: #FFFFFF;
+        border-radius: 36px;
+        overflow: hidden;
+        border: 10px solid #2B354F;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        color: #1F273A;
+      }
+      .phone-top-bar {
+        background: #1C4CA1;
+        color: #FFFFFF;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .phone-content {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background: #EDF0F7;
+      }
+      .pwa-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #DCFCE7;
+        color: #15803D;
+        font-weight: 800;
+        font-size: 13px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+      }
+      .pwa-question-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #CBD5E1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .pwa-q-title {
+        font-family: 'Mukta', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1F273A;
+        line-height: 1.4;
+        margin-bottom: 12px;
+      }
+      .pwa-opt {
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid #CBD5E1;
+        margin-bottom: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pwa-opt.selected {
+        border-color: #1C4CA1;
+        background: #EFF6FF;
+        color: #1C4CA1;
+        font-weight: 700;
+      }
+      .sync-notification {
+        background: #1F273A;
+        color: #FFFFFF;
+        padding: 14px 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .pwa-feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 800px;
+      }
+      .feature-item {
+        display: flex;
+        gap: 20px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 24px;
+        border-radius: 18px;
+        backdrop-filter: blur(16px);
+      }
+      .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: #FFA72F;
+        color: #1F273A;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      /* Scene 4: AI MCQ Generator */
+      .ai-scene {
+        width: 1550px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+      }
+      .ai-header-box {
+        text-align: center;
+      }
+      .ai-workstation {
+        display: grid;
+        grid-template-columns: 460px 180px 760px;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+      }
+      .doc-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+      }
+      .ai-bridge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .ai-chip {
+        width: 74px;
+        height: 74px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #1164BE, #FFA72F);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 35px rgba(255, 167, 47, 0.6);
+        font-weight: 900;
+        font-size: 28px;
+      }
+      .mcq-results-card {
+        background: #FFFFFF;
+        border-radius: 20px;
+        padding: 32px;
+        color: #1F273A;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Scene 5: Executive Dashboard */
+      .exec-scene {
+        width: 1550px;
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+      }
+      .exec-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .exec-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr 1fr;
+        gap: 28px;
+      }
+      .exec-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(20px);
+        border-radius: 22px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .big-stat {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 68px;
+        font-weight: 800;
+        color: #FFA72F;
+        line-height: 1.0;
+        margin: 16px 0;
+      }
+
+      /* Scene 6: Outro */
+      .outro-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 24px;
+      }
+      .emblem-img {
+        width: 130px;
+        height: 130px;
+        border-radius: 28px;
+        box-shadow: 0 16px 50px rgba(255, 167, 47, 0.4);
+        border: 3px solid rgba(255, 167, 47, 0.6);
+        background: #FFFFFF;
+        object-fit: cover;
+      }
+      .outro-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 80px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+      .outro-title span {
+        color: #FFA72F;
+      }
+      .outro-tagline {
+        font-size: 32px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+      }
+      .outro-meta-pills {
+        display: flex;
+        gap: 16px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="22"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Background & Visual Layers -->
+      <div class="bg-canvas"></div>
+      <div class="grid-pattern"></div>
+
+      <!-- Soundtrack -->
+      <audio
+        id="bgm"
+        src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"
+        data-start="0"
+        data-duration="22"
+        data-volume="0.85"
+      ></audio>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 1: The Sovereign Hook (0.0s – 3.2s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene1" class="scene clip" data-start="0" data-duration="3.2" data-track-index="1">
+        <div class="hook-container">
+          <div id="s1-badges" class="badge-strip">
+            <span class="badge-pill">🇮🇳 Mission Karmayogi</span>
+            <span class="badge-pill sec">NIC Secured Infrastructure</span>
+            <span class="badge-pill">SIH 26101 Grounded</span>
+          </div>
+          <h1 id="s1-h1" class="hook-title">10 Million Civil Servants.<br>One Crucial Question:</h1>
+          <h2 id="s1-h2" class="hook-subtitle">How do you guarantee national statistical data quality?</h2>
+          <div id="s1-punch" class="hook-punch">Enter StatVidya.</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 2: StatVidya Reveal & Interactive Radar (3.2s – 8.0s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene2" class="scene clip" data-start="3.2" data-duration="4.8" data-track-index="1">
+        <div class="radar-scene-grid">
+          <div id="s2-left" class="brand-card">
+            <div class="brand-kicker">
+              <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#FFA72F;"></span>
+              MoSPI &middot; NSSTA OFFICIAL PLATFORM
+            </div>
+            <div class="brand-title">
+              StatVidya<span>स्टैटविद्या</span>
+            </div>
+            <p class="brand-desc">
+              Workforce Competency Intelligence Platform for India's Official Statistical System. Grounded strictly in Mission Karmayogi's FRAC model.
+            </p>
+            <div class="score-pill-row">
+              <div class="score-card">
+                <div class="score-val">88.4%</div>
+                <div class="score-lbl">Cadre Readiness</div>
+              </div>
+              <div class="score-card">
+                <div class="score-val" style="color: #FFA72F;">L1 &rarr; L5</div>
+                <div class="score-lbl">FRAC Competencies</div>
+              </div>
+              <div class="score-card">
+                <div class="score-val" style="color: #60A5FA;">100%</div>
+                <div class="score-lbl">Provenanced Data</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="s2-right" class="radar-glass-panel">
+            <div class="radar-header">
+              <div>
+                <div style="font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF;">
+                  Competency Radar
+                </div>
+                <div style="font-size:13px; color:rgba(255,255,255,0.7); margin-top:2px;">
+                  NSSO Field Investigator &middot; Real-time Profile
+                </div>
+              </div>
+              <span style="padding:6px 14px; border-radius:9999px; background:rgba(21,128,61,0.45); border:1px solid #22C55E; font-size:12px; font-weight:800; color:#86EFAC;">
+                ● LIVE VERIFIED
+              </span>
+            </div>
+
+            <!-- Hexagonal Radar Chart SVG with generous padding to prevent text overflow -->
+            <svg id="radar-svg" width="580" height="380" viewBox="0 0 580 380">
+              <polygon points="290,40 430,110 430,270 290,340 150,270 150,110" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <polygon points="290,80 390,130 390,250 290,300 190,250 190,130" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <polygon points="290,120 350,150 350,230 290,260 230,230 230,150" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <!-- Radar Spokes -->
+              <line x1="290" y1="190" x2="290" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <line x1="290" y1="190" x2="430" y2="110" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <line x1="290" y1="190" x2="430" y2="270" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <line x1="290" y1="190" x2="290" y2="340" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <line x1="290" y1="190" x2="150" y2="270" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <line x1="290" y1="190" x2="150" y2="110" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+              <!-- Dynamic Competency Area -->
+              <polygon id="radar-poly" points="290,60 410,125 395,260 290,310 175,255 165,120"
+                fill="rgba(255, 167, 47, 0.45)" stroke="#FFA72F" stroke-width="3" />
+              <!-- Vertices -->
+              <circle cx="290" cy="60" r="6" fill="#FFA72F" />
+              <circle cx="410" cy="125" r="6" fill="#FFA72F" />
+              <circle cx="395" cy="260" r="6" fill="#FFA72F" />
+              <circle cx="290" cy="310" r="6" fill="#FFA72F" />
+              <circle cx="175" cy="255" r="6" fill="#FFA72F" />
+              <circle cx="165" cy="120" r="6" fill="#FFA72F" />
+              <!-- Labels -->
+              <text x="290" y="24" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">Sampling Design (L4)</text>
+              <text x="440" y="115" text-anchor="start" fill="#FFFFFF" font-size="13" font-weight="700">Field Scrutiny (L5)</text>
+              <text x="440" y="275" text-anchor="start" fill="#FFFFFF" font-size="13" font-weight="700">Agri Census (L4)</text>
+              <text x="290" y="365" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700">APAR Standards (L4)</text>
+              <text x="140" y="275" text-anchor="end" fill="#FFFFFF" font-size="13" font-weight="700">Survey Ethics (L5)</text>
+              <text x="140" y="115" text-anchor="end" fill="#FFFFFF" font-size="13" font-weight="700">Data Validation (L4)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 3: Offline Field-First PWA (8.0s – 12.8s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene3" class="scene clip" data-start="8.0" data-duration="4.8" data-track-index="1">
+        <div class="pwa-scene">
+          <div id="s3-phone" class="pwa-phone-mockup">
+            <div class="phone-top-bar">
+              <div>
+                <div style="font-size:16px; font-weight:800;">StatVidya Mobile</div>
+                <div style="font-size:12px; opacity:0.9;">NSSO FOD Field Runner</div>
+              </div>
+              <div class="pwa-tag">● OFFLINE ACTIVE</div>
+            </div>
+            <div class="phone-content">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; font-weight:700; color:#1C4CA1;">सुनीता देवी &middot; कनिष्ठ सांख्यिकी अधिकारी</span>
+                <span style="font-size:12px; font-weight:700; background:#E2E8F0; color:#1E293B; padding:2px 8px; border-radius:6px;">हिंदी (Hindi)</span>
+              </div>
+              <div class="pwa-question-card">
+                <div class="pwa-q-title">
+                  प्रश्न 4: फसल कटाई प्रयोग (CCE) में प्लॉट चयन हेतु यादृच्छिक संख्या सारणी का उपयोग कब अनिवार्य है?
+                </div>
+                <div class="pwa-opt selected">
+                  <span style="color:#15803D; font-weight:800;">✔</span>
+                  (A) चयनित खसरा संख्या में 5x5 मीटर त्रिकोणीय प्लॉट सीमांकन पर
+                </div>
+                <div class="pwa-opt">(B) केवल अनुमानित उपज 10 क्विंटल से कम होने पर</div>
+                <div class="pwa-opt">(C) पर्यवेक्षी अधिकारी की भौतिक अनुपस्थिति में</div>
+              </div>
+              <div id="s3-sync-box" class="sync-notification">
+                <span>IndexedDB Queue: 12 Records Stored</span>
+                <span style="color:#4ADE80; font-weight:700;">Zero Data Loss Sync</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="s3-text" class="pwa-feature-list">
+            <div class="brand-kicker">
+              FIELD ENUMERATORS FIRST &middot; NSSO FOD CADRE
+            </div>
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:56px; font-weight:800; line-height:1.15;">
+              Offline-First PWA.<br><span style="color:#FFA72F;">Bilingual in Every Village.</span>
+            </h2>
+            <div class="feature-item">
+              <div class="feature-icon">🌾</div>
+              <div>
+                <div style="font-size:20px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Built for Field Investigators on Low-Cost Tablets</div>
+                <div style="font-size:16px; color:rgba(255,255,255,0.8); line-height:1.4;">
+                  Zero data loss in zero-connectivity remote blocks. Local caching, instant Devanagari rendering, and seamless auto-sync upon reconnection.
+                </div>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon" style="background:#1164BE; color:#FFFFFF;">⚡</div>
+              <div>
+                <div style="font-size:20px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Micro-Learning at the Point of Field Need</div>
+                <div style="font-size:16px; color:rgba(255,255,255,0.8); line-height:1.4;">
+                  Contextual refresher modules served right before crop surveys, reducing field data scrutiny queries by 42%.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 4: AI Survey Manual MCQ Engine (12.8s – 17.0s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene4" class="scene clip" data-start="12.8" data-duration="4.2" data-track-index="1">
+        <div class="ai-scene">
+          <div id="s4-header" class="ai-header-box">
+            <div class="brand-kicker" style="justify-content:center; margin-bottom:12px;">
+              NSSTA FACULTY COMMAND DESK &middot; GEMINI 3.6 FLASH
+            </div>
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:54px; font-weight:800; letter-spacing:-0.02em;">
+              Turn 400-Page Survey Manuals into <span style="color:#FFA72F;">Rigorous Assessments</span> in Seconds
+            </h2>
+          </div>
+
+          <div class="ai-workstation">
+            <div id="s4-doc" class="doc-card">
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <div style="font-size:28px;">📄</div>
+                <div>
+                  <div style="font-size:17px; font-weight:700; color:#FFFFFF;">Annual Survey of Industries</div>
+                  <div style="font-size:13px; color:rgba(255,255,255,0.7);">Official MoSPI Manual &middot; 412 Pages</div>
+                </div>
+              </div>
+              <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:14px; font-size:13px; color:#CBD5E1; font-family:monospace; line-height:1.5;">
+                &gt; Chapter 4: Schedule A Scrutiny Rules<br>
+                &gt; Gross Fixed Capital Formation Calculations<br>
+                &gt; Depreciation Schedule Item 14 Validation
+              </div>
+            </div>
+
+            <div id="s4-chip" class="ai-bridge">
+              <div class="ai-chip">AI</div>
+              <div style="font-size:12px; font-weight:800; letter-spacing:0.1em; color:#FFA72F;">GEMINI FLASH</div>
+            </div>
+
+            <div id="s4-mcq" class="mcq-results-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <span style="font-size:14px; font-weight:800; color:#1C4CA1; text-transform:uppercase;">Generated Assessment Item</span>
+                <span style="font-size:12px; font-weight:800; color:#15803D; background:#DCFCE7; padding:3px 10px; border-radius:9999px;">
+                  ✔ VERIFIED_OFFICIAL PROVENANCE
+                </span>
+              </div>
+              <div style="font-size:18px; font-weight:700; color:#1F273A; margin-bottom:14px; line-height:1.4;">
+                Under ASI Schedule A, how should additions to plant and machinery under capital work-in-progress be recorded?
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14px;">
+                <div style="padding:10px 14px; border:1px solid #10B981; background:#ECFDF5; border-radius:8px; font-weight:700; color:#065F46;">
+                  ✔ Block 4, Item 12: Historical Cost Basis
+                </div>
+                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
+                  Block 3: Replacement Cost Value
+                </div>
+                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
+                  Block 5: Exclude from Gross Capital
+                </div>
+                <div style="padding:10px 14px; border:1px solid #CBD5E1; border-radius:8px; font-weight:600; color:#334155;">
+                  Annexure 2: Tax Audit Schedule
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 5: Executive Dashboard & Impact (17.0s – 20.2s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene5" class="scene clip" data-start="17.0" data-duration="3.2" data-track-index="1">
+        <div class="exec-scene">
+          <div id="s5-top" class="exec-top">
+            <div>
+              <div class="brand-kicker">EXECUTIVE WORKFORCE COMMAND &middot; MoSPI LEADERSHIP</div>
+              <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:48px; font-weight:800; margin-top:8px;">
+                Not Just Self-Reported Quizzes. <span style="color:#FFA72F;">Real Statistical Outcomes.</span>
+              </h2>
+            </div>
+            <span style="font-size:14px; font-weight:700; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:8px 18px; border-radius:9999px;">
+              National Statistical Commission Aligned
+            </span>
+          </div>
+
+          <div class="exec-grid">
+            <div id="s5-c1" class="exec-card">
+              <div>
+                <div style="font-size:14px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.75);">
+                  National Cadre Readiness
+                </div>
+                <div class="big-stat">89.4%</div>
+              </div>
+              <div style="font-size:15px; color:#4ADE80; font-weight:600;">
+                ▲ +14.2% competency elevation across 28 States & UTs
+              </div>
+            </div>
+
+            <div id="s5-c2" class="exec-card" style="background:rgba(28, 76, 161, 0.25); border-color:rgba(96, 165, 250, 0.4);">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:14px; font-weight:700; text-transform:uppercase; color:#93C5FD;">
+                    Outcome Correlation Model
+                  </span>
+                  <span style="font-size:12px; font-weight:800; color:#FFA72F;">p &lt; 0.001</span>
+                </div>
+                <div class="big-stat" style="color:#4ADE80;">-42%</div>
+              </div>
+              <div style="font-size:16px; color:#FFFFFF; font-weight:600; line-height:1.4;">
+                Direct statistical correlation: iGOT training hours directly reduce NSSO survey scrutiny errors.
+              </div>
+            </div>
+
+            <div id="s5-c3" class="exec-card">
+              <div>
+                <div style="font-size:14px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.75);">
+                  Active Interventions
+                </div>
+                <div class="big-stat" style="color:#60A5FA;">14 Cadres</div>
+              </div>
+              <div style="font-size:15px; color:#FFA72F; font-weight:600;">
+                Targeted pathways dispatched to State DES & NSSO FOD
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           SCENE 6: Outro & Official Resolution (20.2s – 22.0s)
+           ════════════════════════════════════════════════════════════════ -->
+      <div id="scene6" class="scene clip" data-start="20.2" data-duration="1.8" data-track-index="1">
+        <div class="outro-box">
+          <img id="s6-emblem" src="assets/images/karmayogi-emblem.jpg" alt="Karmayogi Emblem" class="emblem-img" />
+          <h1 id="s6-title" class="outro-title">
+            StatVidya &middot; <span>स्टैटविद्या</span>
+          </h1>
+          <p id="s6-sub" class="outro-tagline">
+            From Village Field Surveys to National Policy.
+          </p>
+          <div id="s6-pills" class="outro-meta-pills">
+            <span class="badge-pill">MoSPI &middot; NSSTA</span>
+            <span class="badge-pill" style="color:#4ADE80; border-color:rgba(74,222,128,0.3);">Mission Karmayogi</span>
+            <span class="badge-pill" style="color:#93C5FD; border-color:rgba(147,197,253,0.3);">SIH 26101 Grounded</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         GSAP TIMELINE ANIMATIONS (Deterministic & Seek-Safe)
+         ════════════════════════════════════════════════════════════════ -->
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // ──────────────── Scene 1 (0.0s – 3.2s) ────────────────
+      tl.fromTo("#s1-badges", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.2);
+      tl.fromTo("#s1-h1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.5);
+      tl.fromTo("#s1-h2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.5);
+      tl.fromTo("#s1-punch", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 2.4);
+
+      // ──────────────── Scene 2 (3.2s – 8.0s) ────────────────
+      tl.fromTo("#s2-left", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 3.3);
+      tl.fromTo("#s2-right", { opacity: 0, x: 50, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: "power3.out" }, 3.4);
+      // Radar Polygon Expansion
+      tl.fromTo("#radar-poly", 
+        { scale: 0.2, transformOrigin: "290px 190px", opacity: 0 }, 
+        { scale: 1, opacity: 1, duration: 1.2, ease: "elastic.out(1, 0.75)" }, 
+        4.0
+      );
+
+      // ──────────────── Scene 3 (8.0s – 12.8s) ────────────────
+      tl.fromTo("#s3-phone", { opacity: 0, y: 60, rotation: -2 }, { opacity: 1, y: 0, rotation: 0, duration: 0.8, ease: "power3.out" }, 8.1);
+      tl.fromTo("#s3-text", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out" }, 8.3);
+      tl.fromTo("#s3-sync-box", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.5)" }, 9.8);
+
+      // ──────────────── Scene 4 (12.8s – 17.0s) ────────────────
+      tl.fromTo("#s4-header", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 12.9);
+      tl.fromTo("#s4-doc", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 13.2);
+      tl.fromTo("#s4-chip", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 13.6);
+      tl.fromTo("#s4-mcq", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 14.0);
+
+      // ──────────────── Scene 5 (17.0s – 20.2s) ────────────────
+      tl.fromTo("#s5-top", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 17.1);
+      tl.fromTo("#s5-c1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 17.3);
+      tl.fromTo("#s5-c2", { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 17.5);
+      tl.fromTo("#s5-c3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 17.7);
+
+      // ──────────────── Scene 6 (20.2s – 22.0s) ────────────────
+      tl.fromTo("#s6-emblem", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 20.3);
+      tl.fromTo("#s6-title", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 20.5);
+      tl.fromTo("#s6-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 20.7);
+      tl.fromTo("#s6-pills", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 20.9);
+
+      // Framework registry
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
