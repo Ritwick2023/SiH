@@ -33,13 +33,13 @@ export function PriorityGapsCard({
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
             <h2 className="text-lg font-bold text-[#1F273A]">
-              {isHindi ? 'प्राथमिकता क्षमता अंतराल (FRAC ढांचा)' : 'Priority Competency Gaps (FRAC Framework)'}
+              {isHindi ? 'जिन कौशलों में सुधार की जरूरत है' : 'Skills That Need Improvement'}
             </h2>
           </div>
           <p className="text-xs text-[#475569] mt-0.5">
             {isHindi
-              ? 'आधिकारिक कर्तव्यों और फील्ड संवीक्षा के आधार पर व्यवस्थित'
-              : 'Grounded in MoSPI Cadre Rules • Severity = (Target − Current) × Priority'}
+              ? 'आपकी भूमिका के अनुसार प्राथमिकता से क्रमबद्ध'
+              : 'Ranked by priority based on your role'}
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export function PriorityGapsCard({
             onClick={onViewAllGaps}
             className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1 shrink-0 cursor-pointer"
           >
-            <span>{isHindi ? 'सभी अंतर देखें' : 'View Detailed Matrix'}</span>
+            <span>{isHindi ? 'सभी देखें' : 'See All'}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </button>
         ) : (
@@ -57,7 +57,7 @@ export function PriorityGapsCard({
             href="/skill-gap"
             className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1 shrink-0"
           >
-            <span>{isHindi ? 'सभी अंतर देखें' : 'View Detailed Matrix'}</span>
+            <span>{isHindi ? 'सभी देखें' : 'See All'}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         )}

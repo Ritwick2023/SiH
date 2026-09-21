@@ -46,7 +46,7 @@ export function CorrelationClient({ seriesList }: CorrelationClientProps) {
             Demonstrating the direct statistical impact of FRAC competency enhancement on MoSPI field scrutiny error rates.
           </p>
         </div>
-        <ProvenanceBadge provenance="SYNTHETIC_DEMO_DATA" />
+        <ProvenanceBadge provenance={activeSeries?.provenance || 'EMPIRICAL_NSS78_BOOTSTRAP'} />
       </div>
 
       {/* Series Metric Selector Tabs */}

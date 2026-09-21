@@ -41,6 +41,8 @@ Thumbs.db
 public/sw.js
 public/sw.js.map
 public/swe-worker-*.js
+SIH_PRESENTATION_SLIDE_UPGRADED_TECHNICAL_APPROACH.md
+sih-presentation-graph.html
 
 # Firebase Data Connect Local Development
 .dataconnect/

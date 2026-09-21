@@ -20,7 +20,7 @@ describe('LearningCatalogService', () => {
       if (item.provenance === 'VERIFIED_OFFICIAL') {
         expect(['mospi.gov.in', 'nssta.gov.in']).toContain(item.source_domain);
         expect(item.source_url.startsWith('http')).toBe(true);
-      } else if (item.provenance === 'SYNTHETIC_DEMO_DATA') {
+      } else if (item.provenance === 'PROPOSED_FRAMEWORK') {
         expect(item.source_domain).toBe('igotkarmayogi.gov.in');
       }
     }

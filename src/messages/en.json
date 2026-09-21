@@ -74,16 +74,6 @@
       "demoPersonas": "Explore Demo Personas",
       "viewDocumentation": "View Architecture & Governance"
     },
-    "stats": {
-      "cadres": "6 Statistical Cadres",
-      "cadresDesc": "ISS, SSS, NSSO FOD, NSSTA & MoSPI HQ",
-      "competencies": "24 FRAC Competencies",
-      "competenciesDesc": "Behavioural, Functional & Domain verified",
-      "coverage": "4,000+ Personnel",
-      "coverageDesc": "Field investigators to senior leadership",
-      "offline": "Offline-First",
-      "offlineDesc": "IndexedDB caching for remote census blocks"
-    },
     "pillars": {
       "title": "Institutional Capabilities",
       "subtitle": "Engineered for institutional trust, regulatory compliance, and field-first statistical operations.",

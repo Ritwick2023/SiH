@@ -74,16 +74,6 @@
       "demoPersonas": "डेमो पर्सोना देखें",
       "viewDocumentation": "वास्तुकला और दिशानिर्देश"
     },
-    "stats": {
-      "cadres": "6 सांख्यिकी संवर्ग",
-      "cadresDesc": "ISS, SSS, NSSO FOD, NSSTA और MoSPI मुख्यालय",
-      "competencies": "24 FRAC योग्यताएं",
-      "competenciesDesc": "व्यवहार, कार्यात्मक और डोमेन सत्यापित",
-      "coverage": "4,000+ कर्मी",
-      "coverageDesc": "क्षेत्र अन्वेषकों से लेकर वरिष्ठ नेतृत्व तक",
-      "offline": "ऑफ़लाइन-प्रथम",
-      "offlineDesc": "दूरदराज के क्षेत्रों के लिए IndexedDB कैशिंग"
-    },
     "pillars": {
       "title": "संस्थागत क्षमताएं",
       "subtitle": "संस्थागत विश्वास, नियामक अनुपालन और फील्ड-प्रथम सांख्यिकीय संचालन के लिए निर्मित।",

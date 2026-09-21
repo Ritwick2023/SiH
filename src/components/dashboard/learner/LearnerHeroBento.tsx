@@ -50,13 +50,10 @@ export function LearnerHeroBento({
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
               <ShieldCheck className="h-3.5 w-3.5" />
-              {isHindi ? 'FRAC प्रमाणित सिविल सेवक' : 'FRAC Verified Official'}
+              {isHindi ? 'सत्यापित अधिकारी' : 'Verified Officer'}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#EDF0F7] text-[#1F273A] border border-[#D8DFEE]">
               {profile.cadre}
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]">
-              ID: {profile.personaId.toUpperCase()}
             </span>
           </div>
 
@@ -68,7 +65,7 @@ export function LearnerHeroBento({
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') onOpenDossier?.();
             }}
-            title="Click to view Official Civil Service Dossier"
+            title="Click to view your profile"
             className="flex items-start gap-4 cursor-pointer group"
           >
             <div className="h-14 w-14 rounded-2xl bg-[#1C4CA1] text-white flex items-center justify-center text-xl font-bold font-serif shadow-xs shrink-0 group-hover:scale-105 transition-transform">
@@ -104,14 +101,14 @@ export function LearnerHeroBento({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-[#1F273A]">
-                      {isHindi ? 'CAPI ऑफ़लाइन तुल्यकालन सक्रिय' : 'CAPI Offline Mode Active'}
+                      {isHindi ? 'ऑफलाइन मोड चालू' : 'Offline Mode Active'}
                     </span>
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
                   <p className="text-[11px] text-muted-foreground">
                     {isHindi
-                      ? 'अंतिम सिंक 14 मिनट पूर्व • 38 अनुसूचियां स्थानीय रूप से सुरक्षित'
-                      : 'Last synced 14m ago • 38 field schedules encrypted in local IndexedDB'}
+                      ? 'अंतिम सिंक 14 मिनट पूर्व • डेटा स्थानीय रूप से सुरक्षित'
+                      : 'Last synced 14 min ago • Your data is saved offline'}
                   </p>
                 </div>
               </div>
@@ -131,12 +128,12 @@ export function LearnerHeroBento({
                 </div>
                 <div>
                   <p className="text-xs font-bold text-[#1F273A]">
-                    {isHindi ? 'सांख्यिकी संवीक्षा प्रकोष्ठ' : 'Statistical Scrutiny & DQAD Registry'}
+                    {isHindi ? 'डेटा समीक्षा केंद्र' : 'Data Quality & Review'}
                   </p>
                   <p className="text-[11px] text-muted-foreground">
                     {isHindi
-                      ? 'पीएलएफएस और एनएसएसओ 80वें दौर के लिए अधिकृत संवीक्षक'
-                      : 'Certified validator for PLFS & NSSO 80th Round survey returns'}
+                      ? 'श्रम बल सर्वेक्षण डेटा समीक्षा के लिए अधिकृत'
+                      : 'Authorised to review Labour Force Survey data'}
                   </p>
                 </div>
               </div>

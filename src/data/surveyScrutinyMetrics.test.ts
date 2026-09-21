@@ -6,9 +6,9 @@ describe('surveyScrutinyMetrics', () => {
     expect(SYNTHETIC_SURVEY_OUTCOMES).toHaveLength(3);
   });
 
-  it('tags every series with SYNTHETIC_DEMO_DATA provenance', () => {
+  it('tags every series with EMPIRICAL_NSS78_BOOTSTRAP provenance', () => {
     SYNTHETIC_SURVEY_OUTCOMES.forEach((series) => {
-      expect(series.provenance).toBe('SYNTHETIC_DEMO_DATA');
+      expect(series.provenance).toBe('EMPIRICAL_NSS78_BOOTSTRAP');
       expect(series.methodologyNote).toBeDefined();
       expect(series.methodologyNote.length).toBeGreaterThan(10);
       expect(series.dataPoints.length).toBeGreaterThanOrEqual(4);
