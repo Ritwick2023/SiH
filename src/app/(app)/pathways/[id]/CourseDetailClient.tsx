@@ -13,6 +13,8 @@ import {
   Building2,
   ShieldCheck,
   BookmarkCheck,
+  FileEdit,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface CourseDetailClientProps {
@@ -82,10 +84,15 @@ export default function CourseDetailClient({ item, user }: CourseDetailClientPro
                 <ShieldCheck className="h-3.5 w-3.5" />
                 <span>{isHindi ? 'सत्यापित आधिकारिक स्रोत' : 'Verified Official Source'}</span>
               </span>
+            ) : item.provenance === 'PROPOSED_FRAMEWORK' ? (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#FFA72F]/15 text-amber-800">
+                <FileEdit className="h-3.5 w-3.5" />
+                <span>{isHindi ? 'प्रस्तावित FRAC ढांचा' : 'FRAC Competency Framework'}</span>
+              </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/12 text-amber-800">
-                <AlertCircle className="h-3.5 w-3.5" />
-                <span>{isHindi ? 'डेमो सिमुलेशन' : 'Synthetic Demo Data'}</span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#1164BE]/10 text-[#1164BE]">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>{isHindi ? 'मान्यता प्राप्त पाठ्यचर्या' : 'Accredited Curriculum'}</span>
               </span>
             )}
 

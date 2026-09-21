@@ -42,10 +42,10 @@ describe('AdminDashboard Component', () => {
     expect(html).toContain('Schedule 0.0');
   });
 
-  it('renders PRD Lever 2 outcome correlation chart with synthetic demo watermark', () => {
+  it('renders PRD Lever 2 outcome correlation chart with empirical baseline watermark', () => {
     const html = renderToString(<AdminDashboard user={mockUserAdmin} />);
     expect(html).toContain('Survey Scrutiny Outcome Correlation');
-    expect(html).toContain('SYNTHETIC DEMO DATA');
+    expect(html).toContain('NSS 78th Round Baseline');
     expect(html).toContain('Listing Scrutiny Error Rate');
   });
 

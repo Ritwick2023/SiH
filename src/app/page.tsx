@@ -13,15 +13,12 @@ import {
   FileCheck,
   Users,
   BarChart3,
-  Award,
-  TrendingUp,
   Globe,
   CheckCircle2,
   Zap,
   Lock,
 } from 'lucide-react';
 import {
-  AnimatedCounter,
   ScrollReveal,
   HeroRadarVisual,
   AnimatedProgressBar,
@@ -262,25 +259,6 @@ export default async function LandingPage() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Stats strip */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-12">
-              {[
-                { value: 6, suffix: '', label: 'Statistical Cadres', sub: 'ISS, SSS, NSSO, NSSTA & more', icon: Users },
-                { value: 24, suffix: '+', label: 'FRAC Competencies', sub: 'Domain, Functional & Behavioural', icon: Award },
-                { value: 4000, suffix: '+', label: 'Personnel Covered', sub: 'Field investigators to directors', icon: BarChart3 },
-                { value: 5, suffix: ' Levels', label: 'Proficiency Scale', sub: 'L1 Awareness → L5 Expert Mastery', icon: TrendingUp },
-              ].map(({ value, suffix, label, sub, icon: Icon }, i) => (
-                <div key={i} className="text-left space-y-1 p-5 rounded-2xl bg-white/6 border border-white/10 hover:bg-white/10 transition-all group">
-                  <Icon className="h-5 w-5 text-[#FFA72F] mb-2 group-hover:scale-110 transition-transform" />
-                  <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
-                    <AnimatedCounter target={value} suffix={suffix} />
-                  </div>
-                  <div className="text-xs font-semibold text-white/80">{label}</div>
-                  <div className="text-[11px] text-white/45">{sub}</div>
-                </div>
-              ))}
             </div>
           </div>
         </section>

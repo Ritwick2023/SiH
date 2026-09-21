@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { 
@@ -9,6 +9,7 @@ import {
   Circle, 
   Clock, 
   ArrowRight, 
+  Compass, 
   ChevronRight
 } from 'lucide-react';
 import { CompetencyGap } from '@/lib/types';
@@ -31,18 +32,31 @@ export function RemediationRoadmap({
   const storageKey = `statvidya_roadmap_completed_${userId}`;
 
   // Persistent milestone completion map: milestoneId -> boolean
-  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
+  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {};
     try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        setCompletedMilestones(JSON.parse(stored));
-      }
+      const stored = localStorage.getItem(`statvidya_roadmap_completed_${userId}`);
+      return stored ? JSON.parse(stored) : {};
     } catch {
-      // Local storage unavailable
+      return {};
     }
-  }, [storageKey]);
+  });
+  const [prevStorageKey, setPrevStorageKey] = useState(storageKey);
+
+  // Synchronize storage key changes during render without cascading effect triggers
+  if (storageKey !== prevStorageKey) {
+    setPrevStorageKey(storageKey);
+    let updatedVal: Record<string, boolean> = {};
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (stored) updatedVal = JSON.parse(stored);
+      } catch {
+        // Local storage unavailable
+      }
+    }
+    setCompletedMilestones(updatedVal);
+  }
 
   const toggleMilestone = (id: string) => {
     setCompletedMilestones((prev) => {
@@ -120,7 +134,7 @@ export function RemediationRoadmap({
           <div className="flex-1 space-y-2 min-w-0">
             <div>
               <h4 className={`text-sm font-bold truncate ${isCompleted ? 'line-through text-slate-400' : 'text-[#1F273A]'}`} title={gap.competency.name}>
-                {gap.competency.name}
+                {(isHindi && gap.competency.name_hi) ? gap.competency.name_hi : gap.competency.name}
               </h4>
 
               <div className="flex items-center gap-2 text-xs text-[#475569] mt-1">
@@ -149,7 +163,7 @@ export function RemediationRoadmap({
                     href={`/pathways?courseId=${topCourse.id}`}
                     className="inline-flex items-center gap-1 font-bold text-[#1C4CA1] hover:underline shrink-0"
                   >
-                    <span>Start Module</span>
+                    <span>{isHindi ? 'मॉड्यूल शुरू करें' : 'Start Module'}</span>
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
@@ -162,7 +176,7 @@ export function RemediationRoadmap({
                 href={`/assessment?competency=${gap.competencyId}`}
                 className="text-[11px] font-semibold text-muted-foreground hover:text-[#1C4CA1] inline-flex items-center gap-1"
               >
-                <span>Verify via Assessment</span>
+                <span>{isHindi ? 'मूल्यांकन द्वारा सत्यापित करें' : 'Verify via Assessment'}</span>
                 <ChevronRight className="w-3 h-3" />
               </Link>
             </div>

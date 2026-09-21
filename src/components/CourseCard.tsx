@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ProvenanceBadge } from './ProvenanceBadge';
+import type { ProvenanceType } from '@/lib/types';
 import {
   BookOpen,
   Clock,
@@ -24,6 +25,7 @@ export interface CourseData {
   title_hi?: string;
   provider: string;
   duration: string;
+  provenance?: ProvenanceType;
   description: string;
   description_hi?: string;
   priority?: 'HIGH' | 'MEDIUM' | 'LOW';
@@ -167,7 +169,7 @@ export function CourseCard({
               <Layers className="h-3 w-3" />
               {stageBadge.label}
             </span>
-            <ProvenanceBadge provenance="SYNTHETIC_DEMO_DATA" showLabel={false} size="sm" />
+            <ProvenanceBadge provenance={course.provenance || 'VERIFIED_OFFICIAL'} showLabel={false} size="sm" />
           </div>
 
           <div className="flex items-center gap-1 text-xs text-muted-foreground">

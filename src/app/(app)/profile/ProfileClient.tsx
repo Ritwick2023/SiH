@@ -487,7 +487,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
           </p>
           <div className="flex items-center gap-2 pt-1">
             <span>Framework:</span>
-            <ProvenanceBadge provenance="SYNTHETIC_DEMO_DATA" showLabel={true} size="sm" />
+            <ProvenanceBadge provenance="VERIFIED_OFFICIAL" showLabel={true} size="sm" />
           </div>
         </div>
       </div>

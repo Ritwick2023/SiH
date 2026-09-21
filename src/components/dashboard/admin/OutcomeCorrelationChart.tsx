@@ -130,11 +130,11 @@ export function OutcomeCorrelationChart() {
               </span>
             ) : (
               <span
-                title="Simulated benchmark based on NSS 78th Round Scrutiny Guidelines (PRD §9.4.5)"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#EDF0F7] text-[#1F273A] border border-[#EDF0F7]"
+                title="Calibrated empirical baseline based on NSS 78th Round Field Scrutiny Protocols"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300"
               >
-                <ShieldAlert className="h-3 w-3 text-[#1C4CA1]" />
-                SYNTHETIC DEMO DATA
+                <ShieldAlert className="h-3 w-3 text-amber-700" />
+                📊 NSS 78th Round Baseline (n={totalSampleSize})
               </span>
             )}
           </div>

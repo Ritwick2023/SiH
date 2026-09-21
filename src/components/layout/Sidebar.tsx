@@ -4,11 +4,10 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
-import { ChevronLeft, ChevronRight, ShieldCheck, CheckCircle2, RefreshCw, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, RefreshCw, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { DEMO_PERSONAS } from '@/lib/demoPersonas';
 import type { DemoPersona, UserRole } from '@/lib/types';
-import { OfficerDossierModal } from '@/components/dashboard/learner/modals/OfficerDossierModal';
 import {
   getNavigationForRole,
   getRoleIdentity,
@@ -57,7 +56,6 @@ export function Sidebar({ initialRole }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [dossierOpen, setDossierOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [synced, setSynced] = useState(false);
 
@@ -113,14 +111,6 @@ export function Sidebar({ initialRole }: SidebarProps) {
     return pathname === cleanHref || pathname.startsWith(cleanHref + '/');
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .slice(0, 2)
-      .toUpperCase();
-  };
 
   return (
     <>
@@ -188,65 +178,8 @@ export function Sidebar({ initialRole }: SidebarProps) {
         </button>
       </div>
 
-      {/* Role Profile Card at Top of Sidebar */}
-      {!collapsed ? (
-        <div
-          onClick={() => setDossierOpen(true)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') setDossierOpen(true);
-          }}
-          title="Click to view Official Civil Service Dossier"
-          className="p-3 mx-3 mt-3 rounded-2xl bg-[#EDF0F7]/70 border border-[#D8DFEE] hover:border-[#1C4CA1]/40 hover:bg-[#EDF0F7] flex items-center gap-3 transition-all cursor-pointer shadow-2xs group"
-        >
-          <div
-            className="h-10 w-10 rounded-xl text-white flex items-center justify-center font-bold text-xs font-serif shrink-0 shadow-2xs group-hover:scale-105 transition-transform"
-            style={{ backgroundColor: identity.themeColor }}
-          >
-            {getInitials(activePersona.name)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <p className="text-xs font-bold text-[#1F273A] truncate leading-tight group-hover:text-[#1C4CA1] transition-colors">
-                {activePersona.name}
-              </p>
-            </div>
-            <p className="text-[11px] font-medium text-muted-foreground truncate mt-0.5">
-              {activePersona.designation}
-            </p>
-            <div className="flex items-center gap-1 mt-1">
-              <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white text-[#1C4CA1] border border-[#D8DFEE]">
-                <ShieldCheck className="h-2.5 w-2.5" />
-                {identity.roleLabel}
-              </span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="py-3 flex justify-center">
-          <button
-            type="button"
-            onClick={() => setDossierOpen(true)}
-            className="h-9 w-9 rounded-xl text-white flex items-center justify-center font-bold text-xs shadow-2xs cursor-pointer hover:scale-105 transition-transform"
-            style={{ backgroundColor: identity.themeColor }}
-            title={`${activePersona.name} (${identity.roleLabel}) - Click to view Dossier`}
-          >
-            {getInitials(activePersona.name)}
-          </button>
-        </div>
-      )}
-
       {/* Role Navigation Items */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
-        {!collapsed && (
-          <div className="px-3 pb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            <span>{identity.subtitle}</span>
-            <span className="text-[9px] font-mono text-[#1C4CA1] font-semibold">
-              {navItems.length} {isHindi ? 'उपकरण' : 'Tools'}
-            </span>
-          </div>
-        )}
 
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -317,7 +250,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
                   }, 700);
                 }}
                 disabled={syncing}
-                title={role === 'admin' ? "Synchronize with NSC Central Nodes" : "Force Synchronize 38 Schedules"}
+                title="Sync your data"
                 className="p-1 rounded-lg bg-white border border-[#D8DFEE] text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-colors cursor-pointer shrink-0"
               >
                 <RefreshCw className={`h-3 w-3 ${syncing ? 'animate-spin' : ''}`} />
@@ -325,11 +258,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
             )}
           </div>
           <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
-            {synced
-              ? role === 'admin'
-                ? '✓ Cabinet Protocol Synced with NSC Nodes!'
-                : '✓ 38 Forms Synced with MoSPI Central Node!'
-              : footerData.subtitle}
+            {synced ? '✓ Data synced successfully!' : footerData.subtitle}
           </p>
           <div className="mt-2 pt-2 border-t border-[#D8DFEE] flex items-center justify-between text-[10px] font-medium text-muted-foreground">
             <span className="font-mono text-[#1C4CA1]">{footerData.badge}</span>
@@ -345,12 +274,7 @@ export function Sidebar({ initialRole }: SidebarProps) {
         </div>
       )}
 
-      {/* Official Officer Dossier Modal */}
-      <OfficerDossierModal
-        isOpen={dossierOpen}
-        onClose={() => setDossierOpen(false)}
-        persona={activePersona}
-      />
+
       </aside>
     </>
   );

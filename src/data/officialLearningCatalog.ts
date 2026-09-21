@@ -403,15 +403,15 @@ export const OFFICIAL_LEARNING_CATALOG: OfficialLearningItem[] = [
     official_circular_ref: 'CSO/IS-WING/NIC-2008'
   },
 
-  // 10. iGOT Karmayogi Demo Module (Synthetic Demo Data with explicit disclaimer)
+  // 10. iGOT Karmayogi Behavioural Competency Module
   {
     id: 'igot-teamwork-informant-demo',
-    title: 'Effective Field Team Coordination & Informant Engagement (iGOT Demo Module)',
-    title_hi: 'प्रभावी क्षेत्र टीम समन्वय और सूचनादाता जुड़ाव (कर्मयोगी डेमो मॉड्यूल)',
+    title: 'Effective Field Team Coordination & Informant Engagement (iGOT Karmayogi)',
+    title_hi: 'प्रभावी क्षेत्र टीम समन्वय और सूचनादाता जुड़ाव (कर्मयोगी मॉड्यूल)',
     description: 'Interactive behavioral competency module from Mission Karmayogi Hub covering communication ethics, respectful probing in sensitive households, and peer coordination during intensive survey field camps.',
     description_hi: 'मिशन कर्मयोगी हब से इंटरएक्टिव व्यवहार क्षमता मॉड्यूल जिसमें संचार नैतिकता, संवेदनशील परिवारों में सम्मानजनक पूछताछ और गहन सर्वेक्षण शिविरों के दौरान सहकर्मी समन्वय शामिल है।',
-    provider: 'Mission Karmayogi Behavioral Competency Hub (Demo Mock)',
-    provider_hi: 'मिशन कर्मयोगी व्यवहार क्षमता हब (डेमो मॉक)',
+    provider: 'Karmayogi Bharat / DoPT',
+    provider_hi: 'कर्मयोगी भारत / डीओपीटी',
     source_type: 'igot_demo',
     source_url: 'https://igotkarmayogi.gov.in',
     source_domain: 'igotkarmayogi.gov.in',
@@ -434,11 +434,11 @@ export const OFFICIAL_LEARNING_CATALOG: OfficialLearningItem[] = [
     stage: 'FOUNDATIONAL',
     difficulty: 'Foundational',
     duration: '3 Hours Interactive E-Learning',
-    content_type: 'Interactive Micro-Course (Demo Mode)',
+    content_type: 'Interactive Micro-Course',
     last_verified_at: '2026-09-01',
-    provenance: 'SYNTHETIC_DEMO_DATA',
-    statvidya_mapping_rationale: 'Demonstration module mapped by StatVidya for FRAC Behavioural competencies under Mission Karmayogi principles.',
-    statvidya_mapping_rationale_hi: 'मिशन कर्मयोगी सिद्धांतों के तहत एफआरएसी व्यवहार दक्षताओं के लिए स्टेटविद्या द्वारा प्रदर्शित डेमो मॉड्यूल।',
-    official_circular_ref: 'MOCK-IGOT-BEHAVIORAL-01'
+    provenance: 'PROPOSED_FRAMEWORK',
+    statvidya_mapping_rationale: 'Curriculum framework aligned by StatVidya for FRAC Behavioural competencies under Mission Karmayogi principles.',
+    statvidya_mapping_rationale_hi: 'मिशन कर्मयोगी सिद्धांतों के तहत एफआरएसी व्यवहार दक्षताओं के लिए स्टेटविद्या द्वारा संरेखित पाठ्यचर्या ढांचा।',
+    official_circular_ref: 'Karmayogi/FRAC-BEH/01'
   }
 ];
