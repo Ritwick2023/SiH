@@ -137,6 +137,18 @@ export async function clearOfflineMedia(): Promise<void> {
   await db.clear(MEDIA_STORE_NAME);
 }
 
+/**
+ * clearAllSensitiveOfflineData — Purges all pending assessments and offline cached media
+ * on user logout to prevent data leakage between personas or users sharing a device.
+ */
+export async function clearAllSensitiveOfflineData(): Promise<void> {
+  const db = await openDatabase();
+  const tx = db.transaction([STORE_NAME, MEDIA_STORE_NAME], 'readwrite');
+  await tx.objectStore(STORE_NAME).clear();
+  await tx.objectStore(MEDIA_STORE_NAME).clear();
+  await tx.done;
+}
+
 // =========================================================================
 // QUEUE MANAGER INTERFACE
 // =========================================================================
@@ -150,6 +162,7 @@ export interface OfflineQueueManager {
   markSynced(local_id: string, assessment_id: string, submitted_at: string): Promise<void>;
   markFailed(local_id: string, error: string): Promise<void>;
   clearQueue(): Promise<void>;
+  clearAllSensitiveOfflineData(): Promise<void>;
   flushPendingOnline(): Promise<FlushResult>;
 }
 
@@ -402,6 +415,7 @@ const offlineQueueManager: OfflineQueueManager = {
   markSynced,
   markFailed,
   clearQueue,
+  clearAllSensitiveOfflineData,
   flushPendingOnline,
 };
 

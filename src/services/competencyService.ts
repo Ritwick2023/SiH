@@ -14,7 +14,7 @@ import type {
   Competency,
   ConfidenceTier,
 } from '@/lib/types';
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import { executeWithFallback, getServiceUrl, getAnalyticsHeaders } from '@/lib/serviceUtils';
 
 // ============================================================================
 // CONSTANTS
@@ -406,7 +406,7 @@ export async function computeGapWithFastAPI(
       const analyticsUrl = getServiceUrl('NEXT_PUBLIC_ANALYTICS_SERVICE_URL', 'http://localhost:8000');
       const res = await fetch(`${analyticsUrl}/api/v1/analytics/gap-score`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({
           current_level: currentLevel,
           target_level: targetLevel,

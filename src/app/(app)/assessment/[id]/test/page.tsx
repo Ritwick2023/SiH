@@ -10,6 +10,9 @@ interface PageProps {
 export default async function TestPage({ params }: PageProps) {
   const { id } = await params;
   const user = await getAuthenticatedUser();
+  if (!user) {
+    redirect('/auth/login');
+  }
 
   const assessment = getAssessment(id);
   if (!assessment) {

@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { getAuthenticatedUser } from '@/lib/auth';
 import CredentialsClient from './CredentialsClient';
 
@@ -8,5 +9,8 @@ export const metadata = {
 
 export default async function CredentialsPage() {
   const user = await getAuthenticatedUser();
+  if (!user) {
+    redirect('/auth/login');
+  }
   return <CredentialsClient user={user} />;
 }

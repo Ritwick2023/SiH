@@ -8,7 +8,11 @@
  * Design: PHASE_4_BRAINSTORM.md § 2
  */
 
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import {
+  executeWithFallback,
+  getServiceUrl,
+  getAnalyticsHeaders,
+} from '@/lib/serviceUtils';
 
 export type ProficiencyLevel = 'L1' | 'L2' | 'L3' | 'L4' | 'L5';
 export type AssessmentStage = 'INITIAL' | 'STAGE_1' | 'STAGE_2A' | 'STAGE_2B' | 'STAGE_3' | 'COMPLETE';
@@ -342,7 +346,7 @@ export async function fetchIrtNextQuestion(
     async () => {
       const res = await fetch(`${serviceUrl}/api/v1/assessment/next-question`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({
           candidate_items: candidateItems,
           administered_items: administeredItems,
@@ -402,7 +406,7 @@ export async function finalizeIrtAssessment(
     async () => {
       const res = await fetch(`${serviceUrl}/api/v1/assessment/finalize`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({ administered_items: administeredItems }),
       });
       if (!res.ok) throw new Error(`FastAPI returned status ${res.status}`);

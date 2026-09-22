@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 import { MCQService } from '@/services/mcqService';
+import { getAuthenticatedUser } from '@/lib/auth';
+
+const mcqRateLimit = new Map<string, { count: number; resetAt: number }>();
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -7,6 +11,34 @@ export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {
+    const user = await getAuthenticatedUser(request);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Authentication required to generate MCQs' },
+        { status: 401 }
+      );
+    }
+
+    // Rate Limiting (Req #25): Max 20 requests per minute per user
+    const now = Date.now();
+    const rateKey = user.id;
+    const userRate = mcqRateLimit.get(rateKey);
+    if (userRate) {
+      if (now < userRate.resetAt) {
+        if (userRate.count >= 20) {
+          return NextResponse.json(
+            { error: 'Rate limit exceeded: Too many MCQ generation requests. Please slow down.' },
+            { status: 429 }
+          );
+        }
+        userRate.count++;
+      } else {
+        mcqRateLimit.set(rateKey, { count: 1, resetAt: now + 60 * 1000 });
+      }
+    } else {
+      mcqRateLimit.set(rateKey, { count: 1, resetAt: now + 60 * 1000 });
+    }
+
     const body = await request.json();
     const { competencyId, difficulty, topicPrompt, citationSource, docText, docTitle, questionFocus, count } = body;
 
@@ -36,7 +68,11 @@ export async function POST(request: Request) {
       count: questions.length,
     });
   } catch (error) {
-    console.error('MCQ Generation error:', error);
-    return NextResponse.json({ error: 'Failed to generate MCQ' }, { status: 500 });
+    const requestId = crypto.randomUUID();
+    console.error(`[MCQGenError:${requestId}]`, error);
+    return NextResponse.json(
+      { error: 'Failed to generate MCQ', requestId },
+      { status: 500 }
+    );
   }
 }

@@ -7,7 +7,7 @@
  * FRAC_KNOWLEDGE_BASE within 1,500ms via executeWithFallback.
  */
 
-import { executeWithFallback, getServiceUrl } from '../serviceUtils';
+import { executeWithFallback, getServiceUrl, getAnalyticsHeaders } from '../serviceUtils';
 import { FRAC_KNOWLEDGE_BASE, type DocumentChunk } from '@/data/fracKnowledgeBase';
 
 export type { DocumentChunk };
@@ -75,7 +75,7 @@ export async function semanticSearch(
     async () => {
       const res = await fetch(`${serviceUrl}/api/v1/documents/search`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({
           query,
           top_k: topK,
@@ -112,7 +112,7 @@ export async function upsertChunk(
     async () => {
       const res = await fetch(`${serviceUrl}/api/v1/documents/chunks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({
           document_id: chunk.document_id,
           page_number: chunk.page_number,

@@ -57,3 +57,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 services/analytics-engine/venv/
+
+# Build and local video artifacts
+statvidya-code.zip
+brag-output/

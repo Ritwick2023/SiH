@@ -34,6 +34,16 @@ spec:
               value: "{{ .Values.web.env.NEXT_PUBLIC_APP_URL }}"
             - name: NEXT_PUBLIC_ANALYTICS_SERVICE_URL
               value: "http://{{ .Release.Name }}-analytics:8000"
+            - name: AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: AUTH_SECRET
+            - name: ANALYTICS_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: ANALYTICS_API_SECRET
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           livenessProbe:

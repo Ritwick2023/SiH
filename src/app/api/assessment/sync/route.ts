@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
+import { getAuthenticatedUser } from '@/lib/auth';
+import { DEMO_PERSONAS } from '@/lib/demoPersonas';
 
 export const dynamic = 'force-dynamic';
+
+// Server-side cache to prevent duplicate credential issuance on retried syncs
+const issuedCredentialsCache = new Set<string>();
 
 export async function POST(request: Request) {
   try {
@@ -11,40 +16,85 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required field: local_id' }, { status: 400 });
     }
 
+    // 1. Enforce Server-Authoritative Identity (Req #15)
+    const authenticatedUser = await getAuthenticatedUser(request);
+    let effectiveUserId: string;
+    let effectiveUserName = 'MoSPI Statistical Officer';
+
+    if (authenticatedUser) {
+      // Identity MUST come from authenticated session, never client input
+      effectiveUserId = authenticatedUser.id;
+      effectiveUserName = authenticatedUser.user_metadata?.name || effectiveUserName;
+    } else if (process.env.DEMO_MODE === 'true' || process.env.NODE_ENV === 'test') {
+      // In demo or test mode, check allowlisted demo personas
+      const matched = DEMO_PERSONAS.find((p) => p.id === user_id || p.email === user_id);
+      if (matched) {
+        effectiveUserId = matched.id;
+        effectiveUserName = matched.name;
+      } else {
+        effectiveUserId = user_id || 'demo-sunita';
+      }
+    } else {
+      return NextResponse.json(
+        { error: 'Unauthorized: Authentication required to synchronize assessment' },
+        { status: 401 }
+      );
+    }
+
     const serverAssessmentId = `srv-sync-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const submittedAt = new Date().toISOString();
 
-    // Closed-Loop Outcome Attribution: Log assessment completion asynchronously
+    // 2. Validate Assessment Answers & Completion
+    const answersRecorded = answers && typeof answers === 'object' ? Object.keys(answers).length : 0;
+
+    // Server-authoritative level validation: Cannot claim L4 or L5 without recorded answers
+    let verifiedLevel = final_level || 'L1';
+    if ((verifiedLevel === 'L4' || verifiedLevel === 'L5') && answersRecorded < 2) {
+      verifiedLevel = 'L1'; // Invalidate forged proficiency level
+    }
+
+    // 3. Closed-Loop Outcome Attribution: Log event asynchronously
     const analyticsUrl = process.env.NEXT_PUBLIC_ANALYTICS_SERVICE_URL || 'http://localhost:8000';
     try {
       fetch(`${analyticsUrl}/api/v1/outcomes/log-event`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(process.env.ANALYTICS_API_SECRET
+            ? { Authorization: `Bearer ${process.env.ANALYTICS_API_SECRET}` }
+            : {}),
+        },
         body: JSON.stringify({
-          official_id: user_id || 'anonymous',
+          official_id: effectiveUserId,
           event_type: 'assessment_completed',
           competency_id: competency_id || 'unknown',
-          theta_after: final_level === 'L5' ? 2.8 : (final_level === 'L4' ? 1.6 : (final_level === 'L3' ? 0.3 : -1.0)),
-          metadata: { local_id, branch_path }
+          theta_after:
+            verifiedLevel === 'L5' ? 2.8 : verifiedLevel === 'L4' ? 1.6 : verifiedLevel === 'L3' ? 0.3 : -1.0,
+          metadata: { local_id, branch_path },
         }),
       }).catch(() => {});
     } catch {
       // Non-blocking background log
     }
 
-    // Task C4: Issue DigiLocker W3C Verifiable Credential if final_level is L4 or L5
+    // 4. Server-Authoritative DigiLocker Verifiable Credential Issuance (Req #16)
     let credentialData = null;
-    if (final_level === 'L4' || final_level === 'L5') {
+    const credentialKey = `${effectiveUserId}:${competency_id}:${local_id}`;
+
+    if ((verifiedLevel === 'L4' || verifiedLevel === 'L5') && !issuedCredentialsCache.has(credentialKey)) {
       try {
         const { issueCompetencyCredential } = await import('@/services/digilockerService');
         const issueResult = await issueCompetencyCredential({
-          employeeId: user_id || 'OFFICER-DEFAULT',
-          holderName: user_id === 'demo-sunita' ? 'Sunita Devi' : (user_id === 'demo-amit' ? 'Amit Sharma' : 'MoSPI Statistical Officer'),
+          employeeId: effectiveUserId,
+          holderName: effectiveUserName,
           cadre: 'Field Operations Division (FOD)',
-          competencyId: competency_id || 'comp-boundary-demarcation',
-          competencyName: 'Census Boundary Demarcation & Listing',
-          levelAchieved: final_level,
+          competencyId: competency_id || 'comp-capi',
+          competencyName: 'CAPI Field Enumeration & Survey Verification',
+          levelAchieved: verifiedLevel,
         });
+
+        issuedCredentialsCache.add(credentialKey);
+
         credentialData = {
           issued: true,
           credential_id: issueResult.credentialId,
@@ -62,16 +112,19 @@ export async function POST(request: Request) {
       submitted_at: submittedAt,
       local_id,
       competency_id: competency_id || 'unknown',
-      user_id: user_id || 'unknown',
-      final_level: final_level || 'L1',
+      user_id: effectiveUserId,
+      final_level: verifiedLevel,
       branch_path: branch_path || 'L1',
-      answers_recorded: answers ? Object.keys(answers).length : 0,
+      answers_recorded: answersRecorded,
       offline_created_at: created_at || submittedAt,
       sync_status: 'SYNCED',
       verifiable_credential: credentialData,
     });
   } catch (error) {
     console.error('Assessment sync error:', error);
-    return NextResponse.json({ error: 'Failed to synchronize offline assessment' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to synchronize offline assessment' },
+      { status: 500 }
+    );
   }
 }

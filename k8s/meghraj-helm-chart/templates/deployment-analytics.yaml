@@ -29,8 +29,18 @@ spec:
           env:
             - name: PORT
               value: "8000"
+            - name: APP_ENV
+              value: "production"
             - name: DATABASE_URL
-              value: "postgresql://statvidya_admin:statvidya_secure_prod@{{ .Release.Name }}-postgres:5432/statvidya_db"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: DATABASE_URL
+            - name: ANALYTICS_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: ANALYTICS_API_SECRET
             - name: REDIS_URL
               value: "redis://{{ .Release.Name }}-redis:6379/0"
           resources:

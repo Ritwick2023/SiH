@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import type { UserRole } from '@/lib/types';
+import { DEMO_PERSONAS } from '@/lib/demoPersonas';
+import { verifySessionToken } from '@/lib/sessionToken';
 
 const PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/dashboard': ['learner', 'trainer', 'admin'],
@@ -8,16 +10,127 @@ const PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/profile': ['learner', 'trainer', 'admin'],
   '/assessment': ['learner', 'trainer', 'admin'],
   '/documents': ['learner', 'trainer', 'admin'],
-  '/mcq-generator': ['learner', 'trainer', 'admin'],
+  '/mcq-generator': ['trainer', 'admin'],
   '/review-queue': ['trainer', 'admin'],
   '/admin': ['admin'],
   '/onboarding': ['learner', 'trainer', 'admin'],
+  '/credentials': ['learner', 'trainer', 'admin'],
 };
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Origin & CSRF verification for mutating API calls
   if (pathname.startsWith('/api/')) {
+    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
+      const origin = request.headers.get('origin');
+      const host = request.headers.get('host');
+
+      if (origin && host) {
+        try {
+          const originHost = new URL(origin).host;
+          // Permit matching host or localhost in non-production
+          const isAllowedHost =
+            originHost === host ||
+            (process.env.NODE_ENV !== 'production' &&
+              (originHost.startsWith('localhost:') || originHost.startsWith('127.0.0.1:')));
+
+          if (!isAllowedHost) {
+            return NextResponse.json(
+              { error: 'Forbidden: Cross-origin request rejected' },
+              { status: 403 }
+            );
+          }
+        } catch {
+          return NextResponse.json(
+            { error: 'Forbidden: Malformed Origin header' },
+            { status: 403 }
+          );
+        }
+      }
+    }
     return NextResponse.next();
+  }
+
+  // Identity extraction via server-verified token or allowlisted DEMO_MODE persona
+  let user: {
+    id: string;
+    email?: string;
+    role: UserRole;
+    organization_id?: string;
+    preferred_language?: string;
+  } | null = null;
+
+  // 1. Verify cryptographic session token
+  const sessionToken =
+    request.cookies.get('auth_token')?.value ||
+    request.cookies.get('statvidya_session')?.value;
+
+  if (sessionToken) {
+    const verified = await verifySessionToken(sessionToken);
+    if (verified) {
+      user = {
+        id: verified.id,
+        email: verified.email,
+        role: (verified.app_metadata?.role as UserRole) || 'learner',
+        organization_id: verified.user_metadata?.organization_id,
+        preferred_language: verified.user_metadata?.preferred_language,
+      };
+    }
+  }
+
+  // 2. Demo mode isolation — only permitted if DEMO_MODE=true and persona is allowlisted
+  if (!user && process.env.DEMO_MODE === 'true') {
+    const demoCookie =
+      request.cookies.get('demo_persona')?.value || request.cookies.get('demo_user')?.value;
+
+    if (demoCookie) {
+      let personaId = demoCookie;
+      if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(decodeURIComponent(demoCookie));
+          personaId = parsed.id || parsed.email || '';
+        } catch {
+          personaId = '';
+        }
+      }
+
+      const persona = DEMO_PERSONAS.find(
+        (p) =>
+          p.id === personaId ||
+          (personaId && p.email.toLowerCase() === personaId.toLowerCase())
+      );
+
+      if (persona) {
+        user = {
+          id: persona.id,
+          email: persona.email,
+          role: persona.role,
+          organization_id: persona.organization_id,
+          preferred_language: persona.preferred_language,
+        };
+      }
+    }
+  }
+
+  const routePath = getRoutePath(pathname);
+  const allowedRoles = PROTECTED_ROUTES[routePath];
+
+  // If visiting a protected route without authentication, redirect to login
+  if (allowedRoles) {
+    if (!user) {
+      const loginUrl = new URL('/auth/login', request.url);
+      if (pathname !== '/dashboard') {
+        loginUrl.searchParams.set('returnTo', pathname);
+      }
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Role-based authorization: redirect unauthorized roles to dashboard
+    if (!allowedRoles.includes(user.role)) {
+      const dashboardUrl = new URL('/dashboard', request.url);
+      return NextResponse.redirect(dashboardUrl);
+    }
   }
 
   const response = NextResponse.next({
@@ -26,123 +139,19 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  let user: {
-    id: string;
-    email?: string;
-    app_metadata?: { role?: UserRole };
-    user_metadata?: {
-      name?: string;
-      organization_id?: string;
-      preferred_language?: string;
-    };
-  } | null = null;
-
-  // 1. Check demo_user cookie FIRST for instant local dev authentication
-  const demoCookie = request.cookies.get('demo_user')?.value;
-  if (demoCookie) {
-    try {
-      const parsed = JSON.parse(decodeURIComponent(demoCookie));
-      if (parsed && parsed.email) {
-        user = {
-          id: parsed.id || 'demo-amit',
-          email: parsed.email,
-          app_metadata: { role: parsed.role || 'learner' },
-          user_metadata: {
-            name: parsed.name,
-            organization_id: parsed.organization_id || 'org-mospi',
-            preferred_language: parsed.preferred_language || 'en',
-          },
-        };
-      }
-    } catch {
-      // Parse error
-    }
+  // Set verified user headers for downstream server components
+  if (user) {
+    response.headers.set('x-user-role', String(user.role));
+    response.headers.set('x-user-id', user.id);
+    response.headers.set('x-user-org-id', user.organization_id || '');
   }
 
-  // 2. Check firebase_user cookie
-  if (!user) {
-    const firebaseCookie = request.cookies.get('firebase_user')?.value;
-    if (firebaseCookie) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(firebaseCookie));
-        if (parsed && parsed.email) {
-          user = {
-            id: parsed.uid || parsed.id,
-            email: parsed.email,
-            app_metadata: { role: parsed.role || 'learner' },
-            user_metadata: {
-              name: parsed.displayName || parsed.name,
-              organization_id: parsed.organization_id || 'org-mospi',
-              preferred_language: parsed.preferred_language || 'en',
-            },
-          };
-        }
-      } catch {
-        // Parse error
-      }
-    }
-  }
-
-  // 3. Fallback auto-authenticate demo persona for app routes in dev
-  if (!user) {
-    const { pathname } = request.nextUrl;
-
-    if (pathname.startsWith('/api/sso') || pathname.startsWith('/auth') || pathname === '/') {
-      return response;
-    }
-
-    const defaultPersona = {
-      id: 'demo-amit',
-      name: 'Amit Sharma',
-      email: 'amit.sharma@mospi.gov.in',
-      role: 'learner' as UserRole,
-      organization_id: 'org-mospi',
-      preferred_language: 'en',
-    };
-    response.cookies.set('demo_user', encodeURIComponent(JSON.stringify(defaultPersona)), {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
-    });
-    user = {
-      id: defaultPersona.id,
-      email: defaultPersona.email,
-      app_metadata: { role: defaultPersona.role },
-      user_metadata: defaultPersona,
-    };
-  }
-
-  const userRole = (user?.app_metadata?.role as UserRole) || 'learner';
-  const userOrgId = user?.user_metadata?.organization_id || '';
-
-  const routePath = getRoutePath(request.nextUrl.pathname);
-  const allowedRoles = PROTECTED_ROUTES[routePath];
-
-  // In demo development mode, allow users to inspect /documents, /mcq-generator, and /review-queue
-  // even if exploring as a learner, so features are never blocked while evaluating
-  const isDemoDev = process.env.NODE_ENV !== 'production' || request.cookies.has('demo_user');
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    if (
-      isDemoDev &&
-      (routePath === '/documents' ||
-        routePath === '/mcq-generator' ||
-        routePath === '/review-queue' ||
-        routePath === '/admin' ||
-        request.nextUrl.pathname.startsWith('/admin'))
-    ) {
-      // Allow demo inspection
-    } else {
-      const dashboardUrl = new URL('/dashboard', request.url);
-      return NextResponse.redirect(dashboardUrl);
-    }
-  }
-
+  // Locale determination
   const requestLocale = request.cookies.get('locale')?.value;
-  const validLocale = (requestLocale === 'en' || requestLocale === 'hi') ? requestLocale : null;
-  // Prioritize explicit cookie so toggling language sticks immediately across all pages and personas
-  const locale = validLocale || (user?.user_metadata?.preferred_language === 'hi' ? 'hi' : 'en');
+  const validLocale = requestLocale === 'en' || requestLocale === 'hi' ? requestLocale : null;
+  const locale = validLocale || (user?.preferred_language === 'hi' ? 'hi' : 'en');
 
   if (requestLocale !== locale) {
-    request.cookies.set('locale', locale);
     response.cookies.set('locale', locale, {
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
@@ -150,18 +159,16 @@ export async function proxy(request: NextRequest) {
     });
   }
 
-  response.headers.set('x-user-role', String(userRole));
-  response.headers.set('x-user-org-id', userOrgId || '');
-
   return response;
 }
 
 function getRoutePath(pathname: string): string {
-  if (pathname.startsWith('/admin/')) return '/admin';
-  if (pathname.startsWith('/assessment/')) return '/assessment';
-  if (pathname.startsWith('/mcq-generator/')) return '/mcq-generator';
-  if (pathname.startsWith('/review-queue/')) return '/review-queue';
-  if (pathname.startsWith('/onboarding/')) return '/onboarding';
+  if (pathname.startsWith('/admin')) return '/admin';
+  if (pathname.startsWith('/assessment')) return '/assessment';
+  if (pathname.startsWith('/mcq-generator')) return '/mcq-generator';
+  if (pathname.startsWith('/review-queue')) return '/review-queue';
+  if (pathname.startsWith('/onboarding')) return '/onboarding';
+  if (pathname.startsWith('/credentials')) return '/credentials';
 
   const clean = pathname.split('/')[1];
   if (!clean || clean === 'api') return pathname;

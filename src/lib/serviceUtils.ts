@@ -45,3 +45,20 @@ export function getServiceUrl(envKey: string, fallback: string): string {
   const windowEnv = (window as unknown as Record<string, unknown>)[envKey] as string | undefined;
   return windowEnv || process.env[envKey] || fallback;
 }
+
+/**
+ * Returns secure headers for calling internal analytics microservice,
+ * including bearer authorization when running server-side.
+ */
+export function getAnalyticsHeaders(customHeaders: Record<string, string> = {}): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...customHeaders,
+  };
+
+  const secret = typeof process !== 'undefined' ? process.env?.ANALYTICS_API_SECRET : undefined;
+  if (secret) {
+    headers['Authorization'] = `Bearer ${secret}`;
+  }
+  return headers;
+}

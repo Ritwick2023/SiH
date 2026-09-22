@@ -120,3 +120,14 @@ ingress:
 
 networkPolicy:
   enabled: true
+
+secrets:
+  # Sensitive values for production sovereign cloud deployment
+  # Override with --set or via external secrets operator (Vault / KMS)
+  postgresUser: "statvidya_admin"
+  postgresPassword: "statvidya_secure_prod"
+  minioRootUser: "statvidya_s3_admin"
+  minioRootPassword: "statvidya_s3_prod_secret"
+  analyticsApiSecret: "statvidya_prod_analytics_secret"
+  authSecret: "statvidya_prod_auth_hmac_secret"
+
