@@ -10,6 +10,8 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV !== "production",
 });
 
+process.env.SERWIST_SUPPRESS_TURBOPACK_WARNING = '1';
+
 const nextConfig: NextConfig = {
   turbopack: {},
   compress: true,
@@ -20,8 +22,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [
       'lucide-react',
-      'recharts',
-      'date-fns',
       'clsx',
       'tailwind-merge',
       'unpdf',

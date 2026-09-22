@@ -5,6 +5,7 @@ import { getAuthenticatedUser } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const copilotRateLimit = new Map<string, { count: number; resetAt: number }>();
 
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
         parts: [{ text: m.content }],
       }));
 
-    const model = 'gemini-3.6-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
     const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
       model + ':streamGenerateContent?alt=sse&key=' + apiKey;
 

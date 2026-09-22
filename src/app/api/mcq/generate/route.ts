@@ -5,6 +5,10 @@ import { getAuthenticatedUser } from '@/lib/auth';
 
 const mcqRateLimit = new Map<string, { count: number; resetAt: number }>();
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   try {
     const user = await getAuthenticatedUser(request);

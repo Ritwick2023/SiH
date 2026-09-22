@@ -4,6 +4,10 @@ import { DocumentService } from '@/services/documentService';
 import { TextExtractionService } from '@/services/textExtractionService';
 import { getAuthenticatedUser } from '@/lib/auth';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB limit for official statistical manuals
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.txt']);
 const ALLOWED_MIME_TYPES = new Set(['application/pdf', 'text/plain']);

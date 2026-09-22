@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -135,6 +135,21 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
     });
   }, [profile, isHindi]);
 
+  // Auto-focus and open rubric if navigated via ?comp=
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const compParam = params.get('comp');
+      if (compParam) {
+        const found = gaps.find((g) => g.competencyId === compParam);
+        if (found) {
+          const timer = setTimeout(() => setInspectingGap(found), 0);
+          return () => clearTimeout(timer);
+        }
+      }
+    }
+  }, [gaps]);
+
   // Priority-Weighted Readiness Index
   const weightedReadiness = useMemo(() => {
     const required = gaps.map((g) => ({
@@ -228,7 +243,10 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
     setInspectingGap(gap);
   };
 
-  const handleSimulateLevelUp = (competencyId: string, targetLevel: number) => {
+  const handleSimulateLevelUp = (competencyId: string, targetLevel?: number) => {
+    if (targetLevel) {
+      setSimulatedPlanOverrides((prev) => ({ ...prev, [competencyId]: targetLevel }));
+    }
     setSimulatorFocusedId(competencyId);
     setActiveTab('simulator');
   };
@@ -534,8 +552,7 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
         onClose={() => setInspectingGap(null)}
         onSimulateLevel={(compId, lvl) => {
           setInspectingGap(null);
-          setSimulatorFocusedId(compId);
-          setActiveTab('simulator');
+          handleSimulateLevelUp(compId, lvl);
         }}
       />
     </div>

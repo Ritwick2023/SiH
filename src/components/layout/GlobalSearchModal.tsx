@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { DEMO_PERSONAS } from '@/lib/demoPersonas';
+import type { UserRole } from '@/lib/types';
 
 export interface SearchItem {
   id: string;
@@ -26,6 +26,7 @@ export interface SearchItem {
   cadreTag?: string;
   cadreTag_hi?: string;
   targetPersonaEmail?: string;
+  allowedRoles?: UserRole[];
   keywords?: string[];
 }
 
@@ -38,7 +39,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Offline-first household listing, digital validation rules & survey synchronization.',
     description_hi: 'ऑफ़लाइन घरेलू सूचीकरण, डिजिटल सत्यापन नियम और सर्वेक्षण तुल्यकालन।',
     category: 'competency',
-    href: '/assessment/comp-capi',
+    href: '/skill-gap?comp=comp-capi',
     badge: 'FRAC L3 Target',
     cadreTag: 'Field Investigator',
     cadreTag_hi: 'फील्ड अन्वेषक',
@@ -52,7 +53,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Cadastral map interpretation, boundary reconciliation & FOD field conventions.',
     description_hi: 'कैडस्ट्रल मानचित्र व्याख्या, सीमा समाधान और FOD फील्ड नियम।',
     category: 'competency',
-    href: '/assessment/comp-nsso',
+    href: '/skill-gap?comp=comp-nsso',
     badge: 'FRAC L3 Target',
     cadreTag: 'JSO Cadre',
     cadreTag_hi: 'JSO संवर्ग',
@@ -66,7 +67,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Stratified multi-stage sampling, multiplier estimation & rotational panels.',
     description_hi: 'स्तरीकृत बहु-चरणीय प्रतिचयन, गुणक अनुमान एवं घूर्णी पैनल।',
     category: 'competency',
-    href: '/assessment/comp-survey',
+    href: '/skill-gap?comp=comp-survey',
     badge: 'FRAC L4 Target',
     cadreTag: 'JSO Cadre',
     cadreTag_hi: 'JSO संवर्ग',
@@ -80,7 +81,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Field schedule scrutiny, error flagging, logical checks & verification.',
     description_hi: 'फील्ड अनुसूची संवीक्षा, त्रुटि ध्वजांकन, तार्किक जांच और सत्यापन।',
     category: 'competency',
-    href: '/assessment/comp-data',
+    href: '/skill-gap?comp=comp-data',
     badge: 'FRAC L3 Target',
     cadreTag: 'JSO Cadre',
     cadreTag_hi: 'JSO संवर्ग',
@@ -94,7 +95,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Schedule 0.0 block formation, boundary description & landmark validation.',
     description_hi: 'अनुसूची 0.0 ब्लॉक गठन, सीमा विवरण और लैंडमार्क सत्यापन।',
     category: 'competency',
-    href: '/assessment/comp-demarcation',
+    href: '/skill-gap?comp=comp-demarcation',
     badge: 'FRAC L3 Target',
     cadreTag: 'Field Investigator',
     cadreTag_hi: 'फील्ड अन्वेषक',
@@ -108,7 +109,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     description: 'Household expenditure checks, cross-schedule validation & anomaly resolution.',
     description_hi: 'घरेलू व्यय जांच, क्रॉस-शेड्यूल सत्यापन और विसंगति निवारण।',
     category: 'competency',
-    href: '/assessment/comp-scrutiny',
+    href: '/skill-gap?comp=comp-scrutiny',
     badge: 'FRAC L4 Target',
     cadreTag: 'SSO Cadre',
     cadreTag_hi: 'SSO संवर्ग',
@@ -207,7 +208,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     badge: 'Faculty Studio',
     cadreTag: 'NSSTA Faculty',
     cadreTag_hi: 'NSSTA संकाय',
-    targetPersonaEmail: 'priya.verma@nssta.gov.in',
+    allowedRoles: ['trainer', 'admin'],
     keywords: ['review', 'queue', 'faculty', 'priya', 'trainer', 'qa', 'approve'],
   },
   {
@@ -221,6 +222,7 @@ const SEARCH_REGISTRY: SearchItem[] = [
     badge: 'iGOT Karmayogi',
     cadreTag: 'All Cadres',
     cadreTag_hi: 'सभी संवर्ग',
+    allowedRoles: ['learner', 'trainer', 'admin'],
     keywords: ['courses', 'karmayogi', 'igot', 'learning', 'training'],
   },
   {
@@ -234,40 +236,89 @@ const SEARCH_REGISTRY: SearchItem[] = [
     badge: 'HQ Intelligence',
     cadreTag: 'MoSPI HQ Command',
     cadreTag_hi: 'MoSPI मुख्यालय',
-    targetPersonaEmail: 'rajesh.kumar@mospi.gov.in',
+    allowedRoles: ['admin'],
     keywords: ['analytics', 'admin', 'rajesh', 'correlation', 'metrics', 'ro', 'error', 'readiness'],
+  },
+  {
+    id: 'page-documents',
+    title: 'Official Field Manuals & SOP Library',
+    title_hi: 'आधिकारिक फील्ड मैनुअल एवं एसओपी पुस्तकालय',
+    description: 'Searchable library of MoSPI manuals, circulars, and survey schedules.',
+    description_hi: 'MoSPI मैनुअल, परिपत्रों और सर्वेक्षण अनुसूचियों का खोज योग्य पुस्तकालय।',
+    category: 'page',
+    href: '/documents',
+    badge: 'Knowledge Base',
+    cadreTag: 'All Cadres',
+    cadreTag_hi: 'सभी संवर्ग',
+    allowedRoles: ['learner', 'trainer', 'admin'],
+    keywords: ['manuals', 'documents', 'pdf', 'library', 'sop', 'guidelines'],
+  },
+  {
+    id: 'page-credentials',
+    title: 'DigiLocker Certified Competencies & Badges',
+    title_hi: 'डिजिलॉकर प्रमाणित दक्षताएं एवं बैज',
+    description: 'W3C verifiable credentials for verified statistical competencies.',
+    description_hi: 'सत्यापित सांख्यिकीय दक्षताओं के लिए W3C सत्यापन योग्य क्रेडेंशियल।',
+    category: 'page',
+    href: '/credentials',
+    badge: 'Verifiable Credential',
+    cadreTag: 'All Cadres',
+    cadreTag_hi: 'सभी संवर्ग',
+    allowedRoles: ['learner', 'trainer', 'admin'],
+    keywords: ['credentials', 'digilocker', 'certificate', 'badges', 'w3c'],
+  },
+  {
+    id: 'page-correlation',
+    title: 'Field Scrutiny & Outcomes Correlation',
+    title_hi: 'फील्ड संवीक्षा एवं परिणाम सहसंबंध',
+    description: 'Statistical correlation between training levels and field survey error drops.',
+    description_hi: 'प्रशिक्षण स्तर और फील्ड सर्वेक्षण त्रुटि कमी के बीच सांख्यिकीय सहसंबंध।',
+    category: 'page',
+    href: '/admin/analytics/correlation',
+    badge: 'Econometric Fit',
+    cadreTag: 'MoSPI HQ Command',
+    cadreTag_hi: 'MoSPI मुख्यालय',
+    allowedRoles: ['admin'],
+    keywords: ['correlation', 'regression', 'scrutiny', 'error', 'outcomes', 'roi'],
   },
 ];
 
-function setDemoUserCookie(persona: unknown) {
-  if (typeof document === 'undefined') return;
-  document.cookie = `demo_user=${encodeURIComponent(
-    JSON.stringify(persona)
-  )};path=/;max-age=${60 * 60 * 24 * 7};SameSite=Lax`;
-}
-
-function navigateToUrl(url: string) {
-  if (typeof window === 'undefined') return;
-  window.location.assign(url);
-}
-
-interface GlobalSearchModalProps {
+export interface GlobalSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   isHindi?: boolean;
+  userRole?: UserRole;
+  userCadre?: string;
 }
 
-export function GlobalSearchModal({ isOpen, onClose, isHindi = false }: GlobalSearchModalProps) {
+export function GlobalSearchModal({
+  isOpen,
+  onClose,
+  isHindi = false,
+  userRole,
+  userCadre,
+}: GlobalSearchModalProps) {
   if (!isOpen) return null;
-  return <GlobalSearchModalContent onClose={onClose} isHindi={isHindi} />;
+  return (
+    <GlobalSearchModalContent
+      onClose={onClose}
+      isHindi={isHindi}
+      userRole={userRole}
+      userCadre={userCadre}
+    />
+  );
 }
 
 function GlobalSearchModalContent({
   onClose,
   isHindi = false,
+  userRole,
+  userCadre,
 }: {
   onClose: () => void;
   isHindi?: boolean;
+  userRole?: UserRole;
+  userCadre?: string;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -282,10 +333,19 @@ function GlobalSearchModalContent({
     return () => clearTimeout(timer);
   }, []);
 
+  // Role-scoped item pool: if userRole is specified, only include items permitted for that role
+  const roleScopedItems = useMemo(() => {
+    if (!userRole) return SEARCH_REGISTRY;
+    return SEARCH_REGISTRY.filter((item) => {
+      if (!item.allowedRoles || item.allowedRoles.length === 0) return true;
+      return item.allowedRoles.includes(userRole);
+    });
+  }, [userRole]);
+
   // Filter items based on query and selected category
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return SEARCH_REGISTRY.filter((item) => {
+    const items = roleScopedItems.filter((item) => {
       // Category filter
       if (activeCategory !== 'all' && item.category !== activeCategory) {
         return false;
@@ -295,9 +355,51 @@ function GlobalSearchModalContent({
       const titleMatch = item.title.toLowerCase().includes(q) || item.title_hi.toLowerCase().includes(q);
       const descMatch = item.description.toLowerCase().includes(q) || item.description_hi.toLowerCase().includes(q);
       const keywordMatch = item.keywords?.some((k) => k.toLowerCase().includes(q));
-      return titleMatch || descMatch || keywordMatch;
+      const cadreMatch = item.cadreTag?.toLowerCase().includes(q) || item.cadreTag_hi?.toLowerCase().includes(q);
+      return titleMatch || descMatch || keywordMatch || cadreMatch;
     });
-  }, [query, activeCategory]);
+
+    if (userCadre) {
+      const cadreNorm = userCadre.toLowerCase();
+      return [...items].sort((a, b) => {
+        const aMatch = (a.cadreTag && cadreNorm.includes(a.cadreTag.toLowerCase())) ? 1 : 0;
+        const bMatch = (b.cadreTag && cadreNorm.includes(b.cadreTag.toLowerCase())) ? 1 : 0;
+        return bMatch - aMatch;
+      });
+    }
+
+    return items;
+  }, [roleScopedItems, query, activeCategory, userCadre]);
+
+  const quickShortcuts = useMemo(() => {
+    if (userRole === 'trainer') {
+      return [
+        { label: isHindi ? 'संकाय समीक्षा कतार' : 'Review Queue', q: 'review' },
+        { label: isHindi ? 'MCQ जनरेटर' : 'MCQ Generator', q: 'mcq' },
+        { label: isHindi ? 'फील्ड मैनुअल' : 'Field Manuals', q: 'manual' },
+        { label: isHindi ? 'दस्तावेज़ संग्रह' : 'Documents', q: 'documents' },
+        { label: isHindi ? 'दक्षताएं' : 'Competencies', q: 'comp' },
+      ];
+    }
+    if (userRole === 'admin') {
+      return [
+        { label: isHindi ? 'विभाग विश्लेषण' : 'Department Analytics', q: 'analytics' },
+        { label: isHindi ? 'संवीक्षा सहसंबंध' : 'Outcomes Correlation', q: 'correlation' },
+        { label: isHindi ? 'समीक्षा कतार' : 'Review Queue', q: 'review' },
+        { label: isHindi ? 'कौशल मैट्रिक्स' : 'Skill Gap', q: 'gap' },
+        { label: isHindi ? 'फील्ड मैनुअल' : 'Manuals', q: 'manual' },
+      ];
+    }
+    // Learner / Default
+    return [
+      { label: isHindi ? 'कैपी टैबलेट' : 'CAPI Tablet', q: 'capi' },
+      { label: isHindi ? 'PLFS मैनुअल' : 'PLFS Manual', q: 'plfs' },
+      { label: isHindi ? 'सीमांकन' : 'Demarcation', q: 'demarcation' },
+      { label: isHindi ? 'कौशल अंतराल' : 'Skill Gap', q: 'gap' },
+      { label: isHindi ? 'पाठ्यक्रम' : 'Courses', q: 'courses' },
+      { label: isHindi ? 'अभ्यास प्रश्न' : 'Practice MCQ', q: 'mcq' },
+    ];
+  }, [userRole, isHindi]);
 
   const handleQueryChange = (val: string) => {
     setQuery(val);
@@ -328,23 +430,20 @@ function GlobalSearchModalContent({
     }
   };
 
+  // Clean navigation: opens remediation modal if on dashboard, or navigates to skill gap / target page
   const handleSelectItem = (item: SearchItem) => {
     onClose();
-    if (item.targetPersonaEmail) {
-      try {
-        const persona = DEMO_PERSONAS.find(
-          (p) => p.email.toLowerCase() === item.targetPersonaEmail?.toLowerCase()
-        );
-        if (persona) {
-          setDemoUserCookie(persona);
-          navigateToUrl(item.href);
-          return;
-        }
-      } catch {
-        // Fallback to normal navigation
-      }
+    if (
+      item.category === 'competency' &&
+      typeof window !== 'undefined' &&
+      window.location.pathname === '/dashboard'
+    ) {
+      window.dispatchEvent(
+        new CustomEvent('open-bridge-gap', { detail: { competencyId: item.id } })
+      );
+    } else {
+      router.push(item.href);
     }
-    router.push(item.href);
   };
 
   return (
@@ -352,17 +451,20 @@ function GlobalSearchModalContent({
       role="dialog"
       aria-modal="true"
       aria-label="Global Search"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-stone-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 bg-slate-950/40 backdrop-blur-md transition-all animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in-0 zoom-in-95 duration-150"
+        className="relative w-full max-w-2xl bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_25px_60px_-15px_rgba(15,23,42,0.25),0_0_1px_1px_rgba(255,255,255,0.9)_inset,0_0_0_1px_rgba(203,213,225,0.6)] overflow-hidden flex flex-col max-h-[82vh] transition-all animate-in fade-in-0 zoom-in-[0.98] duration-200 ring-1 ring-black/5"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
-        {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#D8DFEE] bg-stone-50/50">
-          <Search className="h-5 w-5 text-[#1C4CA1] shrink-0" />
+        {/* Subtle Sovereign Accent Gradient Bar */}
+        <div className="h-[2.5px] w-full bg-gradient-to-r from-[#1C4CA1] via-[#1164BE] to-[#FFA72F]" />
+
+        {/* Minimal Rich Search Input Bar */}
+        <div className="flex items-center gap-3.5 px-5 py-4 bg-white/90 border-b border-slate-100/90">
+          <Search className="h-5 w-5 text-slate-400 shrink-0 transition-colors" />
           <input
             ref={inputRef}
             type="text"
@@ -373,67 +475,87 @@ function GlobalSearchModalContent({
                 ? 'दक्षताएं, फील्ड मैनुअल, प्रश्न या पेज खोजें...'
                 : 'Search competencies, manuals, questions, or pages...'
             }
-            className="flex-1 bg-transparent text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none font-medium"
+            style={{
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              minHeight: 'unset',
+              boxShadow: 'none',
+              padding: 0,
+            }}
+            className="flex-1 !bg-transparent !border-0 !outline-none !shadow-none !ring-0 !p-0 !min-h-0 text-[15px] sm:text-base text-slate-900 placeholder:text-slate-400 font-normal selection:bg-[#1C4CA1]/15"
           />
           {query && (
             <button
               type="button"
               onClick={() => handleQueryChange('')}
-              className="p-1 rounded-md text-stone-400 hover:text-stone-700 hover:bg-stone-200/50 transition cursor-pointer"
+              className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all cursor-pointer"
               aria-label="Clear query"
             >
               <X className="h-4 w-4" />
             </button>
           )}
-          <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-[#D8DFEE] bg-white px-2 py-0.5 text-[10px] font-mono text-stone-500 shadow-2xs">
+          <kbd className="hidden sm:inline-flex items-center gap-1 rounded-md border border-slate-200/90 bg-slate-50/80 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-400 shadow-2xs tracking-wider">
             ESC
           </kbd>
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-[#D8DFEE] overflow-x-auto">
+        {/* Minimalist Segmented Pill Navigation */}
+        <div className="flex items-center gap-1.5 px-4 py-2 bg-slate-50/60 border-b border-slate-100 overflow-x-auto no-scrollbar">
           {[
-            { id: 'all', label: isHindi ? 'सभी' : 'All Results', count: SEARCH_REGISTRY.length },
+            { id: 'all', label: isHindi ? 'सभी' : 'All Results', count: roleScopedItems.length },
             {
               id: 'competency',
               label: isHindi ? 'दक्षताएं (FRAC)' : 'Competencies',
-              count: SEARCH_REGISTRY.filter((s) => s.category === 'competency').length,
+              count: roleScopedItems.filter((s) => s.category === 'competency').length,
             },
             {
               id: 'manual',
               label: isHindi ? 'फील्ड मैनुअल' : 'Field Manuals',
-              count: SEARCH_REGISTRY.filter((s) => s.category === 'manual').length,
+              count: roleScopedItems.filter((s) => s.category === 'manual').length,
             },
             {
               id: 'page',
               label: isHindi ? 'पेज एवं नेविगेशन' : 'Platform Pages',
-              count: SEARCH_REGISTRY.filter((s) => s.category === 'page').length,
+              count: roleScopedItems.filter((s) => s.category === 'page').length,
             },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => handleCategoryChange(cat.id as typeof activeCategory)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                activeCategory === cat.id
-                  ? 'bg-[#1C4CA1] text-white shadow-2xs'
-                  : 'bg-[#EDF0F7] text-stone-600 hover:bg-[#D8DFEE]/60'
-              }`}
-            >
-              {cat.label} <span className="opacity-70 text-[10px]">({cat.count})</span>
-            </button>
-          ))}
+          ].map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleCategoryChange(cat.id as typeof activeCategory)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-white text-slate-900 font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.06)] border border-slate-200/80'
+                    : 'text-slate-500 font-medium hover:text-slate-800 hover:bg-slate-200/40 border border-transparent'
+                }`}
+              >
+                <span>{cat.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono transition-colors ${
+                    isActive ? 'bg-slate-100 text-slate-600' : 'text-slate-400'
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Results Container */}
-        <div ref={listRef} className="flex-1 overflow-y-auto p-2 space-y-1 divide-y divide-stone-100">
+        <div ref={listRef} className="flex-1 overflow-y-auto p-2 sm:p-2.5 space-y-1">
           {filteredItems.length === 0 ? (
-            <div className="p-8 text-center">
-              <Search className="h-8 w-8 text-stone-300 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-stone-700">
+            <div className="py-12 px-6 text-center flex flex-col items-center justify-center">
+              <div className="h-12 w-12 rounded-2xl bg-slate-100/90 border border-slate-200/60 flex items-center justify-center mb-3 text-slate-400 shadow-2xs">
+                <Search className="h-5 w-5" />
+              </div>
+              <p className="text-sm font-semibold text-slate-800">
                 {isHindi ? 'कोई परिणाम नहीं मिला' : 'No matching results found'}
               </p>
-              <p className="text-xs text-stone-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1 max-w-sm leading-relaxed">
                 {isHindi
                   ? 'कृपया किसी अन्य शब्द जैसे "CAPI", "Manual", "PLFS", या "Scrutiny" से खोजें।'
                   : 'Try searching with keywords like "CAPI", "PLFS", "Demarcation", or "Review Queue".'}
@@ -450,18 +572,25 @@ function GlobalSearchModalContent({
                   key={item.id}
                   onClick={() => handleSelectItem(item)}
                   onMouseEnter={() => setSelectedIndex(index)}
-                  className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-colors ${
-                    isSelected ? 'bg-[#EDF0F7] border border-[#D8DFEE]' : 'hover:bg-stone-50 border border-transparent'
+                  className={`group relative flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-150 ${
+                    isSelected
+                      ? 'bg-slate-50/95 border border-slate-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.03)]'
+                      : 'hover:bg-slate-50/50 border border-transparent'
                   }`}
                 >
-                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                  {/* Selected Indicator Pill */}
+                  {isSelected && (
+                    <div className="absolute left-0 inset-y-2.5 w-1 rounded-r-full bg-[#1C4CA1]" />
+                  )}
+
+                  <div className="flex items-center gap-3.5 min-w-0 flex-1 pl-1">
                     <div
-                      className={`p-2 rounded-xl shrink-0 mt-0.5 ${
+                      className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                         item.category === 'competency'
-                          ? 'bg-emerald-100/80 text-emerald-800'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
                           : item.category === 'manual'
-                            ? 'bg-amber-100/80 text-amber-800'
-                            : 'bg-blue-100/80 text-blue-800'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                            : 'bg-blue-50 text-blue-700 border border-blue-200/60'
                       }`}
                     >
                       {item.category === 'competency' && <Target className="h-4 w-4" />}
@@ -471,23 +600,33 @@ function GlobalSearchModalContent({
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-sm font-bold text-stone-900 truncate">{title}</span>
+                        <span className="text-[13px] sm:text-sm font-semibold text-slate-900 truncate tracking-tight">
+                          {title}
+                        </span>
                         {item.cadreTag && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 shrink-0">
+                          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/70 shrink-0">
                             {isHindi ? item.cadreTag_hi || item.cadreTag : item.cadreTag}
                           </span>
                         )}
                         {item.badge && (
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 border border-stone-200 shrink-0">
+                          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1C4CA1]/8 text-[#1C4CA1] border border-[#1C4CA1]/15 shrink-0">
                             {item.badge}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-stone-500 mt-0.5 line-clamp-1">{desc}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1 font-normal leading-normal">
+                        {desc}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="shrink-0 ml-3 flex items-center gap-1.5 text-xs font-semibold text-[#1C4CA1]">
+                  <div
+                    className={`shrink-0 ml-3 flex items-center gap-1.5 text-xs transition-all ${
+                      isSelected
+                        ? 'text-[#1C4CA1] font-semibold bg-[#1C4CA1]/8 px-2.5 py-1 rounded-lg border border-[#1C4CA1]/15'
+                        : 'text-slate-400 font-medium group-hover:text-slate-600 px-2 py-1'
+                    }`}
+                  >
                     <span className="hidden sm:inline">
                       {item.category === 'competency'
                         ? isHindi
@@ -509,29 +648,22 @@ function GlobalSearchModalContent({
           )}
         </div>
 
-        {/* Quick Suggestion Pills when query is empty */}
+        {/* Quick Suggestion Chips when query is empty */}
         {!query && (
-          <div className="p-3 bg-stone-50/80 border-t border-[#D8DFEE] text-xs text-stone-500">
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-              <span className="font-bold text-stone-700">
-                {isHindi ? 'लोकप्रिय खोजें:' : 'Quick Shortcuts:'}
+          <div className="p-3.5 bg-slate-50/70 border-t border-slate-100 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+              <span className="text-[11px] font-semibold text-slate-600 tracking-wide">
+                {isHindi ? 'त्वरित शॉर्टकट:' : 'Quick Shortcuts:'}
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {[
-                { label: 'CAPI Tablet', q: 'capi' },
-                { label: 'PLFS Manual', q: 'plfs' },
-                { label: 'Demarcation', q: 'demarcation' },
-                { label: 'Question Bank', q: 'mcq' },
-                { label: 'Faculty Review', q: 'review' },
-                { label: 'Skill Gap', q: 'gap' },
-              ].map((pill) => (
+              {quickShortcuts.map((pill) => (
                 <button
                   key={pill.label}
                   type="button"
                   onClick={() => handleQueryChange(pill.q)}
-                  className="px-2.5 py-1 bg-white border border-[#D8DFEE] rounded-lg hover:border-[#1C4CA1] hover:text-[#1C4CA1] transition text-[11px] font-medium text-stone-600 cursor-pointer"
+                  className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200/90 rounded-full hover:border-slate-300 transition-all text-[11px] font-medium text-slate-600 hover:text-slate-900 shadow-2xs cursor-pointer active:scale-95"
                 >
                   {pill.label}
                 </button>
@@ -540,29 +672,31 @@ function GlobalSearchModalContent({
           </div>
         )}
 
-        {/* Modal Footer with Keyboard Shortcuts */}
-        <div className="px-4 py-2.5 bg-white border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
+        {/* Modal Footer with Minimalist Keyboard Shortcuts */}
+        <div className="px-4 py-2.5 bg-slate-50/90 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 select-none">
           <div className="flex items-center gap-3">
-            <span>
-              <kbd className="font-mono bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200 text-stone-600">
+            <span className="flex items-center gap-1">
+              <kbd className="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600 text-[10px] shadow-2xs">
                 ↑↓
               </kbd>{' '}
               navigate
             </span>
-            <span>
-              <kbd className="font-mono bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200 text-stone-600">
+            <span className="flex items-center gap-1">
+              <kbd className="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600 text-[10px] shadow-2xs">
                 ↵
               </kbd>{' '}
               open
             </span>
-            <span>
-              <kbd className="font-mono bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200 text-stone-600">
+            <span className="flex items-center gap-1">
+              <kbd className="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-600 text-[10px] shadow-2xs">
                 esc
               </kbd>{' '}
               close
             </span>
           </div>
-          <span className="text-[10px] text-stone-400">StatVidya Search Engine • MoSPI</span>
+          <span className="text-[10px] font-medium text-slate-400 tracking-wide">
+            StatVidya Search Engine • MoSPI
+          </span>
         </div>
       </div>
     </div>
