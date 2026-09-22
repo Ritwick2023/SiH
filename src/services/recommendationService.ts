@@ -12,7 +12,7 @@
 
 import type { CompetencyGap } from '@/lib/types';
 import { SEVERITY_WEIGHTS } from './competencyService';
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import { executeWithFallback, getServiceUrl, getAnalyticsHeaders } from '@/lib/serviceUtils';
 
 export interface Course {
   id: string;
@@ -239,7 +239,7 @@ export async function rankCoursesMultiSignal(
 
       const res = await fetch(`${serviceUrl}/api/v1/recommendations/rank`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify(payload),
       });
 

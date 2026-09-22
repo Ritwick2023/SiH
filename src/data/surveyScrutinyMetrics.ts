@@ -90,7 +90,7 @@ export const SYNTHETIC_SURVEY_OUTCOMES: OutcomeCorrelationSeries[] = [
 
 export const EMPIRICAL_SURVEY_OUTCOMES = SYNTHETIC_SURVEY_OUTCOMES;
 
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import { executeWithFallback, getServiceUrl, getAnalyticsHeaders } from '@/lib/serviceUtils';
 import type { ProvenanceType } from '@/lib/types';
 
 /**
@@ -114,7 +114,7 @@ export async function fetchLiveScrutinyCorrelation(
 
       const res = await fetch(`${serviceUrl}/api/v1/analytics/correlate-scrutiny`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAnalyticsHeaders(),
         body: JSON.stringify({ records }),
       });
 

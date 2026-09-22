@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createSessionToken, type AppUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,72 +17,81 @@ export async function POST(request: NextRequest) {
       parichayId,
     } = body;
 
-    if (!email || !email.includes('@')) {
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
       return NextResponse.json({ error: 'Valid official email address is required' }, { status: 400 });
     }
 
-    // Determine role and cadre based on designation and organization
-    let role: 'learner' | 'trainer' | 'admin' = 'learner';
+    const cleanEmail = email.trim().toLowerCase();
+    const desigLower = (designation || '').toString().toLowerCase();
+    const orgLower = (organisation || '').toString().toLowerCase();
+
+    // Security Rule (Req #11): New registrations ALWAYS default to 'learner'.
+    // Privileged roles (trainer/admin) can NEVER be self-assigned via designation or text input.
+    const role = 'learner';
+
+    // Set cadre and preferred language based on field division vs headquarters
     let cadre = 'NSSO Field Operations Division';
     let preferredLanguage: 'en' | 'hi' = 'en';
 
-    const desigLower = (designation || '').toLowerCase();
-    const orgLower = (organisation || '').toLowerCase();
-
     if (desigLower.includes('investigator') || orgLower.includes('field') || orgLower.includes('fod')) {
-      role = 'learner';
       cadre = 'NSSO Field Operations Division';
-      preferredLanguage = 'hi'; // Field investigators are Hindi-first as per PRD §6.1
-    } else if (desigLower.includes('faculty') || orgLower.includes('nssta') || desigLower.includes('director (training)')) {
-      role = 'trainer';
-      cadre = 'NSSTA Faculty';
-      preferredLanguage = 'en';
-    } else if (desigLower.includes('general') || desigLower.includes('adg') || desigLower.includes('director')) {
-      role = 'admin';
-      cadre = 'MoSPI Headquarters Leadership';
-      preferredLanguage = 'en';
+      preferredLanguage = 'hi'; // Field investigators default to Hindi-first
     } else {
-      // Junior Statistical Officer / SSS Cadre
-      role = 'learner';
       cadre = 'Subordinate Statistical Service (SSS)';
       preferredLanguage = 'en';
     }
 
-    const registeredUser = {
+    const registeredUser: AppUser = {
       id: `user-${Date.now()}`,
-      name: name || (email.split('@')[0].replace('.', ' ') || 'Statistical Officer'),
-      email,
-      phone: phone || '',
-      role,
-      organization_id: orgLower.includes('nsso') ? 'org-nsso' : orgLower.includes('nssta') ? 'org-nssta' : 'org-mospi',
-      cadre,
-      designation: designation || 'Statistical Officer',
-      preferred_language: preferredLanguage,
-      department: organisation || 'MoSPI',
-      ministry: ministry || 'Ministry of Statistics and Programme Implementation',
-      center_state: centerState || 'Center',
-      parichay_id: parichayId || `JPID-2024-${Date.now().toString().slice(-4)}`,
-      registered_at: new Date().toISOString(),
+      email: cleanEmail,
+      user_metadata: {
+        name: name || cleanEmail.split('@')[0].replace('.', ' ') || 'Statistical Officer',
+        phone: phone || '',
+        organization_id: orgLower.includes('nsso') ? 'org-nsso' : orgLower.includes('nssta') ? 'org-nssta' : 'org-mospi',
+        cadre,
+        designation: designation || 'Statistical Officer',
+        preferred_language: preferredLanguage,
+        department: organisation || 'MoSPI',
+        ministry: ministry || 'Ministry of Statistics and Programme Implementation',
+        center_state: centerState || 'Center',
+        parichay_id: parichayId || `JPID-2024-${Date.now().toString().slice(-4)}`,
+        registered_at: new Date().toISOString(),
+      },
+      app_metadata: {
+        role, // strictly 'learner'
+      },
     };
+
+    const sessionToken = await createSessionToken(registeredUser);
+    const isDemoMode = process.env.DEMO_MODE === 'true';
 
     const response = NextResponse.json({
       success: true,
-      message: 'Official Government Credential Approved & Profile Created',
+      message: 'Official Government Registration Profile Created (Learner Cadre)',
       user: registeredUser,
     });
 
-    // Set demo_user cookie for instant authentication
-    response.cookies.set('demo_user', encodeURIComponent(JSON.stringify(registeredUser)), {
+    // Set cryptographically signed HttpOnly session cookie
+    response.cookies.set('auth_token', sessionToken, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
-      httpOnly: false,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
     });
+
+    if (isDemoMode) {
+      response.cookies.set('demo_user', encodeURIComponent(JSON.stringify(registeredUser)), {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: false,
+        sameSite: 'lax',
+      });
+    }
 
     response.cookies.set('locale', preferredLanguage, {
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
-      httpOnly: false,
       sameSite: 'lax',
     });
 

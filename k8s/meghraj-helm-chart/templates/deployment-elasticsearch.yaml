@@ -24,7 +24,7 @@ spec:
             - name: discovery.type
               value: single-node
             - name: xpack.security.enabled
-              value: "false"
+              value: {{ .Values.elasticsearch.securityEnabled | default false | quote }}
             - name: ES_JAVA_OPTS
               value: "-Xms1g -Xmx1g"
           resources:

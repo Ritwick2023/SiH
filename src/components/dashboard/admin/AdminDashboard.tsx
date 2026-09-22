@@ -17,6 +17,7 @@ import { NationalReadinessModal } from './modals/NationalReadinessModal';
 import { FlaggedRegionsModal } from './modals/FlaggedRegionsModal';
 import type { DepartmentMetric } from '@/services/adminDashboardService';
 import type { AppUser } from '@/lib/auth';
+import type { DashboardUserProps } from '../RoleDashboardRouter';
 import {
   ShieldCheck,
   Users,
@@ -31,7 +32,7 @@ import {
 } from 'lucide-react';
 
 interface AdminDashboardProps {
-  user: AppUser;
+  user: DashboardUserProps | AppUser;
   isHindi?: boolean;
 }
 

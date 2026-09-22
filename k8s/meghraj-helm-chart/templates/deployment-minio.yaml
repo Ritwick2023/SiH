@@ -25,9 +25,15 @@ spec:
               name: console
           env:
             - name: MINIO_ROOT_USER
-              value: statvidya_s3_admin
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: MINIO_ROOT_USER
             - name: MINIO_ROOT_PASSWORD
-              value: statvidya_s3_prod_secret
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: MINIO_ROOT_PASSWORD
           resources:
             {{- toYaml .Values.minio.resources | nindent 12 }}
 ---

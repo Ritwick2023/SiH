@@ -36,7 +36,7 @@ import { MinisterialBriefingModal } from '@/components/dashboard/admin/modals/Mi
 import { NationalReadinessModal } from '@/components/dashboard/admin/modals/NationalReadinessModal';
 import { FlaggedRegionsModal } from '@/components/dashboard/admin/modals/FlaggedRegionsModal';
 import { GlobalSearchModal } from './GlobalSearchModal';
-import { getPendingCount } from '@/services/offlineService';
+import { getPendingCount, clearAllSensitiveOfflineData } from '@/services/offlineService';
 
 function getInitialPersona(): DemoPersona {
   if (typeof document === 'undefined') return DEMO_PERSONAS[0];
@@ -78,9 +78,22 @@ function setPersonaCookie(persona: DemoPersona) {
   }; path=/; max-age=31536000`;
 }
 
-function clearPersonaCookie() {
+async function clearPersonaCookie() {
   if (typeof document === 'undefined') return;
   document.cookie = 'demo_user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+
+  // Purge sensitive offline queue & cached media from IndexedDB
+  try {
+    await clearAllSensitiveOfflineData();
+  } catch (err) {
+    console.error('Failed to clear sensitive offline data on logout:', err);
+  }
+
+  // Purge sensitive offline route & assessment caches from Service Worker
+  if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: 'PURGE_SENSITIVE_CACHE' });
+  }
 }
 
 interface TopbarProps {
@@ -757,8 +770,8 @@ export function Topbar({ initialRole }: TopbarProps) {
               <div className="pt-1 border-t border-[#D8DFEE]">
                 <button
                   type="button"
-                  onClick={() => {
-                    clearPersonaCookie();
+                  onClick={async () => {
+                    await clearPersonaCookie();
                     setMenuOpen(false);
                     router.push('/auth/login');
                   }}

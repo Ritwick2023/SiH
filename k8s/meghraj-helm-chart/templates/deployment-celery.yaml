@@ -29,8 +29,21 @@ spec:
             - name: CELERY_RESULT_BACKEND
               value: "redis://{{ .Release.Name }}-redis:6379/2"
             - name: DATABASE_URL
-              value: "postgresql://statvidya_admin:statvidya_secure_prod@{{ .Release.Name }}-postgres:5432/statvidya_db"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: DATABASE_URL
             - name: MINIO_ENDPOINT
               value: "{{ .Release.Name }}-minio:9000"
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secrets
+                  key: MINIO_ROOT_PASSWORD
           resources:
             {{- toYaml .Values.celery.resources | nindent 12 }}

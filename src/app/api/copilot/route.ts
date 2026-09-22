@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSystemPromptWithRag, getOfflineFallbackResponse, type CopilotUserContext } from '@/lib/copilotPrompt';
 import { matchPreMadeFaq } from '@/data/copilotFaqResponses';
+import { getAuthenticatedUser } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+const copilotRateLimit = new Map<string, { count: number; resetAt: number }>();
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -17,6 +20,33 @@ interface CopilotRequestBody {
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAuthenticatedUser(request);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized: Authentication required to use Copilot' },
+        { status: 401 }
+      );
+    }
+
+    const now = Date.now();
+    const rateKey = user.id;
+    const userRate = copilotRateLimit.get(rateKey);
+    if (userRate) {
+      if (now < userRate.resetAt) {
+        if (userRate.count >= 30) {
+          return NextResponse.json(
+            { error: 'Rate limit exceeded: Too many Copilot requests. Please wait a minute.' },
+            { status: 429 }
+          );
+        }
+        userRate.count++;
+      } else {
+        copilotRateLimit.set(rateKey, { count: 1, resetAt: now + 60 * 1000 });
+      }
+    } else {
+      copilotRateLimit.set(rateKey, { count: 1, resetAt: now + 60 * 1000 });
+    }
+
     const body: CopilotRequestBody = await request.json();
     const { messages, userContext } = body;
 

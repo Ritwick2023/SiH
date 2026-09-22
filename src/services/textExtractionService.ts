@@ -7,7 +7,7 @@
  * 3. Standard text decoder for TXT/MD/CSV files
  */
 
-import { executeWithFallback, getServiceUrl } from '@/lib/serviceUtils';
+import { executeWithFallback, getServiceUrl, getAnalyticsHeaders } from '@/lib/serviceUtils';
 
 export interface ExtractionResult {
   text: string;
@@ -35,7 +35,7 @@ export class TextExtractionService {
 
         const res = await fetch(`${serviceUrl}/api/v1/documents/chunks`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAnalyticsHeaders(),
           body: JSON.stringify({
             document_id: documentId,
             page_number: 1,

@@ -26,6 +26,9 @@ export default async function AssessmentPage({ params }: PageProps) {
 
   // For real competency IDs — existing adaptive engine
   const user = await getAuthenticatedUser();
+  if (!user) {
+    redirect('/auth/login');
+  }
   const personaFrac = getPersonaFRAC(user);
   const matchedComp = personaFrac.competencies.find((c) => c.id === competencyId);
 
