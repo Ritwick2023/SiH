@@ -97,12 +97,53 @@ function LearningHubContent({ user }: PathwaysClientProps) {
     return LearningCatalogService.rankForGaps(gaps, user);
   }, [gaps, user]);
 
-  // Filter and view state
-  const [activeTab, setActiveTab] = useState<'recommended' | 'courses' | 'manuals' | 'all'>(initialTab);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedProvider, setSelectedProvider] = useState<string>('all');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
-  const [selectedCompetency, setSelectedCompetency] = useState<string>(initialCompetency);
+  // Filter and view state (restores non-sensitive UI state across refreshes)
+  const [activeTab, setActiveTab] = useState<'recommended' | 'courses' | 'manuals' | 'all'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('statvidya_pathways_tab');
+      if (saved === 'recommended' || saved === 'courses' || saved === 'manuals' || saved === 'all') return saved;
+    }
+    return initialTab;
+  });
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('statvidya_pathways_search') || '';
+    }
+    return '';
+  });
+  const [selectedProvider, setSelectedProvider] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('statvidya_pathways_provider') || 'all';
+    }
+    return 'all';
+  });
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('statvidya_pathways_lang') || 'all';
+    }
+    return 'all';
+  });
+  const [selectedCompetency, setSelectedCompetency] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('statvidya_pathways_comp');
+      if (saved) return saved;
+    }
+    return initialCompetency;
+  });
+
+  // Persist filter changes to sessionStorage
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      sessionStorage.setItem('statvidya_pathways_tab', activeTab);
+      sessionStorage.setItem('statvidya_pathways_search', searchQuery);
+      sessionStorage.setItem('statvidya_pathways_provider', selectedProvider);
+      sessionStorage.setItem('statvidya_pathways_lang', selectedLanguage);
+      sessionStorage.setItem('statvidya_pathways_comp', selectedCompetency);
+    } catch {
+      // Ignore sessionStorage exceptions
+    }
+  }, [activeTab, searchQuery, selectedProvider, selectedLanguage, selectedCompetency]);
 
   // Filtered items logic
   const displayedItems = useMemo(() => {

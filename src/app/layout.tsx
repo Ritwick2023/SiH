@@ -4,6 +4,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Inter, Noto_Sans_Devanagari, JetBrains_Mono } from 'next/font/google';
 import { OfflineIndicator } from '@/components/layout';
+import { ScrollRestorationManager } from '@/components/layout/ScrollRestorationManager';
 import './globals.css';
 
 
@@ -56,6 +57,7 @@ export default async function RootLayout({
             <div className="flex flex-col min-h-full">
               {children}
               <OfflineIndicator />
+              <ScrollRestorationManager />
             </div>
           </ThemeProvider>
         </NextIntlClientProvider>

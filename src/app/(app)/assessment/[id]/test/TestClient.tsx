@@ -50,8 +50,62 @@ export default function TestClient({ assessment, userId }: TestClientProps) {
   const [state, dispatch] = useReducer(
     engineReducer,
     assessment,
-    createEngine
+    (initialAssessment) => {
+      const baseState = createEngine(initialAssessment);
+      if (typeof window !== 'undefined') {
+        try {
+          const savedKey = `statvidya_test_${initialAssessment.id}_${userId}`;
+          const saved = sessionStorage.getItem(savedKey);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed.currentIndex === 'number') {
+              return {
+                ...baseState,
+                currentIndex: Math.min(Math.max(0, parsed.currentIndex), initialAssessment.questions.length - 1),
+                answers: parsed.answers || {},
+                visited: new Set<string>(Array.isArray(parsed.visited) ? parsed.visited : [initialAssessment.questions[0]?.id ?? '']),
+                remainingSeconds: typeof parsed.remainingSeconds === 'number' && parsed.remainingSeconds > 0 ? parsed.remainingSeconds : baseState.remainingSeconds,
+                phase: parsed.phase || baseState.phase,
+                startedAt: parsed.startedAt || baseState.startedAt,
+              };
+            }
+          }
+        } catch {
+          // Ignore parse errors and use default base state
+        }
+      }
+      return baseState;
+    }
   );
+
+  // Persist non-sensitive assessment progress to sessionStorage (navigation position, answers, visited)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (state.phase === 'SUBMITTED') {
+      try {
+        sessionStorage.removeItem(`statvidya_test_${assessment.id}_${userId}`);
+      } catch {
+        // Ignore
+      }
+      return;
+    }
+    try {
+      const savedKey = `statvidya_test_${assessment.id}_${userId}`;
+      sessionStorage.setItem(
+        savedKey,
+        JSON.stringify({
+          currentIndex: state.currentIndex,
+          answers: state.answers,
+          visited: Array.from(state.visited),
+          remainingSeconds: state.remainingSeconds,
+          phase: state.phase,
+          startedAt: state.startedAt,
+        })
+      );
+    } catch {
+      // Ignore storage errors
+    }
+  }, [state, assessment.id, userId]);
 
   // Interval ref — store here so it's never recreated on re-render
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

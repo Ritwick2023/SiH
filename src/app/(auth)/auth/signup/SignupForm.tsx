@@ -174,13 +174,9 @@ export default function SignupForm({ onStepChange }: SignupFormProps) {
   const isFieldRole = designation.includes('Investigator') || organisation.includes('Field');
   const isTrainerRole = designation.includes('Faculty') || organisation.includes('NSSTA');
 
-  // Intelligent Go Back handler
+  // Consolidated Go Back handler: navigate back to portal home (/)
   const handleGoBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
+    router.push('/');
   };
 
   return (

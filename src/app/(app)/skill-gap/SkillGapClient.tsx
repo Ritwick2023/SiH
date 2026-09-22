@@ -52,8 +52,14 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
   const locale = useSafeLocale();
   const isHindi = locale === 'hi';
 
-  // Navigation Tab State
-  const [activeTab, setActiveTab] = useState<'overview' | 'simulator' | 'roadmap'>('overview');
+  // Navigation Tab State (persisted across refreshes)
+  const [activeTab, setActiveTab] = useState<'overview' | 'simulator' | 'roadmap'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('statvidya_skillgap_tab');
+      if (saved === 'overview' || saved === 'simulator' || saved === 'roadmap') return saved;
+    }
+    return 'overview';
+  });
 
   // Active Cadre Benchmark
   const [selectedCadre, setSelectedCadre] = useState<string>(() => {
@@ -63,13 +69,42 @@ export default function SkillGapClient({ user }: SkillGapClientProps) {
   });
 
   // Visualization sub-view in Overview tab
-  const [activeViz, setActiveViz] = useState<'radar' | 'sunburst'>('radar');
+  const [activeViz, setActiveViz] = useState<'radar' | 'sunburst'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('statvidya_skillgap_viz');
+      if (saved === 'radar' || saved === 'sunburst') return saved;
+    }
+    return 'radar';
+  });
 
   // Filter & Search states
-  const [severityFilter, setSeverityFilter] = useState<'all' | 'HIGH' | 'MODERATE' | 'PROFICIENT'>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [severityFilter, setSeverityFilter] = useState<'all' | 'HIGH' | 'MODERATE' | 'PROFICIENT'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('statvidya_skillgap_sev');
+      if (saved === 'all' || saved === 'HIGH' || saved === 'MODERATE' || saved === 'PROFICIENT') return saved;
+    }
+    return 'all';
+  });
+  const [categoryFilter, setCategoryFilter] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('statvidya_skillgap_cat') || 'all';
+    }
+    return 'all';
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'severity' | 'gap' | 'name'>('severity');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      sessionStorage.setItem('statvidya_skillgap_tab', activeTab);
+      sessionStorage.setItem('statvidya_skillgap_viz', activeViz);
+      sessionStorage.setItem('statvidya_skillgap_sev', severityFilter);
+      sessionStorage.setItem('statvidya_skillgap_cat', categoryFilter);
+    } catch {
+      // Ignore sessionStorage errors
+    }
+  }, [activeTab, activeViz, severityFilter, categoryFilter]);
 
   // Modal & Focus States
   const [inspectingGap, setInspectingGap] = useState<CompetencyGap | null>(null);

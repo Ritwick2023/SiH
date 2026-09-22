@@ -275,6 +275,12 @@ export function Topbar({ initialRole }: TopbarProps) {
       } catch {
         // Ignore cookie JSON parse error
       }
+      try {
+        const storageKey = `statvidya_scroll_${window.location.pathname}`;
+        sessionStorage.setItem(storageKey, JSON.stringify({ x: window.scrollX, y: window.scrollY, ts: Date.now() }));
+      } catch {
+        // Ignore
+      }
       window.location.reload();
     },
     [locale]

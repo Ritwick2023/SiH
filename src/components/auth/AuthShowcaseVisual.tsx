@@ -1,22 +1,11 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar as CalendarIcon, X } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { KarmayogiEmblemIcon } from './KarmayogiEmblem';
 
 export function AuthShowcaseVisual() {
-  const router = useRouter();
-
-  const handleClose = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
-  };
 
   return (
     <div className="relative w-full h-full min-h-135 lg:min-h-160 rounded-[28px] sm:rounded-4xl overflow-hidden shadow-2xl flex flex-col justify-between p-6 sm:p-8 select-none">
@@ -35,7 +24,7 @@ export function AuthShowcaseVisual() {
         <div className="absolute inset-0 bg-[#1C4CA1]/15 mix-blend-multiply" />
       </div>
 
-      {/* Top Header Row with Floating Amber Pill and Close / Home Link */}
+      {/* Top Header Row with Floating Amber Pill */}
       <div className="relative z-10 flex items-start justify-between gap-3">
         {/* Floating Golden/Amber Notification Card (Matching Reference Image) */}
         <div className="bg-[#FFA72F] text-[#1F273A] rounded-2xl px-3.5 py-2 shadow-xl border border-white/40 flex items-center gap-2.5 max-w-65 animate-in fade-in slide-in-from-top-2">
@@ -50,27 +39,6 @@ export function AuthShowcaseVisual() {
               09:30am - 10:00am • NSSO FOD
             </p>
           </div>
-        </div>
-
-        {/* Home / Return and Close Buttons */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/90 hover:bg-white text-[#1F273A] text-xs font-bold shadow-lg backdrop-blur-md transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-            title="Return to StatVidya Home"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform text-[#1C4CA1]" />
-            <span>Home</span>
-          </Link>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="h-8.5 w-8.5 rounded-full bg-white/90 hover:bg-white text-[#1F273A] shadow-lg backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer group"
-            title="Close and go back"
-            aria-label="Close and go back"
-          >
-            <X className="h-4 w-4 text-slate-600 group-hover:rotate-90 transition-transform" />
-          </button>
         </div>
       </div>
 

@@ -3,40 +3,33 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { 
   ShieldCheck, 
   RefreshCw, 
   KeyRound, 
-  AlertCircle,
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  UserCheck,
-  X
+  AlertCircle, 
+  Sparkles, 
+  ArrowRight, 
+  ArrowLeft, 
+  UserCheck 
 } from 'lucide-react';
 import { KarmayogiHorizontalLogo, KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
 import { ParichayLoginButton } from '@/components/auth/ParichayLoginButton';
+import { getDemoPersonaByEmail } from '@/lib/demoPersonas';
 
 export default function LoginForm() {
   const router = useRouter();
+  const t = useTranslations('auth');
 
-  // Auth Mode: 'otp' | 'password' (matching reference with smooth pill switcher)
-  const [authMode, setAuthMode] = useState<'otp' | 'password'>('otp');
+  // Auth Mode: 'email' (default) | 'otp' (secondary)
+  const [authMode, setAuthMode] = useState<'email' | 'otp'>('email');
 
   // Fields
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaCode, setCaptchaCode] = useState('7K9P2');
-
-  // OTP State
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpValue, setOtpValue] = useState('');
-  const [otpInfoMessage, setOtpInfoMessage] = useState('');
-
-  // Status
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const refreshCaptcha = () => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -48,11 +41,20 @@ export default function LoginForm() {
     setCaptchaInput('');
   };
 
+  // OTP State
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpValue, setOtpValue] = useState('');
+  const [otpInfoMessage, setOtpInfoMessage] = useState('');
+
+  // Status
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   // 1. Handle Request OTP
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!identifier.trim()) {
-      setError('Please enter your 10-digit mobile number or official government email');
+      setError(t('phoneOrEmail') + ' is required');
       return;
     }
 
@@ -118,15 +120,20 @@ export default function LoginForm() {
     }
   };
 
-  // 3. Handle Password Login
-  const handlePasswordLogin = async (e: React.FormEvent) => {
+  // 3. Handle Email Login (Requires Email, Password & Captcha)
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!identifier.trim() || !password.trim()) {
-      setError('Please enter credentials');
+    const cleanEmail = identifier.trim().toLowerCase();
+    if (!cleanEmail) {
+      setError(t('emailAddress') + ' is required');
+      return;
+    }
+    if (!password.trim()) {
+      setError(t('enterPasswordError'));
       return;
     }
     if (captchaInput.trim().toUpperCase() !== captchaCode) {
-      setError('Invalid security Captcha code');
+      setError(t('invalidCaptcha'));
       return;
     }
 
@@ -134,11 +141,23 @@ export default function LoginForm() {
     setError('');
 
     try {
-      const persona = identifier.toLowerCase().includes('sunita') ? 'demo-sunita' : 'demo-amit';
-      const email = persona === 'demo-sunita' ? 'sunita.devi@nsso.gov.in' : 'amit.sharma@mospi.gov.in';
-      router.push(`/api/sso/demo-persona?email=${encodeURIComponent(email)}`);
+      const matched = getDemoPersonaByEmail(cleanEmail);
+      let emailToUse = cleanEmail;
+      if (matched) {
+        emailToUse = matched.email;
+      } else if (cleanEmail.includes('sunita')) {
+        emailToUse = 'sunita.devi@nsso.gov.in';
+      } else if (cleanEmail.includes('priya')) {
+        emailToUse = 'priya.verma@nssta.gov.in';
+      } else if (cleanEmail.includes('rajesh')) {
+        emailToUse = 'rajesh.kumar@mospi.gov.in';
+      } else {
+        emailToUse = 'amit.sharma@mospi.gov.in';
+      }
+
+      router.push(`/api/sso/demo-persona?email=${encodeURIComponent(emailToUse)}`);
     } catch {
-      setError('Authentication failed');
+      setError(t('error') || 'Authentication failed');
       setLoading(false);
     }
   };
@@ -149,19 +168,15 @@ export default function LoginForm() {
     router.push(`/api/sso/parichay?email=${encodeURIComponent(personaEmail)}`);
   };
 
-  // 5. Intelligent Go Back handler
+  // 5. Consolidated single Go Back handler: navigate back to portal home (/)
   const handleGoBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
+    router.push('/');
   };
 
   return (
     <div className="w-full flex flex-col justify-between h-full">
       <div>
-        {/* Top Navigation Row: Go Back + Home + MoSPI Emblem Pill + Mobile Close */}
+        {/* Top Navigation Row: Single Go Back Button + MoSPI Emblem Pill (No redundant Home or X) */}
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
@@ -169,31 +184,17 @@ export default function LoginForm() {
               onClick={handleGoBack}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#D8DFEE] bg-white hover:bg-[#EDF0F7] text-xs font-semibold text-[#1F273A] shadow-2xs transition-all hover:scale-102 active:scale-98 group cursor-pointer"
               title="Go back to previous page"
+              aria-label={t('goBack')}
             >
               <ArrowLeft className="h-3.5 w-3.5 text-[#1C4CA1] group-hover:-translate-x-0.5 transition-transform" />
-              <span>Go Back</span>
+              <span>{t('goBack')}</span>
             </button>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-[#D8DFEE] bg-white/70 hover:bg-white text-[11px] font-medium text-muted-foreground hover:text-[#1F273A] transition-all"
-              title="Go to Home"
-            >
-              <span>Home</span>
-            </Link>
           </div>
           <div className="flex items-center gap-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#D8DFEE] bg-white/80 backdrop-blur-xs text-[11px] font-semibold text-[#1C4CA1] shadow-2xs">
               <KarmayogiEmblemIcon className="h-4 w-4" />
               <span>MoSPI • NSSTA</span>
             </div>
-            <button
-              type="button"
-              onClick={handleGoBack}
-              className="lg:hidden h-7 w-7 rounded-full bg-white border border-[#D8DFEE] text-[#1F273A] flex items-center justify-center shadow-2xs hover:bg-[#EDF0F7] cursor-pointer"
-              title="Close and go back"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
           </div>
         </div>
 
@@ -205,43 +206,43 @@ export default function LoginForm() {
         {/* Editorial Heading */}
         <div className="mb-5">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F273A] tracking-tight font-sans">
-            Welcome back
+            {t('welcomeBack')}
           </h1>
           <p className="text-xs text-muted-foreground mt-1">
             Sign in with government-approved credentials or Parichay SSO
           </p>
         </div>
 
-        {/* Pill Mode Switcher (Login with OTP vs Login with Password) */}
+        {/* Pill Mode Switcher (Email Login default, OTP Login secondary) */}
         <div className="inline-flex p-1 rounded-full bg-[#EDF0F7] border border-[#D8DFEE] mb-6 w-full max-w-xs">
+          <button
+            type="button"
+            onClick={() => {
+              setAuthMode('email');
+              setError('');
+              setOtpSent(false);
+            }}
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-full transition-all text-center cursor-pointer ${
+              authMode === 'email'
+                ? 'bg-white text-[#1C4CA1] shadow-sm'
+                : 'text-muted-foreground hover:text-[#1F273A]'
+            }`}
+          >
+            {t('emailLogin')}
+          </button>
           <button
             type="button"
             onClick={() => {
               setAuthMode('otp');
               setError('');
             }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-full transition-all text-center ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-full transition-all text-center cursor-pointer ${
               authMode === 'otp'
                 ? 'bg-white text-[#1C4CA1] shadow-sm'
                 : 'text-muted-foreground hover:text-[#1F273A]'
             }`}
           >
-            Login with OTP
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode('password');
-              setError('');
-              setOtpSent(false);
-            }}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-full transition-all text-center ${
-              authMode === 'password'
-                ? 'bg-white text-[#1C4CA1] shadow-sm'
-                : 'text-muted-foreground hover:text-[#1F273A]'
-            }`}
-          >
-            Password & Captcha
+            {t('otpLogin')}
           </button>
         </div>
 
@@ -254,7 +255,119 @@ export default function LoginForm() {
         )}
 
         {/* ========================================================================= */}
-        {/* MODE A: LOGIN WITH OTP                                                    */}
+        {/* MODE A: EMAIL LOGIN (DEFAULT PRIMARY METHOD)                              */}
+        {/* ========================================================================= */}
+        {authMode === 'email' && (
+          <div className="space-y-4">
+            <form onSubmit={handleEmailLogin} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-[#1F273A] mb-1.5 ml-1">
+                  {t('emailAddress')}
+                </label>
+                <input
+                  type="email"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="you@mospi.gov.in"
+                  className="w-full h-12 px-5 rounded-2xl bg-white border border-[#D8DFEE] text-sm text-[#1F273A] placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none transition shadow-xs"
+                  required
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5 ml-1">
+                  <label className="text-xs font-semibold text-[#1F273A]">
+                    {t('password')}
+                  </label>
+                  <a
+                    href="#help"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      alert('Please contact your Nodal Administrator or MoSPI IT Helpdesk (1800-111-555) to reset your password.');
+                    }}
+                    className="text-[11px] text-[#1C4CA1] hover:underline"
+                  >
+                    {t('forgotPassword')}
+                  </a>
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full h-12 px-5 rounded-2xl bg-white border border-[#D8DFEE] text-sm text-[#1F273A] placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none transition shadow-xs"
+                  required
+                />
+              </div>
+
+              {/* Captcha */}
+              <div className="pt-1">
+                <label className="block text-xs font-semibold text-[#1F273A] mb-1.5 ml-1">
+                  {t('captcha')}
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="h-11 px-4 bg-[#EDF0F7] border border-[#D8DFEE] rounded-2xl flex items-center justify-center font-mono text-base font-bold tracking-widest text-[#1F273A] select-none shadow-inner">
+                    {captchaCode}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={refreshCaptcha}
+                    className="h-11 w-11 border border-[#D8DFEE] rounded-2xl flex items-center justify-center text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors cursor-pointer"
+                    title={t('refreshCaptcha')}
+                    aria-label={t('refreshCaptcha')}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </button>
+                  <input
+                    type="text"
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
+                    placeholder={t('captchaPlaceholder')}
+                    maxLength={5}
+                    className="flex-1 h-11 px-4 text-sm border border-[#D8DFEE] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1C4CA1] uppercase tracking-wider bg-white font-mono"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-12 rounded-full bg-[#1C4CA1] hover:bg-[#1164BE] active:scale-[0.99] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer mt-2"
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <span>{t('signIn')}...</span>
+                  </span>
+                ) : (
+                  <>
+                    <span>{t('signIn')}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Secondary Option Switcher: Use OTP Login instead */}
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('otp');
+                  setError('');
+                }}
+                className="w-full py-2.5 px-4 rounded-full border border-[#D8DFEE] bg-white hover:bg-[#EDF0F7] text-xs font-semibold text-[#1C4CA1] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
+              >
+                <KeyRound className="h-3.5 w-3.5" />
+                <span>{t('useOtpInstead')}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* MODE B: OTP LOGIN (SECONDARY OPTION)                                      */}
         {/* ========================================================================= */}
         {authMode === 'otp' && (
           <div className="space-y-4">
@@ -262,7 +375,7 @@ export default function LoginForm() {
               <form onSubmit={handleRequestOtp} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-[#1F273A] mb-1.5 ml-1">
-                    Email / Mobile number
+                    {t('phoneOrEmail')}
                   </label>
                   <input
                     type="text"
@@ -282,11 +395,11 @@ export default function LoginForm() {
                   {loading ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span>Requesting OTP...</span>
+                      <span>{t('requestingOtp')}</span>
                     </span>
                   ) : (
                     <>
-                      <span>Request OTP</span>
+                      <span>{t('requestOtp')}</span>
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
@@ -297,14 +410,14 @@ export default function LoginForm() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-[#1C4CA1] flex items-center gap-1.5">
                     <UserCheck className="h-3.5 w-3.5" />
-                    <span>Enter 6-Digit OTP</span>
+                    <span>{t('enterOtp')}</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => setOtpSent(false)}
                     className="text-muted-foreground hover:text-[#1F273A] text-[11px] underline"
                   >
-                    Change
+                    {t('change')}
                   </button>
                 </div>
 
@@ -329,7 +442,7 @@ export default function LoginForm() {
                       onClick={handleRequestOtp}
                       className="text-[#1C4CA1] hover:underline font-semibold"
                     >
-                      Resend Code
+                      {t('resendCode')}
                     </button>
                   </div>
                 </div>
@@ -339,101 +452,40 @@ export default function LoginForm() {
                   disabled={loading}
                   className="w-full h-12 rounded-full bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  {loading ? 'Verifying...' : 'Verify & Proceed to Dashboard'}
+                  {loading ? 'Verifying...' : t('verifyAndProceed')}
                 </button>
               </form>
             )}
+
+            {/* Switch back to Email Login */}
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthMode('email');
+                  setError('');
+                  setOtpSent(false);
+                }}
+                className="w-full py-2.5 px-4 rounded-full border border-[#D8DFEE] bg-white hover:bg-[#EDF0F7] text-xs font-semibold text-[#1C4CA1] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span>{t('useEmailInstead')}</span>
+              </button>
+            </div>
           </div>
         )}
 
-        {/* ========================================================================= */}
-        {/* MODE B: LOGIN WITH PASSWORD & CAPTCHA                                     */}
-        {/* ========================================================================= */}
-        {authMode === 'password' && (
-          <form onSubmit={handlePasswordLogin} className="space-y-3.5">
-            <div>
-              <label className="block text-xs font-semibold text-[#1F273A] mb-1.5 ml-1">
-                Email / Government ID
-              </label>
-              <input
-                type="text"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="you@mospi.gov.in"
-                className="w-full h-12 px-5 rounded-2xl bg-white border border-[#D8DFEE] text-sm text-[#1F273A] placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none transition shadow-xs"
-                required
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1.5 ml-1">
-                <label className="text-xs font-semibold text-[#1F273A]">
-                  Password
-                </label>
-                <a href="#" className="text-[11px] text-[#1C4CA1] hover:underline">
-                  Forgot password?
-                </a>
-              </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="w-full h-12 px-5 rounded-2xl bg-white border border-[#D8DFEE] text-sm text-[#1F273A] placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-[#1C4CA1] focus:outline-none transition shadow-xs"
-                required
-              />
-            </div>
-
-            {/* Captcha */}
-            <div className="pt-1">
-              <label className="block text-xs font-semibold text-[#1F273A] mb-1.5 ml-1">
-                Security Captcha
-              </label>
-              <div className="flex items-center gap-2">
-                <div className="h-11 px-4 bg-[#EDF0F7] border border-[#D8DFEE] rounded-2xl flex items-center justify-center font-mono text-base font-bold tracking-widest text-[#1F273A] select-none shadow-inner">
-                  {captchaCode}
-                </div>
-                <button
-                  type="button"
-                  onClick={refreshCaptcha}
-                  className="h-11 w-11 border border-[#D8DFEE] rounded-2xl flex items-center justify-center text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors"
-                  title="Refresh Captcha"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                </button>
-                <input
-                  type="text"
-                  value={captchaInput}
-                  onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
-                  placeholder="Enter text"
-                  maxLength={5}
-                  className="flex-1 h-11 px-4 text-sm border border-[#D8DFEE] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1C4CA1] uppercase tracking-wider bg-white"
-                  required
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-12 rounded-full bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
-            >
-              {loading ? 'Authenticating...' : 'Sign In'}
-            </button>
-          </form>
-        )}
-
-        {/* Divider (Matching Reference "or continue with") */}
+        {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-[#D8DFEE]" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-white px-3 text-muted-foreground font-medium">or continue with</span>
+            <span className="bg-white px-3 text-muted-foreground font-medium">{t('orContinueWith')}</span>
           </div>
         </div>
 
-        {/* Jan-Parichay / MeriPehchaan Official SSO Button (Task C3) */}
+        {/* Jan-Parichay / MeriPehchaan Official SSO Button */}
         <div className="mb-3">
           <ParichayLoginButton />
         </div>
@@ -527,17 +579,17 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Footer (Matching Reference Style) */}
+      {/* Footer */}
       <div className="mt-8 pt-4 border-t border-[#D8DFEE] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
         <p>
-          Don&apos;t have an account?{' '}
+          {t('noAccount')}{' '}
           <Link href="/auth/signup" className="font-bold text-[#1C4CA1] hover:underline">
-            Register here
+            {t('registerHere')}
           </Link>
         </p>
 
         <a href="#help" onClick={(e) => { e.preventDefault(); alert("Ministry of Statistics & Programme Implementation (MoSPI) Helpline: 1800-111-555"); }} className="text-[11px] text-muted-foreground hover:underline">
-          Nodal Helpdesk
+          {t('nodalHelpdesk')}
         </a>
       </div>
     </div>

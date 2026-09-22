@@ -28,6 +28,15 @@ export function LanguageSwitcher() {
           // Ignore JSON parse errors
         }
 
+        // Save current scroll position before reload so language switch preserves scroll
+        try {
+          const scrollKey = `statvidya_scroll_${window.location.pathname}`;
+          sessionStorage.setItem(
+            scrollKey,
+            JSON.stringify({ x: window.scrollX, y: window.scrollY, timestamp: Date.now() })
+          );
+        } catch {}
+
         // Cleanly reload page to re-render server and client components with new locale
         window.location.reload();
       }
