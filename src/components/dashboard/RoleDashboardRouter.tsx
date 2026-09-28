@@ -5,6 +5,7 @@ import type { UserRole } from '@/lib/types';
 import LearnerDashboard from './learner/LearnerDashboard';
 import TrainerDashboard from './trainer/TrainerDashboard';
 import AdminDashboard from './admin/AdminDashboard';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 export interface DashboardUserProps {
   id: string;
@@ -14,6 +15,7 @@ export interface DashboardUserProps {
     organization_id?: string;
     cadre?: string;
     designation?: string;
+    department?: string;
     preferred_language?: string;
     role?: string;
   };
@@ -58,29 +60,81 @@ export function resolveUserRole(user?: Partial<DashboardUserProps> | null): User
   return 'learner';
 }
 
-export function RoleDashboardRouter({ user }: { user: DashboardUserProps }) {
-  const [role, setRole] = useState<UserRole>(() => resolveUserRole(user));
+function getMergedUser(baseUser: DashboardUserProps): DashboardUserProps {
+  if (typeof document === 'undefined') return baseUser;
+  try {
+    const match = document.cookie.match(/(?:^|; )demo_user=([^;]*)/);
+    if (match) {
+      const decoded = JSON.parse(decodeURIComponent(match[1]));
+      return {
+        ...baseUser,
+        id: decoded.id || baseUser.id,
+        email: decoded.email || baseUser.email,
+        user_metadata: {
+          ...(baseUser.user_metadata || {}),
+          name: decoded.name || baseUser.user_metadata?.name,
+          designation: decoded.designation || baseUser.user_metadata?.designation,
+          department: decoded.department || baseUser.user_metadata?.department,
+          cadre: decoded.cadre || baseUser.user_metadata?.cadre,
+          preferred_language: decoded.preferred_language || baseUser.user_metadata?.preferred_language,
+        },
+        app_metadata: {
+          ...(baseUser.app_metadata || {}),
+          role: decoded.role || baseUser.app_metadata?.role,
+        },
+      };
+    }
+  } catch {
+    // ignore
+  }
+  return baseUser;
+}
 
-  // Sync role if cookie changes (e.g. via Topbar persona switcher)
+export function RoleDashboardRouter({ user }: { user: DashboardUserProps }) {
+  const [currentUser, setCurrentUser] = useState<DashboardUserProps>(() => getMergedUser(user));
+  const [role, setRole] = useState<UserRole>(() => resolveUserRole(currentUser));
+
+  // Sync role and user metadata if cookie changes or user updates profile
   useEffect(() => {
-    const handleCheckCookie = () => {
-      const currentRole = resolveUserRole(user);
+    const handleSync = () => {
+      const merged = getMergedUser(user);
+      const currentRole = resolveUserRole(merged);
+      setCurrentUser((prev) => {
+        if (
+          prev.user_metadata?.name !== merged.user_metadata?.name ||
+          prev.email !== merged.email ||
+          prev.user_metadata?.designation !== merged.user_metadata?.designation ||
+          prev.user_metadata?.preferred_language !== merged.user_metadata?.preferred_language
+        ) {
+          return merged;
+        }
+        return prev;
+      });
       setRole((prev) => (prev !== currentRole ? currentRole : prev));
     };
 
-    handleCheckCookie();
-    const interval = setInterval(handleCheckCookie, 1000);
-    return () => clearInterval(interval);
+    handleSync();
+    const interval = setInterval(handleSync, 1000);
+    const handleUserUpdate = () => handleSync();
+    window.addEventListener('statvidya-user-updated', handleUserUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('statvidya-user-updated', handleUserUpdate);
+    };
   }, [user]);
+
+  const activeLocale = useSafeLocale('en');
+  const isHindi = activeLocale === 'hi';
 
   switch (role) {
     case 'trainer':
-      return <TrainerDashboard user={user} />;
+      return <TrainerDashboard user={currentUser} isHindi={isHindi} />;
     case 'admin':
-      return <AdminDashboard user={user} />;
+      return <AdminDashboard user={currentUser} isHindi={isHindi} />;
     case 'learner':
     default:
-      return <LearnerDashboard user={user} />;
+      return <LearnerDashboard user={currentUser} isHindi={isHindi} />;
   }
 }
 

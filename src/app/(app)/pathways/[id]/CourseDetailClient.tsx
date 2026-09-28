@@ -15,6 +15,7 @@ import {
   FileEdit,
   CheckCircle2,
 } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface CourseDetailClientProps {
   item: OfficialLearningItem;
@@ -23,10 +24,8 @@ interface CourseDetailClientProps {
 
 export default function CourseDetailClient({ item, user }: CourseDetailClientProps) {
   const profile = getPersonaFRAC(user);
-  const isHindi =
-    user?.user_metadata?.preferred_language === 'hi' ||
-    profile.preferredLanguage === 'hi' ||
-    user?.id?.includes('sunita');
+  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
+  const isHindi = locale === 'hi';
 
   const title = isHindi && item.title_hi ? item.title_hi : item.title;
   const description = isHindi && item.description_hi ? item.description_hi : item.description;

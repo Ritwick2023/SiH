@@ -73,11 +73,13 @@ const AT_RISK_ROSTER: TraineeRecord[] = [
 interface TrainerCohortStudioProps {
   onInspectCohort: (cohort: CohortData) => void;
   onRemediateCohort: (cohort: CohortData) => void;
+  isHindi?: boolean;
 }
 
 export function TrainerCohortStudio({
   onInspectCohort,
   onRemediateCohort,
+  isHindi = false,
 }: TrainerCohortStudioProps) {
   const [selectedCadre, setSelectedCadre] = useState<string>('ALL');
   const [search, setSearch] = useState('');
@@ -93,7 +95,7 @@ export function TrainerCohortStudio({
   });
 
   const handleExportRosters = () => {
-    setToastMsg('All MoSPI training cohort rosters exported to CSV format.');
+    setToastMsg(isHindi ? 'सभी MoSPI प्रशिक्षण समूह नामावलियां सीएसवी प्रारूप में निर्यात की गईं।' : 'All MoSPI training cohort rosters exported to CSV format.');
     setTimeout(() => setToastMsg(null), 3000);
   };
 
@@ -106,11 +108,13 @@ export function TrainerCohortStudio({
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
               <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
-                National Academy Cohorts & Training Batches
+                {isHindi ? 'राष्ट्रीय अकादमी समूह एवं प्रशिक्षण बैच' : 'National Academy Cohorts & Training Batches'}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Live roster oversight across NSSTA Greater Noida and 5 Zonal Training Centres (ZTCs)
+              {isHindi
+                ? 'एनएसएसटीए ग्रेटर नोएडा एवं 5 क्षेत्रीय प्रशिक्षण केंद्रों (जेडटीसी) में लाइव रोस्टर निगरानी'
+                : 'Live roster oversight across NSSTA Greater Noida and 5 Zonal Training Centres (ZTCs)'}
             </p>
           </div>
 
@@ -120,7 +124,7 @@ export function TrainerCohortStudio({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors cursor-pointer self-start sm:self-auto"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Export All Rosters</span>
+            <span>{isHindi ? 'सभी नामावलियां निर्यात करें' : 'Export All Rosters'}</span>
           </button>
         </div>
 
@@ -138,18 +142,18 @@ export function TrainerCohortStudio({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search batch name, code or center..."
+              placeholder={isHindi ? 'बैच का नाम, कोड या केंद्र खोजें...' : 'Search batch name, code or center...'}
               className="w-full pl-10 pr-3 py-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
             />
           </div>
 
           <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
             {[
-              { id: 'ALL', label: 'All Cadres' },
-              { id: 'ISS', label: 'ISS Officers' },
-              { id: 'SSS', label: 'SSS Cadre' },
-              { id: 'FOD', label: 'FOD Field Staff' },
-              { id: 'DQAD', label: 'DQAD Scrutiny' },
+              { id: 'ALL', label: isHindi ? 'सभी संवर्ग' : 'All Cadres' },
+              { id: 'ISS', label: isHindi ? 'आईएसएस अधिकारी' : 'ISS Officers' },
+              { id: 'SSS', label: isHindi ? 'एसएसएस संवर्ग' : 'SSS Cadre' },
+              { id: 'FOD', label: isHindi ? 'एफओडी फील्ड स्टाफ' : 'FOD Field Staff' },
+              { id: 'DQAD', label: isHindi ? 'डीक्यूएडी संवीक्षा' : 'DQAD Scrutiny' },
             ].map((cd) => (
               <button
                 key={cd.id}
@@ -194,19 +198,25 @@ export function TrainerCohortStudio({
               {/* Stats Strip */}
               <div className="grid grid-cols-3 gap-2 my-3 p-3 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-center">
                 <div>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground">Enrolled</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {isHindi ? 'नामांकित' : 'Enrolled'}
+                  </p>
                   <p className="text-base font-bold font-mono text-[#1F273A] mt-0.5">
                     {cohort.enrolled}
                   </p>
                 </div>
                 <div className="border-x border-[#D8DFEE]">
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground">Pass Rate</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {isHindi ? 'उत्तीर्ण दर' : 'Pass Rate'}
+                  </p>
                   <p className="text-base font-bold font-mono text-[#1C4CA1] mt-0.5">
                     {cohort.avgScore}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase text-red-700">At-Risk</p>
+                  <p className="text-[10px] font-bold uppercase text-red-700">
+                    {isHindi ? 'जोखिम में' : 'At-Risk'}
+                  </p>
                   <p className="text-base font-bold font-mono text-red-600 mt-0.5">
                     {cohort.atRiskCount}
                   </p>
@@ -216,7 +226,9 @@ export function TrainerCohortStudio({
               {/* Syllabus Meter */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Syllabus Progress</span>
+                  <span className="text-muted-foreground">
+                    {isHindi ? 'पाठ्यक्रम प्रगति' : 'Syllabus Progress'}
+                  </span>
                   <span className="font-mono font-bold text-[#1F273A]">{cohort.progress}%</span>
                 </div>
                 <div className="w-full bg-[#D8DFEE] h-2 rounded-full overflow-hidden">
@@ -234,7 +246,7 @@ export function TrainerCohortStudio({
                 onClick={() => onInspectCohort(cohort)}
                 className="flex-1 py-2 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center"
               >
-                Inspect Batch Details
+                {isHindi ? 'बैच विवरण देखें' : 'Inspect Batch Details'}
               </button>
               <button
                 type="button"
@@ -242,7 +254,7 @@ export function TrainerCohortStudio({
                 className="py-2 px-3.5 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>Remediate</span>
+                <span>{isHindi ? 'उपचार' : 'Remediate'}</span>
               </button>
             </div>
           </div>
@@ -256,15 +268,17 @@ export function TrainerCohortStudio({
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-600" />
               <h3 className="text-base font-bold text-[#1F273A]">
-                At-Risk Trainee Intervention Queue (&lt;60% Score)
+                {isHindi ? 'जोखिम वाले प्रशिक्षु हस्तक्षेप कतार (<60% अंक)' : 'At-Risk Trainee Intervention Queue (<60% Score)'}
               </h3>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Officers requiring targeted remediation before deployment to field operations
+              {isHindi
+                ? 'फील्ड ऑपरेशन्स में तैनाती से पहले लक्षित उपचारात्मक अभ्यास की आवश्यकता वाले अधिकारी'
+                : 'Officers requiring targeted remediation before deployment to field operations'}
             </p>
           </div>
           <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-red-500/15 text-red-700 font-mono">
-            {AT_RISK_ROSTER.length} Flagged
+            {AT_RISK_ROSTER.length} {isHindi ? 'चिह्नित' : 'Flagged'}
           </span>
         </div>
 
@@ -272,11 +286,11 @@ export function TrainerCohortStudio({
           <table className="w-full text-left text-xs">
             <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
               <tr>
-                <th className="py-3 px-4">Trainee</th>
-                <th className="py-3 px-4">Cadre & Center</th>
-                <th className="py-3 px-4">Score</th>
-                <th className="py-3 px-4">Deficient Competency</th>
-                <th className="py-3 px-4 text-right">Intervention</th>
+                <th className="py-3 px-4">{isHindi ? 'प्रशिक्षु' : 'Trainee'}</th>
+                <th className="py-3 px-4">{isHindi ? 'संवर्ग एवं केंद्र' : 'Cadre & Center'}</th>
+                <th className="py-3 px-4">{isHindi ? 'अंक' : 'Score'}</th>
+                <th className="py-3 px-4">{isHindi ? 'कमजोर दक्षता' : 'Deficient Competency'}</th>
+                <th className="py-3 px-4 text-right">{isHindi ? 'हस्तक्षेप' : 'Intervention'}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#D8DFEE]">
@@ -318,7 +332,7 @@ export function TrainerCohortStudio({
                       className="px-3 py-1 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
                     >
                       <Sparkles className="h-3 w-3" />
-                      <span>Dispatch Drill</span>
+                      <span>{isHindi ? 'अभ्यास भेजें' : 'Dispatch Drill'}</span>
                     </button>
                   </td>
                 </tr>

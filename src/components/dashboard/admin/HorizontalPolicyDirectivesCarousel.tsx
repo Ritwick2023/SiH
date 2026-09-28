@@ -69,10 +69,12 @@ export const POLICY_DIRECTIVES_DATA: PolicyDirectiveData[] = [
 
 interface HorizontalPolicyDirectivesCarouselProps {
   onReadCircular?: (directive: PolicyDirectiveData) => void;
+  isHindi?: boolean;
 }
 
 export function HorizontalPolicyDirectivesCarousel({
   onReadCircular,
+  isHindi = false,
 }: HorizontalPolicyDirectivesCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -96,14 +98,16 @@ export function HorizontalPolicyDirectivesCarousel({
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
             <h2 className="text-sm sm:text-base font-black text-[#1F273A] tracking-tight">
-              National Policy Directives &amp; Cabinet Circulars
+              {isHindi ? 'राष्ट्रीय नीति निर्देश और कैबिनेट परिपत्र' : 'National Policy Directives & Cabinet Circulars'}
             </h2>
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#FFA72F]/15 text-amber-700 border border-[#FFA72F]/30">
-              5 Active Directives
+              {isHindi ? '5 सक्रिय निर्देश' : '5 Active Directives'}
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Statutory framework reforms, gazette notifications, and compliance schedules from the Cabinet Secretariat.
+            {isHindi
+              ? 'मंत्रिमंडल सचिवालय से वैधानिक ढांचा सुधार, राजपत्र अधिसूचनाएं और अनुपालन कार्यक्रम।'
+              : 'Statutory framework reforms, gazette notifications, and compliance schedules from the Cabinet Secretariat.'}
           </p>
         </div>
 
@@ -149,20 +153,20 @@ export function HorizontalPolicyDirectivesCarousel({
                 {item.status === 'ENFORCED' ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-800 border border-emerald-500/30 shrink-0">
                     <CheckCircle2 className="h-3 w-3" />
-                    Enforced
+                    {isHindi ? 'लागू' : 'Enforced'}
                   </span>
                 ) : item.status === 'ACTIVE_ROLLOUT' ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20 shrink-0">
                     <Clock className="h-3 w-3" />
-                    Rollout
+                    {isHindi ? 'सक्रिय' : 'Rollout'}
                   </span>
                 ) : item.status === 'IN_REVIEW' ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-800 border border-amber-500/30 shrink-0">
-                    In Review
+                    {isHindi ? 'समीक्षाधीन' : 'In Review'}
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFA72F]/15 text-amber-700 border border-[#FFA72F]/30 shrink-0">
-                    Gazette
+                    {isHindi ? 'राजपत्र' : 'Gazette'}
                   </span>
                 )}
               </div>
@@ -187,10 +191,10 @@ export function HorizontalPolicyDirectivesCarousel({
                 <div className="flex items-center justify-between text-[10.5px]">
                   <span className="text-muted-foreground flex items-center gap-1">
                     <Calendar className="h-3 w-3 text-[#1C4CA1]" />
-                    Deadline: <strong>{item.complianceDeadline}</strong>
+                    {isHindi ? 'समय-सीमा:' : 'Deadline:'} <strong>{item.complianceDeadline}</strong>
                   </span>
                   <span className="font-mono font-bold text-[#1C4CA1]">
-                    {item.complianceRate}% Comply
+                    {item.complianceRate}% {isHindi ? 'अनुपालन' : 'Comply'}
                   </span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
@@ -210,7 +214,7 @@ export function HorizontalPolicyDirectivesCarousel({
                 className="w-full py-1.5 px-3 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
               >
                 <FileText className="h-3.5 w-3.5" />
-                <span>Read Official Circular</span>
+                <span>{isHindi ? 'आधिकारिक परिपत्र पढ़ें' : 'Read Official Circular'}</span>
               </button>
             </div>
           </div>

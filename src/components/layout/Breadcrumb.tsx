@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Home, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { UserRole } from '@/lib/types';
@@ -27,6 +27,8 @@ const routeLabels: Record<string, string> = {
 export function Breadcrumb() {
   const pathname = usePathname();
   const t = useTranslations('breadcrumb');
+  const locale = useLocale();
+  const isHindi = locale === 'hi';
   const [role, setRole] = useState<UserRole>('learner');
 
   useEffect(() => {
@@ -44,12 +46,17 @@ export function Breadcrumb() {
     return null;
   }
 
-  const rootLabel =
-    role === 'trainer'
-      ? 'NSSTA Faculty Studio'
-      : role === 'admin'
-        ? 'Executive Command Desk'
-        : 'Learner Workspace';
+  const rootLabel = isHindi
+    ? (role === 'trainer'
+        ? 'एनएसएसटीए संकाय स्टूडियो'
+        : role === 'admin'
+          ? 'कार्यकारी कमान डेस्क'
+          : 'शिक्षार्थी कार्यक्षेत्र')
+    : (role === 'trainer'
+        ? 'NSSTA Faculty Studio'
+        : role === 'admin'
+          ? 'Executive Command Desk'
+          : 'Learner Workspace');
 
   const crumbs = segments.map((seg, i) => {
     const routeKey = routeLabels[`/${seg}`];

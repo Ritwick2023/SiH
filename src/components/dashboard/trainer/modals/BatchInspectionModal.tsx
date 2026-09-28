@@ -115,6 +115,7 @@ interface BatchInspectionModalProps {
   onClose: () => void;
   cohort: CohortData | null;
   onOpenRemediation?: (cohort: CohortData) => void;
+  isHindi?: boolean;
 }
 
 export function BatchInspectionModal({
@@ -122,6 +123,7 @@ export function BatchInspectionModal({
   onClose,
   cohort,
   onOpenRemediation,
+  isHindi = false,
 }: BatchInspectionModalProps) {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'CRITICAL' | 'WATCH' | 'SAFE'>('ALL');
@@ -141,7 +143,11 @@ export function BatchInspectionModal({
   });
 
   const handleExportCSV = () => {
-    setCopiedMessage(`Exported roster for ${cohort.name} to CSV.`);
+    setCopiedMessage(
+      isHindi
+        ? `${cohort.name} के लिए रोस्टर सीएसवी में निर्यात किया गया।`
+        : `Exported roster for ${cohort.name} to CSV.`
+    );
     setTimeout(() => setCopiedMessage(null), 3000);
   };
 
@@ -162,14 +168,14 @@ export function BatchInspectionModal({
                 {cohort.center}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#1164BE]/10 text-[#1164BE]">
-                Director: {cohort.director}
+                {isHindi ? 'निदेशक' : 'Director'}: {cohort.director}
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#1F273A] tracking-tight">
               {cohort.name}
             </h2>
             <p className="text-xs text-muted-foreground">
-              {cohort.cadre} • Term: {cohort.startDate} to {cohort.endDate}
+              {cohort.cadre} • {isHindi ? 'अवधि' : 'Term'}: {cohort.startDate} {isHindi ? 'से' : 'to'} {cohort.endDate}
             </p>
           </div>
 
@@ -184,27 +190,35 @@ export function BatchInspectionModal({
         {/* Quick Cohort Stats Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-[#EDF0F7]/40 border-b border-[#D8DFEE]">
           <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Enrolled Cadre</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'नामांकित संवर्ग' : 'Enrolled Cadre'}
+            </p>
             <p className="text-xl font-extrabold text-[#1F273A] font-mono mt-0.5">
-              {cohort.enrolled} <span className="text-xs font-normal text-muted-foreground">Officers</span>
+              {cohort.enrolled} <span className="text-xs font-normal text-muted-foreground">{isHindi ? 'अधिकारी' : 'Officers'}</span>
             </p>
           </div>
           <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Cohort Mean Score</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'समूह औसत स्कोर' : 'Cohort Mean Score'}
+            </p>
             <p className="text-xl font-extrabold text-[#1C4CA1] font-mono mt-0.5">
-              {cohort.avgScore}% <span className="text-xs font-normal text-muted-foreground">Pass Rate</span>
+              {cohort.avgScore}% <span className="text-xs font-normal text-muted-foreground">{isHindi ? 'उत्तीर्ण दर' : 'Pass Rate'}</span>
             </p>
           </div>
           <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Syllabus Progress</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'पाठ्यक्रम प्रगति' : 'Syllabus Progress'}
+            </p>
             <p className="text-xl font-extrabold text-[#FFA72F] font-mono mt-0.5">
-              {cohort.progress}% <span className="text-xs font-normal text-muted-foreground">Completed</span>
+              {cohort.progress}% <span className="text-xs font-normal text-muted-foreground">{isHindi ? 'पूर्ण' : 'Completed'}</span>
             </p>
           </div>
           <div className="p-3 rounded-xl bg-white border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-red-700">At-Risk Deficit</p>
+            <p className="text-[10px] font-bold uppercase text-red-700">
+              {isHindi ? 'जोखिम में कमी' : 'At-Risk Deficit'}
+            </p>
             <p className="text-xl font-extrabold text-red-600 font-mono mt-0.5">
-              {cohort.atRiskCount} <span className="text-xs font-normal text-muted-foreground">Officers &lt;60%</span>
+              {cohort.atRiskCount} <span className="text-xs font-normal text-muted-foreground">{isHindi ? 'अधिकारी <60%' : 'Officers <60%'}</span>
             </p>
           </div>
         </div>
@@ -222,7 +236,7 @@ export function BatchInspectionModal({
               }`}
             >
               <Users className="h-4 w-4" />
-              <span>Officer Roster ({trainees.length})</span>
+              <span>{isHindi ? `अधिकारी रोस्टर (${trainees.length})` : `Officer Roster (${trainees.length})`}</span>
             </button>
             <button
               type="button"
@@ -234,7 +248,7 @@ export function BatchInspectionModal({
               }`}
             >
               <BarChart3 className="h-4 w-4" />
-              <span>Curriculum Masteries</span>
+              <span>{isHindi ? 'पाठ्यचर्या दक्षता' : 'Curriculum Masteries'}</span>
             </button>
             <button
               type="button"
@@ -246,7 +260,7 @@ export function BatchInspectionModal({
               }`}
             >
               <Calendar className="h-4 w-4" />
-              <span>Academic Milestones</span>
+              <span>{isHindi ? 'अकादमिक मील के पत्थर' : 'Academic Milestones'}</span>
             </button>
           </div>
 
@@ -257,7 +271,7 @@ export function BatchInspectionModal({
               className="px-3 py-1 rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-semibold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>Export Roster</span>
+              <span>{isHindi ? 'रोस्टर निर्यात करें' : 'Export Roster'}</span>
             </button>
           </div>
         </div>
@@ -281,7 +295,7 @@ export function BatchInspectionModal({
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search officer, designation or center..."
+                    placeholder={isHindi ? 'अधिकारी, पदनाम या केंद्र खोजें...' : 'Search officer, designation or center...'}
                     className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
                   />
                 </div>
@@ -298,7 +312,13 @@ export function BatchInspectionModal({
                           : 'bg-[#EDF0F7] text-muted-foreground hover:bg-[#D8DFEE]'
                       }`}
                     >
-                      {st === 'ALL' ? 'All Trainees' : st}
+                      {st === 'ALL'
+                        ? (isHindi ? 'सभी प्रशिक्षु' : 'All Trainees')
+                        : st === 'CRITICAL'
+                          ? (isHindi ? 'गंभीर' : 'CRITICAL')
+                          : st === 'WATCH'
+                            ? (isHindi ? 'निगरानी' : 'WATCH')
+                            : (isHindi ? 'सुरक्षित' : 'SAFE')}
                     </button>
                   ))}
                 </div>
@@ -309,11 +329,11 @@ export function BatchInspectionModal({
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
                     <tr>
-                      <th className="py-2.5 px-3">Officer</th>
-                      <th className="py-2.5 px-3">Cadre & Center</th>
-                      <th className="py-2.5 px-3">Readiness</th>
-                      <th className="py-2.5 px-3">Weak Competency</th>
-                      <th className="py-2.5 px-3 text-right">Action</th>
+                      <th className="py-2.5 px-3">{isHindi ? 'अधिकारी' : 'Officer'}</th>
+                      <th className="py-2.5 px-3">{isHindi ? 'संवर्ग एवं केंद्र' : 'Cadre & Center'}</th>
+                      <th className="py-2.5 px-3">{isHindi ? 'तैयारी' : 'Readiness'}</th>
+                      <th className="py-2.5 px-3">{isHindi ? 'कमजोर दक्षता' : 'Weak Competency'}</th>
+                      <th className="py-2.5 px-3 text-right">{isHindi ? 'कार्रवाई' : 'Action'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#D8DFEE] bg-white">
@@ -352,7 +372,11 @@ export function BatchInspectionModal({
                                     : 'bg-emerald-500/15 text-emerald-700'
                               }`}
                             >
-                              {trainee.status}
+                              {trainee.status === 'CRITICAL'
+                                ? (isHindi ? 'गंभीर' : 'CRITICAL')
+                                : trainee.status === 'WATCH'
+                                  ? (isHindi ? 'निगरानी' : 'WATCH')
+                                  : (isHindi ? 'सुरक्षित' : 'SAFE')}
                             </span>
                           </div>
                         </td>
@@ -370,7 +394,7 @@ export function BatchInspectionModal({
                             }}
                             className="px-2.5 py-1 rounded-lg bg-[#EDF0F7] hover:bg-[#1C4CA1] hover:text-white text-[#1C4CA1] text-[11px] font-bold border border-[#D8DFEE] transition-all cursor-pointer"
                           >
-                            Remediate
+                            {isHindi ? 'उपचार' : 'Remediate'}
                           </button>
                         </td>
                       </tr>
@@ -384,13 +408,17 @@ export function BatchInspectionModal({
           {activeTab === 'competencies' && (
             <div className="space-y-4">
               <p className="text-xs text-muted-foreground">
-                Aggregated mastery scores across mandatory MoSPI operational protocols for {cohort.name}:
+                {isHindi
+                  ? `${cohort.name} के लिए अनिवार्य MoSPI परिचालन प्रोटोकॉल में संचयी दक्षता स्कोर:`
+                  : `Aggregated mastery scores across mandatory MoSPI operational protocols for ${cohort.name}:`}
               </p>
               <div className="space-y-3">
                 {[
                   {
                     code: 'comp-demarcation',
-                    title: 'Census Boundary Demarcation & Hamlet-Groups (Schedule 0.0)',
+                    title: isHindi
+                      ? 'जनगणना सीमा सीमांकन एवं हेमलेट-समूह (अनुसूची 0.0)'
+                      : 'Census Boundary Demarcation & Hamlet-Groups (Schedule 0.0)',
                     score: 58,
                     target: 75,
                     gap: '-17%',
@@ -398,7 +426,9 @@ export function BatchInspectionModal({
                   },
                   {
                     code: 'comp-capi',
-                    title: 'CAPI Tablet Operations, Offline Sync & GPS Lock',
+                    title: isHindi
+                      ? 'सीएपीआई टैबलेट संचालन, ऑफलाइन सिंक एवं जीपीएस लॉक'
+                      : 'CAPI Tablet Operations, Offline Sync & GPS Lock',
                     score: 64,
                     target: 80,
                     gap: '-16%',
@@ -406,7 +436,9 @@ export function BatchInspectionModal({
                   },
                   {
                     code: 'comp-nsso',
-                    title: 'NSSO Activity Classification (PLFS Schedule 10.4)',
+                    title: isHindi
+                      ? 'एनएसएसओ गतिविधि वर्गीकरण (पीएलएफएस अनुसूची 10.4)'
+                      : 'NSSO Activity Classification (PLFS Schedule 10.4)',
                     score: 72,
                     target: 75,
                     gap: '-3%',
@@ -414,7 +446,9 @@ export function BatchInspectionModal({
                   },
                   {
                     code: 'comp-survey',
-                    title: 'Sampling Multipliers & First Stage Unit Weighting',
+                    title: isHindi
+                      ? 'नमूनाकरण गुणक एवं प्रथम चरण इकाई भार'
+                      : 'Sampling Multipliers & First Stage Unit Weighting',
                     score: 68,
                     target: 75,
                     gap: '-7%',
@@ -422,7 +456,9 @@ export function BatchInspectionModal({
                   },
                   {
                     code: 'comp-data',
-                    title: 'Inter-Record Scrutiny Rules & Validation Formulae',
+                    title: isHindi
+                      ? 'अंतर-रिकॉर्ड जांच नियम एवं सत्यापन सूत्र'
+                      : 'Inter-Record Scrutiny Rules & Validation Formulae',
                     score: 84,
                     target: 80,
                     gap: '+4%',
@@ -439,7 +475,7 @@ export function BatchInspectionModal({
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-sm text-[#1F273A]">{c.score}%</span>
-                        <span className="text-[10px] text-muted-foreground">(Target: {c.target}%)</span>
+                        <span className="text-[10px] text-muted-foreground">({isHindi ? 'लक्ष्य' : 'Target'}: {c.target}%)</span>
                         <span
                           className={`font-mono text-[10px] font-bold px-1.5 py-0.2 rounded ${
                             c.critical ? 'bg-red-500/15 text-red-700' : 'bg-emerald-500/15 text-emerald-700'
@@ -468,27 +504,35 @@ export function BatchInspectionModal({
               <div className="space-y-3">
                 {[
                   {
-                    week: 'Week 1',
-                    milestone: 'Foundational Induction & Statistical Systems Overview',
-                    status: 'Completed',
+                    week: isHindi ? 'सप्ताह 1' : 'Week 1',
+                    milestone: isHindi
+                      ? 'आधारभूत प्रेरण एवं सांख्यिकी प्रणाली अवलोकन'
+                      : 'Foundational Induction & Statistical Systems Overview',
+                    status: isHindi ? 'पूर्ण' : 'Completed',
                     date: '10 Aug 2026',
                   },
                   {
-                    week: 'Week 2',
-                    milestone: 'Schedule 0.0 Demarcation & Field Handbook Practicum',
-                    status: 'Completed',
+                    week: isHindi ? 'सप्ताह 2' : 'Week 2',
+                    milestone: isHindi
+                      ? 'अनुसूची 0.0 सीमांकन एवं फील्ड हैंडबुक प्रायोगिक'
+                      : 'Schedule 0.0 Demarcation & Field Handbook Practicum',
+                    status: isHindi ? 'पूर्ण' : 'Completed',
                     date: '17 Aug 2026',
                   },
                   {
-                    week: 'Week 3',
-                    milestone: 'CAPI Tablet Simulation & GPS Geofencing Trials',
-                    status: 'In Progress (Active Deficit Detected)',
+                    week: isHindi ? 'सप्ताह 3' : 'Week 3',
+                    milestone: isHindi
+                      ? 'सीएपीआई टैबलेट सिमुलेशन एवं जीपीएस जियोफेंसिंग परीक्षण'
+                      : 'CAPI Tablet Simulation & GPS Geofencing Trials',
+                    status: isHindi ? 'प्रगति पर (सक्रिय घाटा पाया गया)' : 'In Progress (Active Deficit Detected)',
                     date: '24 Aug 2026',
                   },
                   {
-                    week: 'Week 4',
-                    milestone: 'Final Statutory Comprehensive Evaluation (Mid-Term)',
-                    status: 'Scheduled',
+                    week: isHindi ? 'सप्ताह 4' : 'Week 4',
+                    milestone: isHindi
+                      ? 'अंतिम वैधानिक व्यापक मूल्यांकन (मध्यावधि)'
+                      : 'Final Statutory Comprehensive Evaluation (Mid-Term)',
+                    status: isHindi ? 'निर्धारित' : 'Scheduled',
                     date: '02 Sep 2026',
                   },
                 ].map((item, idx) => (
@@ -514,7 +558,7 @@ export function BatchInspectionModal({
         <div className="p-4 border-t border-[#D8DFEE] bg-[#EDF0F7]/60 flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <GraduationCap className="h-4 w-4 text-[#1C4CA1]" />
-            <span>NSSTA Course Director Academic Governance</span>
+            <span>{isHindi ? 'एनएसएसटीए पाठ्यक्रम निदेशक अकादमिक शासन' : 'NSSTA Course Director Academic Governance'}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -523,7 +567,7 @@ export function BatchInspectionModal({
               onClick={onClose}
               className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-[#EDF0F7] transition-colors cursor-pointer"
             >
-              Close
+              {isHindi ? 'बंद करें' : 'Close'}
             </button>
             <button
               type="button"
@@ -534,7 +578,7 @@ export function BatchInspectionModal({
               className="px-4 py-2 rounded-xl bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Dispatch Remedial Drill</span>
+              <span>{isHindi ? 'उपचारात्मक अभ्यास भेजें' : 'Dispatch Remedial Drill'}</span>
             </button>
           </div>
         </div>

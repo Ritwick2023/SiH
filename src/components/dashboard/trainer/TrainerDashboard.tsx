@@ -30,9 +30,15 @@ import {
 import Link from 'next/link';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 
-export default function TrainerDashboard({ user }: { user: DashboardUserProps }) {
-  const locale = useSafeLocale(user.user_metadata?.preferred_language || 'en');
-  const isHindi = locale === 'hi';
+export default function TrainerDashboard({
+  user,
+  isHindi: propIsHindi,
+}: {
+  user: DashboardUserProps;
+  isHindi?: boolean;
+}) {
+  const locale = useSafeLocale('en');
+  const isHindi = propIsHindi ?? (locale === 'hi');
   const facultyName = user.user_metadata?.name || (isHindi ? 'डॉ. प्रिया वर्मा' : 'Dr. Priya Verma');
   const facultyDesignation = user.user_metadata?.designation || (isHindi ? 'पाठ्यक्रम निदेशक' : 'Course Director');
   const facultyCadre = user.user_metadata?.cadre || (isHindi ? 'एनएसएसटीए संकाय' : 'NSSTA Faculty');
@@ -54,7 +60,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
     organization_id: 'org-nssta',
     cadre: facultyCadre,
     designation: facultyDesignation,
-    preferred_language: 'en' as const,
+    preferred_language: (isHindi ? 'hi' : 'en') as 'hi' | 'en',
     department: 'NSSTA',
   };
 
@@ -70,7 +76,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
               type="button"
               onClick={() => setDossierOpen(true)}
               className="h-14 w-14 rounded-2xl bg-[#1164BE] text-white flex items-center justify-center text-xl font-bold font-serif shrink-0 shadow-xs hover:scale-105 transition-transform cursor-pointer"
-              title="Click to view Official Faculty Dossier"
+              title={isHindi ? 'आधिकारिक संकाय डोजियर देखने के लिए क्लिक करें' : 'Click to view Official Faculty Dossier'}
             >
               PV
             </button>
@@ -81,18 +87,22 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
                   {facultyCadre}
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]">
-                  National Statistical Systems Training Academy (NSSTA)
+                  {isHindi
+                    ? 'राष्ट्रीय सांख्यिकी प्रणाली प्रशिक्षण अकादमी (एनएसएसटीए)'
+                    : 'National Statistical Systems Training Academy (NSSTA)'}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-[#1F273A] tracking-tight">
                 {facultyName}
               </h1>
               <p className="text-xs sm:text-sm font-semibold text-[#1164BE] mt-0.5">
-                {facultyDesignation} • MoSPI Capacity Building &amp; Examination Board
+                {facultyDesignation} • {isHindi ? 'MoSPI क्षमता निर्माण एवं परीक्षा बोर्ड' : 'MoSPI Capacity Building & Examination Board'}
               </p>
               <p className="text-xs text-[#475569] flex items-center gap-1 mt-1">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-[#1164BE]" />
-                NSSTA Campus, Plot No. 22, Knowledge Park II, Greater Noida, UP
+                {isHindi
+                  ? 'एनएसएसटीए परिसर, प्लॉट नं. 22, नॉलेज पार्क II, ग्रेटर नोएडा, उत्तर प्रदेश'
+                  : 'NSSTA Campus, Plot No. 22, Knowledge Park II, Greater Noida, UP'}
               </p>
             </div>
           </div>
@@ -197,11 +207,13 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
             ingestedManualsCount={6}
             assessedOfficersCount={1420}
             avgPassRate={68}
+            isHindi={isHindi}
           />
 
           {/* High-Contrast Focused Triage Deck */}
           <TrainerReviewTriageCard
             onInspectItem={(item) => setSelectedItemForAnalysis(item)}
+            isHindi={isHindi}
           />
 
           {/* Dual Horizontal Carousels */}
@@ -210,19 +222,21 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
             onRemediateCohort={(cohort) => setSelectedCohortForRemediation(cohort)}
             onInspectItem={(item) => setSelectedItemForAnalysis(item)}
             onOpenDeckStudio={() => setActiveTab('curriculum')}
+            isHindi={isHindi}
           />
 
           {/* Diagnostic & Content Management Bento Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Left Column: Trainee Error Heatmap (6 cols) */}
             <div className="lg:col-span-6">
-              <TraineeErrorHeatmap />
+              <TraineeErrorHeatmap isHindi={isHindi} />
             </div>
 
             {/* Right Column: Ingested Documents Ledger (6 cols) */}
             <div className="lg:col-span-6">
               <IngestedDocumentsLedger
                 onOpenManualReader={(manualId) => setSelectedManualId(manualId)}
+                isHindi={isHindi}
               />
             </div>
           </div>
@@ -236,6 +250,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
         <TrainerCohortStudio
           onInspectCohort={(cohort) => setSelectedCohortForInspection(cohort)}
           onRemediateCohort={(cohort) => setSelectedCohortForRemediation(cohort)}
+          isHindi={isHindi}
         />
       )}
 
@@ -246,6 +261,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
         <TrainerCurriculumStudio
           onOpenManualReader={(manualId) => setSelectedManualId(manualId)}
           onInspectItem={(item) => setSelectedItemForAnalysis(item)}
+          isHindi={isHindi}
         />
       )}
 
@@ -256,6 +272,7 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
         <TrainerDiagnosticsStudio
           onInspectItem={(item) => setSelectedItemForAnalysis(item)}
           onRemediateCohort={(cohort) => setSelectedCohortForRemediation(cohort)}
+          isHindi={isHindi}
         />
       )}
 
@@ -270,18 +287,21 @@ export default function TrainerDashboard({ user }: { user: DashboardUserProps })
           setSelectedCohortForInspection(null);
           setSelectedCohortForRemediation(cohort);
         }}
+        isHindi={isHindi}
       />
 
       <CohortRemediationModal
         isOpen={Boolean(selectedCohortForRemediation)}
         onClose={() => setSelectedCohortForRemediation(null)}
         targetCohort={selectedCohortForRemediation}
+        isHindi={isHindi}
       />
 
       <ItemAnalysisModal
         isOpen={Boolean(selectedItemForAnalysis)}
         onClose={() => setSelectedItemForAnalysis(null)}
         item={selectedItemForAnalysis}
+        isHindi={isHindi}
       />
 
       {selectedManualId && (

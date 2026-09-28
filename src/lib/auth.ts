@@ -49,17 +49,34 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
     const sessionCookie = cookiesMap.get('auth_token') || cookiesMap.get('statvidya_session');
     if (sessionCookie) {
       const verified = await verifySessionToken(sessionCookie);
-      if (verified) return verified;
+      if (verified) {
+        const cookieLang = cookiesMap.get('locale');
+        if ((cookieLang === 'en' || cookieLang === 'hi') && verified.user_metadata) {
+          verified.user_metadata.preferred_language = cookieLang;
+        }
+        return verified;
+      }
     }
 
     if (process.env.DEMO_MODE === 'true') {
       const demoCookie = cookiesMap.get('demo_persona') || cookiesMap.get('demo_user');
       if (demoCookie) {
         let personaId = demoCookie;
+        let customName: string | undefined;
+        let customDesignation: string | undefined;
+        let customCadre: string | undefined;
+        let customDept: string | undefined;
+        let customEmail: string | undefined;
+
         if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
           try {
             const parsed = JSON.parse(decodeURIComponent(demoCookie));
             personaId = parsed.id || parsed.email || '';
+            customName = parsed.name;
+            customDesignation = parsed.designation;
+            customCadre = parsed.cadre;
+            customDept = parsed.department;
+            customEmail = parsed.email;
           } catch {
             personaId = '';
           }
@@ -70,19 +87,25 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
             (personaId && p.email.toLowerCase() === personaId.toLowerCase())
         );
         if (persona) {
+          const cookieLang = cookiesMap.get('locale');
+          const preferred_language = (cookieLang === 'en' || cookieLang === 'hi')
+            ? cookieLang
+            : persona.preferred_language;
           return {
             id: persona.id,
-            email: persona.email,
+            email: customEmail || persona.email,
             user_metadata: {
-              name: persona.name,
-              organization_id: 'mospi-fod',
-              preferred_language: persona.preferred_language,
-              cadre: persona.cadre,
-              designation: persona.designation,
+              name: customName || persona.name,
+              organization_id: persona.organization_id || 'org-mospi',
+              preferred_language,
+              cadre: customCadre || persona.cadre,
+              designation: customDesignation || persona.designation,
+              department: customDept || persona.department,
+              isDemo: true,
             },
             app_metadata: {
               role: persona.role,
-              department: persona.department,
+              department: customDept || persona.department,
             },
           };
         }
@@ -114,7 +137,13 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
     cookieStore?.get ? (cookieStore.get('auth_token')?.value || cookieStore.get('statvidya_session')?.value) : undefined;
   if (sessionCookie) {
     const verified = await verifySessionToken(sessionCookie);
-    if (verified) return verified;
+    if (verified) {
+      const cookieLang = cookieStore?.get ? cookieStore.get('locale')?.value : undefined;
+      if ((cookieLang === 'en' || cookieLang === 'hi') && verified.user_metadata) {
+        verified.user_metadata.preferred_language = cookieLang;
+      }
+      return verified;
+    }
   }
 
   // 3. Demo Mode Isolation (ONLY active when DEMO_MODE=true)
@@ -124,11 +153,22 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
 
     if (demoCookie) {
       let personaId = demoCookie;
+      let customName: string | undefined;
+      let customDesignation: string | undefined;
+      let customCadre: string | undefined;
+      let customDept: string | undefined;
+      let customEmail: string | undefined;
+
       // If legacy JSON cookie, extract ONLY identifier to prevent role tampering
       if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
         try {
           const parsed = JSON.parse(decodeURIComponent(demoCookie));
           personaId = parsed.id || parsed.email || '';
+          customName = parsed.name;
+          customDesignation = parsed.designation;
+          customCadre = parsed.cadre;
+          customDept = parsed.department;
+          customEmail = parsed.email;
         } catch {
           personaId = '';
         }
@@ -142,21 +182,26 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
       );
 
       if (persona) {
+        const cookieLang = cookieStore?.get ? cookieStore.get('locale')?.value : undefined;
+        const preferred_language = (cookieLang === 'en' || cookieLang === 'hi')
+          ? cookieLang
+          : persona.preferred_language;
         return {
           id: persona.id,
-          email: persona.email,
+          email: customEmail || persona.email,
           user_metadata: {
-            name: persona.name,
-            organization_id: persona.organization_id,
-            preferred_language: persona.preferred_language,
-            cadre: persona.cadre,
-            designation: persona.designation,
-            department: persona.department,
+            name: customName || persona.name,
+            organization_id: persona.organization_id || 'org-mospi',
+            preferred_language,
+            cadre: customCadre || persona.cadre,
+            designation: customDesignation || persona.designation,
+            department: customDept || persona.department,
             isDemo: true,
           },
           app_metadata: {
             // Role is strictly derived from the server-side persona definition
             role: persona.role,
+            department: customDept || persona.department,
           },
         };
       }

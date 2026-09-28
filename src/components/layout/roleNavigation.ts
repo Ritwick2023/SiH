@@ -174,16 +174,37 @@ export const ADMIN_NAV_ITEMS: RoleNavItem[] = [
   },
 ];
 
-export function getNavigationForRole(role: UserRole = 'learner'): RoleNavItem[] {
-  switch (role) {
-    case 'trainer':
-      return TRAINER_NAV_ITEMS;
-    case 'admin':
-      return ADMIN_NAV_ITEMS;
-    case 'learner':
-    default:
-      return LEARNER_NAV_ITEMS;
-  }
+export function getNavigationForRole(role: UserRole = 'learner', isHindi = false): RoleNavItem[] {
+  const baseItems = (() => {
+    switch (role) {
+      case 'trainer':
+        return TRAINER_NAV_ITEMS;
+      case 'admin':
+        return ADMIN_NAV_ITEMS;
+      case 'learner':
+      default:
+        return LEARNER_NAV_ITEMS;
+    }
+  })();
+
+  if (!isHindi) return baseItems;
+
+  return baseItems.map((item) => {
+    if (!item.badge) return item;
+    let localizedBadge = item.badge;
+    if (item.badge === '3 Drills') localizedBadge = '3 अभ्यास';
+    else if (item.badge === '6 Manuals') localizedBadge = '6 नियमावलियां';
+    else if (item.badge === '10 Modules') localizedBadge = '10 मॉड्यूल';
+    else if (item.badge === '14 QA') localizedBadge = '14 क्यूए';
+    else if (item.badge === '2 Flagged') localizedBadge = '2 चिह्नित';
+    else if (item.badge === 'Item Studio') localizedBadge = 'प्रश्न बैंक';
+    else if (item.badge === 'Manuals') localizedBadge = 'नियमावलियां';
+
+    return {
+      ...item,
+      badge: localizedBadge,
+    };
+  });
 }
 
 export function getRoleIdentity(role: UserRole = 'learner', isHindi = false) {

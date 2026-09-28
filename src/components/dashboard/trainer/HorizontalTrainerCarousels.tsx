@@ -199,6 +199,7 @@ interface HorizontalTrainerCarouselsProps {
   onRemediateCohort: (cohort: CohortData) => void;
   onInspectItem: (item: ItemAnalysisData) => void;
   onOpenDeckStudio?: (deckId: string) => void;
+  isHindi?: boolean;
 }
 
 export function HorizontalTrainerCarousels({
@@ -206,6 +207,7 @@ export function HorizontalTrainerCarousels({
   onRemediateCohort,
   onInspectItem,
   onOpenDeckStudio,
+  isHindi = false,
 }: HorizontalTrainerCarouselsProps) {
   const cohortsRef = useRef<HTMLDivElement>(null);
   const decksRef = useRef<HTMLDivElement>(null);
@@ -231,11 +233,13 @@ export function HorizontalTrainerCarousels({
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
               <h2 className="text-base sm:text-lg font-bold text-[#1F273A] tracking-tight">
-                Active Training Cohorts & Academy Batches
+                {isHindi ? 'सक्रिय प्रशिक्षण समूह एवं अकादमी बैच' : 'Active Training Cohorts & Academy Batches'}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground">
-              Real-time progress meters, competency mastery, and remediation triggers across NSSTA and ZTCs
+              {isHindi
+                ? 'एनएसएसटीए एवं क्षेत्रीय प्रशिक्षण केंद्रों में रीयल-टाइम प्रगति, क्षमता प्रवीणता और उपचारात्मक उपाय'
+                : 'Real-time progress meters, competency mastery, and remediation triggers across NSSTA and ZTCs'}
             </p>
           </div>
 
@@ -243,7 +247,7 @@ export function HorizontalTrainerCarousels({
             <button
               type="button"
               onClick={() => scroll(cohortsRef, 'left')}
-              aria-label="Previous cohorts"
+              aria-label={isHindi ? 'पिछले समूह' : 'Previous cohorts'}
               className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -251,7 +255,7 @@ export function HorizontalTrainerCarousels({
             <button
               type="button"
               onClick={() => scroll(cohortsRef, 'right')}
-              aria-label="Next cohorts"
+              aria-label={isHindi ? 'अगले समूह' : 'Next cohorts'}
               className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronRight className="h-4 w-4" />
@@ -291,19 +295,25 @@ export function HorizontalTrainerCarousels({
                   {/* Metrics Row */}
                   <div className="grid grid-cols-3 gap-2 my-3.5 p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE]">
                     <div className="text-center">
-                      <p className="text-[9px] font-bold uppercase text-muted-foreground">Enrolled</p>
+                      <p className="text-[9px] font-bold uppercase text-muted-foreground">
+                        {isHindi ? 'नामांकित' : 'Enrolled'}
+                      </p>
                       <p className="text-sm font-bold font-mono text-[#1F273A] mt-0.5">
                         {cohort.enrolled}
                       </p>
                     </div>
                     <div className="text-center border-x border-[#D8DFEE]">
-                      <p className="text-[9px] font-bold uppercase text-muted-foreground">Avg Score</p>
+                      <p className="text-[9px] font-bold uppercase text-muted-foreground">
+                        {isHindi ? 'औसत अंक' : 'Avg Score'}
+                      </p>
                       <p className="text-sm font-bold font-mono text-[#1C4CA1] mt-0.5">
                         {cohort.avgScore}%
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-[9px] font-bold uppercase text-muted-foreground">At-Risk</p>
+                      <p className="text-[9px] font-bold uppercase text-muted-foreground">
+                        {isHindi ? 'जोखिम में' : 'At-Risk'}
+                      </p>
                       <p
                         className={`text-sm font-bold font-mono mt-0.5 ${
                           isAtRiskHigh ? 'text-red-600' : 'text-[#FFA72F]'
@@ -317,7 +327,9 @@ export function HorizontalTrainerCarousels({
                   {/* Progress Bar */}
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-muted-foreground font-medium">Syllabus Completion</span>
+                      <span className="text-muted-foreground font-medium">
+                        {isHindi ? 'पाठ्यक्रम पूर्णता' : 'Syllabus Completion'}
+                      </span>
                       <span className="font-mono font-bold text-[#1F273A]">{cohort.progress}%</span>
                     </div>
                     <div className="w-full bg-[#D8DFEE] h-1.5 rounded-full overflow-hidden">
@@ -336,16 +348,16 @@ export function HorizontalTrainerCarousels({
                     onClick={() => onInspectCohort(cohort)}
                     className="flex-1 py-2 px-3 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center"
                   >
-                    Inspect Batch
+                    {isHindi ? 'बैच निरीक्षण' : 'Inspect Batch'}
                   </button>
                   <button
                     type="button"
                     onClick={() => onRemediateCohort(cohort)}
                     className="py-2 px-3 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
-                    title="Dispatch Emergency Remedial Drill"
+                    title={isHindi ? 'आपातकालीन उपचारात्मक अभ्यास भेजें' : 'Dispatch Emergency Remedial Drill'}
                   >
                     <Sparkles className="h-3 w-3" />
-                    <span>Remediate</span>
+                    <span>{isHindi ? 'उपचार' : 'Remediate'}</span>
                   </button>
                 </div>
               </div>
@@ -363,11 +375,13 @@ export function HorizontalTrainerCarousels({
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
               <h2 className="text-base sm:text-lg font-bold text-[#1F273A] tracking-tight">
-                Curated MoSPI Question Bank Decks
+                {isHindi ? 'क्यूरेटेड MoSPI प्रश्न बैंक डेक' : 'Curated MoSPI Question Bank Decks'}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground">
-              Verified statutory question pools with source RAG citations, Bloom&apos;s levels, and item psychometrics
+              {isHindi
+                ? 'सत्यापित सांविधिक प्रश्न संग्रह, स्रोत आरएजी संदर्भ, ब्लूम स्तर और मनोमिति विश्लेषण'
+                : 'Verified statutory question pools with source RAG citations, Bloom\'s levels, and item psychometrics'}
             </p>
           </div>
 
@@ -375,7 +389,7 @@ export function HorizontalTrainerCarousels({
             <button
               type="button"
               onClick={() => scroll(decksRef, 'left')}
-              aria-label="Previous question decks"
+              aria-label={isHindi ? 'पिछले प्रश्न डेक' : 'Previous question decks'}
               className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -383,7 +397,7 @@ export function HorizontalTrainerCarousels({
             <button
               type="button"
               onClick={() => scroll(decksRef, 'right')}
-              aria-label="Next question decks"
+              aria-label={isHindi ? 'अगले प्रश्न डेक' : 'Next question decks'}
               className="p-1.5 rounded-xl bg-white border border-[#D8DFEE] text-muted-foreground hover:bg-[#EDF0F7] hover:text-[#1F273A] transition-colors cursor-pointer shadow-2xs"
             >
               <ChevronRight className="h-4 w-4" />
@@ -409,7 +423,7 @@ export function HorizontalTrainerCarousels({
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-500/15 px-2 py-0.5 rounded-full">
                     <CheckCircle2 className="h-3 w-3" />
-                    {deck.verifiedPercent}% Verified
+                    {deck.verifiedPercent}% {isHindi ? 'सत्यापित' : 'Verified'}
                   </span>
                 </div>
 
@@ -423,13 +437,17 @@ export function HorizontalTrainerCarousels({
                 {/* Deck Metadata Pill */}
                 <div className="my-3 p-2.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-medium text-[11px]">Item Count</span>
+                    <span className="text-muted-foreground font-medium text-[11px]">
+                      {isHindi ? 'प्रश्न संख्या' : 'Item Count'}
+                    </span>
                     <span className="font-mono font-bold text-[#1F273A] text-xs">
-                      {deck.questionsCount} MCQs
+                      {deck.questionsCount} {isHindi ? 'एमसीक्यू' : 'MCQs'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground font-medium text-[11px]">Cognitive Target</span>
+                    <span className="text-muted-foreground font-medium text-[11px]">
+                      {isHindi ? 'संज्ञानात्मक लक्ष्य' : 'Cognitive Target'}
+                    </span>
                     <span className="text-[10px] font-mono text-[#FFA72F] font-semibold">
                       {deck.bloomsLevel}
                     </span>
@@ -457,14 +475,14 @@ export function HorizontalTrainerCarousels({
                   className="flex-1 py-2 px-3 rounded-xl bg-[#EDF0F7] hover:bg-[#D8DFEE] text-[#1C4CA1] text-xs font-bold transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5"
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
-                  <span>Item Analysis</span>
+                  <span>{isHindi ? 'प्रश्न विश्लेषण' : 'Item Analysis'}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onOpenDeckStudio?.(deck.id)}
                   className="py-2 px-3 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs shrink-0"
                 >
-                  <span>MCQ Studio</span>
+                  <span>{isHindi ? 'एमसीक्यू स्टूडियो' : 'MCQ Studio'}</span>
                   <ArrowRight className="h-3 w-3" />
                 </button>
               </div>

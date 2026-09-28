@@ -385,11 +385,153 @@ export const PERSONA_FRAC_PROFILES: Record<string, PersonaFRACProfile> = {
       },
     ],
   },
+  // 3. Dr. Priya Verma — NSSTA Faculty & Course Director (Trainer)
+  'demo-priya': {
+    personaId: 'demo-priya',
+    email: 'priya.verma@nssta.gov.in',
+    name: 'Dr. Priya Verma',
+    designation: 'Course Director & Faculty',
+    designation_hi: 'पाठ्यक्रम निदेशक और संकाय',
+    cadre: 'NSSTA Faculty',
+    department: 'National Statistical Systems Training Academy (NSSTA)',
+    department_hi: 'राष्ट्रीय सांख्यिकी प्रणाली प्रशिक्षण अकादमी (एनएसएसटीए)',
+    preferredLanguage: 'en',
+    activities: [
+      {
+        id: 'act-faculty-curriculum',
+        name: 'Statistical Pedagogy & Curriculum Calibration',
+        name_hi: 'सांख्यिकीय शिक्षण और पाठ्यक्रम अंशांकन',
+        description: 'Designing competency-grounded training modules for field cadres and calibrating statutory assessment question banks.',
+        description_hi: 'फील्ड संवर्गों के लिए योग्यता-आधारित प्रशिक्षण मॉड्यूल डिजाइन करना और मूल्यांकन प्रश्न बैंकों का अंशांकन।',
+      },
+      {
+        id: 'act-faculty-triage',
+        name: 'Trainee Error Analysis & Remediation Routing',
+        name_hi: 'प्रशिक्षु त्रुटि विश्लेषण और उपचारात्मक रूटिंग',
+        description: 'Auditing field inquiry failure modes and deploying micro-learning interventions for flagged regional cohorts.',
+        description_hi: 'फील्ड जांच त्रुटियों का ऑडिट करना और चिह्नित क्षेत्रीय समूहों के लिए उपचारात्मक हस्तक्षेप तैनात करना।',
+      },
+      {
+        id: 'act-faculty-review',
+        name: 'Ingested Regulatory Knowledge & Manual QA',
+        name_hi: 'विनियमित ज्ञान और नियमावली गुणवत्ता समीक्षा',
+        description: 'Verifying AI-generated item banks against official NSSO/MoSPI operational manuals and instructional guidelines.',
+        description_hi: 'आधिकारिक एनएसएसओ/सांख्यिकी मंत्रालय संचालन नियमावलियों के अनुरूप एआई-निर्मित प्रश्नों का सत्यापन।',
+      },
+    ],
+    competencies: [
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-data'],
+        targetLevel: 5,
+        currentLevel: 4,
+        priority: 'critical',
+        evidenceType: 'assessment-verified',
+        activityName: 'Statistical Pedagogy & Curriculum Calibration',
+        activityName_hi: 'सांख्यिकीय शिक्षण और पाठ्यक्रम अंशांकन',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-survey'],
+        targetLevel: 5,
+        currentLevel: 4,
+        priority: 'critical',
+        evidenceType: 'assessment-verified',
+        activityName: 'Statistical Pedagogy & Curriculum Calibration',
+        activityName_hi: 'सांख्यिकीय शिक्षण और पाठ्यक्रम अंशांकन',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-communication'],
+        targetLevel: 5,
+        currentLevel: 4,
+        priority: 'important',
+        evidenceType: 'assessment-verified',
+        activityName: 'Trainee Error Analysis & Remediation Routing',
+        activityName_hi: 'प्रशिक्षु त्रुटि विश्लेषण और उपचारात्मक रूटिंग',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-rstats'],
+        targetLevel: 4,
+        currentLevel: 3,
+        priority: 'important',
+        evidenceType: 'self-assessed',
+        activityName: 'Ingested Regulatory Knowledge & Manual QA',
+        activityName_hi: 'विनियमित ज्ञान और नियमावली गुणवत्ता समीक्षा',
+      },
+    ],
+  },
+
+  // 4. Rajesh Kumar — Additional Director General, MoSPI HQ (Director/Admin)
+  'demo-rajesh': {
+    personaId: 'demo-rajesh',
+    email: 'rajesh.kumar@mospi.gov.in',
+    name: 'Rajesh Kumar',
+    designation: 'Additional Director General',
+    designation_hi: 'अपर महानिदेशक',
+    cadre: 'Indian Statistical Service (ISS)',
+    department: 'MoSPI Headquarters, Sardar Patel Bhawan, New Delhi',
+    department_hi: 'सांख्यिकी मंत्रालय मुख्यालय, सरदार पटेल भवन, नई दिल्ली',
+    preferredLanguage: 'en',
+    activities: [
+      {
+        id: 'act-adg-governance',
+        name: 'National Statistical Workforce Readiness & Policy Governance',
+        name_hi: 'राष्ट्रीय सांख्यिकी कार्यबल तत्परता और नीतिगत प्रशासन',
+        description: 'Overseeing national cadre capacity, ministerial directives, and high-level statistical quality standards across all regional offices.',
+        description_hi: 'राष्ट्रीय संवर्ग क्षमता, मंत्रिस्तरीय निर्देश और सभी क्षेत्रीय कार्यालयों में उच्च स्तरीय सांख्यिकीय गुणवत्ता मानकों की देखरेख।',
+      },
+      {
+        id: 'act-adg-correlation',
+        name: 'Econometric Scrutiny & Error Correlation Analysis',
+        name_hi: 'अर्थमितीय संवीक्षा और त्रुटि सहसंबंध विश्लेषण',
+        description: 'Directing statistical scrutiny audits and correlating competency interventions with reduction in primary survey errors.',
+        description_hi: 'सांख्यिकीय संवीक्षा ऑडिट का निर्देशन और प्राथमिक सर्वेक्षण त्रुटियों में कमी के साथ योग्यता हस्तक्षेपों का सहसंबंध।',
+      },
+    ],
+    competencies: [
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-survey'],
+        targetLevel: 5,
+        currentLevel: 5,
+        priority: 'critical',
+        evidenceType: 'assessment-verified',
+        activityName: 'National Statistical Workforce Readiness & Policy Governance',
+        activityName_hi: 'राष्ट्रीय सांख्यिकी कार्यबल तत्परता और नीतिगत प्रशासन',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-data'],
+        targetLevel: 5,
+        currentLevel: 4,
+        priority: 'critical',
+        evidenceType: 'assessment-verified',
+        activityName: 'Econometric Scrutiny & Error Correlation Analysis',
+        activityName_hi: 'अर्थमितीय संवीक्षा और त्रुटि सहसंबंध विश्लेषण',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-communication'],
+        targetLevel: 5,
+        currentLevel: 5,
+        priority: 'critical',
+        evidenceType: 'assessment-verified',
+        activityName: 'National Statistical Workforce Readiness & Policy Governance',
+        activityName_hi: 'राष्ट्रीय सांख्यिकी कार्यबल तत्परता और नीतिगत प्रशासन',
+      },
+      {
+        ...OFFICIAL_FRAC_COMPETENCIES['comp-teamwork'],
+        targetLevel: 5,
+        currentLevel: 4,
+        priority: 'important',
+        evidenceType: 'self-assessed',
+        activityName: 'National Statistical Workforce Readiness & Policy Governance',
+        activityName_hi: 'राष्ट्रीय सांख्यिकी कार्यबल तत्परता और नीतिगत प्रशासन',
+      },
+    ],
+  },
 };
 
 // Aliases for user ID variations
 PERSONA_FRAC_PROFILES['demo-fi-sunita'] = PERSONA_FRAC_PROFILES['demo-sunita'];
 PERSONA_FRAC_PROFILES['demo-jso-amit'] = PERSONA_FRAC_PROFILES['demo-amit'];
+PERSONA_FRAC_PROFILES['demo-trainer-priya'] = PERSONA_FRAC_PROFILES['demo-priya'];
+PERSONA_FRAC_PROFILES['demo-admin-rajesh'] = PERSONA_FRAC_PROFILES['demo-rajesh'];
 
 /**
  * Storage key for persisting real-time user competency updates in the browser
@@ -397,29 +539,96 @@ PERSONA_FRAC_PROFILES['demo-jso-amit'] = PERSONA_FRAC_PROFILES['demo-amit'];
 const STORAGE_KEY_PREFIX = 'statvidya_competency_levels_';
 
 /**
- * Retrieve the active FRAC profile for the logged-in user or persona
+ * Retrieve the active FRAC profile for the logged-in user or persona.
+ * Never forces "Amit Sharma" unless the user's identity is actually Amit Sharma.
  */
-export function getPersonaFRAC(userOrEmail?: string | { id?: string; email?: string } | null): PersonaFRACProfile {
-  let identifier = 'demo-amit';
+export function getPersonaFRAC(
+  userOrEmail?:
+    | string
+    | {
+        id?: string;
+        email?: string;
+        user_metadata?: {
+          name?: string;
+          designation?: string;
+          cadre?: string;
+          department?: string;
+          preferred_language?: string;
+        };
+        app_metadata?: {
+          role?: string;
+        };
+      }
+    | null
+): PersonaFRACProfile {
+  let identifier = '';
+  let metaName: string | undefined;
+  let metaDesignation: string | undefined;
+  let metaCadre: string | undefined;
+  let metaDept: string | undefined;
+  let metaLang: 'en' | 'hi' | undefined;
+  let userEmail: string | undefined;
+  let userRole: string | undefined;
 
   if (typeof userOrEmail === 'string') {
     identifier = userOrEmail.toLowerCase();
-  } else if (userOrEmail?.email) {
-    identifier = userOrEmail.email.toLowerCase();
-  } else if (userOrEmail?.id) {
-    identifier = userOrEmail.id.toLowerCase();
+  } else if (userOrEmail) {
+    identifier = (userOrEmail.email || userOrEmail.id || '').toLowerCase();
+    userEmail = userOrEmail.email;
+    metaName = userOrEmail.user_metadata?.name;
+    metaDesignation = userOrEmail.user_metadata?.designation;
+    metaCadre = userOrEmail.user_metadata?.cadre;
+    metaDept = userOrEmail.user_metadata?.department;
+    userRole = userOrEmail.app_metadata?.role;
+    if (userOrEmail.user_metadata?.preferred_language === 'hi' || userOrEmail.user_metadata?.preferred_language === 'en') {
+      metaLang = userOrEmail.user_metadata.preferred_language;
+    }
   }
 
-  // Check email or id match
+  // 1. Direct persona match
+  let baseProfile: PersonaFRACProfile | undefined;
+
   if (identifier.includes('sunita')) {
-    return loadPersistedLevels(PERSONA_FRAC_PROFILES['demo-sunita']);
-  }
-  if (identifier.includes('amit')) {
-    return loadPersistedLevels(PERSONA_FRAC_PROFILES['demo-amit']);
+    baseProfile = PERSONA_FRAC_PROFILES['demo-sunita'];
+  } else if (identifier.includes('priya') || identifier.includes('faculty') || userRole === 'trainer') {
+    baseProfile = PERSONA_FRAC_PROFILES['demo-priya'];
+  } else if (identifier.includes('rajesh') || identifier.includes('director') || userRole === 'admin') {
+    baseProfile = PERSONA_FRAC_PROFILES['demo-rajesh'];
+  } else if (identifier.includes('amit')) {
+    baseProfile = PERSONA_FRAC_PROFILES['demo-amit'];
   }
 
-  // Fallback to Amit Sharma profile
-  return loadPersistedLevels(PERSONA_FRAC_PROFILES['demo-amit']);
+  // 2. If a base profile matches, customize with authenticated user metadata
+  if (baseProfile) {
+    const customized: PersonaFRACProfile = {
+      ...baseProfile,
+      name: metaName || baseProfile.name,
+      email: userEmail || baseProfile.email,
+      designation: metaDesignation || baseProfile.designation,
+      cadre: metaCadre || baseProfile.cadre,
+      department: metaDept || baseProfile.department,
+      preferredLanguage: metaLang || baseProfile.preferredLanguage,
+    };
+    return loadPersistedLevels(customized);
+  }
+
+  // 3. For any other authenticated or custom user, construct a dynamic profile (NEVER hardcode Amit Sharma)
+  const fallbackName = metaName || (userEmail ? userEmail.split('@')[0].replace('.', ' ') : 'Civil Officer');
+  const dynamicProfile: PersonaFRACProfile = {
+    personaId: (typeof userOrEmail === 'object' && userOrEmail?.id) || 'custom-user',
+    email: userEmail || 'officer@mospi.gov.in',
+    name: fallbackName,
+    designation: metaDesignation || 'Statistical Officer',
+    designation_hi: 'सांख्यिकी अधिकारी',
+    cadre: metaCadre || 'Subordinate Statistical Service (SSS)',
+    department: metaDept || 'Ministry of Statistics & Programme Implementation',
+    department_hi: 'सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय',
+    preferredLanguage: metaLang || 'en',
+    activities: PERSONA_FRAC_PROFILES['demo-amit'].activities,
+    competencies: PERSONA_FRAC_PROFILES['demo-amit'].competencies,
+  };
+
+  return loadPersistedLevels(dynamicProfile);
 }
 
 /**

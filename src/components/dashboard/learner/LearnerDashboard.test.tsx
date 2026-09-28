@@ -59,6 +59,25 @@ describe('LearnerDashboard Component', () => {
     expect(html).toContain('आपकी कुल प्रगति');
   });
 
+  it('renders English strings when Sunita Devi selects English language', () => {
+    const mockUserSunitaEnglish = {
+      ...mockUserSunita,
+      user_metadata: {
+        ...mockUserSunita.user_metadata,
+        preferred_language: 'en',
+      },
+    };
+    const html = renderToString(<LearnerDashboard user={mockUserSunitaEnglish} />);
+    expect(html).toContain('Hello, Sunita!');
+    expect(html).toContain('Your Overall Progress');
+    expect(html).toContain('Skills That Need Improvement');
+    expect(html).toContain('My Courses');
+    expect(html).toContain('Practice Quizzes');
+    expect(html).toContain('Government Training Courses');
+    expect(html).toContain('Reference Documents');
+    expect(html).not.toContain('आपकी कुल प्रगति');
+  });
+
   it('renders the official MoSPI field manuals shelf and courses table', () => {
     const html = renderToString(<LearnerDashboard user={mockUserAmit} />);
     expect(html).toContain('Reference Documents');

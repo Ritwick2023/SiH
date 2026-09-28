@@ -7,9 +7,10 @@ import { KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
 interface NationalReadinessModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isHindi?: boolean;
 }
 
-export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessModalProps) {
+export function NationalReadinessModal({ isOpen, onClose, isHindi = false }: NationalReadinessModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -29,18 +30,18 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-[#1C4CA1]/40 text-blue-200 border border-blue-400/30 uppercase">
-                  FRAC Strategic KPI • 2026 Mandate
+                  {isHindi ? 'एफआरएसी सामरिक केपीआई • 2026 शासनादेश' : 'FRAC Strategic KPI • 2026 Mandate'}
                 </span>
               </div>
               <h2 id="readiness-modal-title" className="text-sm sm:text-base font-black tracking-wide text-white mt-0.5">
-                National Cadre Readiness Index (72.4%)
+                {isHindi ? 'राष्ट्रीय संवर्ग तत्परता सूचकांक (72.4%)' : 'National Cadre Readiness Index (72.4%)'}
               </h2>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close readiness modal"
+            aria-label={isHindi ? 'मोडल बंद करें' : 'Close readiness modal'}
             className="rounded-xl p-1.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -53,7 +54,7 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
           <div className="p-4 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] flex items-center justify-between gap-4 shadow-2xs">
             <div>
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
-                Aggregated National Readiness
+                {isHindi ? 'कुल राष्ट्रीय तत्परता' : 'Aggregated National Readiness'}
               </span>
               <div className="flex items-baseline gap-2 mt-0.5">
                 <span className="text-3xl font-black font-mono text-[#1C4CA1]">72.4%</span>
@@ -62,7 +63,9 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
                 </span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-1">
-                Target: <strong>75.0%</strong> by end of Q3 2026 (Mission Karmayogi Bharat)
+                {isHindi
+                  ? 'लक्ष्य: Q3 2026 के अंत तक 75.0% (मिशन कर्मयोगी भारत)'
+                  : 'Target: 75.0% by end of Q3 2026 (Mission Karmayogi Bharat)'}
               </p>
             </div>
             <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 text-emerald-800 flex items-center justify-center shrink-0 border border-emerald-500/25">
@@ -73,43 +76,67 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
           {/* Cadre by Cadre Breakdown */}
           <div className="space-y-3">
             <h3 className="font-bold text-[#1C4CA1] uppercase tracking-wider text-[11px]">
-              Cadre-Wise FRAC Competency Baseline
+              {isHindi ? 'संवर्ग-वार एफआरएसी क्षमता आधार रेखा' : 'Cadre-Wise FRAC Competency Baseline'}
             </h3>
 
             {/* ISS */}
             <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#1F273A]">Indian Statistical Service (ISS Cadre)</span>
-                <span className="font-mono font-bold text-emerald-700">84.2% (Target Met)</span>
+                <span className="font-bold text-[#1F273A]">
+                  {isHindi ? 'भारतीय सांख्यिकी सेवा (आईएसएस संवर्ग)' : 'Indian Statistical Service (ISS Cadre)'}
+                </span>
+                <span className="font-mono font-bold text-emerald-700">
+                  {isHindi ? '84.2% (लक्ष्य प्राप्त)' : '84.2% (Target Met)'}
+                </span>
               </div>
               <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                 <div className="h-full rounded-full bg-emerald-600" style={{ width: '84.2%' }} />
               </div>
-              <p className="text-[10px] text-muted-foreground">820 Senior Officers • Level 4-5 Macro Scrutiny Qualified</p>
+              <p className="text-[10px] text-muted-foreground">
+                {isHindi
+                  ? '820 वरिष्ठ अधिकारी • स्तर 4-5 स्थूल संवीक्षा योग्य'
+                  : '820 Senior Officers • Level 4-5 Macro Scrutiny Qualified'}
+              </p>
             </div>
 
             {/* SSS */}
             <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#1F273A]">Subordinate Statistical Service (SSS Cadre)</span>
-                <span className="font-mono font-bold text-amber-700">71.8% (Target 75%)</span>
+                <span className="font-bold text-[#1F273A]">
+                  {isHindi ? 'अधीनस्थ सांख्यिकी सेवा (एसएसएस संवर्ग)' : 'Subordinate Statistical Service (SSS Cadre)'}
+                </span>
+                <span className="font-mono font-bold text-amber-700">
+                  {isHindi ? '71.8% (लक्ष्य 75%)' : '71.8% (Target 75%)'}
+                </span>
               </div>
               <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                 <div className="h-full rounded-full bg-[#FFA72F]" style={{ width: '71.8%' }} />
               </div>
-              <p className="text-[10px] text-muted-foreground">2,150 JSOs and SSOs • Level 3 Demarcation &amp; Scrutiny</p>
+              <p className="text-[10px] text-muted-foreground">
+                {isHindi
+                  ? '2,150 जेएसओ एवं एसएसओ • स्तर 3 सीमांकन एवं संवीक्षा'
+                  : '2,150 JSOs and SSOs • Level 3 Demarcation & Scrutiny'}
+              </p>
             </div>
 
             {/* FOD */}
             <div className="p-3.5 rounded-2xl bg-white border border-[#D8DFEE] space-y-1.5 shadow-2xs">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="font-bold text-[#1F273A]">Field Operations Division (FOD Rural Cadre)</span>
-                <span className="font-mono font-bold text-red-700">58.4% (Needs Focus)</span>
+                <span className="font-bold text-[#1F273A]">
+                  {isHindi ? 'क्षेत्र संकार्य प्रभाग (एफओडी ग्रामीण संवर्ग)' : 'Field Operations Division (FOD Rural Cadre)'}
+                </span>
+                <span className="font-mono font-bold text-red-700">
+                  {isHindi ? '58.4% (ध्यान आवश्यक)' : '58.4% (Needs Focus)'}
+                </span>
               </div>
               <div className="h-2 w-full rounded-full bg-[#EDF0F7] overflow-hidden">
                 <div className="h-full rounded-full bg-red-600" style={{ width: '58.4%' }} />
               </div>
-              <p className="text-[10px] text-muted-foreground">1,880 Field Investigators • Primary bottleneck in Schedule 0.0 CEB listing</p>
+              <p className="text-[10px] text-muted-foreground">
+                {isHindi
+                  ? '1,880 क्षेत्र अन्वेषक • अनुसूची 0.0 सीईबी सूचीकरण में प्रमुख बाधा'
+                  : '1,880 Field Investigators • Primary bottleneck in Schedule 0.0 CEB listing'}
+              </p>
             </div>
           </div>
 
@@ -117,10 +144,13 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
           <div className="p-3.5 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] flex items-start gap-3">
             <AlertTriangle className="h-5 w-5 text-[#FFA72F] shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-bold text-[#1F273A] text-[11px]">Executive Recommendation</h4>
+              <h4 className="font-bold text-[#1F273A] text-[11px]">
+                {isHindi ? 'कार्यकारी अनुशंसा' : 'Executive Recommendation'}
+              </h4>
               <p className="text-[10.5px] text-muted-foreground leading-relaxed mt-0.5">
-                Reallocating 15 faculty trainers from Headquarters to Patna and Prayagraj ROs will close the 
-                16.6% competency deficit in the FOD Rural Cadre within 4 weeks.
+                {isHindi
+                  ? 'मुख्यालय से 15 संकाय प्रशिक्षकों को पटना और प्रयागराज आरओ में पुन: आवंटित करने से 4 सप्ताह के भीतर एफओडी ग्रामीण संवर्ग में 16.6% क्षमता घाटे को पूरा किया जा सकेगा।'
+                  : 'Reallocating 15 faculty trainers from Headquarters to Patna and Prayagraj ROs will close the 16.6% competency deficit in the FOD Rural Cadre within 4 weeks.'}
               </p>
             </div>
           </div>
@@ -128,13 +158,15 @@ export function NationalReadinessModal({ isOpen, onClose }: NationalReadinessMod
 
         {/* Footer */}
         <div className="bg-[#EDF0F7]/40 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
-          <span className="text-[11px]">Registry Timestamp: 07 Sep 2026</span>
+          <span className="text-[11px]">
+            {isHindi ? 'पंजीकरण समय: 07 सितम्बर 2026' : 'Registry Timestamp: 07 Sep 2026'}
+          </span>
           <button
             type="button"
             onClick={onClose}
             className="px-4 py-1.5 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer shadow-xs"
           >
-            Close
+            {isHindi ? 'बंद करें' : 'Close'}
           </button>
         </div>
       </div>

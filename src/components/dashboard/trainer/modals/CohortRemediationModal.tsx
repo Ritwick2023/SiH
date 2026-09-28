@@ -16,6 +16,7 @@ interface CohortRemediationModalProps {
   onClose: () => void;
   targetCohort: CohortData | null;
   onDispatched?: (details: { cohortName: string; competency: string; count: number }) => void;
+  isHindi?: boolean;
 }
 
 export function CohortRemediationModal({
@@ -23,6 +24,7 @@ export function CohortRemediationModal({
   onClose,
   targetCohort,
   onDispatched,
+  isHindi = false,
 }: CohortRemediationModalProps) {
   const [recipientScope, setRecipientScope] = useState<'AT_RISK' | 'ALL'>('AT_RISK');
   const [competency, setCompetency] = useState('comp-demarcation');
@@ -34,7 +36,7 @@ export function CohortRemediationModal({
 
   if (!isOpen) return null;
 
-  const cohortName = targetCohort?.name || 'Selected Cohort';
+  const cohortName = targetCohort?.name || (isHindi ? 'चयनित समूह' : 'Selected Cohort');
   const atRiskCount = targetCohort?.atRiskCount || 6;
   const totalEnrolled = targetCohort?.enrolled || 48;
 
@@ -66,17 +68,17 @@ export function CohortRemediationModal({
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
-                NSSTA Faculty Intervention
+                {isHindi ? 'एनएसएसटीए संकाय हस्तक्षेप' : 'NSSTA Faculty Intervention'}
               </span>
               <span className="text-[10px] font-mono text-muted-foreground">
-                Rule FR-CONTENT-11
+                {isHindi ? 'नियम एफआर-कंटेंट-11' : 'Rule FR-CONTENT-11'}
               </span>
             </div>
             <h2 className="text-xl font-bold text-[#1F273A] tracking-tight">
-              Curate Remedial Drill
+              {isHindi ? 'उपचारात्मक अभ्यास तैयार करें' : 'Curate Remedial Drill'}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Target: <span className="font-semibold text-[#1F273A]">{cohortName}</span>
+              {isHindi ? 'लक्ष्य' : 'Target'}: <span className="font-semibold text-[#1F273A]">{cohortName}</span>
             </p>
           </div>
 
@@ -96,10 +98,12 @@ export function CohortRemediationModal({
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <h3 className="text-lg font-bold text-[#1F273A]">
-                Remedial Drill Dispatched!
+                {isHindi ? 'उपचारात्मक अभ्यास भेजा गया!' : 'Remedial Drill Dispatched!'}
               </h3>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                {questionCount} diagnostic questions have been assigned to {recipientScope === 'AT_RISK' ? `${atRiskCount} at-risk officers` : `all ${totalEnrolled} trainees`}. Offline sync activated.
+                {isHindi
+                  ? `${questionCount} उपचारात्मक प्रश्न ${recipientScope === 'AT_RISK' ? `${atRiskCount} जोखिमग्रस्त अधिकारियों` : `सभी ${totalEnrolled} प्रशिक्षुओं`} को सौंपे गए हैं। ऑफ़लाइन सिंक सक्रिय।`
+                  : `${questionCount} diagnostic questions have been assigned to ${recipientScope === 'AT_RISK' ? `${atRiskCount} at-risk officers` : `all ${totalEnrolled} trainees`}. Offline sync activated.`}
               </p>
             </div>
           ) : (
@@ -107,9 +111,9 @@ export function CohortRemediationModal({
               {/* Recipient Scope */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-[#1F273A] flex items-center justify-between">
-                  <span>Target Recipients</span>
+                  <span>{isHindi ? 'लक्षित प्राप्तकर्ता' : 'Target Recipients'}</span>
                   <span className="text-[10px] text-muted-foreground font-mono font-normal">
-                    Select delivery scope
+                    {isHindi ? 'वितरण दायरा चुनें' : 'Select delivery scope'}
                   </span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -124,10 +128,10 @@ export function CohortRemediationModal({
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs">
                       <AlertTriangle className="h-3.5 w-3.5 text-amber-600" />
-                      <span>At-Risk Officers Only</span>
+                      <span>{isHindi ? 'केवल जोखिमग्रस्त अधिकारी' : 'At-Risk Officers Only'}</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {atRiskCount} officers with score &lt; 60%
+                      {isHindi ? `< 60% स्कोर वाले ${atRiskCount} अधिकारी` : `${atRiskCount} officers with score < 60%`}
                     </p>
                   </button>
 
@@ -142,10 +146,10 @@ export function CohortRemediationModal({
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs">
                       <Target className="h-3.5 w-3.5 text-[#1C4CA1]" />
-                      <span>Entire Cohort</span>
+                      <span>{isHindi ? 'संपूर्ण समूह' : 'Entire Cohort'}</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      All {totalEnrolled} trainees
+                      {isHindi ? `सभी ${totalEnrolled} प्रशिक्षु` : `All ${totalEnrolled} trainees`}
                     </p>
                   </button>
                 </div>
@@ -154,29 +158,45 @@ export function CohortRemediationModal({
               {/* Competency Focus */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-[#1F273A]">
-                  Deficient Competency Focus
+                  {isHindi ? 'कमजोर दक्षता फोकस' : 'Deficient Competency Focus'}
                 </label>
                 <div className="space-y-1.5">
                   {[
                     {
                       id: 'comp-demarcation',
-                      title: 'Schedule 0.0 Hamlet-Group Demarcation',
-                      desc: 'Population bracket rules & boundary delineation (42% cohort error)',
+                      title: isHindi
+                        ? 'अनुसूची 0.0 हेमलेट-समूह सीमांकन'
+                        : 'Schedule 0.0 Hamlet-Group Demarcation',
+                      desc: isHindi
+                        ? 'जनसंख्या कोष्ठक नियम और सीमा रेखांकन (42% समूह त्रुटि)'
+                        : 'Population bracket rules & boundary delineation (42% cohort error)',
                     },
                     {
                       id: 'comp-capi',
-                      title: 'CAPI Tablet GPS Offset & Resync',
-                      desc: 'Geofencing error protocol and fallback landmarks (29% cohort error)',
+                      title: isHindi
+                        ? 'सीएपीआई टैबलेट जीपीएस ऑफसेट एवं पुन: सिंक'
+                        : 'CAPI Tablet GPS Offset & Resync',
+                      desc: isHindi
+                        ? 'जियोफेंसिंग त्रुटि प्रोटोकॉल और फॉलबैक स्थल (29% समूह त्रुटि)'
+                        : 'Geofencing error protocol and fallback landmarks (29% cohort error)',
                     },
                     {
                       id: 'comp-nsso',
-                      title: 'PLFS Schedule 10.4 UPAS vs CWS Activity Status',
-                      desc: 'Borderline unpaid family helper coding (24% cohort error)',
+                      title: isHindi
+                        ? 'पीएलएफएस अनुसूची 10.4 यूपीएएस बनाम सीडब्ल्यूएस गतिविधि स्थिति'
+                        : 'PLFS Schedule 10.4 UPAS vs CWS Activity Status',
+                      desc: isHindi
+                        ? 'सीमांत अवैतनिक पारिवारिक सहायक कोडिंग (24% समूह त्रुटि)'
+                        : 'Borderline unpaid family helper coding (24% cohort error)',
                     },
                     {
                       id: 'comp-survey',
-                      title: 'First Stage Unit Sampling Multipliers',
-                      desc: 'Weight computation formula under NSS 79th Round (38% cohort error)',
+                      title: isHindi
+                        ? 'प्रथम चरण इकाई नमूनाकरण गुणक'
+                        : 'First Stage Unit Sampling Multipliers',
+                      desc: isHindi
+                        ? 'एनएसएस 79वें दौर के तहत भार गणना सूत्र (38% समूह त्रुटि)'
+                        : 'Weight computation formula under NSS 79th Round (38% cohort error)',
                     },
                   ].map((c) => (
                     <div
@@ -209,41 +229,47 @@ export function CohortRemediationModal({
               {/* Drill Parameters (Questions, Benchmark, Deadline) */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#1F273A]">Questions</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">
+                    {isHindi ? 'प्रश्न' : 'Questions'}
+                  </label>
                   <select
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Number(e.target.value))}
                     className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
-                    <option value={5}>5 Questions</option>
-                    <option value={10}>10 Questions</option>
-                    <option value={15}>15 Questions</option>
+                    <option value={5}>5 {isHindi ? 'प्रश्न' : 'Questions'}</option>
+                    <option value={10}>10 {isHindi ? 'प्रश्न' : 'Questions'}</option>
+                    <option value={15}>15 {isHindi ? 'प्रश्न' : 'Questions'}</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#1F273A]">Passing %</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">
+                    {isHindi ? 'उत्तीर्ण %' : 'Passing %'}
+                  </label>
                   <select
                     value={passThreshold}
                     onChange={(e) => setPassThreshold(Number(e.target.value))}
                     className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
-                    <option value={70}>70% (Standard)</option>
-                    <option value={75}>75% (Target)</option>
-                    <option value={80}>80% (Mastery)</option>
+                    <option value={70}>70% ({isHindi ? 'मानक' : 'Standard'})</option>
+                    <option value={75}>75% ({isHindi ? 'लक्ष्य' : 'Target'})</option>
+                    <option value={80}>80% ({isHindi ? 'दक्षता' : 'Mastery'})</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-[#1F273A]">Deadline</label>
+                  <label className="text-[11px] font-bold text-[#1F273A]">
+                    {isHindi ? 'समय सीमा' : 'Deadline'}
+                  </label>
                   <select
                     value={deadlineHours}
                     onChange={(e) => setDeadlineHours(Number(e.target.value))}
                     className="w-full p-2 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] bg-white focus:ring-1 focus:ring-[#1C4CA1]"
                   >
-                    <option value={24}>24 Hours</option>
-                    <option value={48}>48 Hours</option>
-                    <option value={72}>72 Hours</option>
+                    <option value={24}>24 {isHindi ? 'घंटे' : 'Hours'}</option>
+                    <option value={48}>48 {isHindi ? 'घंटे' : 'Hours'}</option>
+                    <option value={72}>72 {isHindi ? 'घंटे' : 'Hours'}</option>
                   </select>
                 </div>
               </div>
@@ -252,7 +278,9 @@ export function CohortRemediationModal({
               <div className="p-3 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] flex items-start gap-2.5 text-xs text-muted-foreground">
                 <ShieldCheck className="h-4 w-4 text-[#1C4CA1] shrink-0 mt-0.5" />
                 <p className="text-[11px] leading-relaxed">
-                  Remedial test items are extracted directly from the verified MoSPI question bank with statutory citation feedback upon trainee submission.
+                  {isHindi
+                    ? 'उपचारात्मक परीक्षण प्रश्न सीधे सत्यापित MoSPI प्रश्न बैंक से निकाले जाते हैं और प्रशिक्षु सबमिशन पर वैधानिक उद्धरण प्रतिक्रिया प्रदान करते हैं।'
+                    : 'Remedial test items are extracted directly from the verified MoSPI question bank with statutory citation feedback upon trainee submission.'}
                 </p>
               </div>
             </>
@@ -267,7 +295,7 @@ export function CohortRemediationModal({
               onClick={onClose}
               className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-[#EDF0F7] transition-colors cursor-pointer"
             >
-              Cancel
+              {isHindi ? 'रद्द करें' : 'Cancel'}
             </button>
 
             <button
@@ -279,12 +307,12 @@ export function CohortRemediationModal({
               {isDispatching ? (
                 <>
                   <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Packaging & Dispatching...</span>
+                  <span>{isHindi ? 'पैकेजिंग एवं भेजा जा रहा है...' : 'Packaging & Dispatching...'}</span>
                 </>
               ) : (
                 <>
                   <Send className="h-3.5 w-3.5" />
-                  <span>Dispatch Remediation Drill</span>
+                  <span>{isHindi ? 'उपचारात्मक अभ्यास भेजें' : 'Dispatch Remediation Drill'}</span>
                 </>
               )}
             </button>

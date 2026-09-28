@@ -131,9 +131,10 @@ function syncToLocalStorage(id: string, newStatus: 'APPROVED' | 'REJECTED') {
 
 interface TrainerReviewTriageCardProps {
   onInspectItem?: (item: ItemAnalysisData) => void;
+  isHindi?: boolean;
 }
 
-export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCardProps) {
+export function TrainerReviewTriageCard({ onInspectItem, isHindi = false }: TrainerReviewTriageCardProps) {
   const [queue, setQueue] = useState<QuestionItem[]>(() => loadQueueFromStorage());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -204,16 +205,16 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#FFA72F]/15 text-[#FFA72F] border border-[#FFA72F]/30">
               <Sparkles className="h-3.5 w-3.5" />
-              Question Review & QA Triage
+              {isHindi ? 'प्रश्न समीक्षा एवं क्यूए ट्राइएज' : 'Question Review & QA Triage'}
             </span>
             <span className="text-xs font-mono text-slate-300">
-              ({currentIndex + 1} of {queue.length})
+              ({currentIndex + 1} {isHindi ? '/' : 'of'} {queue.length})
             </span>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
             <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">
-              {pendingCount} Pending QA
+              {isHindi ? `${pendingCount} लंबित क्यूए` : `${pendingCount} Pending QA`}
             </span>
           </div>
         </div>
@@ -231,7 +232,8 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                 }`}
               >
                 <ShieldAlert className="h-3 w-3" />
-                Confidence: {currentItem.confidence}%
+                {isHindi ? 'विश्वसनीयता: ' : 'Confidence: '}
+                {currentItem.confidence}%
               </span>
               <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-white/10 text-slate-200">
                 {currentItem.competencyTag}
@@ -257,14 +259,14 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                       onClick={() => setIsEditing(false)}
                       className="px-3 py-1 rounded-lg bg-white/10 text-xs font-semibold hover:bg-white/20 cursor-pointer"
                     >
-                      Cancel
+                      {isHindi ? 'रद्द करें' : 'Cancel'}
                     </button>
                     <button
                       type="button"
                       onClick={handleSaveEdit}
                       className="px-3 py-1 rounded-lg bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] cursor-pointer"
                     >
-                      Save Changes
+                      {isHindi ? 'परिवर्तन सहेजें' : 'Save Changes'}
                     </button>
                   </div>
                 </div>
@@ -277,7 +279,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                     type="button"
                     onClick={handleStartEdit}
                     className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-white/10 text-xs text-white hover:bg-white/20 transition-opacity cursor-pointer"
-                    title="Edit question text"
+                    title={isHindi ? 'प्रश्न पाठ संपादित करें' : 'Edit question text'}
                   >
                     <Edit3 className="h-3.5 w-3.5" />
                   </button>
@@ -310,7 +312,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                     <span className="flex-1 leading-snug">{option}</span>
                     {isCorrect && (
                       <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 shrink-0">
-                        AI Target Answer
+                        {isHindi ? 'एआई लक्षित उत्तर' : 'AI Target Answer'}
                       </span>
                     )}
                   </div>
@@ -330,7 +332,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
             disabled={currentIndex === 0}
             onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
             className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
-            title="Previous question"
+            title={isHindi ? 'पिछला प्रश्न' : 'Previous question'}
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
@@ -339,12 +341,12 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
             disabled={currentIndex === queue.length - 1}
             onClick={() => setCurrentIndex((prev) => Math.min(queue.length - 1, prev + 1))}
             className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
-            title="Next question"
+            title={isHindi ? 'अगला प्रश्न' : 'Next question'}
           >
             <ArrowRight className="h-4 w-4" />
           </button>
           <span className="text-xs text-slate-300 font-mono ml-2">
-            Status:{' '}
+            {isHindi ? 'स्थिति: ' : 'Status: '}
             <strong
               className={`uppercase ${
                 currentItem?.status === 'approved'
@@ -354,7 +356,17 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
                     : 'text-amber-400'
               }`}
             >
-              {currentItem?.status}
+              {currentItem?.status === 'approved'
+                ? isHindi
+                  ? 'स्वीकृत'
+                  : 'approved'
+                : currentItem?.status === 'rejected'
+                ? isHindi
+                  ? 'अस्वीकृत'
+                  : 'rejected'
+                : isHindi
+                ? 'लंबित'
+                : 'pending'}
             </strong>
           </span>
         </div>
@@ -368,7 +380,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
               className="px-3.5 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <BarChart3 className="h-3.5 w-3.5 text-[#FFA72F]" />
-              <span>Psychometrics</span>
+              <span>{isHindi ? 'मनोमिति विश्लेषण' : 'Psychometrics'}</span>
             </button>
           )}
 
@@ -378,7 +390,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold hover:bg-red-500/30 transition-colors cursor-pointer"
           >
             <X className="h-3.5 w-3.5" />
-            <span>Reject</span>
+            <span>{isHindi ? 'अस्वीकार करें' : 'Reject'}</span>
           </button>
           <button
             type="button"
@@ -386,7 +398,7 @@ export function TrainerReviewTriageCard({ onInspectItem }: TrainerReviewTriageCa
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition-colors shadow-xs cursor-pointer"
           >
             <Check className="h-3.5 w-3.5" />
-            <span>Approve for Bank</span>
+            <span>{isHindi ? 'बैंक के लिए स्वीकृत करें' : 'Approve for Bank'}</span>
           </button>
         </div>
       </div>

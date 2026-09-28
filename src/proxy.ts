@@ -146,10 +146,9 @@ export async function proxy(request: NextRequest) {
     response.headers.set('x-user-org-id', user.organization_id || '');
   }
 
-  // Locale determination
+  // Locale determination — English is ALWAYS the default language for every page unless explicitly switched by user
   const requestLocale = request.cookies.get('locale')?.value;
-  const validLocale = requestLocale === 'en' || requestLocale === 'hi' ? requestLocale : null;
-  const locale = validLocale || (user?.preferred_language === 'hi' ? 'hi' : 'en');
+  const locale = requestLocale === 'hi' ? 'hi' : 'en';
 
   if (requestLocale !== locale) {
     response.cookies.set('locale', locale, {

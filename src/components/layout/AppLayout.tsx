@@ -23,41 +23,89 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
+interface ResolvedUser {
+  name: string;
+  role: UserRole;
+  cadre: string;
+  designation: string;
+  email: string;
+}
+
+function getActiveUserFromCookie(): ResolvedUser {
+  if (typeof document === 'undefined') {
+    return {
+      name: 'Statistical Officer',
+      role: 'learner',
+      cadre: 'Subordinate Statistical Service (SSS)',
+      designation: 'Junior Statistical Officer',
+      email: 'officer@mospi.gov.in',
+    };
+  }
+  try {
+    const match = document.cookie.match(/(?:^|; )demo_user=([^;]*)/);
+    if (match) {
+      const decoded = JSON.parse(decodeURIComponent(match[1]));
+      const role = (decoded.role as UserRole) || 'learner';
+      return {
+        name: decoded.name || (role === 'trainer' ? 'Dr. Priya Verma' : role === 'admin' ? 'Rajesh Kumar' : 'Civil Officer'),
+        role,
+        cadre: decoded.cadre || (role === 'trainer' ? 'NSSTA Faculty' : role === 'admin' ? 'MoSPI Headquarters' : 'Subordinate Statistical Service (SSS)'),
+        designation: decoded.designation || (role === 'trainer' ? 'Course Director' : role === 'admin' ? 'Additional Director General' : 'Junior Statistical Officer'),
+        email: decoded.email || 'officer@mospi.gov.in',
+      };
+    }
+  } catch {
+    // fallback
+  }
+  return {
+    name: 'Statistical Officer',
+    role: 'learner',
+    cadre: 'Subordinate Statistical Service (SSS)',
+    designation: 'Junior Statistical Officer',
+    email: 'officer@mospi.gov.in',
+  };
+}
+
 /** Inner component — reads context after provider has been mounted. */
 function AppLayoutInner({ children }: AppLayoutProps) {
   const { isAssessmentActive } = useAssessmentMode();
   const locale = useLocale();
   const [role, setRole] = useState<UserRole>('learner');
+  const [currentUser, setCurrentUser] = useState<ResolvedUser>(getActiveUserFromCookie);
 
   useEffect(() => {
-    const updateRole = () => {
+    const syncUser = () => {
+      const active = getActiveUserFromCookie();
       setRole(resolveUserRole());
+      setCurrentUser((prev) => {
+        if (
+          prev.name !== active.name ||
+          prev.role !== active.role ||
+          prev.email !== active.email ||
+          prev.designation !== active.designation
+        ) {
+          return active;
+        }
+        return prev;
+      });
     };
-    updateRole();
-    const interval = setInterval(updateRole, 1000);
-    return () => clearInterval(interval);
+
+    syncUser();
+    const interval = setInterval(syncUser, 1000);
+    const handleUpdate = () => syncUser();
+    window.addEventListener('statvidya-user-updated', handleUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('statvidya-user-updated', handleUpdate);
+    };
   }, []);
 
   const userContext = {
-    name:
-      role === 'trainer'
-        ? 'Dr. Priya Verma'
-        : role === 'admin'
-          ? 'Rajesh Kumar'
-          : 'Amit Sharma',
+    name: currentUser.name,
     role,
-    cadre:
-      role === 'trainer'
-        ? 'NSSTA Faculty'
-        : role === 'admin'
-          ? 'MoSPI Headquarters'
-          : 'Subordinate Statistical Service (SSS)',
-    designation:
-      role === 'trainer'
-        ? 'Course Director'
-        : role === 'admin'
-          ? 'Additional Director General'
-          : 'Junior Statistical Officer',
+    cadre: currentUser.cadre,
+    designation: currentUser.designation,
     readinessIndex: role === 'admin' ? 72 : 42,
     preferredLanguage: locale,
     topGaps: [

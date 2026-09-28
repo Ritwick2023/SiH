@@ -3,14 +3,19 @@
 import React, { useState } from 'react';
 import { Sparkles, Copy, Check, FileCheck, AlertCircle } from 'lucide-react';
 
-export function AdminAiNarrativeBox() {
+interface AdminAiNarrativeBoxProps {
+  isHindi?: boolean;
+}
+
+export function AdminAiNarrativeBox({ isHindi = false }: AdminAiNarrativeBoxProps) {
   const [copied, setCopied] = useState(false);
   const [staged, setStaged] = useState(false);
 
   const copyBriefing = () => {
-    navigator.clipboard?.writeText(
-      'AI Executive Intelligence Briefing: NSSO FOD Field Investigators exhibit high CAPI sync adoption, but Schedule 0.0 Census Boundary Demarcation remains a quality bottleneck in eastern zones. Recommend mandatory NSSTA hamlet-grouping refresher drills for Bihar and UP East ROs.'
-    );
+    const textToCopy = isHindi
+      ? 'एआई कार्यकारी आसूचना विवरण: एनएसएसओ एफओडी क्षेत्र अन्वेषकों में कैपी तुल्यकालन अपनाना उच्च स्तर पर है, लेकिन पूर्वी क्षेत्रों में अनुसूची 0.0 जनगणना सीमा निर्धारण गुणवत्ता बाधा बना हुआ है। बिहार और यूपी पूर्व क्षेत्रीय कार्यालयों के लिए अनिवार्य एनएसएसटीए हेमलेट-समूह पुनश्चर्या अभ्यास की अनुशंसा की जाती है।'
+      : 'AI Executive Intelligence Briefing: NSSO FOD Field Investigators exhibit high CAPI sync adoption, but Schedule 0.0 Census Boundary Demarcation remains a quality bottleneck in eastern zones. Recommend mandatory NSSTA hamlet-grouping refresher drills for Bihar and UP East ROs.';
+    navigator.clipboard?.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -28,10 +33,10 @@ export function AdminAiNarrativeBox() {
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#FFA72F]/20 text-[#FFA72F] border border-[#FFA72F]/30">
               <Sparkles className="h-3.5 w-3.5" />
-              AI Executive Intelligence Briefing
+              {isHindi ? 'एआई कार्यकारी आसूचना विवरण' : 'AI Executive Intelligence Briefing'}
             </span>
             <span className="text-xs font-mono text-[#D8DFEE]/80">
-              Week 36, 2026 Cycle
+              {isHindi ? 'सप्ताह 36, 2026 चक्र' : 'Week 36, 2026 Cycle'}
             </span>
           </div>
 
@@ -43,12 +48,12 @@ export function AdminAiNarrativeBox() {
             {copied ? (
               <>
                 <Check className="h-3.5 w-3.5 text-emerald-400" />
-                <span className="text-emerald-300">Copied</span>
+                <span className="text-emerald-300">{isHindi ? 'कॉपी किया गया' : 'Copied'}</span>
               </>
             ) : (
               <>
                 <Copy className="h-3.5 w-3.5 text-[#D8DFEE]" />
-                <span>Copy Memo</span>
+                <span>{isHindi ? 'मेमो कॉपी करें' : 'Copy Memo'}</span>
               </>
             )}
           </button>
@@ -57,10 +62,14 @@ export function AdminAiNarrativeBox() {
         {/* Narrative Title */}
         <div className="mt-5">
           <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-            Field Operations Division (FOD) Quality &amp; Scrutiny Intelligence
+            {isHindi
+              ? 'क्षेत्र संचालन प्रभाग (FOD) गुणवत्ता एवं संवीक्षा आसूचना'
+              : 'Field Operations Division (FOD) Quality & Scrutiny Intelligence'}
           </h2>
           <p className="text-xs text-[#D8DFEE]/80 mt-1">
-            Synthesized across 4,850 cadre assessments and 24,000 scrutinized field returns
+            {isHindi
+              ? '4,850 संवर्ग आकलनों और 24,000 संवीक्षित फील्ड विवरणों से संश्लेषित'
+              : 'Synthesized across 4,850 cadre assessments and 24,000 scrutinized field returns'}
           </p>
         </div>
 
@@ -69,24 +78,36 @@ export function AdminAiNarrativeBox() {
           <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10">
             <span className="h-2 w-2 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
             <div>
-              <strong className="text-white font-bold">CAPI Field Modernization: </strong>
-              CAPI tablet synchronization adoption reached 84% across western and southern zones, lowering data transmission lag from 4.2 days to under 6 hours.
+              <strong className="text-white font-bold">
+                {isHindi ? 'कैपी फील्ड आधुनिकीकरण: ' : 'CAPI Field Modernization: '}
+              </strong>
+              {isHindi
+                ? 'पश्चिमी और दक्षिणी क्षेत्रों में कैपी टैबलेट डेटा तुल्यकालन 84% तक पहुंच गया है, जिससे डेटा प्रेषण विलंब 4.2 दिनों से घटकर 6 घंटे से कम हो गया है।'
+                : 'CAPI tablet synchronization adoption reached 84% across western and southern zones, lowering data transmission lag from 4.2 days to under 6 hours.'}
             </div>
           </div>
 
           <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10">
             <span className="h-2 w-2 rounded-full bg-red-400 mt-1.5 shrink-0" />
             <div>
-              <strong className="text-red-300 font-bold">Boundary Demarcation Quality Bottleneck: </strong>
-              Schedule 0.0 listing scrutiny in FOD Bihar (19.8% error rate) and FOD UP East (15.4% error rate) exhibits critical hamlet-group omission risk under PRD §9.4.5 standards.
+              <strong className="text-red-300 font-bold">
+                {isHindi ? 'सीमा निर्धारण गुणवत्ता बाधा: ' : 'Boundary Demarcation Quality Bottleneck: '}
+              </strong>
+              {isHindi
+                ? 'एफओडी बिहार (19.8% त्रुटि दर) और एफओडी यूपी पूर्व (15.4% त्रुटि दर) में अनुसूची 0.0 सूचीकरण संवीक्षा में गंभीर हेमलेट-समूह छूट का जोखिम पाया गया है।'
+                : 'Schedule 0.0 listing scrutiny in FOD Bihar (19.8% error rate) and FOD UP East (15.4% error rate) exhibits critical hamlet-group omission risk under PRD §9.4.5 standards.'}
             </div>
           </div>
 
           <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/5 border border-white/10">
             <span className="h-2 w-2 rounded-full bg-[#FFA72F] mt-1.5 shrink-0" />
             <div>
-              <strong className="text-[#FFA72F] font-bold">Econometric Outcome Correlation: </strong>
-              Strong inverse correlation (r = -0.84, R² = 0.89) proves that advancing investigator demarcation competency from L1 to L3 eliminates over 6.4 percentage points of listing pre-scrutiny errors.
+              <strong className="text-[#FFA72F] font-bold">
+                {isHindi ? 'अर्थमितीय परिणाम सहसंबंध: ' : 'Econometric Outcome Correlation: '}
+              </strong>
+              {isHindi
+                ? 'मजबूत नकारात्मक सहसंबंध (r = -0.84, R² = 0.89) प्रमाणित करता है कि अन्वेषक सीमांकन क्षमता को L1 से L3 तक बढ़ाने से सूचीकरण पूर्व-संवीक्षा त्रुटियों में 6.4 प्रतिशत अंकों की कमी आती है।'
+                : 'Strong inverse correlation (r = -0.84, R² = 0.89) proves that advancing investigator demarcation competency from L1 to L3 eliminates over 6.4 percentage points of listing pre-scrutiny errors.'}
             </div>
           </div>
         </div>
@@ -97,7 +118,9 @@ export function AdminAiNarrativeBox() {
         <div className="flex items-center gap-2 text-xs">
           <AlertCircle className="h-4 w-4 text-[#FFA72F] shrink-0" />
           <span className="text-[#D8DFEE]">
-            Recommended: Issue ministerial circular for targeted hamlet-group drills in Bihar &amp; UP East.
+            {isHindi
+              ? 'अनुशंसा: बिहार और यूपी पूर्व में लक्षित हेमलेट-समूह अभ्यास के लिए मंत्रिस्तरीय परिपत्र जारी करें।'
+              : 'Recommended: Issue ministerial circular for targeted hamlet-group drills in Bihar & UP East.'}
           </span>
         </div>
 
@@ -113,12 +136,12 @@ export function AdminAiNarrativeBox() {
           {staged ? (
             <>
               <Check className="h-3.5 w-3.5 text-[#FFA72F]" />
-              <span>Directive Staged for ADG</span>
+              <span>{isHindi ? 'एडीजी के लिए निर्देश तैयार' : 'Directive Staged for ADG'}</span>
             </>
           ) : (
             <>
               <FileCheck className="h-3.5 w-3.5" />
-              <span>Stage Directive</span>
+              <span>{isHindi ? 'निर्देश तैयार करें' : 'Stage Directive'}</span>
             </>
           )}
         </button>

@@ -33,7 +33,7 @@ export default function AssessmentResultsClient({
 }: AssessmentResultsClientProps) {
   const router = useRouter();
   const locale = useLocale();
-  const isHindi = locale === 'hi' || user?.user_metadata?.preferred_language === 'hi';
+  const isHindi = locale === 'hi';
 
   const displayName = isHindi ? competencyNameHi || competencyName : competencyName;
   const levelNumber = parseInt(finalLevel.replace(/\D/g, ''), 10) || 3;
@@ -56,7 +56,10 @@ export default function AssessmentResultsClient({
         <div className="flex items-center justify-between text-xs text-muted-foreground pb-2 border-b border-[#D8DFEE]">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#1C4CA1]" />
-            <span>{isHindi ? 'मूल्यांकन परिणाम एवं साक्ष्य सत्यापन' : 'Assessment Result & Evidence Certification'}</span>
+            <span>
+              {isHindi ? 'मूल्यांकन परिणाम एवं साक्ष्य सत्यापन' : 'Assessment Result & Evidence Certification'}
+              {user?.user_metadata?.name ? ` • ${user.user_metadata.name}` : ''}
+            </span>
           </div>
           <span className="font-mono text-[11px] bg-[#1C4CA1]/10 text-[#1C4CA1] px-2.5 py-0.5 rounded-full font-bold">
             FRAC v2.4 • MoSPI
