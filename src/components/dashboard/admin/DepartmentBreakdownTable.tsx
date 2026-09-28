@@ -10,9 +10,10 @@ import { Search, Flag, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface DepartmentBreakdownTableProps {
   onInspectOffice?: (office: DepartmentMetric) => void;
+  isHindi?: boolean;
 }
 
-export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdownTableProps) {
+export function DepartmentBreakdownTable({ onInspectOffice, isHindi = false }: DepartmentBreakdownTableProps) {
   const [departments, setDepartments] = useState<DepartmentMetric[]>(MOCK_REGIONAL_OFFICES);
   const [search, setSearch] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -26,7 +27,11 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
     const isNowFlagged = !departments.find((d) => d.id === id)?.isFlagged;
     setToastMessage(
       isNowFlagged
-        ? `Ministerial Flag set for ${name}. Mandating priority NSSTA remedial cohort!`
+        ? isHindi
+          ? `${name} के लिए मंत्रिस्तरीय ध्वज निर्धारित। प्राथमिकता NSSTA उपचारात्मक समूह अनिवार्य!`
+          : `Ministerial Flag set for ${name}. Mandating priority NSSTA remedial cohort!`
+        : isHindi
+        ? `${name} के लिए प्राथमिकता ध्वज हटाया गया।`
         : `Priority flag removed for ${name}.`
     );
     setTimeout(() => setToastMessage(null), 3500);
@@ -60,11 +65,13 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
             <h2 className="text-lg font-bold text-[#1F273A]">
-              Regional Offices &amp; Division Readiness
+              {isHindi ? 'क्षेत्रीय कार्यालय और प्रभाग तत्परता' : 'Regional Offices & Division Readiness'}
             </h2>
           </div>
           <p className="text-xs text-[#475569] mt-0.5">
-            FR-ADMIN-4 • Live cadre capacity monitoring and ministerial priority assignment
+            {isHindi
+              ? 'FR-ADMIN-4 • वास्तविक समय संवर्ग क्षमता निगरानी एवं मंत्रिस्तरीय प्राथमिकता आवंटन'
+              : 'FR-ADMIN-4 • Live cadre capacity monitoring and ministerial priority assignment'}
           </p>
         </div>
 
@@ -73,7 +80,7 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
           <Search className="h-3.5 w-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Filter by RO or zone..."
+            placeholder={isHindi ? 'क्षेत्रीय कार्यालय या ज़ोन से खोजें...' : 'Filter by RO or zone...'}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-xs text-[#1F273A] placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
@@ -86,12 +93,12 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[#D8DFEE] text-[11px] font-bold text-[#475569] uppercase tracking-wider">
-              <th className="pb-3 pl-2">Regional Office / Division</th>
-              <th className="pb-3">Officers</th>
-              <th className="pb-3">Readiness</th>
-              <th className="pb-3">Error Rate</th>
-              <th className="pb-3 hidden sm:table-cell">Status</th>
-              <th className="pb-3 pr-2 text-right">Action</th>
+              <th className="pb-3 pl-2">{isHindi ? 'क्षेत्रीय कार्यालय / प्रभाग' : 'Regional Office / Division'}</th>
+              <th className="pb-3">{isHindi ? 'अधिकारी' : 'Officers'}</th>
+              <th className="pb-3">{isHindi ? 'तत्परता' : 'Readiness'}</th>
+              <th className="pb-3">{isHindi ? 'त्रुटि दर' : 'Error Rate'}</th>
+              <th className="pb-3 hidden sm:table-cell">{isHindi ? 'स्थिति' : 'Status'}</th>
+              <th className="pb-3 pr-2 text-right">{isHindi ? 'कार्रवाई' : 'Action'}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#D8DFEE] text-xs">
@@ -140,16 +147,16 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
                     {isCritical ? (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/15 text-red-700 border border-red-500/30">
                         <AlertTriangle className="h-3 w-3" />
-                        CRITICAL GAP
+                        {isHindi ? 'गंभीर अंतर' : 'CRITICAL GAP'}
                       </span>
                     ) : isOptimal ? (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
                         <CheckCircle2 className="h-3 w-3" />
-                        OPTIMAL
+                        {isHindi ? 'इष्टतम' : 'OPTIMAL'}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 border border-amber-500/30">
-                        MONITORING
+                        {isHindi ? 'निगरानी में' : 'MONITORING'}
                       </span>
                     )}
                   </td>
@@ -162,7 +169,7 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
                         onClick={() => onInspectOffice && onInspectOffice(dept)}
                         className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#EDF0F7] text-[#1C4CA1] border border-[#D8DFEE] hover:bg-white transition-all cursor-pointer shadow-2xs"
                       >
-                        <span>Inspect</span>
+                        <span>{isHindi ? 'निरीक्षण' : 'Inspect'}</span>
                       </button>
 
                       <button
@@ -175,7 +182,11 @@ export function DepartmentBreakdownTable({ onInspectOffice }: DepartmentBreakdow
                         }`}
                       >
                         <Flag className="h-3 w-3" />
-                        <span>{dept.isFlagged ? 'Flagged 🚩' : 'Flag Priority Training'}</span>
+                        <span>
+                          {dept.isFlagged
+                            ? isHindi ? 'चिह्नित 🚩' : 'Flagged 🚩'
+                            : isHindi ? 'प्राथमिकता प्रशिक्षण चिह्नित करें' : 'Flag Priority Training'}
+                        </span>
                       </button>
                     </div>
                   </td>

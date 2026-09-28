@@ -30,6 +30,7 @@ interface ItemAnalysisModalProps {
   onClose: () => void;
   item: ItemAnalysisData | null;
   onStatusChange?: (id: string, status: 'approved' | 'rejected') => void;
+  isHindi?: boolean;
 }
 
 export function ItemAnalysisModal({
@@ -37,6 +38,7 @@ export function ItemAnalysisModal({
   onClose,
   item,
   onStatusChange,
+  isHindi = false,
 }: ItemAnalysisModalProps) {
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -44,7 +46,11 @@ export function ItemAnalysisModal({
 
   const handleAction = (status: 'approved' | 'rejected') => {
     onStatusChange?.(item.id, status);
-    setFeedback(status === 'approved' ? 'Question approved for official exam bank!' : 'Question flagged for faculty distractor revision.');
+    setFeedback(
+      status === 'approved'
+        ? (isHindi ? 'प्रश्न आधिकारिक परीक्षा पूल के लिए स्वीकृत!' : 'Question approved for official exam bank!')
+        : (isHindi ? 'संकाय व्यामोहक संशोधन के लिए प्रश्न चिह्नित किया गया।' : 'Question flagged for faculty distractor revision.')
+    );
     setTimeout(() => {
       setFeedback(null);
       onClose();
@@ -52,10 +58,25 @@ export function ItemAnalysisModal({
   };
 
   const getDiscriminationLabel = (d: number) => {
-    if (d >= 0.4) return { label: 'Excellent Discriminator', color: 'text-emerald-700 bg-emerald-500/15' };
-    if (d >= 0.3) return { label: 'Good Discriminator', color: 'text-blue-700 bg-blue-500/15' };
-    if (d >= 0.2) return { label: 'Marginal Discriminator', color: 'text-amber-700 bg-amber-500/15' };
-    return { label: 'Poor Discriminator', color: 'text-red-700 bg-red-500/15' };
+    if (d >= 0.4)
+      return {
+        label: isHindi ? 'उत्कृष्ट विभेदक' : 'Excellent Discriminator',
+        color: 'text-emerald-700 bg-emerald-500/15',
+      };
+    if (d >= 0.3)
+      return {
+        label: isHindi ? 'अच्छा विभेदक' : 'Good Discriminator',
+        color: 'text-blue-700 bg-blue-500/15',
+      };
+    if (d >= 0.2)
+      return {
+        label: isHindi ? 'सीमांत विभेदक' : 'Marginal Discriminator',
+        color: 'text-amber-700 bg-amber-500/15',
+      };
+    return {
+      label: isHindi ? 'कमजोर विभेदक' : 'Poor Discriminator',
+      color: 'text-red-700 bg-red-500/15',
+    };
   };
 
   const dInfo = getDiscriminationLabel(item.discriminationIndex);
@@ -77,14 +98,16 @@ export function ItemAnalysisModal({
                 {dInfo.label} (D={item.discriminationIndex.toFixed(2)})
               </span>
               <span className="text-[10px] font-mono text-muted-foreground">
-                Facility p={item.facilityIndex.toFixed(2)}
+                {isHindi ? 'सुगमता' : 'Facility'} p={item.facilityIndex.toFixed(2)}
               </span>
             </div>
             <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
-              Psychometric Item Analysis
+              {isHindi ? 'मनोमितीय प्रश्न विश्लेषण' : 'Psychometric Item Analysis'}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Based on {item.totalResponses.toLocaleString()} trainee responses across NSSO Zonal Training Centres
+              {isHindi
+                ? `एनएसएसओ आंचलिक प्रशिक्षण केंद्रों में ${item.totalResponses.toLocaleString()} प्रशिक्षुओं की प्रतिक्रियाओं पर आधारित`
+                : `Based on ${item.totalResponses.toLocaleString()} trainee responses across NSSO Zonal Training Centres`}
             </p>
           </div>
 
@@ -108,7 +131,7 @@ export function ItemAnalysisModal({
           {/* Question Stem */}
           <div className="p-4 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] space-y-1.5">
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#1C4CA1]">
-              Evaluated Question Stem
+              {isHindi ? 'मूल्यांकित प्रश्न' : 'Evaluated Question Stem'}
             </p>
             <p className="text-xs font-semibold text-[#1F273A] leading-relaxed">
               {item.stem}
@@ -118,9 +141,11 @@ export function ItemAnalysisModal({
           {/* Distractor Frequency Breakdown */}
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <p className="font-bold text-[#1F273A]">Distractor Frequency & Selection Spread</p>
+              <p className="font-bold text-[#1F273A]">
+                {isHindi ? 'व्यामोहक आवृत्ति एवं चयन वितरण' : 'Distractor Frequency & Selection Spread'}
+              </p>
               <span className="text-[10px] text-muted-foreground font-mono">
-                Green = Correct Answer
+                {isHindi ? 'हरा = सही उत्तर' : 'Green = Correct Answer'}
               </span>
             </div>
 
@@ -160,7 +185,7 @@ export function ItemAnalysisModal({
                         </span>
                         {isWeakDistractor && (
                           <span className="text-[9px] font-bold text-amber-700 bg-amber-500/15 px-1.5 py-0.2 rounded border border-amber-500/30">
-                            Low Discrim.
+                            {isHindi ? 'निम्न विभेदन' : 'Low Discrim.'}
                           </span>
                         )}
                         {isCorrect && (
@@ -190,7 +215,7 @@ export function ItemAnalysisModal({
               <div className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4 text-[#FFA72F]" />
                 <span className="font-bold text-[#FFA72F] text-[11px] uppercase tracking-wider">
-                  Official MoSPI Manual Citation
+                  {isHindi ? 'आधिकारिक MoSPI नियमावली उद्धरण' : 'Official MoSPI Manual Citation'}
                 </span>
               </div>
               <span className="text-[10px] font-mono text-slate-300">
@@ -213,7 +238,7 @@ export function ItemAnalysisModal({
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-[#EDF0F7] transition-colors cursor-pointer"
           >
-            Close
+            {isHindi ? 'बंद करें' : 'Close'}
           </button>
 
           <div className="flex items-center gap-2">
@@ -223,7 +248,7 @@ export function ItemAnalysisModal({
               className="px-3.5 py-2 rounded-xl bg-white border border-amber-500/40 text-amber-800 text-xs font-bold hover:bg-amber-50 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Edit3 className="h-3.5 w-3.5" />
-              <span>Flag for Revision</span>
+              <span>{isHindi ? 'संशोधन के लिए चिह्नित करें' : 'Flag for Revision'}</span>
             </button>
 
             <button
@@ -232,7 +257,7 @@ export function ItemAnalysisModal({
               className="px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
             >
               <Check className="h-3.5 w-3.5" />
-              <span>Approve for Exam Pool</span>
+              <span>{isHindi ? 'परीक्षा पूल के लिए स्वीकृत करें' : 'Approve for Exam Pool'}</span>
             </button>
           </div>
         </div>

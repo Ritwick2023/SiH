@@ -34,18 +34,14 @@ interface PathwaysClientProps {
 
 function LearningHubContent({ user }: PathwaysClientProps) {
   const searchParams = useSearchParams();
-  const globalLocale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
+  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
 
   const initialCompetency = searchParams.get('competency') || 'all';
   const initialTab = (searchParams.get('tab') as 'recommended' | 'courses' | 'manuals' | 'all') || 'recommended';
 
   // Active user FRAC profile
   const profile = getPersonaFRAC(user);
-  const isHindi =
-    globalLocale === 'hi' ||
-    user?.user_metadata?.preferred_language === 'hi' ||
-    profile.preferredLanguage === 'hi' ||
-    user?.id?.includes('sunita');
+  const isHindi = locale === 'hi';
 
   // Compute active gaps
   const gaps: CompetencyGap[] = useMemo(() => {

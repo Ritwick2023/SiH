@@ -9,6 +9,7 @@ interface TrainerKpiStripProps {
   ingestedManualsCount: number;
   assessedOfficersCount: number;
   avgPassRate: number;
+  isHindi?: boolean;
 }
 
 export function TrainerKpiStrip({
@@ -17,49 +18,50 @@ export function TrainerKpiStrip({
   ingestedManualsCount = 6,
   assessedOfficersCount = 1420,
   avgPassRate = 68,
+  isHindi = false,
 }: TrainerKpiStripProps) {
   const kpis = [
     {
       id: 'pending',
-      label: 'Pending Review',
+      label: isHindi ? 'लंबित समीक्षा' : 'Pending Review',
       value: pendingReviewCount.toString(),
-      subtext: 'Needs Faculty QA',
+      subtext: isHindi ? 'संकाय क्यूए आवश्यक' : 'Needs Faculty QA',
       icon: HelpCircle,
       bgColor: 'bg-[#FFA72F]/15',
       textColor: 'text-[#FFA72F]',
     },
     {
       id: 'approved',
-      label: 'Approved Bank',
+      label: isHindi ? 'स्वीकृत प्रश्न बैंक' : 'Approved Bank',
       value: approvedCount.toString(),
-      subtext: 'Active in Assessment Pool',
+      subtext: isHindi ? 'मूल्यांकन पूल में सक्रिय' : 'Active in Assessment Pool',
       icon: CheckCircle2,
       bgColor: 'bg-emerald-500/15',
       textColor: 'text-emerald-700',
     },
     {
       id: 'manuals',
-      label: 'Ingested Manuals',
+      label: isHindi ? 'समाविष्ट नियमावलियां' : 'Ingested Manuals',
       value: ingestedManualsCount.toString(),
-      subtext: 'Official MoSPI SOPs',
+      subtext: isHindi ? 'आधिकारिक MoSPI एसओपी' : 'Official MoSPI SOPs',
       icon: FileStack,
       bgColor: 'bg-[#1164BE]/10',
       textColor: 'text-[#1164BE]',
     },
     {
       id: 'officers',
-      label: 'Assessed Officers',
+      label: isHindi ? 'मूल्यांकित अधिकारी' : 'Assessed Officers',
       value: assessedOfficersCount.toLocaleString(),
-      subtext: 'Across FOD & SSS Cadres',
+      subtext: isHindi ? 'एफओडी एवं एसएसएस संवर्ग' : 'Across FOD & SSS Cadres',
       icon: Users,
       bgColor: 'bg-[#1C4CA1]/10',
       textColor: 'text-[#1C4CA1]',
     },
     {
       id: 'passrate',
-      label: 'Cohort Pass Rate',
+      label: isHindi ? 'समूह उत्तीर्ण दर' : 'Cohort Pass Rate',
       value: `${avgPassRate}%`,
-      subtext: '+4.2% vs Previous Quarter',
+      subtext: isHindi ? 'पिछली तिमाही से +4.2%' : '+4.2% vs Previous Quarter',
       icon: TrendingUp,
       bgColor: 'bg-blue-500/15',
       textColor: 'text-blue-700',

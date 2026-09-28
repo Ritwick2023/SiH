@@ -9,6 +9,7 @@ interface AdminKpiStripProps {
   scrutinyErrorRate?: number;
   priorityFlaggedCount?: number;
   activeCohortsCount?: number;
+  isHindi?: boolean;
   onKpiClick?: (kpiId: string) => void;
 }
 
@@ -18,50 +19,51 @@ export function AdminKpiStrip({
   scrutinyErrorRate = 8.2,
   priorityFlaggedCount = 2,
   activeCohortsCount = 4,
+  isHindi = false,
   onKpiClick,
 }: AdminKpiStripProps) {
   const kpis = [
     {
       id: 'headcount',
-      label: 'Total Headcount',
+      label: isHindi ? 'कुल संवर्ग संख्या' : 'Total Headcount',
       value: totalHeadcount.toLocaleString(),
-      subtext: 'MoSPI, FOD & SSS Cadres',
+      subtext: isHindi ? 'सांख्यिकी मंत्रालय, एफओडी और एसएसएस' : 'MoSPI, FOD & SSS Cadres',
       icon: Users,
       bgColor: 'bg-[#1C4CA1]/10',
       textColor: 'text-[#1C4CA1]',
     },
     {
       id: 'readiness',
-      label: 'Workforce Readiness',
+      label: isHindi ? 'कार्यबल तत्परता' : 'Workforce Readiness',
       value: `${workforceReadiness}%`,
-      subtext: 'FRAC Target: 70% Met',
+      subtext: isHindi ? 'FRAC लक्ष्य: 70% पूर्ण' : 'FRAC Target: 70% Met',
       icon: Target,
       bgColor: 'bg-emerald-500/15',
       textColor: 'text-emerald-700',
     },
     {
       id: 'error_rate',
-      label: 'Scrutiny Error Rate',
+      label: isHindi ? 'संवीक्षा त्रुटि दर' : 'Scrutiny Error Rate',
       value: `${scrutinyErrorRate}%`,
-      subtext: '-4.1% Reduction QoQ',
+      subtext: isHindi ? '-4.1% त्रैमासिक कमी' : '-4.1% Reduction QoQ',
       icon: AlertTriangle,
       bgColor: 'bg-[#FFA72F]/15',
       textColor: 'text-[#FFA72F]',
     },
     {
       id: 'flagged',
-      label: 'Priority Flagged ROs',
+      label: isHindi ? 'प्राथमिकता चिह्नित कार्यालय' : 'Priority Flagged ROs',
       value: priorityFlaggedCount.toString(),
-      subtext: 'FOD Bihar & FOD UP East',
+      subtext: isHindi ? 'एफओडी बिहार और यूपी पूर्व' : 'FOD Bihar & FOD UP East',
       icon: Flag,
       bgColor: 'bg-red-500/15',
       textColor: 'text-red-700',
     },
     {
       id: 'cohorts',
-      label: 'Active Cohorts',
+      label: isHindi ? 'सक्रिय समूह' : 'Active Cohorts',
       value: activeCohortsCount.toString(),
-      subtext: 'PLFS, HCES, ASI, CAPI',
+      subtext: isHindi ? 'पीएलएफएस, एचसीईएस, एएसआई, कैपी' : 'PLFS, HCES, ASI, CAPI',
       icon: Layers,
       bgColor: 'bg-[#1164BE]/10',
       textColor: 'text-[#1164BE]',

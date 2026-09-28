@@ -22,18 +22,30 @@ function getActivePersonaFromCookie(): DemoPersona {
     if (match) {
       const decoded = JSON.parse(decodeURIComponent(match[1]));
       const found = DEMO_PERSONAS.find(
-        (p) => p.email?.toLowerCase() === decoded.email?.toLowerCase()
+        (p) =>
+          p.email?.toLowerCase() === decoded.email?.toLowerCase() ||
+          p.id === decoded.id
       );
-      if (found) return found;
-      if (decoded.role) {
+      if (found) {
+        return {
+          ...found,
+          ...(decoded.name ? { name: decoded.name } : {}),
+          ...(decoded.designation ? { designation: decoded.designation } : {}),
+          ...(decoded.cadre ? { cadre: decoded.cadre } : {}),
+          ...(decoded.department ? { department: decoded.department } : {}),
+          ...(decoded.preferred_language ? { preferred_language: decoded.preferred_language } : {}),
+          ...(decoded.role ? { role: decoded.role } : {}),
+        };
+      }
+      if (decoded.role || decoded.name || decoded.email) {
         return {
           id: decoded.id || 'custom-user',
           name: decoded.name || 'Civil Officer',
           email: decoded.email || 'user@mospi.gov.in',
-          role: decoded.role as UserRole,
+          role: (decoded.role as UserRole) || 'learner',
           designation: decoded.designation || 'Statistical Officer',
           cadre: decoded.cadre || 'MoSPI Cadre',
-          organization_id: 'org-mospi',
+          organization_id: decoded.organization_id || 'org-mospi',
           preferred_language: (decoded.preferred_language as 'en' | 'hi') || 'en',
           department: decoded.department || 'MoSPI Headquarters',
         };
@@ -86,20 +98,32 @@ export function Sidebar({ initialRole }: SidebarProps) {
     return fromCookie;
   });
 
-  // Keep synced with cookie changes (e.g. from Topbar persona switcher)
+  // Keep synced with cookie changes (e.g. from Topbar persona switcher or profile update)
   useEffect(() => {
     const checkCookie = () => {
       const persona = getActivePersonaFromCookie();
-      setActivePersona((prev) => (prev.email !== persona.email ? persona : prev));
+      setActivePersona((prev) =>
+        prev.email !== persona.email ||
+        prev.name !== persona.name ||
+        prev.role !== persona.role ||
+        prev.designation !== persona.designation
+          ? persona
+          : prev
+      );
     };
 
     checkCookie();
     const interval = setInterval(checkCookie, 1000);
-    return () => clearInterval(interval);
+    const handleUserUpdate = () => checkCookie();
+    window.addEventListener('statvidya-user-updated', handleUserUpdate);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('statvidya-user-updated', handleUserUpdate);
+    };
   }, []);
 
   const role: UserRole = initialRole || activePersona.role || 'learner';
-  const navItems: RoleNavItem[] = getNavigationForRole(role);
+  const navItems: RoleNavItem[] = getNavigationForRole(role, isHindi);
   const identity = getRoleIdentity(role, isHindi);
   const footerData = getRoleFooterData(role, isHindi);
 

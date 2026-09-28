@@ -91,11 +91,13 @@ export const ZONAL_HEALTH_DATA: ZonalHealthData[] = [
 interface HorizontalZonalHealthCarouselProps {
   onInspectZone?: (zone: RegionalOfficeData) => void;
   onDispatchTriage?: (zoneName: string) => void;
+  isHindi?: boolean;
 }
 
 export function HorizontalZonalHealthCarousel({
   onInspectZone,
   onDispatchTriage,
+  isHindi = false,
 }: HorizontalZonalHealthCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -126,6 +128,28 @@ export function HorizontalZonalHealthCarousel({
     }
   };
 
+  const getLocalizedZoneName = (name: string) => {
+    if (!isHindi) return name;
+    switch (name) {
+      case 'Eastern Zone':
+        return 'पूर्वी क्षेत्र';
+      case 'Central-East Zone':
+        return 'मध्य-पूर्व क्षेत्र';
+      case 'Western Zone':
+        return 'पश्चिमी क्षेत्र';
+      case 'Southern Zone':
+        return 'दक्षिणी क्षेत्र';
+      case 'Northern Zone':
+        return 'उत्तरी क्षेत्र';
+      case 'North-Eastern Zone':
+        return 'उत्तर-पूर्वी क्षेत्र';
+      case 'HQ & National Accounts':
+        return 'मुख्यालय और राष्ट्रीय लेखा';
+      default:
+        return name;
+    }
+  };
+
   return (
     <section className="space-y-3" aria-label="Zonal Cadre Readiness Carousel">
       {/* Header with Navigation Controls */}
@@ -134,14 +158,16 @@ export function HorizontalZonalHealthCarousel({
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
             <h2 className="text-sm sm:text-base font-black text-[#1F273A] tracking-tight">
-              National Zonal Health &amp; Cadre Readiness
+              {isHindi ? 'राष्ट्रीय क्षेत्रीय स्वास्थ्य और संवर्ग तत्परता' : 'National Zonal Health & Cadre Readiness'}
             </h2>
             <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
-              7 Zones Monitored
+              {isHindi ? '7 क्षेत्र निगरानी में' : '7 Zones Monitored'}
             </span>
           </div>
           <p className="text-xs text-[#475569] mt-0.5">
-            Cross-zonal statistical capacity, scrutiny error rates, and rapid remedial intervention routing.
+            {isHindi
+              ? 'क्षेत्रवार सांख्यिकीय क्षमता, संवीक्षा त्रुटि दरें, और त्वरित उपचारात्मक हस्तक्षेप रूटिंग।'
+              : 'Cross-zonal statistical capacity, scrutiny error rates, and rapid remedial intervention routing.'}
           </p>
         </div>
 
@@ -193,23 +219,25 @@ export function HorizontalZonalHealthCarousel({
                 <div className="flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold tracking-wider uppercase text-[#475569]">
                     <MapPin className="h-3 w-3 text-[#1C4CA1]" />
-                    {zone.zoneName}
+                    {getLocalizedZoneName(zone.zoneName)}
                   </span>
 
                   {isCritical ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/15 text-red-700 border border-red-500/30">
                       <AlertTriangle className="h-3 w-3" />
-                      Critical Triage
+                      {isHindi ? 'गंभीर ट्राइएज' : 'Critical Triage'}
                     </span>
                   ) : isHighRisk ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-800 border border-amber-500/30">
                       <ShieldAlert className="h-3 w-3" />
-                      High Risk
+                      {isHindi ? 'उच्च जोखिम' : 'High Risk'}
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-800 border border-emerald-500/30">
                       <CheckCircle2 className="h-3 w-3" />
-                      {zone.status === 'EXEMPLARY' ? 'Exemplary' : 'Optimal'}
+                      {zone.status === 'EXEMPLARY'
+                        ? isHindi ? 'उत्कृष्ट' : 'Exemplary'
+                        : isHindi ? 'इष्टतम' : 'Optimal'}
                     </span>
                   )}
                 </div>
@@ -221,7 +249,9 @@ export function HorizontalZonalHealthCarousel({
                   </h3>
                   <p className="text-[11px] text-[#475569] flex items-center gap-1.5 mt-0.5 font-mono">
                     <Users className="h-3.5 w-3.5 text-[#1C4CA1]" />
-                    <span>{zone.headcount.toLocaleString()} Cadre Officers</span>
+                    <span>
+                      {zone.headcount.toLocaleString()} {isHindi ? 'संवर्ग अधिकारी' : 'Cadre Officers'}
+                    </span>
                     <span>•</span>
                     <span className="font-bold text-[#1C4CA1]">{zone.avgLevel}</span>
                   </p>
@@ -230,7 +260,9 @@ export function HorizontalZonalHealthCarousel({
                 {/* Readiness Gauge & Error Rate */}
                 <div className="space-y-1.5 p-3 rounded-xl bg-[#EDF0F7]/60 border border-[#D8DFEE]">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#475569] font-medium">Readiness Index</span>
+                    <span className="text-[#475569] font-medium">
+                      {isHindi ? 'तत्परता सूचकांक' : 'Readiness Index'}
+                    </span>
                     <span className="font-mono font-bold text-[#1F273A]">
                       {zone.readinessPercent}%
                     </span>
@@ -248,7 +280,9 @@ export function HorizontalZonalHealthCarousel({
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] pt-1">
-                    <span className="text-[#475569]">Scrutiny Error Rate:</span>
+                    <span className="text-[#475569]">
+                      {isHindi ? 'संवीक्षा त्रुटि दर:' : 'Scrutiny Error Rate:'}
+                    </span>
                     <span
                       className={`font-mono font-bold ${
                         zone.errorRate > 12 ? 'text-red-700' : 'text-[#1C4CA1]'
@@ -267,7 +301,7 @@ export function HorizontalZonalHealthCarousel({
                   onClick={() => handleInspect(zone)}
                   className="flex-1 py-1.5 px-3 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-all cursor-pointer text-center"
                 >
-                  Inspect Zone
+                  {isHindi ? 'क्षेत्र निरीक्षण' : 'Inspect Zone'}
                 </button>
 
                 {(isCritical || isHighRisk) && (
@@ -276,7 +310,7 @@ export function HorizontalZonalHealthCarousel({
                     onClick={() => onDispatchTriage && onDispatchTriage(zone.zoneName)}
                     className="py-1.5 px-3 rounded-xl bg-red-700 text-white text-xs font-bold hover:bg-red-800 transition-colors cursor-pointer shadow-2xs"
                   >
-                    Triage
+                    {isHindi ? 'उपचार' : 'Triage'}
                   </button>
                 )}
               </div>

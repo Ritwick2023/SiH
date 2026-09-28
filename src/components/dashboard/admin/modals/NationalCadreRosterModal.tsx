@@ -6,6 +6,7 @@ import { X, Download, Search, Users, CheckCircle2 } from 'lucide-react';
 interface NationalCadreRosterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isHindi?: boolean;
 }
 
 interface CadreOfficer {
@@ -102,7 +103,7 @@ const SAMPLE_CADRE_ROSTER: CadreOfficer[] = [
   },
 ];
 
-export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRosterModalProps) {
+export function NationalCadreRosterModal({ isOpen, onClose, isHindi = false }: NationalCadreRosterModalProps) {
   const [search, setSearch] = useState('');
   const [selectedCadre, setSelectedCadre] = useState<'ALL' | 'ISS' | 'SSS' | 'FOD'>('ALL');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
@@ -163,18 +164,18 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-white/20 text-white border border-white/30 uppercase">
-                  National Cadre Registry • 4,850 Personnel
+                  {isHindi ? 'राष्ट्रीय संवर्ग पंजी • 4,850 कार्मिक' : 'National Cadre Registry • 4,850 Personnel'}
                 </span>
               </div>
               <h2 id="roster-modal-title" className="text-sm sm:text-base font-black tracking-wide text-white mt-0.5">
-                MoSPI National Cadre Competency Roster
+                {isHindi ? 'सांख्यिकी मंत्रालय राष्ट्रीय संवर्ग योग्यता पंजी' : 'MoSPI National Cadre Competency Roster'}
               </h2>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close roster modal"
+            aria-label={isHindi ? 'नामावली बंद करें' : 'Close roster modal'}
             className="rounded-xl p-1.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -189,7 +190,7 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
               <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search by officer, station, cadre..."
+                placeholder={isHindi ? 'अधिकारी, स्टेशन, संवर्ग द्वारा खोजें...' : 'Search by officer, station, cadre...'}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#EDF0F7]/50 border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
@@ -203,7 +204,15 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
               className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
             >
               <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
-              <span>{downloadSuccess ? 'CSV Generated!' : 'Export National Roster (CSV)'}</span>
+              <span>
+                {downloadSuccess
+                  ? isHindi
+                    ? 'सीएसवी तैयार!'
+                    : 'CSV Generated!'
+                  : isHindi
+                  ? 'राष्ट्रीय नामावली निर्यात (CSV)'
+                  : 'Export National Roster (CSV)'}
+              </span>
             </button>
           </div>
 
@@ -220,7 +229,13 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                     : 'bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE] hover:bg-[#D8DFEE]'
                 }`}
               >
-                {c === 'ALL' ? 'All Cadres (4,850)' : `${c} Cadre`}
+                {c === 'ALL'
+                  ? isHindi
+                    ? 'सभी संवर्ग (4,850)'
+                    : 'All Cadres (4,850)'
+                  : isHindi
+                  ? `${c} संवर्ग`
+                  : `${c} Cadre`}
               </button>
             ))}
           </div>
@@ -232,13 +247,13 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                  <th className="py-3 px-4">Officer Name</th>
-                  <th className="py-3 px-3">Cadre &amp; Rank</th>
-                  <th className="py-3 px-3">Posting Station</th>
-                  <th className="py-3 px-3">FRAC Level</th>
-                  <th className="py-3 px-3">Readiness</th>
-                  <th className="py-3 px-3">Error Rate</th>
-                  <th className="py-3 px-4 text-right">Cadre Status</th>
+                  <th className="py-3 px-4">{isHindi ? 'अधिकारी का नाम' : 'Officer Name'}</th>
+                  <th className="py-3 px-3">{isHindi ? 'संवर्ग एवं पद' : 'Cadre & Rank'}</th>
+                  <th className="py-3 px-3">{isHindi ? 'तैनाती स्टेशन' : 'Posting Station'}</th>
+                  <th className="py-3 px-3">{isHindi ? 'एफआरएसी स्तर' : 'FRAC Level'}</th>
+                  <th className="py-3 px-3">{isHindi ? 'तैयारी' : 'Readiness'}</th>
+                  <th className="py-3 px-3">{isHindi ? 'त्रुटि दर' : 'Error Rate'}</th>
+                  <th className="py-3 px-4 text-right">{isHindi ? 'संवर्ग स्थिति' : 'Cadre Status'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#D8DFEE] font-mono">
@@ -276,15 +291,15 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
                       {officer.status === 'OPTIMAL' ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-800 border border-emerald-500/30">
                           <CheckCircle2 className="h-3 w-3" />
-                          Optimal
+                          {isHindi ? 'इष्टतम' : 'Optimal'}
                         </span>
                       ) : officer.status === 'COMPETENT' ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE]">
-                          Competent
+                          {isHindi ? 'सक्षम' : 'Competent'}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/15 text-red-800 border border-red-500/30">
-                          Needs Triage
+                          {isHindi ? 'ट्राइएज आवश्यक' : 'Needs Triage'}
                         </span>
                       )}
                     </td>
@@ -297,13 +312,17 @@ export function NationalCadreRosterModal({ isOpen, onClose }: NationalCadreRoste
 
         {/* Footer */}
         <div className="bg-[#EDF0F7]/60 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
-          <span>Showing {filtered.length} of 4,850 officers across 7 zones</span>
+          <span>
+            {isHindi
+              ? `7 प्रभागों में 4,850 अधिकारियों में से ${filtered.length} प्रदर्शित`
+              : `Showing ${filtered.length} of 4,850 officers across 7 zones`}
+          </span>
           <button
             type="button"
             onClick={onClose}
             className="px-4 py-1.5 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
-            Close Roster
+            {isHindi ? 'नामावली बंद करें' : 'Close Roster'}
           </button>
         </div>
       </div>

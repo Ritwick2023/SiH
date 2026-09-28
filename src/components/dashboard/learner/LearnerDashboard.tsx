@@ -19,16 +19,18 @@ import { Award, X } from 'lucide-react';
 import type { DemoPersona } from '@/lib/types';
 import type { FRACCompetencyDef } from '@/data/fracCadres';
 
-export default function LearnerDashboard({ user }: { user: DashboardUserProps }) {
+export default function LearnerDashboard({
+  user,
+  isHindi: propIsHindi,
+}: {
+  user: DashboardUserProps;
+  isHindi?: boolean;
+}) {
   const router = useRouter();
   const profile = getPersonaFRAC(user);
 
-  const globalLocale = useSafeLocale(user.user_metadata?.preferred_language || (user.id?.includes('sunita') ? 'hi' : 'en'));
-  const isHindi =
-    globalLocale === 'hi' ||
-    user.user_metadata?.preferred_language === 'hi' ||
-    profile.preferredLanguage === 'hi' ||
-    user.id?.includes('sunita');
+  const locale = useSafeLocale(user.user_metadata?.preferred_language || 'en');
+  const isHindi = propIsHindi ?? (locale === 'hi');
 
   // Modal States
   const [activeDrillId, setActiveDrillId] = useState<string | null>(null);

@@ -141,16 +141,22 @@ const SAMPLE_DIAGNOSTIC_ITEMS: Record<number, ItemAnalysisData> = {
 interface TrainerDiagnosticsStudioProps {
   onInspectItem: (item: ItemAnalysisData) => void;
   onRemediateCohort: (cohort: CohortData) => void;
+  isHindi?: boolean;
 }
 
 export function TrainerDiagnosticsStudio({
   onInspectItem,
   onRemediateCohort,
+  isHindi = false,
 }: TrainerDiagnosticsStudioProps) {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   const handleDispatchZtc = (center: string) => {
-    setToastMsg(`Targeted remedial drill scheduled for all officers enrolled at ${center}.`);
+    setToastMsg(
+      isHindi
+        ? `${center} में नामांकित सभी अधिकारियों के लिए लक्षित उपचारात्मक अभ्यास निर्धारित किया गया।`
+        : `Targeted remedial drill scheduled for all officers enrolled at ${center}.`
+    );
     setTimeout(() => setToastMsg(null), 3000);
   };
 
@@ -161,11 +167,13 @@ export function TrainerDiagnosticsStudio({
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-red-600" />
           <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
-            Item Diagnostics & Zonal Error Disparities
+            {isHindi ? 'प्रश्न डायग्नोस्टिक्स एवं आंचलिक त्रुटि विषमताएं' : 'Item Diagnostics & Zonal Error Disparities'}
           </h2>
         </div>
         <p className="text-xs text-muted-foreground">
-          Psychometric verification of question items, distractor effectiveness, and geographical failure patterns across MoSPI Zonal Training Centres
+          {isHindi
+            ? 'प्रश्न मदों का मनोमितीय सत्यापन, व्यामोहक प्रभावशीलता और एनएसएसटीए आंचलिक प्रशिक्षण केंद्रों में भौगोलिक असफलता पैटर्न'
+            : 'Psychometric verification of question items, distractor effectiveness, and geographical failure patterns across MoSPI Zonal Training Centres'}
         </p>
 
         {toastMsg && (
@@ -181,14 +189,16 @@ export function TrainerDiagnosticsStudio({
         <div className="flex items-center justify-between pb-3 border-b border-[#D8DFEE]">
           <div>
             <h3 className="text-base font-bold text-[#1F273A]">
-              Regional Zonal Center Deficit Comparison
+              {isHindi ? 'क्षेत्रीय आंचलिक केंद्र घाटा तुलना' : 'Regional Zonal Center Deficit Comparison'}
             </h3>
             <p className="text-xs text-muted-foreground">
-              Cross-zonal performance on NSS 79th Round benchmark competencies
+              {isHindi
+                ? 'एनएसएस 79वें दौर की बेंचमार्क दक्षताओं पर अंतर-क्षेत्रीय प्रदर्शन'
+                : 'Cross-zonal performance on NSS 79th Round benchmark competencies'}
             </p>
           </div>
           <span className="text-xs font-mono font-bold text-[#1C4CA1] bg-[#EDF0F7] px-2.5 py-1 rounded-lg border border-[#D8DFEE]">
-            5 ZTC Centers Audited
+            {isHindi ? '5 आंचलिक केंद्रों का ऑडिट' : '5 ZTC Centers Audited'}
           </span>
         </div>
 
@@ -196,12 +206,12 @@ export function TrainerDiagnosticsStudio({
           <table className="w-full text-left text-xs">
             <thead className="bg-[#EDF0F7] border-b border-[#D8DFEE] text-muted-foreground font-bold uppercase tracking-wider text-[10px]">
               <tr>
-                <th className="py-3 px-4">Zonal Center</th>
-                <th className="py-3 px-4">Trainees</th>
-                <th className="py-3 px-4">Primary Curriculum Deficit</th>
-                <th className="py-3 px-4">Cohort Error Rate</th>
-                <th className="py-3 px-4">Trend vs Q1</th>
-                <th className="py-3 px-4 text-right">Faculty Intervention</th>
+                <th className="py-3 px-4">{isHindi ? 'आंचलिक केंद्र' : 'Zonal Center'}</th>
+                <th className="py-3 px-4">{isHindi ? 'प्रशिक्षु' : 'Trainees'}</th>
+                <th className="py-3 px-4">{isHindi ? 'प्रमुख पाठ्यक्रम घाटा' : 'Primary Curriculum Deficit'}</th>
+                <th className="py-3 px-4">{isHindi ? 'कोहॉर्ट त्रुटि दर' : 'Cohort Error Rate'}</th>
+                <th className="py-3 px-4">{isHindi ? 'तिमाही 1 की तुलना में रुझान' : 'Trend vs Q1'}</th>
+                <th className="py-3 px-4 text-right">{isHindi ? 'संकाय हस्तक्षेप' : 'Faculty Intervention'}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#D8DFEE]">
@@ -214,7 +224,7 @@ export function TrainerDiagnosticsStudio({
                     </div>
                   </td>
                   <td className="py-3 px-4 font-mono text-muted-foreground">
-                    {reg.cadreCount} Officers
+                    {reg.cadreCount} {isHindi ? 'अधिकारी' : 'Officers'}
                   </td>
                   <td className="py-3 px-4 font-medium text-[#1F273A]">
                     {reg.topDeficit}
@@ -233,7 +243,11 @@ export function TrainerDiagnosticsStudio({
                               : 'bg-emerald-500/15 text-emerald-700'
                         }`}
                       >
-                        {reg.status}
+                        {reg.status === 'CRITICAL'
+                          ? (isHindi ? 'गंभीर' : 'CRITICAL')
+                          : reg.status === 'WATCH'
+                            ? (isHindi ? 'निगरानी' : 'WATCH')
+                            : (isHindi ? 'सुरक्षित' : 'SAFE')}
                       </span>
                     </div>
                   </td>
@@ -247,7 +261,7 @@ export function TrainerDiagnosticsStudio({
                       className="px-3 py-1 rounded-xl bg-[#1C4CA1] hover:bg-[#1164BE] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-1"
                     >
                       <Sparkles className="h-3 w-3" />
-                      <span>Dispatch Remediation</span>
+                      <span>{isHindi ? 'उपचार भेजें' : 'Dispatch Remediation'}</span>
                     </button>
                   </td>
                 </tr>
@@ -263,34 +277,42 @@ export function TrainerDiagnosticsStudio({
         <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-[#D8DFEE]">
             <h4 className="font-bold text-sm text-[#1F273A]">
-              Top 4 Most Confused MoSPI Concepts
+              {isHindi ? 'शीर्ष 4 सर्वाधिक भ्रमित अवधारणाएं' : 'Top 4 Most Confused MoSPI Concepts'}
             </h4>
             <span className="text-[10px] font-bold uppercase text-red-700 bg-red-500/15 px-2 py-0.5 rounded-full">
-              High Deficit
+              {isHindi ? 'उच्च घाटा' : 'High Deficit'}
             </span>
           </div>
 
           <div className="space-y-3 text-xs">
             {[
               {
-                concept: 'Hamlet-Group Formation Thresholds (Sched 0.0)',
-                pct: '42% Error',
-                detail: 'Confusion between >600 vs >1200 population brackets for 2 vs 3 hamlet-groups.',
+                concept: isHindi ? 'हेमलेट-समूह गठन सीमाएं (अनुसूची 0.0)' : 'Hamlet-Group Formation Thresholds (Sched 0.0)',
+                pct: isHindi ? '42% त्रुटि' : '42% Error',
+                detail: isHindi
+                  ? '2 बनाम 3 हेमलेट-समूहों के लिए >600 बनाम >1200 जनसंख्या कोष्ठक के बीच भ्रम।'
+                  : 'Confusion between >600 vs >1200 population brackets for 2 vs 3 hamlet-groups.',
               },
               {
-                concept: 'Multi-Stage Sampling Multipliers & Weights',
-                pct: '38% Error',
-                detail: 'Failure to invert selection probability for second-stage rural sampling units.',
+                concept: isHindi ? 'बहु-चरणीय नमूनाकरण गुणक एवं भार' : 'Multi-Stage Sampling Multipliers & Weights',
+                pct: isHindi ? '38% त्रुटि' : '38% Error',
+                detail: isHindi
+                  ? 'द्वितीय चरण की ग्रामीण नमूना इकाइयों के लिए चयन संभावना को उलटने में विफलता।'
+                  : 'Failure to invert selection probability for second-stage rural sampling units.',
               },
               {
-                concept: 'CAPI Offline GPS Coordinate Fallback',
-                pct: '29% Error',
-                detail: 'Investigators recording 0.0 lat/long instead of 3-minute open-sky satellite lock.',
+                concept: isHindi ? 'सीएपीआई ऑफलाइन जीपीएस निर्देशांक फॉलबैक' : 'CAPI Offline GPS Coordinate Fallback',
+                pct: isHindi ? '29% त्रुटि' : '29% Error',
+                detail: isHindi
+                  ? 'जांचकर्ता 3 मिनट के खुले आसमान उपग्रह लॉक के बजाय 0.0 अक्षांश/देशांतर दर्ज कर रहे हैं।'
+                  : 'Investigators recording 0.0 lat/long instead of 3-minute open-sky satellite lock.',
               },
               {
-                concept: 'PLFS UPAS Code 11 vs 21 Classification',
-                pct: '24% Error',
-                detail: 'Misclassifying unpaid family helpers as own-account self-employed workers.',
+                concept: isHindi ? 'पीएलएफएस यूपीएएस कोड 11 बनाम 21 वर्गीकरण' : 'PLFS UPAS Code 11 vs 21 Classification',
+                pct: isHindi ? '24% त्रुटि' : '24% Error',
+                detail: isHindi
+                  ? 'अवैतनिक पारिवारिक सहायकों को स्वरोजगार वाले कामगारों के रूप में गलत वर्गीकृत करना।'
+                  : 'Misclassifying unpaid family helpers as own-account self-employed workers.',
               },
             ].map((item, idx) => (
               <div key={idx} className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE] space-y-2">
@@ -306,7 +328,7 @@ export function TrainerDiagnosticsStudio({
                     className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1C4CA1] hover:text-[#1164BE] cursor-pointer"
                   >
                     <BarChart3 className="h-3 w-3" />
-                    <span>Inspect Distractors</span>
+                    <span>{isHindi ? 'व्यामोहकों का विश्लेषण' : 'Inspect Distractors'}</span>
                   </button>
                 </div>
               </div>
@@ -320,25 +342,35 @@ export function TrainerDiagnosticsStudio({
             <div className="flex items-center gap-2 pb-2 border-b border-white/10">
               <ShieldAlert className="h-4 w-4 text-[#FFA72F]" />
               <h4 className="font-bold text-sm text-[#FFA72F]">
-                NSSTA Faculty Remediation Guidance
+                {isHindi ? 'एनएसएसटीए संकाय उपचारात्मक मार्गदर्शन' : 'NSSTA Faculty Remediation Guidance'}
               </h4>
             </div>
 
             <p className="text-xs text-slate-200 leading-relaxed">
-              Based on empirical psychometric responses, automated drills with statutory citations should be dispatched at least 7 days prior to national survey rollouts.
+              {isHindi
+                ? 'अनुभवजन्य मनोमितीय प्रतिक्रियाओं के आधार पर, राष्ट्रीय सर्वेक्षण शुरू होने से कम से कम 7 दिन पहले वैधानिक उद्धरणों के साथ स्वचालित अभ्यास भेजे जाने चाहिए।'
+                : 'Based on empirical psychometric responses, automated drills with statutory citations should be dispatched at least 7 days prior to national survey rollouts.'}
             </p>
 
             <div className="space-y-2 text-xs">
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-                <p className="font-bold text-[#FFA72F]">Prescription 1: CAPI Field Simulation</p>
+                <p className="font-bold text-[#FFA72F]">
+                  {isHindi ? 'निर्देश 1: सीएपीआई फील्ड सिमुलेशन' : 'Prescription 1: CAPI Field Simulation'}
+                </p>
                 <p className="text-[11px] text-slate-300">
-                  Mandate 3 interactive practice trials on Android emulator for all ZTC Kolkata & Lucknow trainees.
+                  {isHindi
+                    ? 'जेडटीसी कोलकाता और लखनऊ के सभी प्रशिक्षुओं के लिए एंड्रॉइड एमुलेटर पर 3 इंटरैक्टिव अभ्यास सत्र अनिवार्य करें।'
+                    : 'Mandate 3 interactive practice trials on Android emulator for all ZTC Kolkata & Lucknow trainees.'}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-                <p className="font-bold text-[#FFA72F]">Prescription 2: Schedule 0.0 Diagnostic</p>
+                <p className="font-bold text-[#FFA72F]">
+                  {isHindi ? 'निर्देश 2: अनुसूची 0.0 डायग्नोस्टिक' : 'Prescription 2: Schedule 0.0 Diagnostic'}
+                </p>
                 <p className="text-[11px] text-slate-300">
-                  Dispatch 5-question targeted drill with population threshold examples.
+                  {isHindi
+                    ? 'जनसंख्या सीमा उदाहरणों के साथ 5-प्रश्नों वाला लक्षित अभ्यास भेजें।'
+                    : 'Dispatch 5-question targeted drill with population threshold examples.'}
                 </p>
               </div>
             </div>
@@ -350,7 +382,7 @@ export function TrainerDiagnosticsStudio({
             className="w-full py-2.5 rounded-xl bg-[#FFA72F] hover:bg-[#E08D18] text-[#1F273A] text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 mt-4"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Open Global Remediation Dispatcher</span>
+            <span>{isHindi ? 'वैश्विक उपचारात्मक डिस्पैचर खोलें' : 'Open Global Remediation Dispatcher'}</span>
           </button>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { type OutcomeCorrelationSeries } from '@/lib/types';
 import { calculateLinearRegression } from '@/services/adminService';
 import { ShieldAlert, Info, CheckCircle2, Building2, Users } from 'lucide-react';
 
-export function OutcomeCorrelationChart() {
+export function OutcomeCorrelationChart({ isHindi = false }: { isHindi?: boolean }) {
   const [seriesList, setSeriesList] = useState<OutcomeCorrelationSeries[]>(SYNTHETIC_SURVEY_OUTCOMES);
   const [activeMetricId, setActiveMetricId] = useState(SYNTHETIC_SURVEY_OUTCOMES[0].id);
   const [hoveredPoint, setHoveredPoint] = useState<OutcomeCorrelationSeries['dataPoints'][0] | null>(null);
@@ -102,11 +102,13 @@ export function OutcomeCorrelationChart() {
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
               <h2 className="text-base sm:text-lg font-bold text-[#1F273A]">
-                Survey Scrutiny Outcome Correlation (PRD §9.4.5)
+                {isHindi ? 'सर्वेक्षण संवीक्षा परिणाम सहसंबंध (PRD §9.4.5)' : 'Survey Scrutiny Outcome Correlation (PRD §9.4.5)'}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Empirical correlation between field competency levels and subsequent schedule scrutiny error rates
+              {isHindi
+                ? 'फील्ड दक्षता स्तर और आगामी अनुसूची संवीक्षा त्रुटि दरों के बीच अनुभवजन्य सहसंबंध'
+                : 'Empirical correlation between field competency levels and subsequent schedule scrutiny error rates'}
             </p>
           </div>
 
@@ -118,7 +120,7 @@ export function OutcomeCorrelationChart() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300"
               >
                 <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                🔬 Live Data (n={totalSampleSize})
+                {isHindi ? `🔬 लाइव डेटा (n=${totalSampleSize})` : `🔬 Live Data (n=${totalSampleSize})`}
               </span>
             ) : selectedSeries.provenance === 'EMPIRICAL_NSS78_BOOTSTRAP' ? (
               <span
@@ -126,7 +128,7 @@ export function OutcomeCorrelationChart() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300"
               >
                 <ShieldAlert className="h-3 w-3 text-amber-700" />
-                📊 NSS 78th Round Baseline (n={totalSampleSize})
+                {isHindi ? `📊 NSS 78वां दौर बेसलाइन (n=${totalSampleSize})` : `📊 NSS 78th Round Baseline (n=${totalSampleSize})`}
               </span>
             ) : (
               <span
@@ -134,7 +136,7 @@ export function OutcomeCorrelationChart() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300"
               >
                 <ShieldAlert className="h-3 w-3 text-amber-700" />
-                📊 NSS 78th Round Baseline (n={totalSampleSize})
+                {isHindi ? `📊 NSS 78वां दौर बेसलाइन (n=${totalSampleSize})` : `📊 NSS 78th Round Baseline (n=${totalSampleSize})`}
               </span>
             )}
           </div>
@@ -142,37 +144,57 @@ export function OutcomeCorrelationChart() {
 
         {/* Series Selector Pills */}
         <div className="flex flex-wrap items-center gap-2 mt-4">
-          {seriesList.map((series) => (
-            <button
-              key={series.id}
-              type="button"
-              onClick={() => {
-                setActiveMetricId(series.id);
-                setHoveredPoint(null);
-              }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
-                activeMetricId === series.id
-                  ? 'bg-[#1C4CA1] text-white shadow-xs'
-                  : 'bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE] hover:bg-[#D8DFEE]/60'
-              }`}
-            >
-              {series.metricName}
-            </button>
-          ))}
+          {seriesList.map((series) => {
+            const localizedSeriesName = isHindi
+              ? series.id === 'corr-listing' || series.metricName.includes('Listing')
+                ? 'अनुसूची 0.0 सूचीकरण संवीक्षा'
+                : series.id === 'corr-food' || series.metricName.includes('Recall')
+                ? 'HCES खाद्य स्मरण टेलीस्कोपिंग'
+                : series.id === 'corr-plfs' || series.metricName.includes('Classification')
+                ? 'PLFS गतिविधि वर्गीकरण'
+                : series.metricName
+              : series.metricName;
+
+            return (
+              <button
+                key={series.id}
+                type="button"
+                onClick={() => {
+                  setActiveMetricId(series.id);
+                  setHoveredPoint(null);
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
+                  activeMetricId === series.id
+                    ? 'bg-[#1C4CA1] text-white shadow-xs'
+                    : 'bg-[#EDF0F7] text-muted-foreground border border-[#D8DFEE] hover:bg-[#D8DFEE]/60'
+                }`}
+              >
+                {localizedSeriesName}
+              </button>
+            );
+          })}
         </div>
 
         {/* Regression Fit Summary Pill Banner */}
         <div className="grid grid-cols-3 gap-2.5 mt-4 p-3 rounded-2xl bg-[#EDF0F7]/50 border border-[#EDF0F7] text-xs font-mono">
           <div>
-            <span className="text-[10px] font-sans font-bold text-muted-foreground block">R² Goodness of Fit</span>
+            <span className="text-[10px] font-sans font-bold text-muted-foreground block">
+              {isHindi ? 'R² मॉडल उपयुक्तता' : 'R² Goodness of Fit'}
+            </span>
             <span className="text-sm font-black text-[#1F273A]">{selectedSeries.rSquared}</span>
           </div>
           <div>
-            <span className="text-[10px] font-sans font-bold text-muted-foreground block">Regression Slope</span>
-            <span className="text-sm font-black text-[#FFA72F]">{selectedSeries.regressionSlope}% / level</span>
+            <span className="text-[10px] font-sans font-bold text-muted-foreground block">
+              {isHindi ? 'प्रतिगमन प्रवणता' : 'Regression Slope'}
+            </span>
+            <span className="text-sm font-black text-[#FFA72F]">
+              {selectedSeries.regressionSlope}% / {isHindi ? 'स्तर' : 'level'}
+            </span>
           </div>
           <div>
-            <span className="text-[10px] font-sans font-bold text-muted-foreground block">Significance (p-value)</span>
+            <span className="text-[10px] font-sans font-bold text-muted-foreground block">
+              {isHindi ? 'सार्थकता (p-मान)' : 'Significance (p-value)'}
+            </span>
             <span className="text-sm font-black text-emerald-700">p = {selectedSeries.pValue}</span>
           </div>
         </div>
@@ -317,7 +339,7 @@ export function OutcomeCorrelationChart() {
               fontWeight="bold"
               fill="#64748B"
             >
-              {selectedSeries.xAxisLabel}
+              {isHindi ? 'दक्षता स्तर (L1 - L5)' : selectedSeries.xAxisLabel}
             </text>
 
             {/* Y-axis title */}
@@ -330,7 +352,7 @@ export function OutcomeCorrelationChart() {
               fontWeight="bold"
               fill="#64748B"
             >
-              {selectedSeries.yAxisLabel}
+              {isHindi ? 'संवीक्षा त्रुटि दर (%)' : selectedSeries.yAxisLabel}
             </text>
           </svg>
         </div>
@@ -354,13 +376,15 @@ export function OutcomeCorrelationChart() {
                 L{hoveredPoint.competencyLevel}
               </span>
               <span className="px-2 py-0.5 rounded-md bg-white border border-[#EDF0F7] font-bold text-[#FFA72F]">
-                {hoveredPoint.errorRatePercent}% Err
+                {hoveredPoint.errorRatePercent}% {isHindi ? 'त्रुटि' : 'Err'}
               </span>
             </div>
           </div>
         ) : (
           <div className="mt-3 p-2 text-center text-xs text-muted-foreground bg-[#EDF0F7]/40 rounded-xl">
-            Hover over any regional data circle to inspect district sample size and scrutiny metrics
+            {isHindi
+              ? 'जिले के नमूना आकार और संवीक्षा मेट्रिक्स का निरीक्षण करने के लिए किसी भी क्षेत्रीय डेटा सर्कल पर होवर करें'
+              : 'Hover over any regional data circle to inspect district sample size and scrutiny metrics'}
           </div>
         )}
 

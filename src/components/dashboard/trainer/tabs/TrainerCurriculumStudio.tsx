@@ -100,11 +100,13 @@ const CURRICULUM_ITEMS: ItemAnalysisData[] = [
 interface TrainerCurriculumStudioProps {
   onOpenManualReader: (manualId: string) => void;
   onInspectItem: (item: ItemAnalysisData) => void;
+  isHindi?: boolean;
 }
 
 export function TrainerCurriculumStudio({
   onOpenManualReader,
   onInspectItem,
+  isHindi = false,
 }: TrainerCurriculumStudioProps) {
   const [search, setSearch] = useState('');
   const [selectedCompetency, setSelectedCompetency] = useState('ALL');
@@ -120,7 +122,7 @@ export function TrainerCurriculumStudio({
   });
 
   const handleExportBank = () => {
-    setToastMsg('Exported 342 verified questions to MoSPI Official Examination JSON/CSV.');
+    setToastMsg(isHindi ? '342 सत्यापित प्रश्नों को MoSPI परीक्षा JSON/CSV में निर्यात किया गया।' : 'Exported 342 verified questions to MoSPI Official Examination JSON/CSV.');
     setTimeout(() => setToastMsg(null), 3000);
   };
 
@@ -133,11 +135,13 @@ export function TrainerCurriculumStudio({
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#FFA72F]" />
               <h2 className="text-lg font-bold text-[#1F273A] tracking-tight">
-                Curriculum Studio & Vector Knowledge Base
+                {isHindi ? 'पाठ्यचर्या स्टूडियो एवं वेक्टर ज्ञानकोश' : 'Curriculum Studio & Vector Knowledge Base'}
               </h2>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Manage ingested MoSPI statutory handbooks, chunk indexes, and verified question banks
+              {isHindi
+                ? 'समाविष्ट MoSPI सांविधिक नियमावलियों, वेक्टर खंडों और सत्यापित प्रश्न बैंकों का प्रबंधन करें'
+                : 'Manage ingested MoSPI statutory handbooks, chunk indexes, and verified question banks'}
             </p>
           </div>
 
@@ -147,7 +151,7 @@ export function TrainerCurriculumStudio({
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#D8DFEE] transition-colors"
             >
               <UploadCloud className="h-3.5 w-3.5" />
-              <span>Upload Manual</span>
+              <span>{isHindi ? 'नियमावली अपलोड करें' : 'Upload Manual'}</span>
             </Link>
             <button
               type="button"
@@ -155,7 +159,7 @@ export function TrainerCurriculumStudio({
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-colors cursor-pointer shadow-2xs"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>Export Question Bank</span>
+              <span>{isHindi ? 'प्रश्न बैंक निर्यात करें' : 'Export Question Bank'}</span>
             </button>
           </div>
         </div>
@@ -170,19 +174,33 @@ export function TrainerCurriculumStudio({
         {/* Vector Engine KPI Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-[#D8DFEE] text-center">
           <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Manuals Ingested</p>
-            <p className="text-xl font-extrabold text-[#1F273A] font-mono mt-0.5">6 Books</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'समाविष्ट नियमावलियां' : 'Manuals Ingested'}
+            </p>
+            <p className="text-xl font-extrabold text-[#1F273A] font-mono mt-0.5">
+              {isHindi ? '6 पुस्तकें' : '6 Books'}
+            </p>
           </div>
           <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Vector Chunks</p>
-            <p className="text-xl font-extrabold text-[#1C4CA1] font-mono mt-0.5">1,276 Chunks</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'वेक्टर खंड' : 'Vector Chunks'}
+            </p>
+            <p className="text-xl font-extrabold text-[#1C4CA1] font-mono mt-0.5">
+              {isHindi ? '1,276 खंड' : '1,276 Chunks'}
+            </p>
           </div>
           <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">Active Pool</p>
-            <p className="text-xl font-extrabold text-[#FFA72F] font-mono mt-0.5">342 MCQs</p>
+            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+              {isHindi ? 'सक्रिय पूल' : 'Active Pool'}
+            </p>
+            <p className="text-xl font-extrabold text-[#FFA72F] font-mono mt-0.5">
+              {isHindi ? '342 एमसीक्यू' : '342 MCQs'}
+            </p>
           </div>
           <div className="p-3 rounded-xl bg-[#EDF0F7]/40 border border-[#D8DFEE]">
-            <p className="text-[10px] font-bold uppercase text-emerald-700">RAG Alignment</p>
+            <p className="text-[10px] font-bold uppercase text-emerald-700">
+              {isHindi ? 'आरएजी संरेखण' : 'RAG Alignment'}
+            </p>
             <p className="text-xl font-extrabold text-emerald-600 font-mono mt-0.5">99.4%</p>
           </div>
         </div>
@@ -192,16 +210,20 @@ export function TrainerCurriculumStudio({
       <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-2xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-[#D8DFEE]">
           <div>
-            <h3 className="text-base font-bold text-[#1F273A]">Ingested MoSPI Handbooks</h3>
+            <h3 className="text-base font-bold text-[#1F273A]">
+              {isHindi ? 'समाविष्ट MoSPI नियमावली संग्रह' : 'Ingested MoSPI Handbooks'}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Click on any manual to inspect official chapters and vector extracts
+              {isHindi
+                ? 'अध्याय एवं वेक्टर उद्धरण देखने के लिए किसी भी नियमावली पर क्लिक करें'
+                : 'Click on any manual to inspect official chapters and vector extracts'}
             </p>
           </div>
           <Link
             href="/documents"
             className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1"
           >
-            <span>All Documents</span>
+            <span>{isHindi ? 'सभी दस्तावेज़' : 'All Documents'}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -210,24 +232,24 @@ export function TrainerCurriculumStudio({
           {[
             {
               id: 'manual-plfs-vol1',
-              title: 'Instructions to Field Staff: Vol. 1 (PLFS 2026)',
+              title: isHindi ? 'फील्ड स्टाफ के लिए निर्देश: खंड 1 (पीएलएफएस 2026)' : 'Instructions to Field Staff: Vol. 1 (PLFS 2026)',
               division: 'NSSO Field Operations Division',
-              pages: '184 Pages • 412 Chunks',
-              badge: 'Statutory Core',
+              pages: isHindi ? '184 पृष्ठ • 412 खंड' : '184 Pages • 412 Chunks',
+              badge: isHindi ? 'सांविधिक कोर' : 'Statutory Core',
             },
             {
               id: 'manual-schedule0',
-              title: 'Schedule 0.0 Household Listing & Demarcation Handbook',
+              title: isHindi ? 'अनुसूची 0.0 घरेलू सूचीकरण एवं सीमांकन पुस्तिका' : 'Schedule 0.0 Household Listing & Demarcation Handbook',
               division: 'Survey Design & Research Division (SDRD)',
-              pages: '96 Pages • 228 Chunks',
-              badge: 'Census Fieldwork',
+              pages: isHindi ? '96 पृष्ठ • 228 खंड' : '96 Pages • 228 Chunks',
+              badge: isHindi ? 'जनगणना फील्डवर्क' : 'Census Fieldwork',
             },
             {
               id: 'manual-capi',
-              title: 'ASHE & CAPI Tablet Operational Manual Ver 2026',
+              title: isHindi ? 'एएसएचई एवं सीएपीआई टैबलेट संचालन मैनुअल 2026' : 'ASHE & CAPI Tablet Operational Manual Ver 2026',
               division: 'Data Processing Division (DPD)',
-              pages: '64 Pages • 146 Chunks',
-              badge: 'Digital CAPI',
+              pages: isHindi ? '64 पृष्ठ • 146 खंड' : '64 Pages • 146 Chunks',
+              badge: isHindi ? 'डिजिटल सीएपीआई' : 'Digital CAPI',
             },
           ].map((m) => (
             <div
@@ -250,7 +272,9 @@ export function TrainerCurriculumStudio({
 
               <div className="pt-2 border-t border-[#D8DFEE] flex items-center justify-between text-[10px] text-muted-foreground">
                 <span>{m.pages}</span>
-                <span className="font-bold text-[#1C4CA1]">Inspect Chapters →</span>
+                <span className="font-bold text-[#1C4CA1]">
+                  {isHindi ? 'अध्याय देखें →' : 'Inspect Chapters →'}
+                </span>
               </div>
             </div>
           ))}
@@ -262,10 +286,12 @@ export function TrainerCurriculumStudio({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-[#D8DFEE]">
           <div>
             <h3 className="text-base font-bold text-[#1F273A]">
-              Curated Question Bank Explorer
+              {isHindi ? 'क्यूरेटेड प्रश्न बैंक अन्वेषक' : 'Curated Question Bank Explorer'}
             </h3>
             <p className="text-xs text-muted-foreground">
-              Filter by competency, Bloom&apos;s level, or examine psychometric properties
+              {isHindi
+                ? 'दक्षता, ब्लूम स्तर के अनुसार फ़िल्टर करें या मनोमिति गुणों का परीक्षण करें'
+                : 'Filter by competency, Bloom\'s level, or examine psychometric properties'}
             </p>
           </div>
 
@@ -274,7 +300,7 @@ export function TrainerCurriculumStudio({
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFA72F] text-[#1F273A] text-xs font-bold hover:bg-[#E08D18] transition-colors shadow-2xs self-start sm:self-auto"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Generate New MCQs with AI</span>
+            <span>{isHindi ? 'एआई से नए एमसीक्यू बनाएं' : 'Generate New MCQs with AI'}</span>
           </Link>
         </div>
 
@@ -286,18 +312,18 @@ export function TrainerCurriculumStudio({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search question stem, source manual..."
+              placeholder={isHindi ? 'प्रश्न, स्रोत नियमावली खोजें...' : 'Search question stem, source manual...'}
               className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-[#D8DFEE] text-xs text-[#1F273A] focus:outline-none focus:ring-1 focus:ring-[#1C4CA1]"
             />
           </div>
 
           <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
             {[
-              { id: 'ALL', label: 'All Competencies' },
-              { id: 'comp-demarcation', label: 'Demarcation' },
-              { id: 'comp-capi', label: 'CAPI Tablet' },
-              { id: 'comp-nsso', label: 'PLFS Labour' },
-              { id: 'comp-survey', label: 'Sampling' },
+              { id: 'ALL', label: isHindi ? 'सभी दक्षताएं' : 'All Competencies' },
+              { id: 'comp-demarcation', label: isHindi ? 'सीमांकन' : 'Demarcation' },
+              { id: 'comp-capi', label: isHindi ? 'सीएपीआई टैबलेट' : 'CAPI Tablet' },
+              { id: 'comp-nsso', label: isHindi ? 'पीएलएफएस श्रम' : 'PLFS Labour' },
+              { id: 'comp-survey', label: isHindi ? 'प्रतिचयन' : 'Sampling' },
             ].map((c) => (
               <button
                 key={c.id}
@@ -331,7 +357,7 @@ export function TrainerCurriculumStudio({
                     {item.competencyTag}
                   </span>
                   <span className="text-[10px] font-mono text-muted-foreground">
-                    Discrimination D={item.discriminationIndex.toFixed(2)}
+                    {isHindi ? 'विभेदन' : 'Discrimination'} D={item.discriminationIndex.toFixed(2)}
                   </span>
                 </div>
 
@@ -342,7 +368,7 @@ export function TrainerCurriculumStudio({
                       : 'bg-amber-500/15 text-amber-700'
                   }`}
                 >
-                  {item.status}
+                  {item.status === 'approved' ? (isHindi ? 'स्वीकृत' : 'approved') : (isHindi ? 'लंबित' : 'pending')}
                 </span>
               </div>
 
@@ -362,7 +388,7 @@ export function TrainerCurriculumStudio({
                   className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#1C4CA1] hover:text-white transition-colors cursor-pointer shrink-0"
                 >
                   <BarChart3 className="h-3.5 w-3.5" />
-                  <span>Item Psychometrics</span>
+                  <span>{isHindi ? 'मनोमिति विश्लेषण' : 'Item Psychometrics'}</span>
                 </button>
               </div>
             </div>

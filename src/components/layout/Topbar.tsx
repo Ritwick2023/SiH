@@ -45,18 +45,30 @@ function getInitialPersona(): DemoPersona {
     if (match) {
       const decoded = JSON.parse(decodeURIComponent(match[1]));
       const found = DEMO_PERSONAS.find(
-        (p) => p.email?.toLowerCase() === decoded.email?.toLowerCase()
+        (p) =>
+          p.email?.toLowerCase() === decoded.email?.toLowerCase() ||
+          p.id === decoded.id
       );
-      if (found) return found;
-      if (decoded.role) {
+      if (found) {
+        return {
+          ...found,
+          ...(decoded.name ? { name: decoded.name } : {}),
+          ...(decoded.designation ? { designation: decoded.designation } : {}),
+          ...(decoded.cadre ? { cadre: decoded.cadre } : {}),
+          ...(decoded.department ? { department: decoded.department } : {}),
+          ...(decoded.preferred_language ? { preferred_language: decoded.preferred_language } : {}),
+          ...(decoded.role ? { role: decoded.role } : {}),
+        };
+      }
+      if (decoded.role || decoded.name || decoded.email) {
         return {
           id: decoded.id || 'custom-user',
           name: decoded.name || 'Civil Officer',
           email: decoded.email || 'user@mospi.gov.in',
-          role: decoded.role as UserRole,
+          role: (decoded.role as UserRole) || 'learner',
           designation: decoded.designation || 'Statistical Officer',
           cadre: decoded.cadre || 'MoSPI Cadre',
-          organization_id: 'org-mospi',
+          organization_id: decoded.organization_id || 'org-mospi',
           preferred_language: (decoded.preferred_language as 'en' | 'hi') || 'en',
           department: decoded.department || 'MoSPI Headquarters',
         };
@@ -73,9 +85,6 @@ function setPersonaCookie(persona: DemoPersona) {
   document.cookie = `demo_user=${encodeURIComponent(
     JSON.stringify(persona)
   )}; path=/; max-age=604800`;
-  document.cookie = `locale=${
-    persona.preferred_language || 'en'
-  }; path=/; max-age=31536000`;
 }
 
 async function clearPersonaCookie() {
@@ -165,16 +174,28 @@ export function Topbar({ initialRole }: TopbarProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Sync with cookie changes
+  // Sync with cookie changes & profile update events
   useEffect(() => {
     const checkCookie = () => {
       const persona = getInitialPersona();
-      setActivePersona((prev) => (prev.email !== persona.email ? persona : prev));
+      setActivePersona((prev) =>
+        prev.email !== persona.email ||
+        prev.name !== persona.name ||
+        prev.role !== persona.role ||
+        prev.designation !== persona.designation
+          ? persona
+          : prev
+      );
     };
 
     checkCookie();
     const interval = setInterval(checkCookie, 1000);
-    return () => clearInterval(interval);
+    const handleUserUpdate = () => checkCookie();
+    window.addEventListener('statvidya-user-updated', handleUserUpdate);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('statvidya-user-updated', handleUserUpdate);
+    };
   }, []);
 
   const role: UserRole = initialRole || activePersona.role || 'learner';
@@ -432,7 +453,7 @@ export function Topbar({ initialRole }: TopbarProps) {
               {/* NSSTA Faculty Studio Badge */}
               <div className="flex items-center gap-1.5 rounded-xl bg-[#1164BE]/10 border border-[#1164BE]/25 px-3 py-1.5 text-xs font-bold text-[#1164BE]">
                 <GraduationCap className="h-3.5 w-3.5 text-[#1164BE]" />
-                <span>NSSTA Faculty Studio</span>
+                <span>{locale === 'hi' ? 'एनएसएसटीए संकाय स्टूडियो' : 'NSSTA Faculty Studio'}</span>
               </div>
 
               {/* Pending QA Counter */}
@@ -441,7 +462,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 className="hidden sm:flex items-center gap-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-500/25 transition-colors"
               >
                 <ClipboardCheck className="h-3.5 w-3.5 text-amber-700" />
-                <span>14 QA Pending</span>
+                <span>{locale === 'hi' ? '14 क्यूए लंबित' : '14 QA Pending'}</span>
               </Link>
 
               {/* Ingest Manual Quick CTA */}
@@ -450,7 +471,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#1164BE] px-3 py-1.5 text-xs font-bold text-white hover:bg-secondary-hover transition-colors shadow-2xs"
               >
                 <FileUp className="h-3.5 w-3.5" />
-                <span>Ingest Manual</span>
+                <span>{locale === 'hi' ? 'नियमावली अपलोड' : 'Ingest Manual'}</span>
               </Link>
             </>
           )}
@@ -465,7 +486,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 className="flex items-center gap-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-500/25 transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <Target className="h-3.5 w-3.5 text-emerald-700" />
-                <span>National Readiness: 72.4%</span>
+                <span>{locale === 'hi' ? 'राष्ट्रीय तत्परता: 72.4%' : 'National Readiness: 72.4%'}</span>
               </button>
 
               {/* Priority Flagged ROs Capsule */}
@@ -476,7 +497,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 className="hidden sm:flex items-center gap-1.5 rounded-xl bg-red-500/15 border border-red-500/30 px-3 py-1.5 text-xs font-bold text-red-800 hover:bg-red-500/25 transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <Flag className="h-3.5 w-3.5 text-red-600" />
-                <span>2 Flagged ROs</span>
+                <span>{locale === 'hi' ? '2 चिह्नित क्षेत्रीय कार्यालय' : '2 Flagged ROs'}</span>
               </button>
 
               {/* Ministerial Briefing CTA */}
@@ -487,7 +508,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                 className="hidden lg:flex items-center gap-1.5 rounded-xl bg-[#1C4CA1] px-3 py-1.5 text-xs font-bold text-white hover:bg-primary-dark transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
-                <span>Ministerial PDF</span>
+                <span>{locale === 'hi' ? 'मंत्रिस्तरीय पीडीएफ' : 'Ministerial PDF'}</span>
               </button>
             </>
           )}

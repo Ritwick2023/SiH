@@ -19,6 +19,7 @@ interface RegionalDetailModalProps {
   onClose: () => void;
   office: RegionalOfficeData | null;
   onDispatchTriage?: (roName: string) => void;
+  isHindi?: boolean;
 }
 
 export function RegionalDetailModal({
@@ -26,6 +27,7 @@ export function RegionalDetailModal({
   onClose,
   office,
   onDispatchTriage,
+  isHindi = false,
 }: RegionalDetailModalProps) {
   const [triageSent, setTriageSent] = useState(false);
 
@@ -61,7 +63,7 @@ export function RegionalDetailModal({
                 </span>
                 {isCritical && (
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500 text-white uppercase">
-                    Priority Attention
+                    {isHindi ? 'प्राथमिकता ध्यान' : 'Priority Attention'}
                   </span>
                 )}
               </div>
@@ -73,7 +75,7 @@ export function RegionalDetailModal({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close regional detail modal"
+            aria-label={isHindi ? 'मोडल बंद करें' : 'Close regional detail modal'}
             className="rounded-xl p-1.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -85,23 +87,35 @@ export function RegionalDetailModal({
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-3 gap-3">
             <div className="p-3.5 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] text-center">
-              <span className="text-[10px] font-bold text-muted-foreground block">Total Personnel</span>
+              <span className="text-[10px] font-bold text-muted-foreground block">
+                {isHindi ? 'कुल कार्मिक' : 'Total Personnel'}
+              </span>
               <span className="text-xl font-extrabold font-mono text-[#1F273A]">{office.headcount}</span>
-              <span className="text-[9px] text-muted-foreground block">FOD &amp; SSS Cadres</span>
+              <span className="text-[9px] text-muted-foreground block">
+                {isHindi ? 'एफओडी एवं एसएसएस संवर्ग' : 'FOD & SSS Cadres'}
+              </span>
             </div>
             <div className="p-3.5 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] text-center">
-              <span className="text-[10px] font-bold text-muted-foreground block">Workforce Readiness</span>
+              <span className="text-[10px] font-bold text-muted-foreground block">
+                {isHindi ? 'कार्यबल तत्परता' : 'Workforce Readiness'}
+              </span>
               <span className={`text-xl font-extrabold font-mono ${office.readinessPercent >= 70 ? 'text-emerald-700' : 'text-amber-700'}`}>
                 {office.readinessPercent}%
               </span>
-              <span className="text-[9px] text-muted-foreground block">Avg: {office.avgLevel}</span>
+              <span className="text-[9px] text-muted-foreground block">
+                {isHindi ? 'औसत' : 'Avg'}: {office.avgLevel}
+              </span>
             </div>
             <div className="p-3.5 rounded-2xl bg-[#EDF0F7]/40 border border-[#D8DFEE] text-center">
-              <span className="text-[10px] font-bold text-muted-foreground block">Scrutiny Error Rate</span>
+              <span className="text-[10px] font-bold text-muted-foreground block">
+                {isHindi ? 'संवीक्षा त्रुटि दर' : 'Scrutiny Error Rate'}
+              </span>
               <span className={`text-xl font-extrabold font-mono ${office.errorRate > 12 ? 'text-red-700' : 'text-[#1F273A]'}`}>
                 {office.errorRate}%
               </span>
-              <span className="text-[9px] text-muted-foreground block">NSS Returns</span>
+              <span className="text-[9px] text-muted-foreground block">
+                {isHindi ? 'एनएसएस रिटर्न' : 'NSS Returns'}
+              </span>
             </div>
           </div>
 
@@ -109,19 +123,25 @@ export function RegionalDetailModal({
           <div className="p-4 rounded-2xl bg-white border border-[#D8DFEE] space-y-2 shadow-2xs">
             <h3 className="font-bold text-[#1C4CA1] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
               <Users className="h-3.5 w-3.5 text-[#1C4CA1]" />
-              Cadre Headcount Breakdown
+              {isHindi ? 'संवर्ग जनशक्ति विवरण' : 'Cadre Headcount Breakdown'}
             </h3>
             <div className="space-y-1.5 text-[11px]">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Field Investigators (FOD Rural Cadre)</span>
+                <span className="text-muted-foreground">
+                  {isHindi ? 'क्षेत्र अन्वेषक (एफओडी संवर्ग)' : 'Field Investigators (FOD Rural Cadre)'}
+                </span>
                 <span className="font-mono font-bold text-[#1F273A]">{Math.round(office.headcount * 0.65)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Junior Statistical Officers (SSS Cadre)</span>
+                <span className="text-muted-foreground">
+                  {isHindi ? 'कनिष्ठ सांख्यिकी अधिकारी (एसएसएस संवर्ग)' : 'Junior Statistical Officers (SSS Cadre)'}
+                </span>
                 <span className="font-mono font-bold text-[#1F273A]">{Math.round(office.headcount * 0.25)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Senior Officers &amp; Directors (ISS Cadre)</span>
+                <span className="text-muted-foreground">
+                  {isHindi ? 'वरिष्ठ अधिकारी एवं निदेशक (आईएसएस संवर्ग)' : 'Senior Officers & Directors (ISS Cadre)'}
+                </span>
                 <span className="font-mono font-bold text-[#1F273A]">{Math.round(office.headcount * 0.10)}</span>
               </div>
             </div>
@@ -131,12 +151,14 @@ export function RegionalDetailModal({
           <div className="p-4 rounded-2xl bg-white border border-[#D8DFEE] space-y-2 shadow-2xs">
             <h3 className="font-bold text-[#FFA72F] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
               <AlertTriangle className="h-3.5 w-3.5 text-[#FFA72F]" />
-              Dominant Error Clusters (Last 90 Days)
+              {isHindi ? 'प्रमुख त्रुटि समूह (विगत 90 दिन)' : 'Dominant Error Clusters (Last 90 Days)'}
             </h3>
             <div className="space-y-2">
               <div>
                 <div className="flex justify-between text-[11px] mb-0.5">
-                  <span className="text-[#1F273A] font-semibold">Schedule 0.0 Household Demarcation</span>
+                  <span className="text-[#1F273A] font-semibold">
+                    {isHindi ? 'अनुसूची 0.0 घरेलू सीमांकन' : 'Schedule 0.0 Household Demarcation'}
+                  </span>
                   <span className="font-mono text-red-700 font-bold">{isCritical ? '42%' : '14%'}</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#EDF0F7]">
@@ -149,7 +171,9 @@ export function RegionalDetailModal({
 
               <div>
                 <div className="flex justify-between text-[11px] mb-0.5">
-                  <span className="text-[#1F273A] font-semibold">NIC-2008 &amp; NCO-2015 5-Digit Coding</span>
+                  <span className="text-[#1F273A] font-semibold">
+                    {isHindi ? 'एनआईसी-2008 एवं एनसीओ-2015 5-अंकीय कोडिंग' : 'NIC-2008 & NCO-2015 5-Digit Coding'}
+                  </span>
                   <span className="font-mono text-amber-700 font-bold">{isCritical ? '31%' : '18%'}</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#EDF0F7]">
@@ -162,7 +186,9 @@ export function RegionalDetailModal({
 
               <div>
                 <div className="flex justify-between text-[11px] mb-0.5">
-                  <span className="text-[#1F273A] font-semibold">ASHE Capital Asset Enterprise Valuation</span>
+                  <span className="text-[#1F273A] font-semibold">
+                    {isHindi ? 'एएसएचई पूंजी परिसंपत्ति मूल्यांकन' : 'ASHE Capital Asset Enterprise Valuation'}
+                  </span>
                   <span className="font-mono text-[#1C4CA1] font-bold">{isCritical ? '27%' : '10%'}</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#EDF0F7]">
@@ -180,16 +206,24 @@ export function RegionalDetailModal({
             <div className="p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-between text-[11px] text-emerald-900 font-bold">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-700" />
-                <span>NSSTA Mobile Training Unit dispatched to {office.name}!</span>
+                <span>
+                  {isHindi
+                    ? `एनएसएसटीए सचल प्रशिक्षण इकाई ${office.name} में तैनात!`
+                    : `NSSTA Mobile Training Unit dispatched to ${office.name}!`}
+                </span>
               </div>
               <span className="font-mono text-[10px]">Triage Ref: TR-Patna-0907</span>
             </div>
           ) : (
             <div className="p-4 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h4 className="font-bold text-[#1F273A] text-[11px]">NSSTA Remedial Intervention</h4>
+                <h4 className="font-bold text-[#1F273A] text-[11px]">
+                  {isHindi ? 'एनएसएसटीए उपचारात्मक हस्तक्षेप' : 'NSSTA Remedial Intervention'}
+                </h4>
                 <p className="text-[10px] text-muted-foreground">
-                  Deploy targeted 5-day competency booster modules and faculty mentors to this RO.
+                  {isHindi
+                    ? 'इस क्षेत्रीय कार्यालय में 5-दिवसीय क्षमता वर्धक मॉड्यूल और संकाय संरक्षक तैनात करें।'
+                    : 'Deploy targeted 5-day competency booster modules and faculty mentors to this RO.'}
                 </p>
               </div>
               <button
@@ -198,7 +232,7 @@ export function RegionalDetailModal({
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1C4CA1] text-white font-bold text-xs hover:bg-[#1164BE] transition-colors cursor-pointer shadow-xs shrink-0"
               >
                 <Send className="h-3.5 w-3.5" />
-                <span>Dispatch Triage</span>
+                <span>{isHindi ? 'ट्राइएज तैनात करें' : 'Dispatch Triage'}</span>
               </button>
             </div>
           )}
@@ -206,13 +240,15 @@ export function RegionalDetailModal({
 
         {/* Footer */}
         <div className="bg-[#EDF0F7]/40 border-t border-[#D8DFEE] px-6 py-3 flex items-center justify-between text-xs text-muted-foreground shrink-0">
-          <span className="text-[11px]">Audit Source: NSS Scrutiny System 2026</span>
+          <span className="text-[11px]">
+            {isHindi ? 'ऑडिट स्रोत: एनएसएस संवीक्षा प्रणाली 2026' : 'Audit Source: NSS Scrutiny System 2026'}
+          </span>
           <button
             type="button"
             onClick={onClose}
             className="px-4 py-1.5 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
-            Close
+            {isHindi ? 'बंद करें' : 'Close'}
           </button>
         </div>
       </div>

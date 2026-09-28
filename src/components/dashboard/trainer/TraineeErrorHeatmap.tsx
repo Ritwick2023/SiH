@@ -62,7 +62,7 @@ const CURRICULUM_ERROR_POINTS: ErrorPoint[] = [
   },
 ];
 
-export function TraineeErrorHeatmap() {
+export function TraineeErrorHeatmap({ isHindi = false }: { isHindi?: boolean }) {
   return (
     <div className="rounded-2xl bg-white border border-[#D8DFEE] p-6 shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-[#D8DFEE]">
@@ -70,11 +70,13 @@ export function TraineeErrorHeatmap() {
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-red-600" />
             <h2 className="text-lg font-bold text-[#1F273A]">
-              Trainee Curriculum Error Heatmap
+              {isHindi ? 'प्रशिक्षु पाठ्यचर्या त्रुटि हीटमैप' : 'Trainee Curriculum Error Heatmap'}
             </h2>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            FR-CONTENT-11 • Diagnostic failure rates aggregated across recent cohort assessments
+            {isHindi
+              ? 'एफआर-कंटेंट-11 • हाल के समूह मूल्यांकनों में एकत्रित नैदानिक विफलता दर'
+              : 'FR-CONTENT-11 • Diagnostic failure rates aggregated across recent cohort assessments'}
           </p>
         </div>
 
@@ -82,7 +84,7 @@ export function TraineeErrorHeatmap() {
           href="/assignments"
           className="text-xs font-bold text-[#1C4CA1] hover:text-[#1164BE] inline-flex items-center gap-1 shrink-0"
         >
-          <span>Curate Targeted Drill</span>
+          <span>{isHindi ? 'लक्षित अभ्यास तैयार करें' : 'Curate Targeted Drill'}</span>
           <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
       </div>
@@ -109,7 +111,7 @@ export function TraineeErrorHeatmap() {
                       ) : (
                         <AlertTriangle className="h-3 w-3" />
                       )}
-                      {point.errorRatePercent}% Error Rate
+                      {point.errorRatePercent}% {isHindi ? 'त्रुटि दर' : 'Error Rate'}
                     </span>
                     <span className="text-[11px] text-muted-foreground font-medium truncate">
                       {point.cadre}
@@ -120,7 +122,7 @@ export function TraineeErrorHeatmap() {
 
                 <div className="shrink-0 text-right">
                   <span className="text-xs font-mono font-bold text-muted-foreground">
-                    N = {point.sampleCount} trainees
+                    N = {point.sampleCount} {isHindi ? 'प्रशिक्षु' : 'trainees'}
                   </span>
                 </div>
               </div>
@@ -147,3 +149,5 @@ export function TraineeErrorHeatmap() {
     </div>
   );
 }
+
+export default TraineeErrorHeatmap;

@@ -7,9 +7,10 @@ import { KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
 interface MinisterialBriefingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isHindi?: boolean;
 }
 
-export function MinisterialBriefingModal({ isOpen, onClose }: MinisterialBriefingModalProps) {
+export function MinisterialBriefingModal({ isOpen, onClose, isHindi = false }: MinisterialBriefingModalProps) {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   if (!isOpen) return null;
@@ -90,19 +91,19 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-[#FFA72F]/20 text-[#FFA72F] border border-[#FFA72F]/30 uppercase">
-                  CONFIDENTIAL // CABINET LEVEL
+                  {isHindi ? 'गोपनीय // मंत्रिमंडल स्तर' : 'CONFIDENTIAL // CABINET LEVEL'}
                 </span>
                 <span className="text-[10px] text-white/60 font-mono">Ref: MoSPI/HQ/ADG/2026/8821</span>
               </div>
               <h2 id="briefing-modal-title" className="text-sm sm:text-base font-black tracking-wide text-white mt-0.5">
-                Secretary Briefing Memorandum (PDF Preview)
+                {isHindi ? 'सचिव ब्रीफिंग ज्ञापन (पीडीएफ पूर्वावलोकन)' : 'Secretary Briefing Memorandum (PDF Preview)'}
               </h2>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close briefing modal"
+            aria-label={isHindi ? 'ब्रीफिंग मोडल बंद करें' : 'Close briefing modal'}
             className="rounded-xl p-1.5 text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -248,7 +249,7 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
             onClick={onClose}
             className="px-4 py-2 rounded-xl border border-[#D8DFEE] text-xs font-bold text-muted-foreground hover:bg-white transition-colors cursor-pointer"
           >
-            Close Document
+            {isHindi ? 'दस्तावेज़ बंद करें' : 'Close Document'}
           </button>
 
           <div className="flex items-center gap-2">
@@ -258,7 +259,7 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#EDF0F7] transition-colors cursor-pointer shadow-2xs"
             >
               <Printer className="h-3.5 w-3.5" />
-              <span>Print Memo</span>
+              <span>{isHindi ? 'ज्ञापन प्रिंट करें' : 'Print Memo'}</span>
             </button>
 
             <button
@@ -267,7 +268,15 @@ National Statistical Commission Registry Node: NSC-DEL-2026-0907`;
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-all cursor-pointer shadow-xs active:scale-95"
             >
               <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
-              <span>{downloadSuccess ? 'Downloaded!' : 'Download Official PDF'}</span>
+              <span>
+                {downloadSuccess
+                  ? isHindi
+                    ? 'डाउनलोड हो गया!'
+                    : 'Downloaded!'
+                  : isHindi
+                  ? 'आधिकारिक पीडीएफ डाउनलोड करें'
+                  : 'Download Official PDF'}
+              </span>
             </button>
           </div>
         </div>

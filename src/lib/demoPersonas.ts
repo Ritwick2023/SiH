@@ -20,7 +20,7 @@ export const DEMO_PERSONAS: DemoPersona[] = [
     organization_id: 'org-nsso',
     cadre: 'NSSO Field Operations Division',
     designation: 'Field Investigator',
-    preferred_language: 'hi',
+    preferred_language: 'en',
     department: 'NSSO Field Operations Division',
   },
   {

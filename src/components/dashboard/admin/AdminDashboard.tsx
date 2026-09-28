@@ -30,13 +30,16 @@ import {
   Download,
   CheckCircle2,
 } from 'lucide-react';
+import { useSafeLocale } from '@/lib/useSafeLocale';
 
 interface AdminDashboardProps {
   user: DashboardUserProps | AppUser;
   isHindi?: boolean;
 }
 
-export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
+export function AdminDashboard({ user, isHindi: propIsHindi }: AdminDashboardProps) {
+  const locale = useSafeLocale('en');
+  const isHindi = propIsHindi ?? (locale === 'hi');
   const [activeTab, setActiveTab] = useState<
     'overview' | 'zonal_ro' | 'scrutiny_correlation' | 'policy_circulars' | 'governance_orders'
   >('overview');
@@ -110,13 +113,19 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="h-14 w-14 rounded-2xl bg-[#1C4CA1] text-white flex items-center justify-center text-xl font-bold font-serif shrink-0 shadow-xs">
-              RK
+              {adminName
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase() || 'RK'}
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/20">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  National Executive Command
+                  {isHindi ? 'राष्ट्रीय कार्यकारी कमान' : 'National Executive Command'}
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]">
                   {adminCadre}
@@ -129,11 +138,13 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                 {adminName}
               </h1>
               <p className="text-xs sm:text-sm font-semibold text-[#1164BE] mt-0.5">
-                {adminDesignation} • Workforce Strategy &amp; Statistical Governance
+                {adminDesignation} • {isHindi ? 'कार्यबल रणनीति एवं सांख्यिकीय शासन' : 'Workforce Strategy & Statistical Governance'}
               </p>
               <p className="text-xs text-[#475569] flex items-center gap-1 mt-1">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-[#1C4CA1]" />
-                Ministry of Statistics &amp; Programme Implementation, Sardar Patel Bhawan, New Delhi
+                {isHindi
+                  ? 'सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय, सरदार पटेल भवन, नई दिल्ली'
+                  : 'Ministry of Statistics & Programme Implementation, Sardar Patel Bhawan, New Delhi'}
               </p>
             </div>
           </div>
@@ -147,7 +158,7 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1F273A] text-white text-xs font-bold hover:bg-black transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
-                <span>Secretary Memo (PDF)</span>
+                <span>{isHindi ? 'सचिव ज्ञापन (पीडीएफ)' : 'Secretary Memo (PDF)'}</span>
               </button>
 
               <button
@@ -156,20 +167,24 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] hover:bg-[#EDF0F7] transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <Users className="h-3.5 w-3.5" />
-                <span>Cadre Roster</span>
+                <span>{isHindi ? 'संवर्ग नामावली' : 'Cadre Roster'}</span>
               </button>
             </div>
 
             <div className="p-2.5 rounded-xl bg-[#EDF0F7]/60 border border-[#D8DFEE] text-right hidden sm:block">
-              <span className="text-[10px] font-bold text-[#475569] block">Statistical Authority</span>
-              <span className="text-xs font-black text-[#1C4CA1]">National Sample Survey (NSS)</span>
+              <span className="text-[10px] font-bold text-[#475569] block">
+                {isHindi ? 'सांख्यिकीय प्राधिकरण' : 'Statistical Authority'}
+              </span>
+              <span className="text-xs font-black text-[#1C4CA1]">
+                {isHindi ? 'राष्ट्रीय प्रतिदर्श सर्वेक्षण (एनएसएस)' : 'National Sample Survey (NSS)'}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
       {/* 5-Card Macro KPI Strip with interactive onKpiClick */}
-      <AdminKpiStrip onKpiClick={handleKpiClick} />
+      <AdminKpiStrip onKpiClick={handleKpiClick} isHindi={isHindi} />
 
       {/* Multi-Deck Workspace Tab Navigation */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1" role="tablist">
@@ -254,32 +269,34 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
         <div className="space-y-6">
           {/* Horizontal Zonal Health Deck */}
           <HorizontalZonalHealthCarousel
+            isHindi={isHindi}
             onInspectZone={handleInspectOffice}
             onDispatchTriage={(zone) => {
-              showToast(`NSSTA Triage team dispatched to ${zone}!`);
+              showToast(isHindi ? `${zone} में एनएसएसटीए ट्राइएज टीम तैनात!` : `NSSTA Triage team dispatched to ${zone}!`);
               setFlaggedModalOpen(true);
             }}
           />
 
           {/* AI Executive Intelligence Briefing */}
-          <AdminAiNarrativeBox />
+          <AdminAiNarrativeBox isHindi={isHindi} />
 
           {/* Horizontal Policy Directives & Cabinet Circulars Deck */}
-          <HorizontalPolicyDirectivesCarousel onReadCircular={handleReadCircular} />
+          <HorizontalPolicyDirectivesCarousel onReadCircular={handleReadCircular} isHindi={isHindi} />
 
           {/* FRAC Competency Sunburst Hierarchy (Task C1) */}
           <FracSunburstHierarchy />
 
           {/* Outcome Correlation Scatter Chart (PRD Lever 2 & §9.4.5) */}
-          <OutcomeCorrelationChart />
+          <OutcomeCorrelationChart isHindi={isHindi} />
 
           {/* Regional Office Breakdown & Ministerial Actions Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div className="lg:col-span-8">
-              <DepartmentBreakdownTable onInspectOffice={handleInspectOffice} />
+              <DepartmentBreakdownTable onInspectOffice={handleInspectOffice} isHindi={isHindi} />
             </div>
             <div className="lg:col-span-4">
               <AdminCabinetDrawer
+                isHindi={isHindi}
                 onOpenBriefingModal={() => setBriefingModalOpen(true)}
                 onOpenRosterModal={() => setRosterModalOpen(true)}
                 onOpenSweepModal={() => setSweepModalOpen(true)}
@@ -293,52 +310,63 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
       {activeTab === 'zonal_ro' && (
         <div className="space-y-6">
           <HorizontalZonalHealthCarousel
+            isHindi={isHindi}
             onInspectZone={handleInspectOffice}
             onDispatchTriage={(zone) => {
-              showToast(`NSSTA Triage team dispatched to ${zone}!`);
+              showToast(isHindi ? `${zone} में एनएसएसटीए ट्राइएज टीम तैनात!` : `NSSTA Triage team dispatched to ${zone}!`);
               setFlaggedModalOpen(true);
             }}
           />
-          <DepartmentBreakdownTable onInspectOffice={handleInspectOffice} />
+          <DepartmentBreakdownTable onInspectOffice={handleInspectOffice} isHindi={isHindi} />
         </div>
       )}
 
       {/* TAB 3: OUTCOME REGRESSION (PRD §9.4.5) */}
       {activeTab === 'scrutiny_correlation' && (
         <div className="space-y-6">
-          <OutcomeCorrelationChart />
-          <AdminAiNarrativeBox />
+          <OutcomeCorrelationChart isHindi={isHindi} />
+          <AdminAiNarrativeBox isHindi={isHindi} />
         </div>
       )}
 
       {/* TAB 4: POLICY DIRECTIVES & CABINET CIRCULARS */}
       {activeTab === 'policy_circulars' && (
         <div className="space-y-6">
-          <HorizontalPolicyDirectivesCarousel onReadCircular={handleReadCircular} />
+          <HorizontalPolicyDirectivesCarousel onReadCircular={handleReadCircular} isHindi={isHindi} />
           <div className="p-6 rounded-3xl bg-white border border-[#D8DFEE] shadow-xs space-y-3">
             <div className="flex items-center gap-2 pb-3 border-b border-[#D8DFEE]">
               <ShieldCheck className="h-4 w-4 text-[#1C4CA1]" />
               <h3 className="font-bold text-[#1F273A] text-sm">
-                National Data Governance &amp; Cadre Compliance Overview
+                {isHindi
+                  ? 'राष्ट्रीय डेटा शासन एवं संवर्ग अनुपालन अवलोकन'
+                  : 'National Data Governance & Cadre Compliance Overview'}
               </h3>
             </div>
             <p className="text-xs text-[#475569] leading-relaxed">
-              All 5 statutory policy circulars are issued under the joint authority of the Cabinet Secretariat, 
-              Ministry of Statistics &amp; Programme Implementation, and National Statistical Commission (NSC).
-              Mandated compliance milestones are audited bi-weekly through the automated CAPI scrutiny pipeline.
+              {isHindi
+                ? 'सभी 5 सांविधिक नीति परिपत्र कैबिनेट सचिवालय, सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय एवं राष्ट्रीय सांख्यिकी आयोग (एनएससी) के संयुक्त अधिकार के तहत जारी किए जाते हैं। अनिवार्य अनुपालन मील के पत्थरों का स्वचालित सीएपीआई संवीक्षा पाइपलाइन के माध्यम से पाक्षिक ऑडिट किया जाता है।'
+                : 'All 5 statutory policy circulars are issued under the joint authority of the Cabinet Secretariat, Ministry of Statistics & Programme Implementation, and National Statistical Commission (NSC). Mandated compliance milestones are audited bi-weekly through the automated CAPI scrutiny pipeline.'}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <div className="p-3 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] text-center">
-                <span className="text-[10px] text-[#475569] block">Mandated Surveys</span>
+                <span className="text-[10px] text-[#475569] block">
+                  {isHindi ? 'अनिवार्य सर्वेक्षण' : 'Mandated Surveys'}
+                </span>
                 <span className="text-lg font-black font-mono text-[#1C4CA1]">PLFS, ASHE, HCES</span>
               </div>
               <div className="p-3 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] text-center">
-                <span className="text-[10px] text-[#475569] block">Average Compliance</span>
+                <span className="text-[10px] text-[#475569] block">
+                  {isHindi ? 'औसत अनुपालन' : 'Average Compliance'}
+                </span>
                 <span className="text-lg font-black font-mono text-emerald-700">71.5%</span>
               </div>
               <div className="p-3 rounded-2xl bg-[#EDF0F7]/60 border border-[#D8DFEE] text-center">
-                <span className="text-[10px] text-[#475569] block">Next Enforcement Audit</span>
-                <span className="text-lg font-black font-mono text-[#1164BE]">15 Oct 2026</span>
+                <span className="text-[10px] text-[#475569] block">
+                  {isHindi ? 'अगला प्रवर्तन ऑडिट' : 'Next Enforcement Audit'}
+                </span>
+                <span className="text-lg font-black font-mono text-[#1164BE]">
+                  {isHindi ? '15 अक्टूबर 2026' : '15 Oct 2026'}
+                </span>
               </div>
             </div>
           </div>
@@ -351,6 +379,7 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div className="lg:col-span-6">
               <AdminCabinetDrawer
+                isHindi={isHindi}
                 onOpenBriefingModal={() => setBriefingModalOpen(true)}
                 onOpenRosterModal={() => setRosterModalOpen(true)}
                 onOpenSweepModal={() => setSweepModalOpen(true)}
@@ -359,11 +388,12 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
             <div className="lg:col-span-6 space-y-4">
               <div className="p-6 rounded-3xl bg-white border border-[#D8DFEE] shadow-xs space-y-4">
                 <h3 className="font-bold text-sm text-[#1F273A]">
-                  Statutory Ministerial Instruments
+                  {isHindi ? 'सांविधिक मंत्रिस्तरीय दस्तावेज' : 'Statutory Ministerial Instruments'}
                 </h3>
                 <p className="text-xs text-[#475569] leading-relaxed">
-                  Generate executive legal briefing instruments and deploy nationwide assessment sweeps 
-                  for the National Statistical Systems Training Academy (NSSTA).
+                  {isHindi
+                    ? 'राष्ट्रीय सांख्यिकी प्रणाली प्रशिक्षण अकादमी (एनएसएसटीए) के लिए कार्यकारी कानूनी ब्रीफिंग दस्तावेज तैयार करें और देशव्यापी मूल्यांकन अभियान शुरू करें।'
+                    : 'Generate executive legal briefing instruments and deploy nationwide assessment sweeps for the National Statistical Systems Training Academy (NSSTA).'}
                 </p>
                 <div className="space-y-2">
                   <button
@@ -371,7 +401,9 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                     onClick={() => setSweepModalOpen(true)}
                     className="w-full py-2.5 px-4 rounded-xl bg-[#1C4CA1] text-white text-xs font-bold hover:bg-[#1164BE] transition-all cursor-pointer shadow-xs flex items-center justify-between"
                   >
-                    <span>Authorize Q3 National Assessment Sweep</span>
+                    <span>
+                      {isHindi ? 'तिमाही 3 राष्ट्रीय मूल्यांकन अभियान अधिकृत करें' : 'Authorize Q3 National Assessment Sweep'}
+                    </span>
                     <Send className="h-3.5 w-3.5" />
                   </button>
                   <button
@@ -379,7 +411,9 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                     onClick={() => setRosterModalOpen(true)}
                     className="w-full py-2.5 px-4 rounded-xl bg-white border border-[#D8DFEE] text-[#1C4CA1] text-xs font-bold hover:bg-[#EDF0F7] transition-all cursor-pointer shadow-2xs flex items-center justify-between"
                   >
-                    <span>Inspect Complete 4,850 Officer Registry</span>
+                    <span>
+                      {isHindi ? 'संपूर्ण 4,850 अधिकारी पंजी का निरीक्षण करें' : 'Inspect Complete 4,850 Officer Registry'}
+                    </span>
                     <Users className="h-3.5 w-3.5" />
                   </button>
                   <button
@@ -387,7 +421,9 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
                     onClick={() => setBriefingModalOpen(true)}
                     className="w-full py-2.5 px-4 rounded-xl bg-[#1F273A] text-white text-xs font-bold hover:bg-black transition-all cursor-pointer shadow-2xs flex items-center justify-between"
                   >
-                    <span>Open Confidential Secretary Briefing Memo</span>
+                    <span>
+                      {isHindi ? 'गोपनीय सचिव ब्रीफिंग ज्ञापन खोलें' : 'Open Confidential Secretary Briefing Memo'}
+                    </span>
                     <Download className="h-3.5 w-3.5 text-[#FFA72F]" />
                   </button>
                 </div>
@@ -401,35 +437,41 @@ export function AdminDashboard({ user, isHindi = false }: AdminDashboardProps) {
       <MinisterialBriefingModal
         isOpen={briefingModalOpen}
         onClose={() => setBriefingModalOpen(false)}
+        isHindi={isHindi}
       />
 
       <NationalCadreRosterModal
         isOpen={rosterModalOpen}
         onClose={() => setRosterModalOpen(false)}
+        isHindi={isHindi}
       />
 
       <CommissionSweepModal
         isOpen={sweepModalOpen}
         onClose={() => setSweepModalOpen(false)}
-        onSuccess={(id) => showToast(`Executive Order ${id} successfully authorized!`)}
+        onSuccess={(id) => showToast(isHindi ? `कार्यकारी आदेश ${id} सफलतापूर्वक अधिकृत!` : `Executive Order ${id} successfully authorized!`)}
+        isHindi={isHindi}
       />
 
       <RegionalDetailModal
         isOpen={officeModalOpen}
         onClose={() => setOfficeModalOpen(false)}
         office={selectedOffice}
-        onDispatchTriage={(name) => showToast(`NSSTA Triage dispatched to ${name}!`)}
+        onDispatchTriage={(name) => showToast(isHindi ? `${name} में एनएसएसटीए ट्राइएज तैनात!` : `NSSTA Triage dispatched to ${name}!`)}
+        isHindi={isHindi}
       />
 
       <NationalReadinessModal
         isOpen={readinessModalOpen}
         onClose={() => setReadinessModalOpen(false)}
+        isHindi={isHindi}
       />
 
       <FlaggedRegionsModal
         isOpen={flaggedModalOpen}
         onClose={() => setFlaggedModalOpen(false)}
-        onDispatchIntervention={(name) => showToast(`Intervention ordered for ${name}!`)}
+        onDispatchIntervention={(name) => showToast(isHindi ? `${name} के लिए हस्तक्षेप आदेश जारी!` : `Intervention ordered for ${name}!`)}
+        isHindi={isHindi}
       />
     </div>
   );

@@ -65,9 +65,10 @@ const INGESTED_DOCUMENTS: IngestedDocument[] = [
 
 interface IngestedDocumentsLedgerProps {
   onOpenManualReader?: (manualId: string) => void;
+  isHindi?: boolean;
 }
 
-export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocumentsLedgerProps) {
+export function IngestedDocumentsLedger({ onOpenManualReader, isHindi = false }: IngestedDocumentsLedgerProps) {
   return (
     <div className="rounded-3xl bg-white border border-[#D8DFEE] p-6 shadow-xs overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-[#D8DFEE]">
@@ -75,11 +76,13 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#1164BE]" />
             <h2 className="text-lg font-bold text-[#1F273A]">
-              Ingested MoSPI Manuals &amp; Chunks
+              {isHindi ? 'समाविष्ट MoSPI नियमावलियां एवं खंड' : 'Ingested MoSPI Manuals & Chunks'}
             </h2>
           </div>
           <p className="text-xs text-[#475569] mt-0.5">
-            FR-CONTENT-1..5 • Semantic vector chunks and AI question generation lineage
+            {isHindi
+              ? 'एफआर-कंटेंट-1..5 • सिमेंटिक वेक्टर खंड और एआई प्रश्न निर्माण वंशावली'
+              : 'FR-CONTENT-1..5 • Semantic vector chunks and AI question generation lineage'}
           </p>
         </div>
 
@@ -89,7 +92,7 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#1164BE] text-white text-xs font-bold hover:bg-[#1C4CA1] transition-colors shadow-2xs"
           >
             <Upload className="h-3.5 w-3.5" />
-            <span>Upload New Manual</span>
+            <span>{isHindi ? 'नई नियमावली अपलोड करें' : 'Upload New Manual'}</span>
           </Link>
         </div>
       </div>
@@ -98,12 +101,12 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[#D8DFEE] text-[11px] font-bold text-[#475569] uppercase tracking-wider">
-              <th className="pb-3 pl-2">Manual / SOP Title</th>
-              <th className="pb-3 hidden md:table-cell">MoSPI Division</th>
-              <th className="pb-3">Chunks</th>
-              <th className="pb-3">Questions</th>
-              <th className="pb-3 hidden sm:table-cell">Status</th>
-              <th className="pb-3 pr-2 text-right">Actions</th>
+              <th className="pb-3 pl-2">{isHindi ? 'नियमावली / एसओपी शीर्षक' : 'Manual / SOP Title'}</th>
+              <th className="pb-3 hidden md:table-cell">{isHindi ? 'MoSPI प्रभाग' : 'MoSPI Division'}</th>
+              <th className="pb-3">{isHindi ? 'खंड' : 'Chunks'}</th>
+              <th className="pb-3">{isHindi ? 'प्रश्न' : 'Questions'}</th>
+              <th className="pb-3 hidden sm:table-cell">{isHindi ? 'स्थिति' : 'Status'}</th>
+              <th className="pb-3 pr-2 text-right">{isHindi ? 'कार्रवाई' : 'Actions'}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#D8DFEE] text-xs">
@@ -118,7 +121,9 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
                     <div className="min-w-0">
                       <p className="font-bold text-[#1F273A] line-clamp-1">{doc.title}</p>
                       <p className="text-[11px] text-[#475569] truncate mt-0.5">
-                        {doc.pages} Pages • Updated {doc.updatedAt}
+                        {isHindi
+                          ? `${doc.pages} पृष्ठ • अद्यतन ${doc.updatedAt}`
+                          : `${doc.pages} Pages • Updated ${doc.updatedAt}`}
                       </p>
                     </div>
                   </div>
@@ -163,7 +168,7 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1164BE] hover:bg-[#D8DFEE] transition-colors cursor-pointer"
                     >
                       <BookOpen className="h-3 w-3" />
-                      <span>Inspect</span>
+                      <span>{isHindi ? 'निरीक्षण' : 'Inspect'}</span>
                     </button>
                   ) : (
                     <Link
@@ -171,7 +176,7 @@ export function IngestedDocumentsLedger({ onOpenManualReader }: IngestedDocument
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] text-xs font-bold text-[#1164BE] hover:bg-[#D8DFEE] transition-colors"
                     >
                       <Eye className="h-3 w-3" />
-                      <span>Chunks</span>
+                      <span>{isHindi ? 'खंड देखें' : 'Chunks'}</span>
                     </Link>
                   )}
                 </td>

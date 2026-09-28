@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
     organization_id: persona.organization_id,
     cadre: persona.cadre,
     designation: persona.designation,
-    preferred_language: persona.preferred_language || 'hi',
+    preferred_language: persona.preferred_language || 'en',
     department: persona.department,
     parichay_id:
       persona.id === 'demo-sunita'
@@ -196,7 +196,8 @@ export async function GET(request: NextRequest) {
     sameSite: 'lax',
   });
 
-  response.cookies.set('locale', claims.preferred_language, {
+  const callbackLocale = claims.preferred_language === 'hi' ? 'hi' : 'en';
+  response.cookies.set('locale', callbackLocale, {
     path: '/',
     maxAge: 60 * 60 * 24 * 365,
     httpOnly: false,

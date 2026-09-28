@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import type { RadarDataPoint } from '@/components/RadarChart';
@@ -18,7 +19,7 @@ const RadarChart = dynamic(
     ),
   }
 );
-import { Award, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { Award, CheckCircle2, Clock, Sparkles, Edit3, X } from 'lucide-react';
 import { getPersonaFRAC } from '@/data/fracCadres';
 import { CompetencyService } from '@/services/competencyService';
 import type { AppUser } from '@/lib/auth';
@@ -61,7 +62,17 @@ interface ProfileData {
 
 function buildPersonaProfileData(user?: AppUser | null, isHindiLang?: boolean): ProfileData {
   const profile = getPersonaFRAC(user);
-  const isHindi = isHindiLang ?? (user?.user_metadata?.preferred_language === 'hi' || profile.preferredLanguage === 'hi');
+  const isHindi = isHindiLang ?? (user?.user_metadata?.preferred_language === 'hi');
+
+  const effectiveName = user?.user_metadata?.name || profile.name;
+  const effectiveEmail = user?.email || profile.email;
+  const effectiveDesignation =
+    (user?.user_metadata?.designation as string) ||
+    (isHindi ? profile.designation_hi : profile.designation);
+  const effectiveCadre = (user?.user_metadata?.cadre as string) || profile.cadre;
+  const effectiveDept =
+    (user?.user_metadata?.department as string) ||
+    (isHindi ? profile.department_hi : profile.department);
 
   const competencyRecords: CompetencyRecord[] = profile.competencies.map((comp) => ({
     competencyId: comp.id,
@@ -94,13 +105,15 @@ function buildPersonaProfileData(user?: AppUser | null, isHindiLang?: boolean): 
   });
 
   return {
-    name: profile.name,
-    email: profile.email,
-    designation: isHindi ? profile.designation_hi : profile.designation,
-    cadre: profile.cadre,
-    department: isHindi ? profile.department_hi : profile.department,
-    organization: isHindi ? 'सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय (MoSPI)' : 'Ministry of Statistics and Programme Implementation (MoSPI)',
-    role: isHindi ? profile.designation_hi : profile.designation,
+    name: effectiveName,
+    email: effectiveEmail,
+    designation: effectiveDesignation,
+    cadre: effectiveCadre,
+    department: effectiveDept,
+    organization: isHindi
+      ? 'सांख्यिकी और कार्यक्रम कार्यान्वयन मंत्रालय (MoSPI)'
+      : 'Ministry of Statistics and Programme Implementation (MoSPI)',
+    role: effectiveDesignation,
     karmaPoints: profile.personaId.includes('sunita') ? 1450 : 1820,
     aparMilestone: isHindi ? '2025-2026: बेंचमार्क लक्ष्य पार किया' : '2025-2026: Benchmark Target Exceeded',
     readinessIndex,
@@ -113,11 +126,112 @@ function buildPersonaProfileData(user?: AppUser | null, isHindiLang?: boolean): 
 }
 
 export default function ProfileClient({ user }: { user?: AppUser | null }) {
+  const router = useRouter();
   const t = useTranslations();
-  const locale = useSafeLocale(user?.user_metadata?.preferred_language || 'en');
+
+  const [currentUser, setCurrentUser] = useState<AppUser | null>(() => {
+    if (typeof document !== 'undefined') {
+      try {
+        const match = document.cookie.match(/(?:^|; )demo_user=([^;]*)/);
+        if (match) {
+          const decoded = JSON.parse(decodeURIComponent(match[1]));
+          return {
+            id: decoded.id || user?.id || 'demo-user',
+            email: decoded.email || user?.email,
+            user_metadata: {
+              ...(user?.user_metadata || {}),
+              name: decoded.name || user?.user_metadata?.name,
+              designation: decoded.designation || user?.user_metadata?.designation,
+              department: decoded.department || user?.user_metadata?.department,
+              cadre: decoded.cadre || user?.user_metadata?.cadre,
+              preferred_language: decoded.preferred_language || user?.user_metadata?.preferred_language,
+            },
+            app_metadata: {
+              role: decoded.role || user?.app_metadata?.role || 'learner',
+            },
+          };
+        }
+      } catch {
+        // fallback
+      }
+    }
+    return user || null;
+  });
+
+  useEffect(() => {
+    const handleUserUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<AppUser>;
+      if (customEvent.detail) {
+        setCurrentUser(customEvent.detail);
+      }
+    };
+    window.addEventListener('statvidya-user-updated', handleUserUpdate);
+    return () => window.removeEventListener('statvidya-user-updated', handleUserUpdate);
+  }, []);
+
+  const locale = useSafeLocale(
+    currentUser?.user_metadata?.preferred_language || user?.user_metadata?.preferred_language || 'en'
+  );
   const isHindi = locale === 'hi';
-  const data = useMemo(() => buildPersonaProfileData(user, isHindi), [user, isHindi]);
+  const data = useMemo(() => buildPersonaProfileData(currentUser, isHindi), [currentUser, isHindi]);
   const [activeTab, setActiveTab] = useState<'overview' | 'competencies' | 'history'>('overview');
+
+  // Edit Profile Form State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: data.name,
+    designation: data.designation,
+    department: data.department,
+    preferredLanguage:
+      (currentUser?.user_metadata?.preferred_language as 'en' | 'hi') || (isHindi ? 'hi' : 'en'),
+  });
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const handleOpenEditModal = () => {
+    setEditForm({
+      name: data.name,
+      designation: data.designation,
+      department: data.department,
+      preferredLanguage:
+        (currentUser?.user_metadata?.preferred_language as 'en' | 'hi') || (isHindi ? 'hi' : 'en'),
+    });
+    setSaveError(null);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || 'Failed to update profile');
+      }
+
+      const updatedUser = result.user;
+      setCurrentUser(updatedUser);
+
+      // Dispatch event to update Sidebar, Topbar, AppLayout
+      window.dispatchEvent(new CustomEvent('statvidya-user-updated', { detail: updatedUser }));
+
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+      setEditModalOpen(false);
+      router.refresh();
+    } catch (err: unknown) {
+      setSaveError(err instanceof Error ? err.message : 'Error updating profile');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (!data) {
     return (
@@ -158,30 +272,53 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto py-4">
+      {/* Toast Alert on successful save */}
+      {saveSuccess && (
+        <div className="p-3.5 rounded-2xl bg-[#1C4CA1] text-white text-xs font-bold flex items-center justify-between shadow-xs animate-in fade-in duration-150">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-[#FFA72F]" />
+            <span>{isHindi ? 'प्रोफ़ाइल सफलतापूर्वक अपडेट हो गई!' : 'Profile updated successfully!'}</span>
+          </div>
+        </div>
+      )}
+
       {/* Header Profile Card */}
-      <div className="rounded-2xl bg-white p-7 sm:p-8 shadow-card border border-[#D8DFEE]">
+      <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-xs border border-[#D8DFEE]">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
-            {/* Avatar */}
-            <div className="w-18 h-18 rounded-2xl bg-[#1C4CA1] flex items-center justify-center text-white text-2xl font-bold shadow-sm ring-4 ring-[#1C4CA1]/10">
-              {data.name.split(' ').map((n) => n[0]).join('')}
+            {/* Avatar with dynamic initials */}
+            <div className="w-18 h-18 rounded-2xl bg-[#1C4CA1] flex items-center justify-center text-white text-2xl font-bold shadow-xs ring-4 ring-[#1C4CA1]/10 font-mono">
+              {(data.name || 'CO')
+                .split(' ')
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join('')
+                .toUpperCase()}
             </div>
 
             <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-[#1F273A] tracking-tight">{data.name}</h1>
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#1C4CA1]/10 px-3 py-0.5 text-xs font-semibold text-[#1C4CA1]">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[#1F273A] tracking-tight">{data.name}</h1>
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#1C4CA1]/10 px-3 py-0.5 text-xs font-semibold text-[#1C4CA1] border border-[#1C4CA1]/20">
                   <Sparkles className="h-3 w-3" />
                   {data.role}
                 </span>
+                <button
+                  type="button"
+                  onClick={handleOpenEditModal}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[#D8DFEE] text-xs font-bold text-[#1C4CA1] bg-[#EDF0F7] hover:bg-[#D8DFEE] shadow-2xs transition-colors cursor-pointer"
+                >
+                  <Edit3 className="h-3.5 w-3.5 text-[#1C4CA1]" />
+                  <span>{isHindi ? 'संपादित करें' : 'Edit Profile'}</span>
+                </button>
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">{data.designation}</p>
+              <p className="text-sm font-medium text-muted-foreground mt-0.5">{data.designation}</p>
               <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-muted-foreground">
-                <span className="font-medium text-[#1F273A]">{data.department}</span>
+                <span className="font-semibold text-[#1F273A]">{data.department}</span>
                 <span>•</span>
                 <span>{data.cadre}</span>
                 <span>•</span>
-                <span>{data.organization}</span>
+                <span>{data.email}</span>
               </div>
             </div>
           </div>
@@ -196,7 +333,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                 {isHindi ? 'कर्म अंक' : 'Karma Points'}
               </p>
             </div>
-            <div className="h-8 w-px bg-muted" />
+            <div className="h-8 w-px bg-[#D8DFEE]" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#1164BE] font-mono">
                 {data.assessmentsCompleted}
@@ -205,7 +342,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
                 {isHindi ? 'मूल्यांकन' : 'Assessments'}
               </p>
             </div>
-            <div className="h-8 w-px bg-muted" />
+            <div className="h-8 w-px bg-[#D8DFEE]" />
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-[#FFA72F] font-mono">
                 {data.coursesCompleted}
@@ -218,7 +355,7 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
         </div>
 
         {/* APAR Milestone Banner */}
-        <div className="mt-6 p-4 rounded-xl bg-[#EDF0F7] flex items-center justify-between border border-[#D8DFEE]">
+        <div className="mt-6 p-4 rounded-2xl bg-[#EDF0F7] flex items-center justify-between border border-[#D8DFEE]">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1C4CA1]/10 text-[#1C4CA1]">
               <Award className="h-5 w-5" />
@@ -233,6 +370,116 @@ export default function ProfileClient({ user }: { user?: AppUser | null }) {
           </span>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      {editModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md bg-white rounded-3xl border border-[#D8DFEE] shadow-xl p-6 sm:p-7 space-y-5 animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-[#D8DFEE]">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#1C4CA1]" />
+                <h3 className="text-base font-bold text-[#1F273A]">
+                  {isHindi ? 'अधिकारी प्रोफ़ाइल संपादित करें' : 'Edit Officer Profile'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditModalOpen(false)}
+                className="h-8 w-8 rounded-xl bg-[#EDF0F7] text-[#475569] hover:bg-[#D8DFEE] flex items-center justify-center text-sm font-bold cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#1F273A] mb-1.5">
+                  {isHindi ? 'पूरा नाम' : 'Full Name'} *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D8DFEE] text-sm text-[#1F273A] bg-[#EDF0F7]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
+                  placeholder="e.g. Dr. Priya Verma"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#1F273A] mb-1.5">
+                  {isHindi ? 'पदनाम' : 'Designation'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.designation}
+                  onChange={(e) => setEditForm({ ...editForm, designation: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D8DFEE] text-sm text-[#1F273A] bg-[#EDF0F7]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
+                  placeholder="e.g. Statistical Officer"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#1F273A] mb-1.5">
+                  {isHindi ? 'विभाग / कार्यालय' : 'Department / Division'}
+                </label>
+                <input
+                  type="text"
+                  value={editForm.department}
+                  onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D8DFEE] text-sm text-[#1F273A] bg-[#EDF0F7]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
+                  placeholder="e.g. MoSPI Headquarters"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#1F273A] mb-1.5">
+                  {isHindi ? 'प्राथमिक भाषा' : 'Preferred Language'}
+                </label>
+                <select
+                  value={editForm.preferredLanguage}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, preferredLanguage: e.target.value as 'en' | 'hi' })
+                  }
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#D8DFEE] text-sm text-[#1F273A] bg-[#EDF0F7]/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C4CA1]"
+                >
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी (Hindi)</option>
+                </select>
+              </div>
+
+              {saveError && (
+                <p className="text-xs font-semibold text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">
+                  {saveError}
+                </p>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#D8DFEE]">
+                <button
+                  type="button"
+                  onClick={() => setEditModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-[#D8DFEE] text-xs font-bold text-[#475569] hover:bg-[#EDF0F7] cursor-pointer"
+                >
+                  {isHindi ? 'रद्द करें' : 'Cancel'}
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-5 py-2 rounded-xl bg-[#1C4CA1] text-xs font-bold text-white hover:bg-[#153c82] transition-all cursor-pointer shadow-xs disabled:opacity-50"
+                >
+                  {saving
+                    ? isHindi
+                      ? 'सहेज रहे हैं...'
+                      : 'Saving...'
+                    : isHindi
+                    ? 'परिवर्तन सहेजें'
+                    : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Tab Navigation */}
       <div className="flex border-b border-[#D8DFEE] gap-2">
