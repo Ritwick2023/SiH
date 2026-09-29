@@ -5,6 +5,13 @@
   },
   "nav": {
     "dashboard": "डैशबोर्ड",
+    "home": "होम",
+    "myLearning": "मेरा शिक्षण",
+    "learningPaths": "लर्निंग पाथ",
+    "assessments": "मूल्यांकन",
+    "myCompetencies": "मेरी दक्षताएँ",
+    "resources": "संसाधन",
+    "helpSupport": "सहायता एवं समर्थन",
     "skillGap": "कौशल अंतर",
     "pathways": "पाठ्यक्रम एवं शिक्षण",
     "profile": "प्रोफ़ाइल",

@@ -126,13 +126,13 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F4F6FB]">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto bg-[#F4F6FB]">
+    <div className="flex h-screen flex-col overflow-hidden bg-[#F8FAFC]">
+      <Topbar />
+      <div className="flex flex-1 overflow-hidden min-w-0">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto bg-[#F8FAFC]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5">
-            <div className="mb-4">
+            <div className="mb-2">
               <Breadcrumb />
             </div>
             <div>{children}</div>

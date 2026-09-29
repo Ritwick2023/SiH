@@ -42,7 +42,7 @@ export function Breadcrumb() {
 
   const segments = pathname.split('/').filter(Boolean);
 
-  if (segments.length === 0 || segments[0] === 'auth') {
+  if (segments.length === 0 || segments[0] === 'auth' || pathname === '/dashboard') {
     return null;
   }
 

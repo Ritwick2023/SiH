@@ -1,13 +1,14 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { KarmayogiEmblemIcon } from '@/components/auth/KarmayogiEmblem';
 import { ChevronLeft, ChevronRight, CheckCircle2, RefreshCw, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { DEMO_PERSONAS } from '@/lib/demoPersonas';
 import type { DemoPersona, UserRole } from '@/lib/types';
+import { BuildingDataIndiaCard } from './BuildingDataIndiaCard';
 import {
   getNavigationForRole,
   getRoleIdentity,
@@ -155,114 +156,105 @@ export function Sidebar({ initialRole }: SidebarProps) {
             : '-translate-x-full md:translate-x-0'
         } ${collapsed ? 'md:w-18' : 'md:w-64'}`}
       >
-      {/* Brand Header */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-[#D8DFEE]">
-        {!collapsed ? (
-          <Link href="/dashboard" prefetch={true} className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] shadow-2xs transition-transform group-hover:scale-105 p-1 shrink-0" suppressHydrationWarning>
-              <KarmayogiEmblemIcon className="h-7 w-7" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-base text-[#1F273A] tracking-tight">
-                {identity.title}
-              </span>
-              <span className="text-[10px] font-bold text-[#1C4CA1] uppercase tracking-wider -mt-0.5">
-                {identity.subtitle}
-              </span>
-            </div>
-          </Link>
-        ) : (
-          <Link
-            href="/dashboard"
-            prefetch={true}
-            className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] shadow-2xs p-1"
-            suppressHydrationWarning
-          >
+      {/* Mobile Drawer Brand Header */}
+      <div className="flex md:hidden h-16 items-center justify-between px-4 border-b border-[#D8DFEE]">
+        <Link href="/dashboard" prefetch={true} className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7] border border-[#D8DFEE] shadow-2xs p-1 shrink-0" suppressHydrationWarning>
             <KarmayogiEmblemIcon className="h-7 w-7" />
-          </Link>
-        )}
-
-        {/* Desktop collapse button */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="hidden md:flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-[#475569] hover:bg-[#D8DFEE] hover:text-[#1F273A] transition-colors cursor-pointer"
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
-
-        {/* Mobile close button */}
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-base text-[#1F273A] tracking-tight">
+              {identity.title}
+            </span>
+            <span className="text-[10px] font-bold text-[#1C4CA1] uppercase tracking-wider -mt-0.5">
+              {identity.subtitle}
+            </span>
+          </div>
+        </Link>
         <button
           type="button"
           onClick={() => setMobileDrawerOpen(false)}
           aria-label="Close navigation menu"
-          className="md:hidden flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-[#475569] hover:bg-[#D8DFEE] hover:text-[#1F273A] transition-colors cursor-pointer"
+          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDF0F7] border border-[#D8DFEE] text-[#475569] hover:bg-[#D8DFEE] hover:text-[#1F273A] transition-colors cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>
       </div>
 
       {/* Role Navigation Items */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
-
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
           const labelText = item.label.startsWith('nav.') ? t(item.label) : item.label;
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              prefetch={true}
-              onClick={() => setMobileDrawerOpen(false)}
-              title={collapsed ? labelText : undefined}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 group relative cursor-pointer ${
-                collapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''
-              } ${
-                active
-                  ? 'bg-[#1C4CA1] text-white shadow-xs font-bold'
-                  : 'text-[#1F273A] hover:bg-[#EDF0F7] hover:text-[#1C4CA1]'
-              }`}
-            >
-              <Icon
-                className={`h-4 w-4 shrink-0 ${
-                  active ? 'text-white' : 'text-[#1C4CA1]'
-                }`}
-              />
-              {!collapsed && (
-                <span className="truncate flex-1 font-medium">{labelText}</span>
-              )}
+          const handleClick = (e: React.MouseEvent) => {
+            setMobileDrawerOpen(false);
+            if (item.href === '#help') {
+              e.preventDefault();
+              window.dispatchEvent(new CustomEvent('toggle-copilot'));
+            }
+          };
 
-              {!collapsed && item.badge && (
-                <span
-                  className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-md ${
-                    item.badgeType === 'warning'
-                      ? 'bg-amber-500/15 text-amber-800 border border-amber-500/30'
-                      : item.badgeType === 'accent'
-                        ? 'bg-soft-gold text-[#1F273A] border border-[#FFA72F]/40'
-                        : 'bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]'
-                  }`}
-                >
-                  {item.badge}
-                </span>
+          return (
+            <React.Fragment key={item.href}>
+              {item.isDividerBefore && (
+                <div className="my-2 border-t border-[#E2E8F0]" />
               )}
-            </Link>
+              <Link
+                href={item.href}
+                prefetch={item.href !== '#help'}
+                onClick={handleClick}
+                title={collapsed ? labelText : undefined}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-150 group relative cursor-pointer ${
+                  collapsed ? 'justify-center px-0 h-10 w-10 mx-auto' : ''
+                } ${
+                  active
+                    ? 'bg-[#E8F1FC] text-[#1C4CA1] font-bold'
+                    : 'text-[#475569] hover:bg-[#EDF0F7] hover:text-[#1F273A] font-medium'
+                }`}
+              >
+                <Icon
+                  className={`h-4 w-4 shrink-0 transition-colors ${
+                    active ? 'text-[#1C4CA1]' : 'text-[#64748B] group-hover:text-[#1C4CA1]'
+                  }`}
+                />
+                {!collapsed && (
+                  <span className="truncate flex-1">{labelText}</span>
+                )}
+
+                {!collapsed && item.badge && (
+                  <span
+                    className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-md ${
+                      item.badgeType === 'warning'
+                        ? 'bg-amber-500/15 text-amber-800 border border-amber-500/30'
+                        : item.badgeType === 'accent'
+                          ? 'bg-soft-gold text-[#1F273A] border border-[#FFA72F]/40'
+                          : 'bg-[#EDF0F7] text-[#475569] border border-[#D8DFEE]'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            </React.Fragment>
           );
         })}
       </nav>
 
-      {/* Role Status Footer */}
+      {/* Sidebar Bottom Presentation Card (Learner) or Role Status Footer (Admin/Trainer) */}
       {!collapsed ? (
-        <div className="p-3 m-3 rounded-2xl bg-[#EDF0F7]/70 border border-[#D8DFEE] shadow-2xs">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              <span className="text-[11px] font-bold text-[#1F273A] truncate">
-                {footerData.title}
-              </span>
-            </div>
-            {(role === 'learner' || role === 'admin') && (
+        role === 'learner' ? (
+          <BuildingDataIndiaCard isHindi={isHindi} />
+        ) : (
+          <div className="p-3 m-3 rounded-2xl bg-[#EDF0F7]/70 border border-[#D8DFEE] shadow-2xs">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="text-[11px] font-bold text-[#1F273A] truncate">
+                  {footerData.title}
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={() => {
@@ -279,16 +271,16 @@ export function Sidebar({ initialRole }: SidebarProps) {
               >
                 <RefreshCw className={`h-3 w-3 ${syncing ? 'animate-spin' : ''}`} />
               </button>
-            )}
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
+              {synced ? '✓ Data synced successfully!' : footerData.subtitle}
+            </p>
+            <div className="mt-2 pt-2 border-t border-[#D8DFEE] flex items-center justify-between text-[10px] font-medium text-muted-foreground">
+              <span className="font-mono text-[#1C4CA1]">{footerData.badge}</span>
+              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+            </div>
           </div>
-          <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
-            {synced ? '✓ Data synced successfully!' : footerData.subtitle}
-          </p>
-          <div className="mt-2 pt-2 border-t border-[#D8DFEE] flex items-center justify-between text-[10px] font-medium text-muted-foreground">
-            <span className="font-mono text-[#1C4CA1]">{footerData.badge}</span>
-            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-          </div>
-        </div>
+        )
       ) : (
         <div className="py-3 flex justify-center border-t border-[#D8DFEE]">
           <span

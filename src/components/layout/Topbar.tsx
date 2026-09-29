@@ -35,6 +35,7 @@ import { CAPIConnectivityModal } from '@/components/dashboard/learner/modals/CAP
 import { MinisterialBriefingModal } from '@/components/dashboard/admin/modals/MinisterialBriefingModal';
 import { NationalReadinessModal } from '@/components/dashboard/admin/modals/NationalReadinessModal';
 import { FlaggedRegionsModal } from '@/components/dashboard/admin/modals/FlaggedRegionsModal';
+import { AshokaEmblem } from '@/components/auth/AshokaEmblem';
 import { GlobalSearchModal } from './GlobalSearchModal';
 import { getPendingCount, clearAllSensitiveOfflineData } from '@/services/offlineService';
 
@@ -343,8 +344,8 @@ export function Topbar({ initialRole }: TopbarProps) {
 
   return (
     <header className="relative z-30 flex h-16 items-center justify-between bg-white border-b border-[#D8DFEE] px-4 sm:px-6 select-none shadow-xs">
-      {/* Search / Context Area */}
-      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+      {/* Brand & Department Area (Left) */}
+      <div className="flex items-center gap-3 shrink-0">
         {/* Mobile Hamburger Navigation Button */}
         <button
           type="button"
@@ -355,24 +356,51 @@ export function Topbar({ initialRole }: TopbarProps) {
           <Menu className="h-4 w-4" />
         </button>
 
-        {/* Global Search Command Trigger Button (Desktop & Tablet) */}
+        {/* MoSPI Emblem & Full Department Typography */}
+        <div className="flex items-center gap-2.5">
+          <AshokaEmblem className="h-10 w-auto text-[#1F273A] shrink-0" />
+          <div className="hidden sm:flex flex-col text-[#1F273A] leading-tight select-none">
+            <span className="font-extrabold text-[12.5px] tracking-tight">MoSPI</span>
+            <span className="text-[8.5px] text-slate-500 font-medium leading-[11px]">Ministry of Statistics and</span>
+            <span className="text-[8.5px] text-slate-500 font-medium leading-[11px]">Programme Implementation</span>
+            <span className="text-[8.5px] text-slate-500 font-medium leading-[11px]">Government of India</span>
+          </div>
+        </div>
+
+        {/* StatVidya Brand Lockup */}
+        <Link href="/dashboard" prefetch={true} className="flex flex-col pl-3 border-l border-slate-200 group">
+          <span className="font-black text-lg text-[#1C4CA1] tracking-tight leading-none group-hover:text-[#1164BE] transition-colors">
+            StatVidya
+          </span>
+          <span className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5">
+            Learn | Assess | Grow
+          </span>
+        </Link>
+      </div>
+
+      {/* Broad Center Search Bar (Screenshot matching with Ctrl + K) */}
+      <div className="flex-1 max-w-xl mx-4 hidden md:flex items-center">
         <button
           type="button"
           onClick={() => setSearchModalOpen(true)}
-          className="hidden sm:flex items-center justify-between h-9 sm:w-36 md:w-44 lg:w-48 rounded-xl bg-slate-100/70 hover:bg-white border border-slate-200/80 hover:border-slate-300/90 px-2.5 text-xs text-slate-700 transition-all shadow-2xs hover:shadow-xs cursor-pointer group shrink-0"
-          title={locale === 'hi' ? 'दक्षताएं, मैनुअल खोजें... (⌘K)' : 'Search competencies, manuals... (⌘K)'}
-          aria-label={locale === 'hi' ? 'दक्षताएं, मैनुअल खोजें' : 'Search competencies, manuals...'}
+          className="w-full flex items-center justify-between h-9 px-3.5 rounded-full bg-[#F1F5F9]/80 hover:bg-white border border-[#E2E8F0] hover:border-[#1C4CA1]/40 text-xs text-slate-500 transition-all shadow-2xs hover:shadow-xs cursor-pointer group"
+          title={locale === 'hi' ? 'खोजें (Ctrl + K)' : 'Search (Ctrl + K)'}
+          aria-label="Search"
         >
-          <div className="flex items-center gap-1.5 min-w-0">
-            <Search className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1C4CA1] shrink-0 transition-colors" />
-            <span className="truncate text-slate-500 group-hover:text-slate-700 font-normal">
-              {locale === 'hi' ? 'दक्षताएं, मैनुअल...' : 'Search competencies, manuals...'}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Search className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1C4CA1] transition-colors shrink-0" />
+            <span className="truncate text-slate-500 font-normal">
+              {locale === 'hi' ? 'पाठ्यक्रम, दक्षताएँ, या शिक्षण पथ खोजें...' : 'Search for courses, competencies, or learning paths...'}
             </span>
+            <span className="sr-only">Search competencies, manuals... ⌘K</span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[9px] font-medium text-slate-400 group-hover:text-slate-600 shadow-2xs">
-            ⌘K
+          <kbd className="inline-flex items-center gap-0.5 rounded border border-slate-200 bg-white px-2 py-0.5 font-mono text-[9px] font-medium text-slate-400 group-hover:text-slate-600 shadow-2xs shrink-0">
+            Ctrl + K
           </kbd>
         </button>
+      </div>
+
+      <div className="flex items-center gap-2 min-w-0">
 
         {/* Global Search Icon Button (Mobile Only) */}
         <button
@@ -411,7 +439,7 @@ export function Topbar({ initialRole }: TopbarProps) {
               >
                 <Award className="h-3.5 w-3.5 text-[#D97706]" />
                 <span className="font-mono font-bold">+550</span>
-                <span className="text-[10px] text-slate-600 hidden sm:inline">Karma</span>
+                <span className="text-[10px] text-slate-600 hidden sm:inline">Karma Points</span>
               </button>
 
               {/* Interactive CAPI & Offline Vault Engine (Task D1) */}
@@ -440,7 +468,7 @@ export function Topbar({ initialRole }: TopbarProps) {
                     isOfflineSimulated ? 'text-amber-600' : 'text-emerald-600'
                   }`}
                 />
-                <span>{isOfflineSimulated ? 'CAPI Offline' : 'Vault Active'}</span>
+                <span>{isOfflineSimulated ? 'CAPI Offline' : 'CAPI Vault Active'}</span>
                 <span className="text-[10px] font-mono text-emerald-700 hidden md:inline">
                   {pendingVaultCount > 0 ? `(${pendingVaultCount} queued)` : '(38 Cached)'}
                 </span>
@@ -516,28 +544,72 @@ export function Topbar({ initialRole }: TopbarProps) {
       </div>
 
       {/* Action / Profile Area */}
-      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* 1-Click Official Persona Switcher */}
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Global Language Switcher - Dropdown pill */}
+        <button
+          type="button"
+          onClick={() => handleLanguageToggle()}
+          aria-label={locale === 'en' ? 'Switch interface to Hindi' : 'Switch interface to English'}
+          title="Toggle Language (English / हिन्दी)"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-[#1F273A] transition shadow-2xs cursor-pointer"
+        >
+          <span>{locale === 'hi' ? 'हिन्दी' : 'English'}</span>
+          <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+        </button>
+
+        {/* Functional Notification Center Bell Button */}
+        <div className="relative" ref={notificationsRef}>
+          <button
+            type="button"
+            onClick={toggleNotifications}
+            aria-label={`Notifications${
+              unreadCount > 0 ? `, ${unreadCount} unread` : ''
+            }`}
+            aria-expanded={notificationsOpen}
+            className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 transition cursor-pointer"
+          >
+            <Bell className="h-4 w-4" />
+            {unreadCount > 0 && (
+              <span
+                className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"
+                aria-hidden="true"
+              />
+            )}
+          </button>
+
+          {notificationsOpen && (
+            <NotificationDropdown
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onNotificationClick={handleNotificationClick}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              onClose={() => setNotificationsOpen(false)}
+            />
+          )}
+        </div>
+
+        {/* User Account Avatar & Persona Switcher */}
         <div className="relative" ref={switcherRef}>
           <button
             id="persona-switcher-button"
             type="button"
             onClick={toggleSwitcher}
-            aria-label="Switch persona or cadre role"
+            aria-label="User Profile & Cadre Switcher"
             aria-expanded={switcherOpen}
-            className="flex items-center gap-1.5 rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] px-2.5 py-1.5 text-xs font-semibold hover:bg-white hover:border-[#1C4CA1]/40 transition shadow-2xs cursor-pointer shrink-0"
-            title="Switch Persona / Cadre Role"
+            className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition cursor-pointer"
           >
-            <span className="flex h-2 w-2 rounded-full bg-[#1C4CA1] animate-pulse shrink-0" />
-            <span className="font-bold text-[#1F273A] truncate max-w-24 sm:max-w-28">
-              {activePersona.name}
-            </span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${currentRoleStyle.badge}`}
-            >
-              {role}
-            </span>
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1C4CA1] text-white font-bold text-xs shrink-0 shadow-2xs">
+              {activePersona.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="hidden sm:flex flex-col text-left leading-tight">
+              <span className="font-bold text-xs text-[#1F273A] truncate max-w-28">
+                {activePersona.name}
+              </span>
+              <span className="text-[10px] text-slate-400 capitalize">
+                {role}
+              </span>
+            </div>
+            <ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0" />
           </button>
 
           {switcherOpen && (
@@ -605,54 +677,6 @@ export function Topbar({ initialRole }: TopbarProps) {
                 })}
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Global Language Switcher - Desktop & Tablet (Hidden on mobile to keep topbar uncluttered) */}
-        <button
-          type="button"
-          onClick={() => handleLanguageToggle()}
-          aria-label={locale === 'en' ? 'Switch interface to Hindi (हिन्दी)' : 'Switch interface to English'}
-          title={locale === 'en' ? 'सम्पूर्ण इंटरफ़ेस हिन्दी में बदलें (Global)' : 'Switch entire interface to English (Global)'}
-          className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#EDF0F7]/80 hover:bg-white border border-[#D8DFEE] hover:border-[#1C4CA1]/40 px-3 py-1.5 text-xs font-bold text-[#1F273A] transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer group"
-        >
-          <Globe className="h-3.5 w-3.5 text-[#1C4CA1] transition-transform duration-300 group-hover:rotate-45" />
-          <span className="tracking-tight">{locale === 'en' ? 'हिन्दी' : 'English'}</span>
-          <span className="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded-md bg-[#1C4CA1]/10 text-[#1C4CA1] border border-[#1C4CA1]/15">
-            {locale === 'en' ? 'HI' : 'EN'}
-          </span>
-        </button>
-
-        {/* Functional Notification Center Bell Button */}
-        <div className="relative" ref={notificationsRef}>
-          <button
-            type="button"
-            onClick={toggleNotifications}
-            aria-label={`Notifications${
-              unreadCount > 0 ? `, ${unreadCount} unread` : ''
-            }`}
-            aria-expanded={notificationsOpen}
-            className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#EDF0F7]/70 border border-[#D8DFEE] text-[#475569] hover:bg-white hover:text-[#1F273A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1C4CA1] cursor-pointer"
-          >
-            <Bell className="h-4 w-4" />
-            {unreadCount > 0 && (
-              <span
-                className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#B91C1C] px-1 text-[9px] font-bold text-white shadow-2xs"
-                aria-hidden="true"
-              >
-                {badgeLabel}
-              </span>
-            )}
-          </button>
-
-          {notificationsOpen && (
-            <NotificationDropdown
-              notifications={notifications}
-              unreadCount={unreadCount}
-              onNotificationClick={handleNotificationClick}
-              onMarkAllAsRead={handleMarkAllAsRead}
-              onClose={() => setNotificationsOpen(false)}
-            />
           )}
         </div>
 
