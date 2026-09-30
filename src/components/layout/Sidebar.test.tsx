@@ -68,4 +68,65 @@ describe('Sidebar Component', () => {
     // Should NOT contain trainer creation tools
     expect(html).not.toContain('AI Question Studio');
   });
+
+  it('renders with auto-collapse rail by default and supports mouse interaction', () => {
+    const html = renderToString(<Sidebar initialRole="learner" />);
+    // Verify rail spacer and main navigation aside exist
+    expect(html).toContain('Sidebar Navigation');
+    expect(html).toContain('md:w-18');
+    expect(html).toContain('Auto-expand');
+    expect(html).toContain('Pin sidebar open');
+  });
+
+  it('expands on mouseenter and collapses on mouseleave in DOM environment', async () => {
+    // @ts-expect-error test flag
+    globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+    const { createRoot } = await import('react-dom/client');
+    const { act } = await import('react');
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(<Sidebar initialRole="learner" />);
+    });
+
+    const aside = container.querySelector('aside[aria-label="Sidebar Navigation"]');
+    expect(aside).not.toBeNull();
+    // Initially collapsed (md:w-18)
+    expect(aside?.className).toContain('md:w-18');
+
+    // Trigger mouse enter via mouseenter and mouseover
+    await act(async () => {
+      aside?.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+      aside?.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
+    });
+
+    // Now expanded (md:w-64)
+    expect(aside?.className).toContain('md:w-64');
+
+    // Trigger mouse leave
+    await act(async () => {
+      aside?.dispatchEvent(new MouseEvent('mouseleave', { bubbles: false, cancelable: true }));
+      aside?.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, cancelable: true }));
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    });
+
+    // Now collapsed back to md:w-18
+    expect(aside?.className).toContain('md:w-18');
+
+    // Click pin button to pin open
+    const pinBtn = container.querySelector('button[title*="Pin sidebar open"]') as HTMLButtonElement | null;
+    expect(pinBtn).not.toBeNull();
+    await act(async () => {
+      pinBtn?.click();
+    });
+
+    // When pinned, it is expanded even when mouse is not hovering
+    expect(aside?.className).toContain('md:w-64');
+
+    root.unmount();
+    container.remove();
+  });
 });
+

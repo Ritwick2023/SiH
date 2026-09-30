@@ -2,6 +2,17 @@ import type { DemoPersona } from './types';
 
 export const DEMO_PERSONAS: DemoPersona[] = [
   {
+    id: 'demo-rithwik',
+    name: 'Rithwik',
+    email: 'rithwik@mospi.gov.in',
+    role: 'learner',
+    organization_id: 'org-mospi',
+    cadre: 'Subordinate Statistical Service (SSS)',
+    designation: 'Statistical Officer',
+    preferred_language: 'en',
+    department: 'MoSPI Headquarters',
+  },
+  {
     id: 'demo-amit',
     name: 'Amit Sharma',
     email: 'amit.sharma@mospi.gov.in',

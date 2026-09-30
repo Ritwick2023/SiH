@@ -5,6 +5,13 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "home": "Home",
+    "myLearning": "My Learning",
+    "learningPaths": "Learning Paths",
+    "assessments": "Assessments",
+    "myCompetencies": "My Competencies",
+    "resources": "Resources",
+    "helpSupport": "Help & Support",
     "skillGap": "Skill Gap",
     "pathways": "Courses & Learning",
     "profile": "Profile",

@@ -1,9 +1,18 @@
 import { AppLayout } from '@/components/layout';
+import { getAuthenticatedUser } from '@/lib/auth';
+import type { UserRole } from '@/lib/types';
 
-export default function AppRouteLayout({
+export default async function AppRouteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout>{children}</AppLayout>;
+  const user = await getAuthenticatedUser();
+  const initialRole = (user?.app_metadata?.role as UserRole) || 'learner';
+
+  return (
+    <AppLayout initialUser={user} initialRole={initialRole}>
+      {children}
+    </AppLayout>
+  );
 }

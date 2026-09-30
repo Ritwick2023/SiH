@@ -68,17 +68,23 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
         let customDept: string | undefined;
         let customEmail: string | undefined;
 
-        if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
+        if (demoCookie.includes('{') || demoCookie.includes('%')) {
+          let str = demoCookie;
           try {
-            const parsed = JSON.parse(decodeURIComponent(demoCookie));
+            while (str.includes('%')) {
+              const dec = decodeURIComponent(str);
+              if (dec === str) break;
+              str = dec;
+            }
+            const parsed = JSON.parse(str);
             personaId = parsed.id || parsed.email || '';
-            customName = parsed.name;
-            customDesignation = parsed.designation;
-            customCadre = parsed.cadre;
-            customDept = parsed.department;
+            customName = parsed.user_metadata?.name || parsed.name;
+            customDesignation = parsed.user_metadata?.designation || parsed.designation;
+            customCadre = parsed.user_metadata?.cadre || parsed.cadre;
+            customDept = parsed.user_metadata?.department || parsed.department;
             customEmail = parsed.email;
           } catch {
-            personaId = '';
+            // ignore
           }
         }
         const persona = DEMO_PERSONAS.find(
@@ -160,17 +166,23 @@ export async function getAuthenticatedUser(req?: Request): Promise<AppUser | nul
       let customEmail: string | undefined;
 
       // If legacy JSON cookie, extract ONLY identifier to prevent role tampering
-      if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
+      if (demoCookie.includes('{') || demoCookie.includes('%')) {
+        let str = demoCookie;
         try {
-          const parsed = JSON.parse(decodeURIComponent(demoCookie));
+          while (str.includes('%')) {
+            const dec = decodeURIComponent(str);
+            if (dec === str) break;
+            str = dec;
+          }
+          const parsed = JSON.parse(str);
           personaId = parsed.id || parsed.email || '';
-          customName = parsed.name;
-          customDesignation = parsed.designation;
-          customCadre = parsed.cadre;
-          customDept = parsed.department;
+          customName = parsed.user_metadata?.name || parsed.name;
+          customDesignation = parsed.user_metadata?.designation || parsed.designation;
+          customCadre = parsed.user_metadata?.cadre || parsed.cadre;
+          customDept = parsed.user_metadata?.department || parsed.department;
           customEmail = parsed.email;
         } catch {
-          personaId = '';
+          // ignore
         }
       }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { 
@@ -21,6 +21,33 @@ interface RemediationRoadmapProps {
   isHindi: boolean;
 }
 
+let cachedRoadmapRaw: string | null = null;
+let cachedRoadmapMap: Record<string, boolean> = {};
+
+function getRoadmapSnapshot(storageKey: string): Record<string, boolean> {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (raw === cachedRoadmapRaw) return cachedRoadmapMap;
+    cachedRoadmapRaw = raw;
+    cachedRoadmapMap = raw ? JSON.parse(raw) : {};
+    return cachedRoadmapMap;
+  } catch {
+    return cachedRoadmapMap;
+  }
+}
+
+const getRoadmapServerSnapshot = (): Record<string, boolean> => ({});
+
+function subscribeRoadmap(callback: () => void) {
+  window.addEventListener('storage', callback);
+  window.addEventListener('statvidya-roadmap-updated', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('statvidya-roadmap-updated', callback);
+  };
+}
+
 export function RemediationRoadmap({
   gaps,
   simulatedOverrides,
@@ -31,42 +58,21 @@ export function RemediationRoadmap({
   const storageKey = `statvidya_roadmap_completed_${userId}`;
 
   // Persistent milestone completion map: milestoneId -> boolean
-  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>(() => {
-    if (typeof window === 'undefined') return {};
-    try {
-      const stored = localStorage.getItem(`statvidya_roadmap_completed_${userId}`);
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  });
-  const [prevStorageKey, setPrevStorageKey] = useState(storageKey);
-
-  // Synchronize storage key changes during render without cascading effect triggers
-  if (storageKey !== prevStorageKey) {
-    setPrevStorageKey(storageKey);
-    let updatedVal: Record<string, boolean> = {};
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem(storageKey);
-        if (stored) updatedVal = JSON.parse(stored);
-      } catch {
-        // Local storage unavailable
-      }
-    }
-    setCompletedMilestones(updatedVal);
-  }
+  const completedMilestones = useSyncExternalStore(
+    subscribeRoadmap,
+    () => getRoadmapSnapshot(storageKey),
+    getRoadmapServerSnapshot
+  );
 
   const toggleMilestone = (id: string) => {
-    setCompletedMilestones((prev) => {
-      const updated = { ...prev, [id]: !prev[id] };
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(updated));
-      } catch {
-        // Local storage unavailable
-      }
-      return updated;
-    });
+    const current = getRoadmapSnapshot(storageKey);
+    const updated = { ...current, [id]: !current[id] };
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(updated));
+      window.dispatchEvent(new Event('statvidya-roadmap-updated'));
+    } catch {
+      // Local storage unavailable
+    }
   };
 
   const { phase1Gaps, phase2Gaps, phase3Gaps } = useMemo(() => {

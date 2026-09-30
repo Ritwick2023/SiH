@@ -1,17 +1,20 @@
 import type { UserRole } from '@/lib/types';
 import {
+  Home,
+  BookOpen,
+  Compass,
+  ClipboardCheck,
+  BarChart3,
+  Award,
+  FileText,
+  HelpCircle,
   LayoutDashboard,
   Target,
-  ClipboardCheck,
   UserCircle,
-  FileText,
   Brain,
-  BarChart3,
   Building2,
   TrendingUp,
   Layers,
-  GraduationCap,
-  Award,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -21,25 +24,34 @@ export interface RoleNavItem {
   icon: LucideIcon;
   badge?: string;
   badgeType?: 'default' | 'accent' | 'warning' | 'success';
+  isDividerBefore?: boolean;
 }
 
 export const LEARNER_NAV_ITEMS: RoleNavItem[] = [
   {
     href: '/dashboard',
     label: 'nav.dashboard',
-    icon: LayoutDashboard,
+    icon: Home,
   },
   {
-    href: '/skill-gap',
-    label: 'nav.skillGap',
-    icon: Target,
+    href: '/courses',
+    label: 'nav.myLearning',
+    icon: BookOpen,
+  },
+  {
+    href: '/pathways',
+    label: 'nav.pathways',
+    icon: Compass,
   },
   {
     href: '/assignments',
     label: 'nav.assessment',
     icon: ClipboardCheck,
-    badge: '3 Drills',
-    badgeType: 'accent',
+  },
+  {
+    href: '/skill-gap',
+    label: 'nav.skillGap',
+    icon: BarChart3,
   },
   {
     href: '/mcq-generator',
@@ -47,30 +59,25 @@ export const LEARNER_NAV_ITEMS: RoleNavItem[] = [
     icon: Brain,
   },
   {
-    href: '/documents',
-    label: 'nav.documents',
-    icon: FileText,
-    badge: '6 Manuals',
-    badgeType: 'default',
-  },
-  {
-    href: '/pathways',
-    label: 'nav.pathways',
-    icon: GraduationCap,
-    badge: '10 Modules',
-    badgeType: 'default',
-  },
-  {
     href: '/credentials',
     label: 'nav.credentials',
     icon: Award,
-    badge: 'W3C VC',
-    badgeType: 'accent',
+  },
+  {
+    href: '/documents',
+    label: 'nav.documents',
+    icon: FileText,
+    isDividerBefore: true,
   },
   {
     href: '/profile',
     label: 'nav.profile',
     icon: UserCircle,
+  },
+  {
+    href: '#help',
+    label: 'nav.helpSupport',
+    icon: HelpCircle,
   },
 ];
 
