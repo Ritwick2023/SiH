@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Bookmark, ArrowRight } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 
 interface LearnerContinueLearningCardProps {
   isHindi?: boolean;

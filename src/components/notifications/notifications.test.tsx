@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import React, { act } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, Root } from 'react-dom/client';
 import {
   getInitialNotifications,
   LEARNER_NOTIFICATIONS,
@@ -141,10 +141,22 @@ describe('Notification State Transitions', () => {
 
 describe('NotificationItem Component', () => {
   let container: HTMLDivElement;
+  let root: Root | null = null;
 
   beforeEach(() => {
     container = document.createElement('div');
     document.body.appendChild(container);
+    root = createRoot(container);
+  });
+
+  afterEach(() => {
+    if (root) {
+      act(() => {
+        root?.unmount();
+      });
+      root = null;
+    }
+    container?.remove();
   });
 
   it('renders unread notification with unread indicator and fires onSelect', () => {
@@ -159,9 +171,8 @@ describe('NotificationItem Component', () => {
       href: '/assignments',
     };
 
-    const root = createRoot(container);
     act(() => {
-      root.render(
+      root?.render(
         <NotificationItem
           notification={testNotification}
           onSelect={onSelect}
@@ -187,10 +198,22 @@ describe('NotificationItem Component', () => {
 
 describe('NotificationDropdown Component', () => {
   let container: HTMLDivElement;
+  let root: Root | null = null;
 
   beforeEach(() => {
     container = document.createElement('div');
     document.body.appendChild(container);
+    root = createRoot(container);
+  });
+
+  afterEach(() => {
+    if (root) {
+      act(() => {
+        root?.unmount();
+      });
+      root = null;
+    }
+    container?.remove();
   });
 
   it('Test 1: renders notifications list and shows unread badge & mark all as read', () => {
@@ -217,9 +240,8 @@ describe('NotificationDropdown Component', () => {
       },
     ];
 
-    const root = createRoot(container);
     act(() => {
-      root.render(
+      root?.render(
         <NotificationDropdown
           notifications={sampleNotifications}
           unreadCount={1}
@@ -249,9 +271,8 @@ describe('NotificationDropdown Component', () => {
   });
 
   it('Test 7: renders empty state when there are no notifications', () => {
-    const root = createRoot(container);
     act(() => {
-      root.render(
+      root?.render(
         <NotificationDropdown
           notifications={[]}
           unreadCount={0}

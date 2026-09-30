@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
@@ -12,33 +12,33 @@ import {
 import { Notification } from '@/components/notifications/types';
 import { getInitialNotifications } from '@/components/notifications/notification-data';
 import { NotificationItem } from '@/components/notifications/NotificationItem';
-
+import type { UserRole } from '@/lib/types';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 
-function getInitialClientNotifications(): Notification[] {
-  if (typeof document === 'undefined') return getInitialNotifications('learner');
-  let role = 'learner';
-  try {
-    const match = document.cookie.match(/(?:^|;\s*)demo_user=([^;]+)/);
-    if (match) {
-      const parsed = JSON.parse(decodeURIComponent(match[1]));
-      if (parsed?.role) {
-        role = parsed.role;
-      }
-    }
-  } catch {
-    // Fallback to learner
-  }
-  return getInitialNotifications(role);
+interface NotificationsClientProps {
+  initialRole?: UserRole;
 }
 
-export function NotificationsClient() {
+export function NotificationsClient({ initialRole = 'learner' }: NotificationsClientProps) {
   const router = useRouter();
   const t = useTranslations('notifications');
   const locale = useSafeLocale();
   const isHindi = locale === 'hi';
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const [notifications, setNotifications] = useState<Notification[]>(getInitialClientNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(() =>
+    getInitialNotifications(initialRole)
+  );
+
+  useEffect(() => {
+    const handleUserUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.role) {
+        setNotifications(getInitialNotifications(customEvent.detail.role));
+      }
+    };
+    window.addEventListener('statvidya-user-updated', handleUserUpdate);
+    return () => window.removeEventListener('statvidya-user-updated', handleUserUpdate);
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 

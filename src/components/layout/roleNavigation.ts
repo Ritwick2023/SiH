@@ -15,7 +15,6 @@ import {
   Building2,
   TrendingUp,
   Layers,
-  GraduationCap,
   type LucideIcon,
 } from 'lucide-react';
 

@@ -10,7 +10,7 @@ const PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/profile': ['learner', 'trainer', 'admin'],
   '/assessment': ['learner', 'trainer', 'admin'],
   '/documents': ['learner', 'trainer', 'admin'],
-  '/mcq-generator': ['trainer', 'admin'],
+  '/mcq-generator': ['learner', 'trainer', 'admin'],
   '/review-queue': ['trainer', 'admin'],
   '/admin': ['admin'],
   '/onboarding': ['learner', 'trainer', 'admin'],
@@ -86,12 +86,18 @@ export async function proxy(request: NextRequest) {
 
     if (demoCookie) {
       let personaId = demoCookie;
-      if (demoCookie.startsWith('%7B') || demoCookie.startsWith('{')) {
+      if (demoCookie.includes('{') || demoCookie.includes('%')) {
+        let str = demoCookie;
         try {
-          const parsed = JSON.parse(decodeURIComponent(demoCookie));
+          while (str.includes('%')) {
+            const dec = decodeURIComponent(str);
+            if (dec === str) break;
+            str = dec;
+          }
+          const parsed = JSON.parse(str);
           personaId = parsed.id || parsed.email || '';
         } catch {
-          personaId = '';
+          // ignore
         }
       }
 

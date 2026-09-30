@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { Check, X, Edit3, ShieldAlert, Sparkles, BookOpen, ArrowRight, ArrowLeft, BarChart3 } from 'lucide-react';
 import type { ItemAnalysisData } from './modals/ItemAnalysisModal';
 
@@ -67,10 +67,15 @@ const INITIAL_QUEUE: QuestionItem[] = [
   },
 ];
 
-function loadQueueFromStorage(): QuestionItem[] {
+let cachedRawQueue: string | null = null;
+let cachedQueueList: QuestionItem[] = INITIAL_QUEUE;
+
+function getReviewQueueSnapshot(): QuestionItem[] {
   if (typeof window === 'undefined') return INITIAL_QUEUE;
   try {
     const raw = localStorage.getItem('statvidya_review_queue');
+    if (raw === cachedRawQueue) return cachedQueueList;
+    cachedRawQueue = raw;
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
@@ -94,35 +99,48 @@ function loadQueueFromStorage(): QuestionItem[] {
           sourceDoc: item.sourceDoc || 'Official MoSPI Manual',
           section: item.citation || 'Statutory Guidelines',
           status: (item.status?.toLowerCase() === 'approved' || item.status?.toLowerCase() === 'published')
-            ? 'approved' as const
+            ? ('approved' as const)
             : item.status?.toLowerCase() === 'rejected'
-              ? 'rejected' as const
-              : 'pending' as const,
+              ? ('rejected' as const)
+              : ('pending' as const),
         }));
 
         const existingIds = new Set(mapped.map((m) => m.id));
         const nonDup = INITIAL_QUEUE.filter((q) => !existingIds.has(q.id));
-        return [...mapped, ...nonDup];
+        cachedQueueList = [...mapped, ...nonDup];
+        return cachedQueueList;
       }
     }
+    cachedQueueList = INITIAL_QUEUE;
+    return cachedQueueList;
   } catch (e) {
     console.error('Failed to load review queue for triage card:', e);
+    return cachedQueueList;
   }
-  return INITIAL_QUEUE;
+}
+
+const getReviewQueueServerSnapshot = () => INITIAL_QUEUE;
+
+function subscribeReviewQueue(callback: () => void) {
+  window.addEventListener('storage', callback);
+  window.addEventListener('statvidya-review-queue-updated', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('statvidya-review-queue-updated', callback);
+  };
 }
 
 function syncToLocalStorage(id: string, newStatus: 'APPROVED' | 'REJECTED') {
   if (typeof window === 'undefined') return;
   try {
     const raw = localStorage.getItem('statvidya_review_queue');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        const updated = parsed.map((item: { id: string; status: string }) =>
-          item.id === id ? { ...item, status: newStatus } : item
-        );
-        localStorage.setItem('statvidya_review_queue', JSON.stringify(updated));
-      }
+    const parsed = raw ? JSON.parse(raw) : INITIAL_QUEUE;
+    if (Array.isArray(parsed)) {
+      const updated = parsed.map((item: { id: string; status: string }) =>
+        item.id === id ? { ...item, status: newStatus } : item
+      );
+      localStorage.setItem('statvidya_review_queue', JSON.stringify(updated));
+      window.dispatchEvent(new Event('statvidya-review-queue-updated'));
     }
   } catch {
     // ignore
@@ -135,7 +153,11 @@ interface TrainerReviewTriageCardProps {
 }
 
 export function TrainerReviewTriageCard({ onInspectItem, isHindi = false }: TrainerReviewTriageCardProps) {
-  const [queue, setQueue] = useState<QuestionItem[]>(() => loadQueueFromStorage());
+  const queue = useSyncExternalStore(
+    subscribeReviewQueue,
+    getReviewQueueSnapshot,
+    getReviewQueueServerSnapshot
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editedStem, setEditedStem] = useState('');
@@ -144,22 +166,14 @@ export function TrainerReviewTriageCard({ onInspectItem, isHindi = false }: Trai
   const pendingCount = queue.filter((q) => q.status === 'pending').length;
 
   const handleApprove = (id: string) => {
-    setQueue((prev) => {
-      const updated = prev.map((q) => (q.id === id ? { ...q, status: 'approved' as const } : q));
-      syncToLocalStorage(id, 'APPROVED');
-      return updated;
-    });
+    syncToLocalStorage(id, 'APPROVED');
     if (currentIndex < queue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handleReject = (id: string) => {
-    setQueue((prev) => {
-      const updated = prev.map((q) => (q.id === id ? { ...q, status: 'rejected' as const } : q));
-      syncToLocalStorage(id, 'REJECTED');
-      return updated;
-    });
+    syncToLocalStorage(id, 'REJECTED');
     if (currentIndex < queue.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
@@ -173,9 +187,21 @@ export function TrainerReviewTriageCard({ onInspectItem, isHindi = false }: Trai
 
   const handleSaveEdit = () => {
     if (!currentItem) return;
-    setQueue((prev) =>
-      prev.map((q) => (q.id === currentItem.id ? { ...q, stem: editedStem } : q))
-    );
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('statvidya_review_queue');
+        const parsed = raw ? JSON.parse(raw) : queue;
+        if (Array.isArray(parsed)) {
+          const updated = parsed.map((item: { id: string; stem?: string }) =>
+            item.id === currentItem.id ? { ...item, stem: editedStem } : item
+          );
+          localStorage.setItem('statvidya_review_queue', JSON.stringify(updated));
+          window.dispatchEvent(new Event('statvidya-review-queue-updated'));
+        }
+      } catch {
+        // ignore
+      }
+    }
     setIsEditing(false);
   };
 

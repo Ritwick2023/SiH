@@ -1,0 +1,216 @@
+================================================================================
+Karmayogi Bharat / MoSPI Learning Intelligence Platform - Bug Fixes Log
+================================================================================
+
+BUG #1: React SSR / Client Hydration Mismatch & Initial Persona State
+- Location:
+  * src/app/(app)/layout.tsx
+  * src/components/layout/AppLayout.tsx
+  * src/components/layout/Topbar.tsx
+- Issue:
+  The application suffered from React hydration mismatch errors on page load.
+  The server rendered the default fallback persona (Rithwik / Learner) because
+  app layout was a pure client component without initial SSR session resolution.
+  When the client hydrated, the cookie or localStorage differed from SSR markup,
+  causing React errors #418 / #423 / #425 and flickering UI.
+- Fix:
+  1. Converted src/app/(app)/layout.tsx into an async Server Component that fetches
+     authenticated user metadata via getAuthenticatedUser() during SSR.
+  2. Passed initialUser and initialRole as props down to AppLayout, Topbar, and
+     Sidebar.
+  3. Replaced client-only initial persona defaults in Topbar with getInitialPersona(initialUser, initialRole)
+     to guarantee identical server markup and initial client DOM.
+
+--------------------------------------------------------------------------------
+
+BUG #2: Learner Persona Name Discrepancy (Sunita Devi showing as Rithwik)
+- Location:
+  * src/components/layout/Topbar.tsx
+  * src/components/layout/AppLayout.tsx
+  * src/lib/auth/authStore.ts
+- Issue:
+  On the learner dashboard, the page content greeted "Sunita Devi" (MoSPI Field
+  Investigator), but the profile button in the topbar displayed "Rithwik" because
+  hardcoded fallback values in Topbar overrode or lagged the authenticated session.
+- Fix:
+  1. Updated Topbar to use the resolved activeUser / initialUser name and cadre:
+     Sunita Devi (Field Investigator, FOD - NSSO).
+  2. Synced the profile avatar badge and name directly with the authenticated user
+     profile state across SSR and client updates.
+
+--------------------------------------------------------------------------------
+
+BUG #3: Duplicate Profile Buttons in the Top Navigation Bar
+- Location:
+  * src/components/layout/Topbar.tsx
+- Issue:
+  The topbar rendered two redundant profile buttons side-by-side:
+  1. A persona switch pill button (data-testid="persona-switcher-button").
+  2. A separate avatar/account dropdown button with identical info.
+- Fix:
+  1. Consolidated the two buttons into a single, clean, accessible Profile button
+     showing the user's avatar, full name, and official designation.
+  2. Relocated the cadre/persona switcher and language selector inside the single
+     unified profile dropdown menu, removing topbar clutter while preserving full
+     cadre switching and profile settings capabilities.
+
+--------------------------------------------------------------------------------
+
+BUG #4: "My Learning" Redirecting to Courses Catalog (/pathways)
+- Location:
+  * src/app/(app)/courses/page.tsx
+  * src/app/(app)/courses/MyLearningClient.tsx
+  * src/components/layout/Topbar.tsx
+- Issue:
+  Clicking "My Learning" in the navigation was intended to display the learner's
+  current active courses, enrollment status, completion percentages, and pathway
+  progress. However, src/app/(app)/courses/page.tsx was hardcoded with
+  redirect('/pathways'), abruptly bouncing learners to the generic course catalog.
+- Fix:
+  1. Created a dedicated learner progress experience in MyLearningClient.tsx at /courses.
+  2. Rendered active enrolled courses, overall completion stats (e.g., 68% progress,
+     14.5 hours logged, 2 certificates earned), competency pathway tracker, and
+     interactive course table.
+  3. Replaced redirect('/pathways') in page.tsx with MyLearningClient, allowing
+     learners to view their active personal progress directly.
+
+--------------------------------------------------------------------------------
+
+BUG #5: "Practice MCQs" Redirecting to Dashboard for Learners
+- Location:
+  * src/proxy.ts
+- Issue:
+  Clicking "Practice MCQs" (/mcq-generator) from the sidebar redirected learners
+  back to /dashboard because the edge proxy route protection configuration
+  only allowed 'trainer' and 'admin' roles for /mcq-generator.
+- Fix:
+  1. Updated PROTECTED_ROUTES['/mcq-generator'] in src/proxy.ts to include 'learner'
+     role alongside 'trainer' and 'admin'.
+  2. Verified that learners can now seamlessly enter the Document Practice & MCQ Station
+     to generate assessments and test their competencies without unauthorized redirects.
+
+--------------------------------------------------------------------------------
+
+BUG #6: React Hydration Mismatches in Notifications & Client Storage Components
+- Location:
+  * src/app/(app)/notifications/page.tsx
+  * src/app/(app)/notifications/NotificationsClient.tsx
+  * src/components/dashboard/trainer/TrainerReviewTriageCard.tsx
+  * src/components/skill-gap/RemediationRoadmap.tsx
+  * src/app/(app)/review-queue/page.tsx
+- Issue:
+  1. On the notifications page, the server rendered default learner notifications while
+     the client read document.cookie during initial hydration, causing a React hydration
+     mismatch exception (#418 / #423) when viewing as admin or trainer.
+  2. In TrainerReviewTriageCard, RemediationRoadmap, and ReviewQueuePage, useState
+     was initialized by reading localStorage inside the initializer function. Since
+     localStorage was unavailable or had different data during SSR, the server rendered
+     the fallback count while the client hydrated the stored count (e.g. 3 vs 6 items),
+     causing hydration failures.
+- Fix:
+  1. Made NotificationsPage an async Server Component passing the authenticated initialRole
+     directly to NotificationsClient so SSR and initial client hydration match identically.
+  2. Added a statvidya-user-updated event listener in NotificationsClient for live updates.
+  3. Refactored TrainerReviewTriageCard, RemediationRoadmap, and ReviewQueuePage to utilize
+     React's useSyncExternalStore with snapshot reference caching and custom storage update
+     events, completely eliminating all hydration mismatches and cascading render warnings.
+
+--------------------------------------------------------------------------------
+
+BUG #7: Cadre/Persona Switcher Session Token Precedence Collision
+- Location:
+  * src/components/layout/Topbar.tsx
+- Issue:
+  When switching official cadres via the UI dropdown (e.g. from Learner Sunita to Admin
+  Rajesh), Topbar set demo_user and demo_persona cookies, but did not purge existing
+  cryptographic auth_token cookies. Because the server auth boundary prioritizes auth_token
+  over demo cookies, the server components failed to reflect the newly switched cadre.
+- Fix:
+  1. Updated setPersonaCookie to purge auth_token, statvidya_session, and sb-demo-auth-token
+     upon switching demo cadres so the new persona takes immediate effect.
+  2. Updated handleSelectPersona to call POST /api/sso/demo-persona to sign and set a fresh
+     session token for the chosen persona.
+  3. Navigated cleanly via window.location.replace('/dashboard') on cadre changes to reset
+     router cache and guarantee pristine SSR across all roles with zero immutability violations.
+--------------------------------------------------------------------------------
+
+BUG #8: Profile Button and Logged-In User Name Mismatch
+- Location:
+  * src/components/layout/Topbar.tsx
+  * src/components/layout/AppLayout.tsx
+  * src/components/layout/Sidebar.tsx
+  * src/proxy.ts
+  * src/lib/auth.ts
+  * src/app/api/sso/demo-persona/route.ts
+- Issue:
+  The dashboard and page greeted the authenticated user (e.g., Sunita Devi, Field
+  Investigator), but the profile button in the top navigation bar either reverted
+  to "Rithwik" or failed to match the active user session.
+  Root cause: In /api/sso/demo-persona, Next.js response.cookies.set() automatically
+  URL-encodes values. The route handler was passing encodeURIComponent(JSON.stringify(userObj)),
+  resulting in double URL encoding (%257B...). When client or server code called
+  JSON.parse(decodeURIComponent(cookie)), %257B decoded to %7B instead of {, causing
+  a JSON syntax error and falling back to persona 0 (Rithwik). Additionally, Topbar
+  and Sidebar maintained local state that lagged behind or diverged from the authenticated
+  currentUser resolved by AppLayout.
+- Fix:
+  1. Stopped double URL encoding in src/app/api/sso/demo-persona/route.ts (both GET and POST).
+  2. Implemented safeDecodeCookie in Topbar.tsx, AppLayout.tsx, Sidebar.tsx, proxy.ts,
+     and auth.ts to iteratively decode multi-encoded cookie strings before JSON parsing.
+  3. Threaded the resolved currentUser prop from AppLayout directly to Topbar and Sidebar.
+  4. Derived activePersona directly from currentUser in Topbar.tsx, guaranteeing immediate,
+     reactive, and synchronous display of the logged-in user's name, cadre, and designation
+     in the profile button across all roles.
+
+--------------------------------------------------------------------------------
+
+BUG #9: Top Navigation Bar Non-Uniform Spacing and Irregular Button Gaps
+- Location:
+  * src/components/layout/Topbar.tsx
+- Issue:
+  The top navigation bar had inconsistent, non-uniform gaps between elements. The header
+  used justify-between across 4 loose child containers (Brand, Search, Badges, Actions),
+  causing elements to stretch unpredictably across different screen viewports. Button
+  heights and padding varied (h-8 vs h-9, uneven margins, scattered gap sizes), resulting
+  in an unbalanced, misaligned topbar.
+- Fix:
+  1. Re-architected <header> into three clean, structured layout zones:
+     - Zone 1 (Left): MoSPI Emblem, Ministry Typography, and StatVidya brand lockup
+       (flex items-center gap-3 shrink-0).
+     - Zone 2 (Center): Unified global search palette with shortcut badge
+       (flex-1 max-w-md mx-6 hidden xl:flex).
+     - Zone 3 (Right): Single consolidated flex container (flex items-center gap-2.5 shrink-0 ml-auto).
+  2. Standardized every action button and pill in the right zone to an exact h-9 (36px)
+     height, px-3 horizontal padding, rounded-xl border radius, and uniform gap-2.5 (10px) distribution.
+  3. Grouped Mobile Search, Bhashini Voice Assistant, Role Badges (Karma Points, CAPI Offline
+     Vault, Faculty pills, National Readiness), Language Switcher, Notifications Bell, and
+     User Profile into this single container, ensuring uniform spacing and layout alignment.
+
+--------------------------------------------------------------------------------
+
+BUG #10: Unutilized Empty Space Below "Continue Learning" & "Your Competency Overview"
+- Location:
+  * src/components/dashboard/learner/LearnerDashboard.tsx
+  * src/components/dashboard/learner/LearnerDailyDrillWidget.tsx (new)
+  * src/components/dashboard/learner/LearnerFocusCompetenciesWidget.tsx (new)
+- Issue:
+  On the Learner Dashboard, the 3-column grid had a vertical height imbalance:
+  Column 3 (Upcoming Milestones & Quick Assessments) was ~520px tall, while Column 1
+  (Continue Learning Card) and Column 2 (Competency Overview Radar Card) were only ~320px tall.
+  This left ~200px of awkward, empty whitespace beneath Continue Learning and Your Competency
+  Overview, making the lower portion of the dashboard feel barren.
+- Fix:
+  1. Built LearnerDailyDrillWidget.tsx and placed it beneath LearnerContinueLearningCard in Column 1:
+     - Displays the learner's "Daily Field Simulation Drill" (Household Consumer Expenditure Survey).
+     - Features an active 5-day streak tracker with burning flame indicator, 5-minute duration badge,
+       and +50 Karma Points reward.
+     - Includes a single-click interactive "Start Today's Drill" CTA that triggers LearnerDrillModal.
+  2. Built LearnerFocusCompetenciesWidget.tsx and placed it beneath LearnerCompetencyOverviewCard in Column 2:
+     - Highlights "Priority Competencies to Level Up" based on AI-evaluated gaps (Sampling Methodology
+       and CAPI Field Validation).
+     - Visualizes current vs target proficiency levels with animated progress bars and gap tags.
+     - Provides a single-click "Bridge Gap" CTA that triggers BridgeGapRemediationModal.
+  3. Balanced the heights across all 3 columns (~540-550px each), eliminating unwanted dead space
+     while providing actionable, high-value learning utilities.
+================================================================================
+

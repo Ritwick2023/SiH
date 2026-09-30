@@ -9,6 +9,8 @@ import { LearnerKpiStrip } from './LearnerKpiStrip';
 import { LearnerContinueLearningCard } from './LearnerContinueLearningCard';
 import { LearnerCompetencyOverviewCard } from './LearnerCompetencyOverviewCard';
 import { LearnerRightSidebarDeck } from './LearnerRightSidebarDeck';
+import { LearnerDailyDrillWidget } from './LearnerDailyDrillWidget';
+import { LearnerFocusCompetenciesWidget } from './LearnerFocusCompetenciesWidget';
 import { LearnerRecommendedCourses } from './LearnerRecommendedCourses';
 
 import { PriorityGapsCard } from './PriorityGapsCard';
@@ -228,14 +230,23 @@ export default function LearnerDashboard({
 
           {/* 3. Middle Grid: Continue Learning, Competency Overview (Radar), and Right Deck */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            {/* Continue Learning Card (4 cols on lg) */}
-            <div className="lg:col-span-4 flex flex-col">
+            {/* Continue Learning & Daily Micro-Drill Cards (4 cols on lg) */}
+            <div className="lg:col-span-4 flex flex-col space-y-5">
               <LearnerContinueLearningCard isHindi={isHindi} />
+              <LearnerDailyDrillWidget
+                onStartDrill={() => handleStartDrill('drill-schedule-0')}
+                isHindi={isHindi}
+              />
             </div>
 
-            {/* Competency Overview Spider Chart (5 cols on lg) */}
-            <div className="lg:col-span-5 flex flex-col">
+            {/* Competency Overview Spider Chart & Priority Gap Remediation (5 cols on lg) */}
+            <div className="lg:col-span-5 flex flex-col space-y-5">
               <LearnerCompetencyOverviewCard isHindi={isHindi} />
+              <LearnerFocusCompetenciesWidget
+                competencies={profile.competencies}
+                onBridgeGap={handleBridgeGap}
+                isHindi={isHindi}
+              />
             </div>
 
             {/* Right Deck: Next Step, Upcoming Deadlines, Recent Achievements (3 cols on lg) */}

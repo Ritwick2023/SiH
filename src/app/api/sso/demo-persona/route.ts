@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   });
 
   // Set demo cookies for backwards compatibility and UI evaluation
-  response.cookies.set('demo_user', encodeURIComponent(JSON.stringify(userObj)), {
+  response.cookies.set('demo_user', JSON.stringify(userObj), {
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
     httpOnly: false,
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       sameSite: 'lax',
     });
 
-    response.cookies.set('demo_user', encodeURIComponent(JSON.stringify(userObj)), {
+    response.cookies.set('demo_user', JSON.stringify(userObj), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
       httpOnly: false,

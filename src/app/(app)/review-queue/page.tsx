@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useSyncExternalStore } from 'react';
 import { useSafeLocale } from '@/lib/useSafeLocale';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { ProvenanceBadge } from '@/components/ProvenanceBadge';
@@ -112,12 +112,17 @@ const DEFAULT_ITEMS: ReviewItem[] = [
   },
 ];
 
-function getInitialReviewItems(): ReviewItem[] {
+let cachedRawReview: string | null = null;
+let cachedReviewList: ReviewItem[] = DEFAULT_ITEMS;
+
+function getReviewQueueSnapshot(): ReviewItem[] {
   if (typeof window === 'undefined') return DEFAULT_ITEMS;
   try {
-    const stored = localStorage.getItem('statvidya_review_queue');
-    if (stored) {
-      const parsed: ReviewItem[] = JSON.parse(stored);
+    const raw = localStorage.getItem('statvidya_review_queue');
+    if (raw === cachedRawReview) return cachedReviewList;
+    cachedRawReview = raw;
+    if (raw) {
+      const parsed: ReviewItem[] = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
         const merged = [...parsed];
         for (const d of DEFAULT_ITEMS) {
@@ -125,19 +130,36 @@ function getInitialReviewItems(): ReviewItem[] {
             merged.push(d);
           }
         }
-        return merged;
+        cachedReviewList = merged;
+        return cachedReviewList;
       }
     }
-    localStorage.setItem('statvidya_review_queue', JSON.stringify(DEFAULT_ITEMS));
+    cachedReviewList = DEFAULT_ITEMS;
+    return cachedReviewList;
   } catch (e) {
     console.error('Error hydrating review queue:', e);
+    return cachedReviewList;
   }
-  return DEFAULT_ITEMS;
+}
+
+const getReviewQueueServerSnapshot = () => DEFAULT_ITEMS;
+
+function subscribeReviewQueue(callback: () => void) {
+  window.addEventListener('storage', callback);
+  window.addEventListener('statvidya-review-queue-updated', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('statvidya-review-queue-updated', callback);
+  };
 }
 
 export default function ReviewQueuePage() {
   const systemLocale = useSafeLocale();
-  const [items, setItems] = useState<ReviewItem[]>(getInitialReviewItems);
+  const items = useSyncExternalStore(
+    subscribeReviewQueue,
+    getReviewQueueSnapshot,
+    getReviewQueueServerSnapshot
+  );
   const [selectedId, setSelectedId] = useState<string>(() => items[0]?.id || 'rq-101');
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'PUBLISHED' | 'REJECTED'>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -154,9 +176,9 @@ export default function ReviewQueuePage() {
   };
 
   const saveItems = (updated: ReviewItem[]) => {
-    setItems(updated);
     try {
       localStorage.setItem('statvidya_review_queue', JSON.stringify(updated));
+      window.dispatchEvent(new Event('statvidya-review-queue-updated'));
     } catch (e) {
       console.error('Failed to persist review queue:', e);
     }
