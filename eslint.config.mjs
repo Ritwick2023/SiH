@@ -18,6 +18,8 @@ const eslintConfig = defineConfig([
     "src/dataconnect-admin-generated/**",
     // Python microservices & virtual environments:
     "services/**",
+    // Agents framework skills and helper scripts:
+    ".agents/**",
   ]),
 ]);
 
